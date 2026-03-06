@@ -32,12 +32,13 @@
    | Week 2  | Content structure design (word list / reading format) | E           | End Week 2     |
    | Week 2  | Exercise logic design                               | F           | End Week 2     |
    | Week 2  | Testing strategy & QA checklist                     | G           | End Week 2     |
+   | Week 2  | Initial testing                                     | G           | End Week 2     |
    | Week 3  | Vocabulary module development                       | A E         | End Week 3     |
    | Week 3  | Reading module development                          | B           | End Week 3     |
    | Week 3  | Exercise engine implementation                      | F           | End Week 3     |
    | Week 3  | UI implementation                                  | C           | End Week 3     |
    | Week 3  | Code integration & GitHub management                 | D           | End Week 3     |
-   | Week 3  | Initial testing                                     | G           | End Week 3     |
+   | Week 3  | Presentation                                     | All           | Week 3     |
    | Week 4  | Client meeting                                      | All         | Early Week 4   |
    | Week 4  | Requirement clarification & Vocabulary module improvement | A      | Mid-Week 4     |
    | Week 4  | Listening module development                        | C           | End Week 4     |
@@ -46,15 +47,23 @@
    | Week 4  | Exercise improvements                               | F           | End Week 4     |
    | Week 4  | Content refinement                                  | B           | End Week 4     |
    | Week 4  | Testing iteration                                   | G           | End Week 4     |
+   | Week 4  | Presentation                                     | All           | Week 4     |
    | Week 5  | Bug fixing & feature polishing                      | All         | End Week 5     |
    | Week 5  | UI improvements                                     | C           | End Week 5     |
    | Week 5  | Performance improvement                             | A D         | End Week 5     |
+   | Week 5  | Presentation                                     | All           | Week 5     |
    | Week 6  | Final integration                                   | All         | Early Week 6   |
    | Week 6  | Final testing                                       | G           | Mid-Week 6    |
    | Week 6  | Testing report                                      | G           | End Week 6     |
    | Week 6  | Demo preparation                                    | A B         | Mid-Week 6    |
    | Week 6  | Presentation slides                                 | C           | End Week 6     |
+   | Week 6  | Presentation                                 | All           | Week 6     |
 
+## Visualization
+
+The following image provides a clearer visual version of the planning table above:
+
+![Overall planning visualization](docs/images/overall-planning-visual.png)
 
 ## Responsible Key:
 
