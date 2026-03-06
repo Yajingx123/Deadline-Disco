@@ -63,7 +63,7 @@
 
 The following image provides a clearer visual version of the planning table above:
 
-![Overall planning visualization](docs/images/overall-planning-visual.png)
+![Overall planning visualization](doc/images/overall-planning-visual.png)
 
 ## Responsible Key:
 
