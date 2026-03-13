@@ -34,3 +34,9 @@
 
 ### Form group page (made by Chulin Zhao)
 ![form-group-page](doc/images/form-group-page.png)
+
+### Vocabulary exam page (made by Yiran Xu)
+![vocabulary-exam-page](doc/images/vocabulary-exam.png)
+
+### Vocabulary exam submission page (made by Yiran Xu)
+![vocabulary-exam-submission-page](doc/images/vocabulary-exam-submitted.png)
