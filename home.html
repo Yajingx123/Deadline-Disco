@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AcadBeat | Resonance in Learning</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,500;1,700&family=Inter:wght@300;400;600;800&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #E4DFD8;
+            --primary-color: #9BB7D4;
+            --secondary-color: #3A4E6B;
+            --white: #ffffff;
+            --transition-slow: all 2.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--secondary-color);
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        /* --- NAVIGATION --- */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 5%;
+            height: 80px;
+            background-color: var(--bg-color);
+            border-bottom: 1px solid rgba(58, 78, 107, 0.1);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+        }
+
+        .logo span {
+            color: var(--primary-color);
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        .nav-item {
+            text-decoration: none;
+            color: var(--secondary-color);
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            padding: 8px 0;
+            position: relative;
+            transition: 0.6s ease;
+            opacity: 0.5;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            opacity: 1;
+        }
+
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--secondary-color);
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 34px;
+            height: 34px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            border: 1px solid var(--secondary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.7rem;
+        }
+
+        /* --- MAIN VIEWPORT --- */
+        main {
+            margin-top: 80px;
+            height: calc(100vh - 80px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0 5%;
+            text-align: center;
+        }
+
+        .module-label {
+            font-size: 0.75rem;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            opacity: 0.4;
+            margin-bottom: 1.5rem;
+            font-weight: 300;
+        }
+
+        .module-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: moduleReveal 2.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* --- VOCABULARY --- */
+        .quote-wrap {
+            max-width: 850px;
+            margin-bottom: 5rem;
+            padding: 2rem 0;
+        }
+
+        .quote-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8rem;
+            font-style: italic;
+            line-height: 1.2;
+            margin-bottom: 2rem;
+        }
+
+        .quote-author {
+            font-size: 0.8rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            opacity: 0.5;
+        }
+
+        /* --- LISTENING --- */
+        .sound-landscape {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 6px;
+            height: 100px;
+            margin-bottom: 3.5rem;
+        }
+
+        .bar {
+            width: 3px;
+            background-color: var(--primary-color);
+            border-radius: 3px;
+            animation: soundWave 1.5s ease-in-out infinite alternate;
+        }
+
+        /* --- SPEAKING (Final Bubble Masterpiece) --- */
+        .vocal-dialogue {
+            width: 380px;
+            height: 100px;
+            position: relative;
+            margin-bottom: 3.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .bubble {
+            background: rgba(155, 183, 212, 0.15);
+            border: 1.5px solid var(--primary-color);
+            border-radius: 12px;
+            position: relative;
+            animation: bubbleBreath 4s ease-in-out infinite;
+            backdrop-filter: blur(4px);
+        }
+
+        /* 更长更扁的比例 */
+        .bubble-left {
+            width: 180px;
+            height: 45px;
+            margin-top: 5px;
+        }
+
+        .bubble-right {
+            width: 140px;
+            height: 35px;
+            align-self: flex-end;
+            animation-delay: 2s;
+        }
+
+        /* 通用尾巴样式 */
+        .bubble::after,
+        .bubble::before {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border-style: solid;
+        }
+
+        /* 左尾巴 (正常保持) */
+        .bubble-left::after {
+            border-width: 12px 10px 0 0;
+            border-color: var(--primary-color) transparent transparent transparent;
+            bottom: -12px;
+            left: 18px;
+        }
+
+        .bubble-left::before {
+            border-width: 9px 7px 0 0;
+            border-color: var(--bg-color) transparent transparent transparent;
+            bottom: -9px;
+            left: 19.5px;
+            z-index: 2;
+        }
+
+        /* 右尾巴 (精准重写，解决错位) */
+        /* 右尾巴：底部定位 + 尖角朝右 (标准形状) */
+        /* 右尾巴 (底部尖角朝右，镜面左侧，完美对话气泡) */
+        .bubble-right::after {
+            border-width: 12px 10px 0 0;
+            border-color: var(--primary-color) transparent transparent transparent;
+            bottom: -12px;
+            right: 8px;
+            transform: scaleX(-1);
+        }
+
+        .bubble-right::before {
+            border-width: 9px 7px 0 0;
+            border-color: var(--bg-color) transparent transparent transparent;
+            bottom: -9px;
+            right: 9.5px;
+            z-index: 2;
+            transform: scaleX(-1);
+        }
+
+        /* --- READING (Floating Tags) --- */
+        .reading-topography {
+            width: 400px;
+            height: 160px;
+            position: relative;
+            margin-bottom: 3.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .text-strata {
+            height: 2px;
+            background: var(--secondary-color);
+            opacity: 0.1;
+        }
+
+        .scan-focus {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 2px;
+            height: 100%;
+            background: var(--primary-color);
+            box-shadow: 0 0 15px 2px var(--primary-color);
+            animation: scanMove 5s linear infinite;
+            z-index: 10;
+        }
+
+        .tag-text {
+            font-size: 0.5rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            background: var(--bg-color);
+            padding: 2px 8px;
+            border-radius: 4px;
+            position: absolute;
+            border: 0.5px solid rgba(155, 183, 212, 0.3);
+            animation: tagFloat 3s ease-in-out infinite;
+        }
+
+        /* --- WRITING (Paper & Cursive) --- */
+        .writing-hand {
+            width: 450px;
+            height: 150px;
+            margin-bottom: 3.5rem;
+            position: relative;
+            background: linear-gradient(transparent 95%, rgba(58, 78, 107, 0.05) 5%);
+            background-size: 100% 25px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-left: 2px solid rgba(155, 183, 212, 0.2);
+        }
+
+        .cursive-path {
+            fill: none;
+            stroke: var(--secondary-color);
+            stroke-width: 2.2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-dasharray: 1200;
+            stroke-dashoffset: 1200;
+            animation: writeWord 8s ease-in-out infinite;
+            opacity: 0.7;
+        }
+
+        /* --- DAILY FOCUS CARD --- */
+        .daily-focus-card {
+            background: rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(58, 78, 107, 0.1);
+            padding: 2.2rem 3rem;
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+            text-align: left;
+            margin-bottom: 4rem;
+            backdrop-filter: blur(8px);
+            min-width: 600px;
+        }
+
+        .card-number {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.5rem;
+            color: var(--primary-color);
+            opacity: 0.7;
+            font-style: italic;
+        }
+
+        .card-content h4 {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 0.6rem;
+            opacity: 0.5;
+            font-weight: 800;
+        }
+
+        .card-content p {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.4rem;
+            line-height: 1.3;
+            color: var(--secondary-color);
+            font-weight: 500;
+        }
+
+        .bottom-actions {
+            display: flex;
+            gap: 20px;
+        }
+
+        .btn-small {
+            padding: 12px 35px;
+            border-radius: 40px;
+            border: 1.2px solid var(--secondary-color);
+            background: transparent;
+            color: var(--secondary-color);
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            transition: 0.4s;
+        }
+
+        .btn-small:hover {
+            background-color: var(--secondary-color);
+            color: var(--bg-color);
+            transform: translateY(-3px);
+        }
+
+        .btn-primary-small {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        /* --- ANIMATIONS --- */
+        @keyframes moduleReveal {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+                filter: blur(15px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+                filter: blur(0);
+            }
+        }
+
+        @keyframes soundWave {
+            0% {
+                height: 15%;
+                opacity: 0.3;
+            }
+
+            100% {
+                height: 100%;
+                opacity: 1;
+            }
+        }
+
+        @keyframes bubbleBreath {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.7;
+            }
+
+            50% {
+                transform: scale(1.03);
+                opacity: 0.95;
+            }
+        }
+
+        @keyframes tagFloat {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        @keyframes scanMove {
+            0% {
+                left: 0%;
+            }
+
+            100% {
+                left: 100%;
+            }
+        }
+
+        @keyframes writeWord {
+            0% {
+                stroke-dashoffset: 1200;
+                opacity: 0;
+            }
+
+            5% {
+                opacity: 1;
+            }
+
+            85% {
+                stroke-dashoffset: 0;
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <div class="logo">Acad<span>Beat</span></div>
+        <div class="nav-menu">
+            <div class="nav-item active" onclick="loadModule('Vocabulary', this)">Vocabulary</div>
+            <div class="nav-item" onclick="loadModule('Listening', this)">Listening</div>
+            <div class="nav-item" onclick="loadModule('Speaking', this)">Speaking</div>
+            <div class="nav-item" onclick="loadModule('Reading', this)">Reading</div>
+            <div class="nav-item" onclick="loadModule('Writing', this)">Writing</div>
+        </div>
+        <div class="user-section">
+            <span style="font-size: 0.75rem; font-weight: 700;">ALEX RIVERA</span>
+            <div class="avatar">AR</div>
+        </div>
+    </nav>
+
+    <main id="app-viewport"></main>
+
+    <script>
+        const data = {
+            Vocabulary: { label: "Section I — Lexical Depth", btns: ["Word Quest", "Mastery Check"] },
+            Listening: { label: "Section II — Listening Intelligence", id: "02", topic: "The Nuances of British Parliamentary Debate", btns: ["Audio Stream", "Echo Challenge"] },
+            Speaking: { label: "Section III — Spoken Eloquence", id: "03", topic: "Articulating Complex Generative AI Ethics", btns: ["Record Prompt", "Expression Drill"] },
+            Reading: { label: "Section IV — Textual Analytics", id: "04", topic: "Deconstructing Post-Colonial Narratives", btns: ["Deep Scan", "Context Duel"] },
+            Writing: { label: "Section V — Syntactic Flow", id: "05", topic: "Structuring Theses in Socio-Economics", btns: ["Draft Studio", "Syntax Trial"] }
+        };
+
+        function loadModule(name, el) {
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            el.classList.add('active');
+            const viewport = document.getElementById('app-viewport');
+            const m = data[name];
+
+            let html = `<div class="module-content">`;
+            html += `<div class="module-label">${m.label}</div>`;
+
+            if (name === 'Vocabulary') {
+                const quotes = [
+                    { text: "The limits of my language mean the limits of my world.", author: "— Ludwig Wittgenstein" },
+                    { text: "Language is the dress of thought.", author: "— Samuel Johnson" },
+                    { text: "Language is the armory of human power.", author: "— Ralph Waldo Emerson" },
+                    { text: "The essential function of language is communication.", author: "— Ferdinand de Saussure" },
+                    { text: "Without words, without names, there is no knowledge of things.", author: "— Plato" }
+                ];
+                const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+                html += `<div class="quote-wrap">
+                <p class="quote-text">"${randomQuote.text}"</p>
+                <p class="quote-author">${randomQuote.author}</p>
+             </div>`;
+            }
+            else if (name === 'Listening') {
+                let bars = '';
+                for (let i = 0; i < 30; i++) bars += `<div class="bar" style="height:${Math.random() * 70 + 20}%; animation-duration:${Math.random() * 0.4 + 0.4}s"></div>`;
+                html += `<div class="sound-landscape">${bars}</div>`;
+            }
+            else if (name === 'Speaking') {
+                html += `<div class="vocal-dialogue">
+                            <div class="bubble bubble-left"></div>
+                            <div class="bubble bubble-right"></div>
+                         </div>`;
+            }
+            else if (name === 'Reading') {
+                html += `<div class="reading-topography">
+                            <div class="scan-focus"></div>
+                            ${Array(6).fill('<div class="text-strata"></div>').join('')}
+                            <span class="tag-text" style="top:5%; left:15%; animation-delay:0s">SYNTAX</span>
+                            <span class="tag-text" style="top:35%; left:60%; animation-delay:0.5s">LEXIS</span>
+                            <span class="tag-text" style="top:60%; left:10%; animation-delay:1.2s">LOGIC</span>
+                            <span class="tag-text" style="top:85%; left:75%; animation-delay:0.8s">NUANCE</span>
+                            <span class="tag-text" style="top:20%; left:35%; animation-delay:2s">STRUCTURE</span>
+                            <span class="tag-text" style="bottom:10%; left:45%; animation-delay:1.5s">CONTEXT</span>
+                         </div>`;
+            }
+            else if (name === 'Writing') {
+                html += `<div class="writing-hand">
+                            <svg viewBox="0 0 450 100" width="450">
+                                <path class="cursive-path" d="M40,60 C60,10 80,90 100,40 C110,20 130,80 150,60 C180,60 170,20 200,20 C230,20 220,80 250,80 C280,80 270,30 310,30 C340,30 330,70 370,70 S410,20 430,30" />
+                            </svg>
+                         </div>`;
+            }
+
+            if (name !== 'Vocabulary') {
+                html += `<div class="daily-focus-card">
+                            <div class="card-number">${m.id}</div>
+                            <div class="card-content">
+                                <h4>Daily Focus</h4>
+                                <p>${m.topic}</p>
+                            </div>
+                        </div>`;
+            }
+
+            html += `<div class="bottom-actions">
+                        <button class="btn-small btn-primary-small">${m.btns[0]}</button>
+                        <button class="btn-small">${m.btns[1]}</button>
+                    </div>`;
+
+            html += `</div>`;
+            viewport.innerHTML = html;
+        }
+
+        window.onload = () => loadModule('Vocabulary', document.querySelector('.nav-item'));
+    </script>
+</body>
+
+</html>
