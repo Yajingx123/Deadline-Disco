@@ -27,6 +27,7 @@ function dispatch_listening_exam_routes(string $method, string $path): void
         send_error('Not found', 404);
     }
 
+    // All remaining listening exam routes share the same examId/resource pattern.
     $examId = $matches[1];
     $resource = $matches[2];
     $userId = trim(request_query_string('userId', 'demo-user')) ?: 'demo-user';

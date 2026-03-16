@@ -38,6 +38,13 @@ function formatTime(totalSeconds) {
   return `${mm}:${ss}`;
 }
 
+function hasMeaningfulProgress(progress) {
+  if (!progress || progress.exam_status !== "in_progress") return false;
+  if (typeof progress.answered_questions === "number" && progress.answered_questions > 0) return true;
+  const answers = progress.answers;
+  return Boolean(answers && typeof answers === "object" && Object.keys(answers).length > 0);
+}
+
 export default function ExamPage({ exam, mode, onSubmit, onExit }) {
   const [answers, setAnswers] = useState({});
   const audioTimeRef = useRef(0);
@@ -54,6 +61,7 @@ export default function ExamPage({ exam, mode, onSubmit, onExit }) {
     cancelLabel: "Keep Editing"
   });
   const latestProgressRef = useRef(null);
+  const allowProgressPersistenceRef = useRef(true);
 
   useEffect(() => {
     let active = true;
@@ -67,13 +75,16 @@ export default function ExamPage({ exam, mode, onSubmit, onExit }) {
       const savedUpdatedAt = Number(saved?.updated_at || 0);
       const resultSubmittedAt = Number(existingResult?.submittedAt || 0);
       const shouldResume =
-        saved?.exam_status === "in_progress" &&
+        hasMeaningfulProgress(saved) &&
         (!existingResult || savedUpdatedAt > resultSubmittedAt);
 
       if (shouldResume) {
         setPendingResume(saved);
       } else {
-        if (existingResult && saved?.exam_status === "in_progress") {
+        if (saved && !hasMeaningfulProgress(saved)) {
+          await clearExamProgress(exam.id, mode);
+          if (!active) return;
+        } else if (existingResult && saved?.exam_status === "in_progress") {
           await clearExamProgress(exam.id, mode);
           if (!active) return;
         }
@@ -125,7 +136,12 @@ export default function ExamPage({ exam, mode, onSubmit, onExit }) {
   useEffect(() => {
     if (!loaded) return;
     const saveNow = () => {
+      if (!allowProgressPersistenceRef.current) return;
       if (!latestProgressRef.current) return;
+      if (!hasMeaningfulProgress(latestProgressRef.current)) {
+        clearExamProgress(exam.id, mode);
+        return;
+      }
       saveExamProgress(exam.id, mode, latestProgressRef.current);
     };
 
@@ -182,6 +198,7 @@ export default function ExamPage({ exam, mode, onSubmit, onExit }) {
   const submit = async (force = false) => {
     if (submitting) return;
     if (!force) setShowSubmitConfirm(false);
+    allowProgressPersistenceRef.current = false;
     setSubmitting(true);
     const serverResult = await submitExam(exam.id, mode, answers);
     const result =
@@ -209,6 +226,7 @@ export default function ExamPage({ exam, mode, onSubmit, onExit }) {
       })();
     await saveExamResult(exam.id, result, mode);
     await clearExamProgress(exam.id, mode);
+    latestProgressRef.current = null;
     onSubmit(result, answers);
   };
 

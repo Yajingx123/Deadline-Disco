@@ -26,6 +26,7 @@ require_once __DIR__ . '/../src/Modules/ListeningExam/submit_exam_api.php';
 require_once __DIR__ . '/../src/Modules/ListeningExam/listening_exam_routes.php';
 
 try {
+    // Keep the public entry thin: load dependencies once, then hand off to the module router.
     dispatch_listening_exam_routes(request_method(), request_path());
 } catch (PDOException $e) {
     send_error('Server error: ' . $e->getMessage(), 500);

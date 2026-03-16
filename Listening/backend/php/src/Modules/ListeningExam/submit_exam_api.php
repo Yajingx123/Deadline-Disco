@@ -16,6 +16,7 @@ function api_submit_exam(PDO $db, string $examId, string $userId, string $mode, 
     $perQuestion = [];
     $score = 0;
 
+    // Build the review payload and score in one pass so frontend review can render directly.
     foreach ($questions as $question) {
         $questionId = $question['id'];
         $userAnswer = $answers[$questionId] ?? null;
