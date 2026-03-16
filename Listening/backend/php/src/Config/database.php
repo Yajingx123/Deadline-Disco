@@ -5,7 +5,7 @@ const LISTENING_DB_HOST = '127.0.0.1';
 const LISTENING_DB_PORT = 3306;
 const LISTENING_DB_NAME = 'listening_exam';
 const LISTENING_DB_USER = 'root';
-const LISTENING_DB_PASSWORD = 'JingyuPan@20051026';
+const LISTENING_DB_PASSWORD = '';
 
 function listening_db(): PDO
 {
