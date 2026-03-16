@@ -1,6 +1,14 @@
 CREATE DATABASE IF NOT EXISTS listening_exam DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE listening_exam;
 
+CREATE TABLE IF NOT EXISTS `user` (
+  `user_id` INT PRIMARY KEY AUTO_INCREMENT COMMENT 'User primary key',
+  `username` VARCHAR(50) NOT NULL UNIQUE COMMENT 'Username',
+  `password` VARCHAR(255) NOT NULL COMMENT 'Password value',
+  `email` VARCHAR(100) UNIQUE NULL COMMENT 'User email',
+  `create_time` DATETIME DEFAULT NOW() COMMENT 'Created time'
+) COMMENT = 'User account table';
+
 CREATE TABLE IF NOT EXISTS exams (
   id VARCHAR(64) PRIMARY KEY,
   title VARCHAR(255) NOT NULL,

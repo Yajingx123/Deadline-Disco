@@ -2,12 +2,16 @@ import { useEffect, useState } from "react";
 import ExamCard from "../components/ExamCard";
 import { loadExamStatuses } from "../services/listeningExamStorage";
 
-export default function ExamList({ exams, onStart }) {
+export default function ExamList({ exams, onStart, currentUser }) {
   const [statusMap, setStatusMap] = useState({});
 
   useEffect(() => {
+    if (!currentUser) return;
     let active = true;
-    Promise.all([loadExamStatuses(exams, "practice"), loadExamStatuses(exams, "exam")]).then(
+    Promise.all([
+      loadExamStatuses(exams, "practice", currentUser),
+      loadExamStatuses(exams, "exam", currentUser)
+    ]).then(
       ([practiceStatuses, examStatuses]) => {
         if (!active) return;
         const merged = {};
@@ -24,7 +28,7 @@ export default function ExamList({ exams, onStart }) {
     return () => {
       active = false;
     };
-  }, [exams]);
+  }, [exams, currentUser]);
 
   return (
     <section>
@@ -34,6 +38,7 @@ export default function ExamList({ exams, onStart }) {
           <p>Choose a test to begin practice, with progress save and recovery.</p>
         </div>
         <div className="materials-tags">
+          <span className="chip">{currentUser}</span>
           <span className="chip">Listening Drill</span>
           <span className="chip">Exam Mode</span>
         </div>

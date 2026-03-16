@@ -1,6 +1,17 @@
 import { HOME_MODULES } from "../home/homeData";
 
-export default function SiteNav({ activeModule, currentSection, onSelectModule, onAction }) {
+function initialsForUser(username) {
+  const name = username || "NA";
+  return name.slice(0, 2).toUpperCase();
+}
+
+export default function SiteNav({
+  activeModule,
+  currentSection,
+  currentUser,
+  onSelectModule,
+  onAction
+}) {
   return (
     <header className="site-nav-wrap">
       <nav className="site-nav">
@@ -32,8 +43,8 @@ export default function SiteNav({ activeModule, currentSection, onSelectModule, 
           ))}
         </div>
         <div className="user-section">
-          <span className="nav-user-name">ALEX RIVERA</span>
-          <div className="avatar">AR</div>
+          <span className="nav-user-name">{currentUser}</span>
+          <div className="avatar">{initialsForUser(currentUser)}</div>
         </div>
       </nav>
     </header>

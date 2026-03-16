@@ -8,6 +8,8 @@ import ExamPage from "../modules/listening-exam/pages/ExamPage";
 import ReviewPage from "../modules/listening-exam/pages/ReviewPage";
 import { loadExams } from "../modules/listening-exam/services/listeningExamApi";
 
+const CURRENT_USERNAME = "user1";
+
 export default function App() {
   const [section, setSection] = useState("home");
   const [activeModule, setActiveModule] = useState("Vocabulary");
@@ -79,6 +81,7 @@ export default function App() {
         <SiteNav
           activeModule={activeModule}
           currentSection={section}
+          currentUser={CURRENT_USERNAME}
           onSelectModule={handleSelectModule}
           onAction={handleModuleAction}
         />
@@ -89,12 +92,15 @@ export default function App() {
       ) : (
         <div className={fullscreenExam ? "materials-page-shell fullscreen-materials" : "materials-page-shell"}>
           <section className="materials-page-body">
-            {view === "list" ? <ExamListPage exams={exams} onStart={openModeSelection} /> : null}
+            {view === "list" ? (
+              <ExamListPage exams={exams} onStart={openModeSelection} currentUser={CURRENT_USERNAME} />
+            ) : null}
             {view === "list" && loading ? <p>Loading exams...</p> : null}
             {view === "exam" && selectedExam ? (
               <ExamPage
                 exam={selectedExam}
                 mode={mode}
+                currentUser={CURRENT_USERNAME}
                 onExit={() => setView("list")}
                 onSubmit={(nextResult) => {
                   setResult(nextResult);

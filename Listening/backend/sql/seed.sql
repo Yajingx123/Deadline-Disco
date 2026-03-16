@@ -1,5 +1,12 @@
 USE listening_exam;
 
+TRUNCATE TABLE `user`;
+
+INSERT INTO `user` (username, password, email)
+VALUES
+('user1', '123456', 'user1@example.com'),
+('user2', '654321', 'user2@example.com');
+
 DELETE FROM questions WHERE exam_id IN ('exam-1', '1');
 DELETE FROM exams WHERE id IN ('exam-1', '1');
 

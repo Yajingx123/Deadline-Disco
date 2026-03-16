@@ -5,6 +5,10 @@ function dispatch_listening_exam_routes(string $method, string $path): void
 {
     $db = listening_db();
 
+    if ($method === 'GET' && $path === '/api/users') {
+        api_list_users($db);
+    }
+
     if ($method === 'GET' && $path === '/api/health') {
         api_health_check();
     }

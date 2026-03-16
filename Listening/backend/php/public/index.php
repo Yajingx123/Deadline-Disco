@@ -23,6 +23,7 @@ require_once __DIR__ . '/../src/Modules/ListeningExam/status_api.php';
 require_once __DIR__ . '/../src/Modules/ListeningExam/progress_api.php';
 require_once __DIR__ . '/../src/Modules/ListeningExam/result_api.php';
 require_once __DIR__ . '/../src/Modules/ListeningExam/submit_exam_api.php';
+require_once __DIR__ . '/../src/Modules/ListeningExam/user_api.php';
 require_once __DIR__ . '/../src/Modules/ListeningExam/listening_exam_routes.php';
 
 try {

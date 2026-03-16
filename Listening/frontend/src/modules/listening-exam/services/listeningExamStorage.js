@@ -1,8 +1,6 @@
 const API_BASE = import.meta.env?.VITE_API_BASE_URL || "http://localhost:8000";
-const USER_ID = "demo-user";
-const userIdForMode = (mode) => `${USER_ID}_${mode}`;
 
-async function callApi(path, init = {}, userId = USER_ID) {
+async function callApi(path, init = {}, userId) {
   const url = `${API_BASE}${path}${path.includes("?") ? "&" : "?"}userId=${encodeURIComponent(userId)}`;
   const response = await fetch(url, {
     headers: { "Content-Type": "application/json" },
@@ -12,55 +10,55 @@ async function callApi(path, init = {}, userId = USER_ID) {
   return response.status === 204 ? null : response.json();
 }
 
-export async function loadExamProgress(examId, mode) {
+export async function loadExamProgress(examId, mode, userId) {
   const data = await callApi(
     `/api/exams/${examId}/progress?mode=${encodeURIComponent(mode)}`,
     {},
-    userIdForMode(mode)
+    userId
   );
   return data?.progress || null;
 }
 
-export async function saveExamProgress(examId, mode, payload) {
+export async function saveExamProgress(examId, mode, payload, userId) {
   await callApi(
     `/api/exams/${examId}/progress?mode=${encodeURIComponent(mode)}`,
     {
       method: "PUT",
       body: JSON.stringify(payload)
     },
-    userIdForMode(mode)
+    userId
   );
 }
 
-export async function clearExamProgress(examId, mode) {
+export async function clearExamProgress(examId, mode, userId) {
   await callApi(
     `/api/exams/${examId}/progress?mode=${encodeURIComponent(mode)}`,
     { method: "DELETE" },
-    userIdForMode(mode)
+    userId
   );
 }
 
-export async function loadExamResult(examId, mode) {
+export async function loadExamResult(examId, mode, userId) {
   const data = await callApi(
     `/api/exams/${examId}/result?mode=${encodeURIComponent(mode)}`,
     {},
-    userIdForMode(mode)
+    userId
   );
   return data?.result || null;
 }
 
-export async function saveExamResult(examId, payload, mode) {
+export async function saveExamResult(examId, payload, mode, userId) {
   await callApi(
     `/api/exams/${examId}/result?mode=${encodeURIComponent(mode)}`,
     {
       method: "PUT",
       body: JSON.stringify(payload)
     },
-    userIdForMode(mode)
+    userId
   );
 }
 
-export async function submitExam(examId, mode, answers) {
+export async function submitExam(examId, mode, answers, userId) {
   const payload = { mode, answers };
   const data = await callApi(
     `/api/exams/${examId}/submit?mode=${encodeURIComponent(mode)}`,
@@ -68,16 +66,16 @@ export async function submitExam(examId, mode, answers) {
       method: "POST",
       body: JSON.stringify(payload)
     },
-    userIdForMode(mode)
+    userId
   );
   return data?.result || null;
 }
 
-export async function loadExamStatuses(exams, mode = "exam") {
+export async function loadExamStatuses(exams, mode = "exam", userId) {
   const data = await callApi(
     `/api/exam-status?mode=${encodeURIComponent(mode)}`,
     {},
-    userIdForMode(mode)
+    userId
   );
   return data?.statuses || {};
 }
