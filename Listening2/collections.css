@@ -1,0 +1,167 @@
+
+
+/* 测试卡片容器 - 横向多列排列 */
+.test-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    padding: 10px 0;
+}
+
+/* 测试卡片 */
+.test-card {
+    border: 1px solid #E4DFD8;
+    border-radius: 8px;
+    padding: 20px;
+    background: white;
+    transition: all 0.2s ease;
+}
+
+.test-card:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+/* 卡片头部 */
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+}
+
+.card-title {
+    color: #3A4E6B;
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.play-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #9BB7D4;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.play-icon:hover {
+    background: #3A4E6B;
+}
+
+/* 卡片详情 */
+.card-details {
+    margin-bottom: 15px;
+}
+
+.detail-item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    color: #3A4E6B;
+    margin-bottom: 8px;
+}
+
+.detail-label {
+    font-weight: 500;
+}
+
+/* 进度条 */
+.progress-bar {
+    width: 100%;
+    height: 6px;
+    background: #E4DFD8;
+    border-radius: 3px;
+    margin: 10px 0;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #9BB7D4;
+    border-radius: 3px;
+}
+
+/* 状态 */
+.status {
+    font-size: 14px;
+    font-weight: 500;
+    margin: 10px 0;
+}
+
+.status.completed {
+    color: #4CAF50;
+}
+
+.status.not-started {
+    color: #9E9E9E;
+}
+
+/* 按钮布局：两行样式 */
+.card-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 10px;
+}
+.button-row {
+    display: flex;
+    gap: 8px;
+}
+.button-row button {
+    flex: 1;
+}
+
+/* 开始练习按钮 */
+.start-button {
+    padding: 10px;
+    border: 1px solid #9BB7D4;
+    border-radius: 4px;
+    background: #9BB7D4;
+    color: white;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.start-button:hover {
+    background: #3A4E6B;
+    border-color: #3A4E6B;
+}
+
+.listening-btn {
+    padding: 10px 15px;
+    background-color: #9BB7D4;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.listening-btn:hover {
+    background-color: #3A4E6B;
+}
+
+.remove-button {
+    padding: 10px 15px;
+    background-color: white;
+    color: #3A4E6B;
+    border: 2px solid #9BB7D4;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.remove-button:hover {
+    background-color: #9BB7D4;
+    color: #fff;
+}
+

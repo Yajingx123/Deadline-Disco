@@ -1,0 +1,182 @@
+        /* 互动听力页面样式 */
+        .listening-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 200px 0 50px 0;
+            gap: 30px;
+        }
+        /* 耳机容器 */
+        .headphone-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        /* 耳机图标 */
+        .headphone-icon {
+            color: #9BB7D4; /* Haze Blue */
+            z-index: 2;
+        }
+        .headphone-icon svg {
+            width: 64px;
+            height: 64px;
+        }
+        /* 扩散圆环 */
+        .ripple-ring {
+            position: absolute;
+            border: 2px solid #9BB7D4; /* Haze Blue */
+            border-radius: 50%;
+            animation: ripple-animation 3s infinite;
+        }
+        .ripple-ring:nth-child(2) {
+            width: 70px;
+            height: 70px;
+            animation-delay: 0s;
+        }
+        .ripple-ring:nth-child(3) {
+            width: 70px;
+            height: 70px;
+            animation-delay: 1s;
+        }
+        .ripple-ring:nth-child(4) {
+            width: 70px;
+            height: 70px;
+            animation-delay: 2s;
+        }
+        @keyframes ripple-animation {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(2.5);
+                opacity: 0;
+            }
+        }
+        /* 状态选择文字 */
+        .status-text {
+            font-size: 18px;
+            color: #3A4E6B; /* Midnight Navy */
+            font-weight: 500;
+            text-align: center;
+        }
+        /* 状态选择按钮 */
+        .status-buttons {
+            display: flex;
+            gap: 200px;
+            margin: 100px 0 50px 0;
+        }
+        .status-btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 150px;
+            justify-content: center;
+        }
+        .status-btn.not-understood {
+            background-color: #9BB7D4;
+            color: white;
+        }
+
+        .status-btn.understood {
+            background-color: #9BB7D4; /* Haze Blue */
+            color: white;
+        }
+        .status-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #9BB7D4; /* Haze Blue */
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+            float: right;
+            margin-left: 20px;
+            margin-top: 5px;
+        }
+        .back-button:hover {
+            background-color: #7ca0b5; /* Darker shade of Haze Blue */
+        }
+        .btn-icon {
+            font-size: 18px;
+        }
+        /* 文章理解进度条 */
+        .progress-wrapper {
+            width: 100%;
+            margin: 20px 0;
+        }
+        .progress-label {
+            font-size: 14px;
+            color: #3A4E6B;
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .overall-progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #e6ebf0;
+            border-radius: 5px;
+            display: flex;
+            overflow: hidden;
+        }
+        .progress-segment {
+            height: 100%;
+            transition: width 0.3s ease, background-color 0.3s ease;
+        }
+        .progress-understood { background: #4285F4; }
+        .progress-not-understood { background: #9BB7D4; }
+        .progress-skipped { background: #9AA0A6; }
+        .progress-segment.current {
+            border: 1px solid #fff;
+            box-sizing: border-box;
+        }
+        /* 保存按钮样式 */
+        .save-btn {
+            background: #3A4E6B;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .save-btn:hover { background: #2a3d5b; }
+        /* 播放器容器 */
+        .player-container {
+            width: 100%;
+            max-width: 600px;
+            margin-top: 0px;
+        }
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .status-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            .status-btn {
+                width: 200px;
+            }
+            .player-container {
+                max-width: 100%;
+            }
+        }

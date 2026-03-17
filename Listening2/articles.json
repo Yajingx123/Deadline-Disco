@@ -1,0 +1,34 @@
+[
+    {
+        "title": "Daily Life in the UK",
+        "duration": "3:45",
+        "difficulty": "Easy",
+        "description": "Learn about daily routines and customs in the United Kingdom, including breakfast habits, transportation, and leisure activities.",
+        "tags": ["Daily Life", "UK Culture", "Beginner"],
+        "author": "By: Emma Thompson"
+    },
+    {
+        "title": "Business Meeting Essentials",
+        "duration": "5:20",
+        "difficulty": "Medium",
+        "description": "Learn key phrases and etiquette for business meetings in English, including introductions, presentations, and decision-making.",
+        "tags": ["Business", "Meetings", "Intermediate"],
+        "author": "By: John Smith"
+    },
+    {
+        "title": "Environmental Conservation",
+        "duration": "4:15",
+        "difficulty": "Medium",
+        "description": "Explore topics related to environmental conservation, including renewable energy, recycling, and sustainable living practices.",
+        "tags": ["Environment", "Science", "Intermediate"],
+        "author": "By: Sarah Johnson"
+    },
+    {
+        "title": "Advanced Academic Vocabulary",
+        "duration": "6:30",
+        "difficulty": "Hard",
+        "description": "Learn advanced academic vocabulary and expressions commonly used in university settings and research papers.",
+        "tags": ["Academic", "Vocabulary", "Advanced"],
+        "author": "By: Professor Robert Davis"
+    }
+]

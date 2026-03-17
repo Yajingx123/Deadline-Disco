@@ -55,6 +55,13 @@ export default function App() {
       return;
     }
 
+    if (moduleName === "Listening" && actionLabel === "Audio Stream") {
+
+      window.location.href = "http://127.0.0.1:5500/Listening2/collections.html"; 
+
+      return;
+    }
+
     if (HOME_MODULES[moduleName]) {
       setActiveModule(moduleName);
     }

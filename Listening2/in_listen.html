@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inclusive Listening - ACADBEAT</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="in_listen.css">
+    <script src="./sentence-player.js" defer></script>
+
+</head>
+<body>
+    <!-- 顶栏 -->
+    <div class="top-bar">
+        <a href="collections.html" class="logo">ACADBEAT</a>
+        <div class="top-right">
+            <span>🔔</span>
+            <span>⚙️</span>
+            <span>👤</span>
+        </div>
+    </div>
+
+    <!-- 主容器 -->
+    <div class="main-container">
+        <!-- 侧边栏 -->
+        <div class="sidebar">
+            <ul class="sidebar-links">
+                <li><a href="collections.html" class="active">collections</a></li>
+                <li><a href="community.html">Community</a></li>
+                <li><a href="player.html">Player</a></li>
+               
+            </ul>
+        </div>
+
+        <!-- 互动听力页面内容 -->
+        <div class="content-container">
+            <div class="content-area">
+                <div class="page-title">
+                    <span>In_Listening - Interactive Listening</span>
+                    <a href="collections.html" class="back-button">← Back to Collections</a>
+                </div>
+                <div class="listening-content">
+                    <!-- 耳机图标 -->
+                    <div class="headphone-container">
+                        <div class="headphone-icon">
+                            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M3 18v-6a9 9 0 0 1 18 0v6"></path>
+                                <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z"></path>
+                            </svg>
+                        </div>
+                        <div class="ripple-ring"></div>
+                        <div class="ripple-ring"></div>
+                        <div class="ripple-ring"></div>
+                    </div>
+
+                    <!-- 理解进度条 -->
+                    <div class="progress-wrapper">
+                        <div class="progress-label">
+                            <span>Article Comprehension</span>
+                            <span id="progress-text">0 / 0</span>
+                        </div>
+                        <div class="overall-progress-bar" id="progress-bar"></div>
+                    </div>
+
+                    <!-- 状态选择 -->
+                    <div class="status-text">Please select your understanding status</div>
+                    <div class="status-buttons">
+                        <button class="status-btn not-understood" id="btn-not-understand">
+                            <span class="btn-icon">😵</span> Didn't understand
+                        </button>
+                        <button class="status-btn understood" id="btn-understand">
+                            <span class="btn-icon">😊</span> Understood
+                        </button>
+                        <button class="save-btn" id="btn-save-progress">
+                             Save Progress to Server
+                        </button>
+                    </div>
+
+                    <!-- 播放器 -->
+                    <div class="player-container">
+                        <sentence-player id="myPlayer"></sentence-player>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 全局变量
+        let audioId = null, sentences = [], player = null, progress = [];
+        const STORAGE_KEY = 'comprehension_', USER_ID = 1;
+
+        // 工具函数
+        const getAudioId = () => new URLSearchParams(location.search).get('audio_id');
+        
+        const loadProgressFromLocal = () => {
+            const data = localStorage.getItem(STORAGE_KEY + audioId);
+            if (data) {
+                try { return JSON.parse(data); }
+                catch (e) { console.error('解析本地进度失败', e); }
+            }
+            return Array(sentences.length).fill(0);
+        };
+
+        const saveProgressToLocal = () => {
+            localStorage.setItem(STORAGE_KEY + audioId, JSON.stringify(progress));
+        };
+
+        const calculateOverallProgress = () => {
+            if (!sentences.length) return 0;
+            const doneCount = progress.filter(s => s === 1 || s === 2).length;
+            return Math.round((doneCount / sentences.length) * 100);
+        };
+
+        const getCompletionStatus = () => {
+            const doneCount = progress.filter(s => s === 1 || s === 2).length;
+            if (doneCount === 0) return 'Not Started';
+            return doneCount === sentences.length ? 'completed' : 'in_progress';
+        };
+
+        // 后端接口 - 获取进度（改为GET请求）
+        const loadProgressFromServer = async () => {
+            if (!audioId) return loadProgressFromLocal();
+            
+
+            try {
+                // GET请求：参数拼接到URL，方法改为GET
+                const response = await fetch(`http://127.0.0.1:8000/api/audio/progress?user_id=${USER_ID}&audio_id=${parseInt(audioId)}`);
+
+                // 容错处理：先读文本再解析JSON
+                const responseText = await response.text();
+
+                  
+                if (!responseText.trim()) {
+                    console.log('服务器返回空，使用本地进度');
+                    return loadProgressFromLocal();
+                }
+
+                const result = JSON.parse(responseText);
+                
+                if (result.code === 0 && result.data?.progress_data) {
+                    const serverProgress = Array.isArray(result.data.progress_data) 
+                        ? result.data.progress_data 
+                        : JSON.parse(result.data.progress_data || '[]');
+                    return serverProgress.length === sentences.length ? serverProgress : loadProgressFromLocal();
+                }
+            } catch (error) {
+                console.error('加载服务器进度失败，使用本地进度：', error);
+            }
+            return loadProgressFromLocal();
+        };
+
+        // 后端接口 - 保存进度（保留POST请求）
+        const saveProgressToServer = async () => {
+            if (!audioId || !sentences.length) {
+                alert('No audio data to save!');
+                return;
+            }
+
+            const postData = {
+                action: 'update_audio_progress',
+                user_id: USER_ID,
+                audio_id: parseInt(audioId),
+                progress_percent: calculateOverallProgress(),
+                current_index: player.currentSentenceIndex,
+                progress_data: JSON.stringify(progress),
+                status: getCompletionStatus()
+            };
+
+            try {
+                const response = await fetch('./api/index.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: new URLSearchParams(postData)
+                });
+                
+                // 容错处理
+                const responseText = await response.text();
+                if (!responseText.trim()) {
+                    alert('Save failed: Empty response from server');
+                    return;
+                }
+
+                const result = JSON.parse(responseText);
+                
+                if (result.code === 0) {
+                    alert('Progress saved successfully!');
+                    saveProgressToLocal();
+                } else {
+                    alert('Save failed: ' + (result.msg || 'Unknown error'));
+                }
+            } catch (error) {
+                alert('Network error: ' + error.message);
+                console.error('保存失败：', error);
+            }
+        };
+
+        // 渲染进度条
+        const renderProgressBar = () => {
+            const bar = document.getElementById('progress-bar');
+            const text = document.getElementById('progress-text');
+            bar.innerHTML = '';
+
+            if (!sentences.length) return;
+            
+            const doneCount = progress.filter(s => s !== 0).length;
+            text.textContent = `${doneCount} / ${sentences.length}`;
+            
+            const segmentWidth = 100 / sentences.length;
+            const currentIndex = player.currentSentenceIndex;
+
+            progress.forEach((status, index) => {
+                const segment = document.createElement('div');
+                segment.style.width = `${segmentWidth}%`;
+                segment.className = 'progress-segment' + (index === currentIndex ? ' current' : '');
+                
+                if (status === 1) segment.classList.add('progress-understood');
+                else if (status === 2) segment.classList.add('progress-not-understood');
+                else if (status === 3) segment.classList.add('progress-skipped');
+
+                bar.appendChild(segment);
+            });
+        };
+
+        // 标记当前句子状态
+        const markCurrent = (status) => {
+            progress[player.currentSentenceIndex] = status;
+            saveProgressToLocal();
+            renderProgressBar();
+
+            const nextBtn = player.querySelector('.sentence-next-btn');
+            if (nextBtn && player.currentSentenceIndex < sentences.length - 1) {
+                nextBtn.click();
+            }
+        };
+
+        // 监听播放器按钮
+        const watchPlayerButtons = () => {
+            // 下一句按钮
+            const nextBtn = player.querySelector('.sentence-next-btn');
+            if (nextBtn) {
+                nextBtn.addEventListener('click', () => {
+                    const idx = player.currentSentenceIndex;
+                    if (progress[idx] === 0) {
+                        progress[idx] = 3;
+                        saveProgressToLocal();
+                    }
+                    renderProgressBar();
+                });
+            }
+
+            // 上一句/播放按钮
+            const prevBtn = player.querySelector('.sentence-prev-btn');
+            const playBtn = player.querySelector('.sentence-play-btn');
+            
+            if (prevBtn) prevBtn.addEventListener('click', renderProgressBar);
+            if (playBtn) playBtn.addEventListener('click', renderProgressBar);
+        };
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', async () => {
+            audioId = getAudioId();
+            player = document.getElementById('myPlayer');
+
+            if (!audioId) {
+                alert('No audio ID provided!');
+                return;
+            }
+
+            try {
+                // 加载句子数据
+                const jsonRes = await fetch(`./listening/${audioId}.json`);
+                sentences = await jsonRes.json();
+
+                // 加载服务器进度
+                progress = await loadProgressFromServer();
+                
+                // 初始化播放器
+                player.setAttribute('audio-src', `./listening/${audioId}.mp3`);
+                player.setAttribute('sentences', JSON.stringify(sentences));
+
+                // 绑定事件
+                renderProgressBar();
+                watchPlayerButtons();
+                document.getElementById('btn-understand').onclick = () => markCurrent(1);
+                document.getElementById('btn-not-understand').onclick = () => markCurrent(2);
+                document.getElementById('btn-save-progress').onclick = saveProgressToServer;
+
+                // 定时刷新进度条
+                setInterval(renderProgressBar, 500);
+            } catch (err) {
+                alert(`加载音频/字幕失败：${err.message}`);
+                console.error('初始化失败：', err);
+            }
+        });
+    </script>
+</body>
+</html>

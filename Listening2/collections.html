@@ -1,0 +1,222 @@
+<!--
+ * @Author: yzp 488361078@qq.com
+ * @Date: 2026-03-12 19:46:31
+ * @LastEditors: yzp 488361078@qq.com
+ * @LastEditTime: 2026-03-17 16:52:25
+ * @FilePath: \listening\collections.html
+ * @Description: This is the default setting, please set `customMade`, open koroFileHeader to view configuration.
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Collections - ACADBEAT</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="collections.css">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <!-- <script src="./audio-player.js" defer></script> -->
+    <style>
+        /* 按钮两行布局 */
+        .card-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .button-row {
+            display: flex;
+            gap: 8px;
+        }
+        .button-row button {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="top-bar">
+            <a href="collections.html" class="logo">ACADBEAT</a>
+            <div class="top-right">
+                <span>🔔</span>
+                <span>⚙️</span>
+                <span>👤</span>
+            </div>
+        </div>
+
+        <div class="main-container">
+            <div class="sidebar">
+                <ul class="sidebar-links">
+                    <li><a href="collections.html" class="active">Collections</a></li>
+                    <li><a href="community.html">Community</a></li>
+                    <li><a href="player.html">Player</a></li>
+
+                </ul>
+            </div>
+
+            <div class="content-container">
+                <div class="content-area">
+                    <div class="page-title">
+                        <span>Collections - Listening</span>
+                        <div class="mode-buttons">
+                            <button class="mode-button active">Listening Drill</button>
+                        </div>
+                    </div>
+                    
+                    <div class="test-cards">
+                        <div v-if="loading" class="loading">Loading...</div>
+                        <div v-else-if="error" class="error">
+                            {{ error }}
+                        </div>
+                        <div v-else-if="!collections || collections.length === 0" class="no-data">
+                            No audio materials in your collection yet
+                        </div>
+                        <material-card 
+                            v-for="material in collections" 
+                            :key="material.audio_id || material.id" 
+                            :material="material"
+                            @start-practice="startPractice"
+                            @remove-collection="removeCollection"
+                        ></material-card>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <template id="material-card-template">
+        <div class="test-card">
+            <div class="card-header">
+                <h3 class="card-title">{{ material.title || material.name || `Audio ${material.audio_id || material.id}` }}</h3>
+                <div class="play-icon">▶</div>
+            </div>
+            <div class="card-details">
+                <div class="detail-item">
+                    <span class="detail-label">Audio length:</span>
+                    <span>{{ material.duration || 'Unknown duration' }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Difficulty:</span>
+                    <span>{{ material.difficulty || 'Medium' }}</span>
+                </div>
+                <div class="detail-item">
+                    <span class="detail-label">Current Index:</span>
+                    <span>{{ material.current_index || 'Not tested' }}</span>
+                </div>
+                 <div class="detail-item">
+                    <span class="detail-label">Percent:</span>
+                    <span>{{ material.progress_percent + "%" || 'Not tested' }}</span>
+                </div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" :style="{ width: (material.progress_percent || 0) + '%' }"></div>
+            </div>
+            <div class="status" :class="material.status ? material.status.toLowerCase() : 'not-started'">
+                Status: {{ material.status || 'Not Started' }}
+            </div>
+
+            <!-- 按钮布局：两行 -->
+            <div class="card-buttons">
+                <div class="button-row">
+                    <button class="start-button" @click="onStartPractice">Start</button>
+                    <button class="remove-button" @click="onRemoveFromCollection">Remove</button>
+                </div>
+                <button class="listening-btn" @click="goToInclusiveListen(material.audio_id || material.id)">Inclusive Listening</button>
+            </div>
+        </div>
+    </template>
+
+    <script>
+        const { createApp, ref, onMounted } = Vue;
+        
+        const MaterialCard = {
+            template: '#material-card-template',
+            props: ['material'],
+            emits: ['start-practice', 'remove-collection'],
+            methods: {
+                onStartPractice() {
+                    this.$emit('start-practice', this.material.audio_id || this.material.id);
+                },
+                onRemoveFromCollection() {
+                    this.$emit('remove-collection', this.material.audio_id || this.material.id);
+                },
+                goToInclusiveListen(audioId) {
+                    window.location.href = `in_listen.html?audio_id=${audioId}`;
+                }
+            }
+        };
+        
+        const App = {
+            components: { MaterialCard },
+            setup() {
+                const collections = ref([]);
+                const loading = ref(true);
+                const error = ref(null);
+                const userId = 1;
+
+                // 加载收藏列表
+                const loadcollections = async () => {
+                    try {
+                        loading.value = true;
+                        error.value = null;
+                        const response = await fetch(`http://localhost:8000/api/audio/collection?user_id=${userId}`);
+                        const data = await response.json();
+                        if (data.code === 0) {
+                            collections.value = data.data;
+                        } else {
+                            error.value = data.msg || 'Failed to fetch data';
+                        }
+                    } catch (err) {
+                        error.value = 'Network error: ' + err.message;
+                    } finally {
+                        loading.value = false;
+                    }
+                };
+
+                // 开始练习
+                const startPractice = (audioId) => {
+                    window.location.href = `player.html?audio_id=${audioId}`;
+                };
+
+               // 取消收藏（修复后：不显示 loading）
+                const removeCollection = async (audioId) => {
+                if (!confirm('Remove from collection?')) return;
+
+                try {
+                const res = await fetch(`http://127.0.0.1:8000/api/audio/collection/cancel?user_id=${userId}&audio_id=${audioId}`);
+                const data = await res.json();
+
+                if (data.code === 0) {
+                    alert('Removed successfully');
+                    
+                    // 👇 这里不直接调用 loadcollections()，而是手动删除本地数据
+                    collections.value = collections.value.filter(item => 
+                    item.audio_id !== audioId
+                    );
+                    
+                } else {
+                    alert(data.msg || 'Failed to remove');
+                }
+                } catch (err) {
+                alert('Network error');
+                }
+                };
+
+                onMounted(() => {
+                    loadcollections();
+                });
+                
+                return {
+                    collections,
+                    loading,
+                    error,
+                    startPractice,
+                    removeCollection
+                };
+            }
+        };
+        
+        createApp(App).mount('#app');
+    </script>
+</body>
+</html>
