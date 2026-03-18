@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS listening_exam DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE listening_exam;
+CREATE DATABASE IF NOT EXISTS my_test_schema DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE my_test_schema;
 
 CREATE TABLE IF NOT EXISTS `user` (
   `user_id` INT PRIMARY KEY AUTO_INCREMENT COMMENT 'User primary key',
