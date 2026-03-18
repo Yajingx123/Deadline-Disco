@@ -1,15 +1,19 @@
--- 查询 user 表的所有列和所有数据
--- 音频信息表（适配你的 JSON 数据）
-CREATE TABLE IF NOT EXISTS `audio` (
-    `audio_id` INT PRIMARY KEY AUTO_INCREMENT COMMENT '音频唯一标识（自增主键）',
-    `title` VARCHAR(100) NOT NULL COMMENT '音频标题（如 Daily Life in the UK）',
-    `duration` VARCHAR(10) NOT NULL COMMENT '音频时长（格式：分:秒，如 3:45）',
-    `difficulty` VARCHAR(10) NOT NULL COMMENT '难度等级（Easy/Medium/Hard）',
-    `description` TEXT COMMENT '音频描述（长文本）',
-    `tags` VARCHAR(255) COMMENT '标签集合（用逗号分隔，如 Daily Life,UK Culture,Beginner）',
-    `author` VARCHAR(50) COMMENT '音频作者（如 By: Emma Thompson）',
-    `create_time` DATETIME DEFAULT NOW() COMMENT '数据录入时间（自动填充）'
-) COMMENT = '英语音频学习信息表';
+-- auto-generated definition
+create table intensive_listening_audio
+(
+    audio_id       int auto_increment comment '音频唯一标识（自增主键）'
+        primary key,
+    title          varchar(100)                       not null comment '音频标题（如 Daily Life in the UK）',
+    duration       varchar(10)                        not null comment '音频时长（格式：分:秒，如 3:45）',
+    difficulty     varchar(10)                        not null comment '难度等级（Easy/Medium/Hard）',
+    description    text                               null comment '音频描述（长文本）',
+    tags           varchar(255)                       null comment '标签集合（用逗号分隔，如 Daily Life,UK Culture,Beginner）',
+    author         varchar(50)                        null comment '音频作者（如 By: Emma Thompson）',
+    create_time    datetime default CURRENT_TIMESTAMP null comment '数据录入时间（自动填充）',
+    path           varchar(255)                       null comment '存放音频字幕文件路径',
+    sentence_count int                                not null
+)
+    comment '英语音频学习信息表';
 
 INSERT INTO `intensive_listening_audio`
     (`title`, `duration`, `difficulty`, `description`, `tags`, `author`, `path`, `sentence_count`)
