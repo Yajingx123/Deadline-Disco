@@ -66,8 +66,14 @@
         /* 状态选择按钮 */
         .status-buttons {
             display: flex;
-            gap: 200px;
-            margin: 100px 0 50px 0;
+            align-items: center;
+            gap: 10px;
+            justify-content: flex-start; /* 原space-between改为flex-start */
+            margin: 15px 0;
+        }
+        .status-btn-group {
+            display: flex;
+            gap: 10px;
         }
         .status-btn {
             padding: 12px 30px;
@@ -98,15 +104,13 @@
         }
         .back-button {
             display: inline-block;
-            padding: 10px 20px;
+            padding: 8px 16px;
             background-color: #9BB7D4; /* Haze Blue */
             color: white;
             text-decoration: none;
-            border-radius: 5px;
+            border-radius: 4px;
             font-size: 14px;
             transition: background-color 0.3s ease;
-            float: right;
-            margin-left: 20px;
             margin-top: 5px;
         }
         .back-button:hover {
@@ -127,40 +131,91 @@
             display: flex;
             justify-content: space-between;
         }
-        .overall-progress-bar {
-            width: 100%;
-            height: 10px;
-            background: #e6ebf0;
-            border-radius: 5px;
+        /* 新增图例样式 */
+        .progress-legend {
             display: flex;
+            align-items: center;
+            gap: 16px;
+            margin: 10px 0;
+            flex-wrap: wrap;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+        }
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 2px;
+        }
+        /* 调整后的图例颜色（蓝/灰/白系） */
+        .legend-understood {
+            background-color: #9BB7D4; /* 浅蓝 - 已理解 */
+        }
+        .legend-not-understood {
+            background-color: #3A4E6B; /* 深蓝 - 未理解 */
+        }
+        .legend-skipped {
+            background-color: #E4DFD8; /* 浅灰/白 - 跳过 */
+        }
+        .legend-current {
+            border: 2px solid #2196F3; /* 蓝色边框 - 当前句 */
+            background-color: transparent;
+        }
+        
+        /* 页面标题样式调整（用于放置Save按钮） */
+        .page-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .title-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        /* 保存按钮样式（调整为蓝系主色） */
+        .save-btn {
+            padding: 8px 16px;
+            background-color: #9BB7D4; /* 浅蓝主色 */
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .save-btn:hover {
+            background-color: #8aa6c3; /* hover加深 */
+        }
+
+        /* 进度条分段样式（匹配图例颜色） */
+        .overall-progress-bar {
+            display: flex;
+            width: 100%;
+            height: 24px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
             overflow: hidden;
         }
         .progress-segment {
             height: 100%;
-            transition: width 0.3s ease, background-color 0.3s ease;
-        }
-        .progress-understood { background: #4285F4; }
-        .progress-not-understood { background: #9BB7D4; }
-        .progress-skipped { background: #9AA0A6; }
-        .progress-segment.current {
-            border: 1px solid #fff;
             box-sizing: border-box;
         }
-        /* 保存按钮样式 */
-        .save-btn {
-            background: #3A4E6B;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-top: 15px;
-            font-size: 14px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
+        .progress-understood {
+            background-color: #9BB7D4; /* 浅蓝 - 已理解 */
         }
-        .save-btn:hover { background: #2a3d5b; }
+        .progress-not-understood {
+            background-color: #3A4E6B; /* 深蓝 - 未理解 */
+        }
+        .progress-skipped {
+            background-color: #E4DFD8; /* 浅灰/白 - 跳过 */
+        }
+        .progress-segment.current {
+            border: 2px solid #2196F3; /* 蓝色边框 - 当前句 */
+        }
         /* 播放器容器 */
         .player-container {
             width: 100%;

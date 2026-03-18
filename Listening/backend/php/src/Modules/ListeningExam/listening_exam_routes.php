@@ -60,13 +60,13 @@ function dispatch_listening_exam_routes(string $method, string $path): void
     }
 
     // 5. 添加音频收藏（POST）
-    if ($method === 'POST' && $path === '/api/audio/collection/add') {
+    if ($method === 'GET' && $path === '/api/audio/collection/add') {
         addUserAudioCollection($db);
         return;
     }
 
     // 6. 取消音频收藏（POST/DELETE，兼容两种方式）
-    if (($method === 'POST' || $method === 'DELETE') && $path === '/api/audio/collection/cancel') {
+    if (($method === 'GET' || $method === 'DELETE') && $path === '/api/audio/collection/cancel') {
         cancelUserAudioCollection($db);
         return;
     }

@@ -7,40 +7,53 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="in_listen.css">
     <script src="./sentence-player.js" defer></script>
-
+    <style>
+        /* 可选：添加一些基础样式以确保移除侧边栏后内容居中或占满全屏 */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: sans-serif;
+        }
+        .main-container {
+            display: block; /* 移除原本的 flex 布局影响，如果有的话 */
+            width: 100%;
+            height: 100vh;
+        }
+        .content-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .content-area {
+            width: 100%;
+            max-width: 800px; /* 限制最大宽度以保持阅读体验 */
+        }
+    </style>
 </head>
 <body>
-    <!-- 顶栏 -->
-    <div class="top-bar">
-        <a href="collections.html" class="logo">ACADBEAT</a>
-        <div class="top-right">
-            <span>🔔</span>
-            <span>⚙️</span>
-            <span>👤</span>
-        </div>
-    </div>
 
-    <!-- 主容器 -->
+    <!-- Main Container (Sidebar Removed) -->
     <div class="main-container">
-        <!-- 侧边栏 -->
-        <div class="sidebar">
-            <ul class="sidebar-links">
-                <li><a href="collections.html" class="active">collections</a></li>
-                <li><a href="community.html">Community</a></li>
-                <li><a href="player.html">Player</a></li>
-               
-            </ul>
-        </div>
-
-        <!-- 互动听力页面内容 -->
+        <!-- Interactive Listening Page Content -->
         <div class="content-container">
             <div class="content-area">
+                <!-- 页面标题（包含Save按钮） -->
                 <div class="page-title">
-                    <span>In_Listening - Interactive Listening</span>
-                    <a href="collections.html" class="back-button">← Back to Collections</a>
+                    <span>In_Listening - Intensive Listening</span>
+                    <div class="title-right">
+                        <button class="save-btn" id="btn-save-progress">
+                            Save Progress to Server
+                        </button>
+                        <a href="collections.html" class="back-button">← Back to Collections</a>
+                    </div>
                 </div>
+                
                 <div class="listening-content">
-                    <!-- 耳机图标 -->
+                    <!-- Headphone Icon -->
                     <div class="headphone-container">
                         <div class="headphone-icon">
                             <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -53,30 +66,49 @@
                         <div class="ripple-ring"></div>
                     </div>
 
-                    <!-- 理解进度条 -->
+                    <!-- Comprehension Progress Bar -->
                     <div class="progress-wrapper">
                         <div class="progress-label">
                             <span>Article Comprehension</span>
                             <span id="progress-text">0 / 0</span>
                         </div>
                         <div class="overall-progress-bar" id="progress-bar"></div>
+                        
+                        <!-- Progress Bar Legend -->
+                        <div class="progress-legend">
+                            <div class="legend-item">
+                                <div class="legend-color legend-understood"></div>
+                                <span>Understood</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color legend-not-understood"></div>
+                                <span>Didn't Understand</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color legend-skipped"></div>
+                                <span>Skipped</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color legend-current"></div>
+                                <span>Current Sentence</span>
+                            </div>
+                        </div>
                     </div>
 
-                    <!-- 状态选择 -->
+                    <!-- Status Selection -->
                     <div class="status-text">Please select your understanding status</div>
                     <div class="status-buttons">
-                        <button class="status-btn not-understood" id="btn-not-understand">
-                            <span class="btn-icon">😵</span> Didn't understand
-                        </button>
-                        <button class="status-btn understood" id="btn-understand">
-                            <span class="btn-icon">😊</span> Understood
-                        </button>
-                        <button class="save-btn" id="btn-save-progress">
-                             Save Progress to Server
-                        </button>
+                        <div class="status-btn-group">
+                            <button class="status-btn not-understood" id="btn-not-understand">
+                                <span class="btn-icon">😵</span> Didn't understand
+                            </button>
+                            <button class="status-btn understood" id="btn-understand">
+                                <span class="btn-icon">😊</span> Understood
+                            </button>
+                        </div>
                     </div>
 
-                    <!-- 播放器 -->
+                    <!-- Player -->
                     <div class="player-container">
                         <sentence-player id="myPlayer"></sentence-player>
                     </div>
@@ -86,18 +118,18 @@
     </div>
 
     <script>
-        // 全局变量
+        // Global Variables
         let audioId = null, sentences = [], player = null, progress = [];
         const STORAGE_KEY = 'comprehension_', USER_ID = 1;
 
-        // 工具函数
+        // Utility Functions
         const getAudioId = () => new URLSearchParams(location.search).get('audio_id');
         
         const loadProgressFromLocal = () => {
             const data = localStorage.getItem(STORAGE_KEY + audioId);
             if (data) {
                 try { return JSON.parse(data); }
-                catch (e) { console.error('解析本地进度失败', e); }
+                catch (e) { console.error('Failed to parse local progress', e); }
             }
             return Array(sentences.length).fill(0);
         };
@@ -118,21 +150,16 @@
             return doneCount === sentences.length ? 'completed' : 'in_progress';
         };
 
-        // 后端接口 - 获取进度（改为GET请求）
+        // Backend API - Load Progress
         const loadProgressFromServer = async () => {
             if (!audioId) return loadProgressFromLocal();
             
-
             try {
-                // GET请求：参数拼接到URL，方法改为GET
                 const response = await fetch(`http://127.0.0.1:8000/api/audio/progress?user_id=${USER_ID}&audio_id=${parseInt(audioId)}`);
-
-                // 容错处理：先读文本再解析JSON
                 const responseText = await response.text();
-
                   
                 if (!responseText.trim()) {
-                    console.log('服务器返回空，使用本地进度');
+                    console.log('Empty response from server, using local progress');
                     return loadProgressFromLocal();
                 }
 
@@ -145,12 +172,12 @@
                     return serverProgress.length === sentences.length ? serverProgress : loadProgressFromLocal();
                 }
             } catch (error) {
-                console.error('加载服务器进度失败，使用本地进度：', error);
+                console.error('Failed to load server progress, using local progress: ', error);
             }
             return loadProgressFromLocal();
         };
 
-        // 后端接口 - 保存进度（保留POST请求）
+        // Backend API - Save Progress
         const saveProgressToServer = async () => {
             if (!audioId || !sentences.length) {
                 alert('No audio data to save!');
@@ -174,7 +201,6 @@
                     body: new URLSearchParams(postData)
                 });
                 
-                // 容错处理
                 const responseText = await response.text();
                 if (!responseText.trim()) {
                     alert('Save failed: Empty response from server');
@@ -191,11 +217,11 @@
                 }
             } catch (error) {
                 alert('Network error: ' + error.message);
-                console.error('保存失败：', error);
+                console.error('Save failed: ', error);
             }
         };
 
-        // 渲染进度条
+        // Render Progress Bar
         const renderProgressBar = () => {
             const bar = document.getElementById('progress-bar');
             const text = document.getElementById('progress-text');
@@ -222,7 +248,7 @@
             });
         };
 
-        // 标记当前句子状态
+        // Mark Current Sentence Status
         const markCurrent = (status) => {
             progress[player.currentSentenceIndex] = status;
             saveProgressToLocal();
@@ -234,9 +260,8 @@
             }
         };
 
-        // 监听播放器按钮
+        // Monitor Player Buttons
         const watchPlayerButtons = () => {
-            // 下一句按钮
             const nextBtn = player.querySelector('.sentence-next-btn');
             if (nextBtn) {
                 nextBtn.addEventListener('click', () => {
@@ -249,7 +274,6 @@
                 });
             }
 
-            // 上一句/播放按钮
             const prevBtn = player.querySelector('.sentence-prev-btn');
             const playBtn = player.querySelector('.sentence-play-btn');
             
@@ -257,7 +281,7 @@
             if (playBtn) playBtn.addEventListener('click', renderProgressBar);
         };
 
-        // 初始化
+        // Initialization
         document.addEventListener('DOMContentLoaded', async () => {
             audioId = getAudioId();
             player = document.getElementById('myPlayer');
@@ -268,29 +292,24 @@
             }
 
             try {
-                // 加载句子数据
                 const jsonRes = await fetch(`./listening/${audioId}.json`);
                 sentences = await jsonRes.json();
 
-                // 加载服务器进度
                 progress = await loadProgressFromServer();
                 
-                // 初始化播放器
                 player.setAttribute('audio-src', `./listening/${audioId}.mp3`);
                 player.setAttribute('sentences', JSON.stringify(sentences));
 
-                // 绑定事件
                 renderProgressBar();
                 watchPlayerButtons();
                 document.getElementById('btn-understand').onclick = () => markCurrent(1);
                 document.getElementById('btn-not-understand').onclick = () => markCurrent(2);
                 document.getElementById('btn-save-progress').onclick = saveProgressToServer;
 
-                // 定时刷新进度条
                 setInterval(renderProgressBar, 500);
             } catch (err) {
-                alert(`加载音频/字幕失败：${err.message}`);
-                console.error('初始化失败：', err);
+                alert(`Failed to load audio/subtitles: ${err.message}`);
+                console.error('Initialization failed: ', err);
             }
         });
     </script>

@@ -3,98 +3,21 @@
  * @Author: yzp 488361078@qq.com
  * @Date: 2026-03-15 16:15:41
  * @LastEditors: yzp 488361078@qq.com
- * @LastEditTime: 2026-03-17 19:45:00
+ * @LastEditTime: 2026-03-18 14:15:00
  * @FilePath: \listening\api\materials.php
- * @Description: 多接口API文件，支持多种功能
+ * @Description: 音频相关接口函数库（纯函数，无入口逻辑）
  */
 
-// ===================== 全局配置 & 公共头 =====================
-// 1. 统一跨域 + JSON响应头（只写一次，避免函数内重复）
-header("Access-Control-Allow-Origin: *"); 
-header('Content-Type: application/json; charset=utf-8');
-header('Cache-Control: no-cache, no-store, must-revalidate'); // 禁用缓存
-
-// 2. 数据库配置（集中管理）
-$host = 'localhost';
-$user = 'root';
-$password = '123456';
-$dbname = 'my_test_schema';
-
-// 3. 公共函数：参数校验（复用，避免重复代码）
+// 公共函数：参数校验
 function validateIntParam($param, $default = 0) {
     return isset($param) && is_numeric($param) ? intval($param) : $default;
 }
 
-// ===================== 核心业务逻辑 =====================
-// 4. 获取请求动作（兼容GET/POST，适配所有接口）
-$action = $_REQUEST['action'] ?? 'get_audio_list';
-
-try {
-    // 5. 数据库连接（只初始化一次）
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname;charset=utf8mb4", $user, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    
-    // 6. 接口路由（按功能分组，结构清晰）
-    switch ($action) {
-        // 音频基础查询
-        case 'get_audio_list':
-            getAudioList($pdo);
-            break;
-        case 'getDetail':
-            getAudioDetailById($pdo); 
-            break;
-
-        // 收藏相关
-        case 'getMyCollection':       
-            getMyCollection($pdo);
-            break;
-        case 'getAllAudioSimpleCollect': 
-            getAllAudioWithSimpleCollectStatus($pdo);
-            break;
-        case 'add_audio_collection':
-            addUserAudioCollection($pdo);
-            break;
-        case 'cancel_audio_collection':
-            cancelUserAudioCollection($pdo);
-            break;
-
-        // 进度相关
-        case 'update_audio_progress':
-            saveAudioProgress($pdo);
-            break;
-        case 'get_audio_progress':
-            getAudioProgress($pdo);
-            break;
-
-        // 默认处理
-        default:
-            echo json_encode([
-                'code' => -2,
-                'msg' => '未知的操作类型：'.$action
-            ], JSON_UNESCAPED_UNICODE);
-            break;
-    }
-
-} catch(PDOException $e) {
-    // 7. 全局异常捕获（统一格式）
-    echo json_encode([
-        'code' => -1,
-        'msg' => '数据库连接失败：' . $e->getMessage(),
-        'debug' => $e->getCode() // 调试用，生产可删除
-    ], JSON_UNESCAPED_UNICODE);
-} finally {
-    // 8. 确保数据库连接关闭（finally 更规范）
-    $pdo = null;
-}
-
-// ===================== 函数定义（按功能分组） =====================
-
-/**
- * 音频基础查询 - 获取音频列表
- */
+// ===================== 音频基础查询 =====================
 function getAudioList($pdo) {
     try {
-        $sql = "SELECT * FROM audio";
+        // 修正表名：audio → intensive_listening_audio
+        $sql = "SELECT * FROM intensive_listening_audio";
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
         $audioList = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -112,11 +35,7 @@ function getAudioList($pdo) {
     }
 }
 
-/**
- * 音频基础查询 - 根据ID获取详情
- */
 function getAudioDetailById($pdo) {
-    // 复用公共校验函数
     $id = validateIntParam($_GET['id']);
     if ($id <= 0) {
         echo json_encode([
@@ -127,7 +46,8 @@ function getAudioDetailById($pdo) {
     }
 
     try {
-        $sql = "SELECT * FROM audio WHERE audio_id = :audio_id";
+        // 修正表名：audio → intensive_listening_audio
+        $sql = "SELECT * FROM intensive_listening_audio WHERE audio_id = :audio_id";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':audio_id', $id, PDO::PARAM_INT);
         $stmt->execute();
@@ -155,9 +75,7 @@ function getAudioDetailById($pdo) {
     }
 }
 
-/**
- * 收藏相关 - 获取我的收藏列表（带进度）
- */
+// ===================== 收藏相关 =====================
 function getMyCollection($pdo) {
     $user_id = validateIntParam($_GET['user_id']);
     if ($user_id <= 0) {
@@ -177,7 +95,8 @@ function getMyCollection($pdo) {
                 up.status, 
                 up.update_time 
             FROM user_audio_progress up 
-            INNER JOIN audio a ON up.audio_id = a.audio_id 
+            -- 修正表名：audio → intensive_listening_audio
+            INNER JOIN intensive_listening_audio a ON up.audio_id = a.audio_id 
             WHERE up.user_id = :user_id 
             ORDER BY up.update_time DESC
         ";
@@ -202,9 +121,6 @@ function getMyCollection($pdo) {
     }
 }
 
-/**
- * 收藏相关 - 获取所有音频+简易收藏状态
- */
 function getAllAudioWithSimpleCollectStatus($pdo) {
     $user_id = validateIntParam($_GET['user_id']);
     if ($user_id <= 0) {
@@ -221,7 +137,8 @@ function getAllAudioWithSimpleCollectStatus($pdo) {
                 a.*,
                 IF(up.user_id IS NOT NULL, 1, 0) AS is_collected
             FROM 
-                audio a
+                -- 修正表名：audio → intensive_listening_audio
+                intensive_listening_audio a
             LEFT JOIN 
                 user_audio_progress up 
                 ON a.audio_id = up.audio_id 
@@ -251,12 +168,11 @@ function getAllAudioWithSimpleCollectStatus($pdo) {
     }
 }
 
-/**
- * 收藏相关 - 添加音频收藏
- */
+// 收藏音频（GET版本）
 function addUserAudioCollection($pdo) {
-    $userId = validateIntParam($_REQUEST['user_id']);
-    $audioId = validateIntParam($_REQUEST['audio_id']);
+    // 改为从GET参数获取（适配前端URL传参）
+    $userId = validateIntParam($_GET['user_id']);
+    $audioId = validateIntParam($_GET['audio_id']);
     
     if ($userId <= 0 || $audioId <= 0) {
         echo json_encode([
@@ -267,13 +183,38 @@ function addUserAudioCollection($pdo) {
     }
 
     try {
+        // 1. 先获取该音频的句子数量
+        $sentenceCountSql = "SELECT sentence_count FROM intensive_listening_audio WHERE audio_id = ?";
+        $stmt = $pdo->prepare($sentenceCountSql);
+        $stmt->execute([$audioId]);
+        $audio = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$audio || $audio['sentence_count'] <= 0) {
+            echo json_encode([
+                'code' => -1,
+                'msg' => '未找到该音频或句子数量无效'
+            ], JSON_UNESCAPED_UNICODE);
+            return;
+        }
+        
+        $sentenceCount = $audio['sentence_count'];
+        // 生成对应长度的全0数组并转为JSON字符串
+        $progressData = array_fill(0, $sentenceCount, 0);
+        $progressDataJson = json_encode($progressData);
+
+        // 2. 插入或更新进度数据（包含progress_data）
         $sql = "INSERT INTO user_audio_progress 
-                (user_id, audio_id, progress_percent, status) 
-                VALUES (?, ?, 0, 'Not Started')
-                ON DUPLICATE KEY UPDATE update_time = CURRENT_TIMESTAMP";
+                (user_id, audio_id, progress_percent, current_index, progress_data, status) 
+                VALUES (?, ?, 0, 0, ?, 'Not Started')
+                ON DUPLICATE KEY UPDATE 
+                    update_time = CURRENT_TIMESTAMP,
+                    progress_percent = VALUES(progress_percent),
+                    current_index = VALUES(current_index),
+                    progress_data = VALUES(progress_data),
+                    status = VALUES(status)";
         
         $stmt = $pdo->prepare($sql);
-        $stmt->execute([$userId, $audioId]);
+        $stmt->execute([$userId, $audioId, $progressDataJson]);
         
         echo json_encode([
             'code' => 0,
@@ -289,12 +230,11 @@ function addUserAudioCollection($pdo) {
     }
 }
 
-/**
- * 收藏相关 - 取消音频收藏
- */
+// 取消收藏音频（GET版本）
 function cancelUserAudioCollection($pdo) {
-    $userId = validateIntParam($_REQUEST['user_id']);
-    $audioId = validateIntParam($_REQUEST['audio_id']);
+    // 改为从GET参数获取（适配前端URL传参）
+    $userId = validateIntParam($_GET['user_id']);
+    $audioId = validateIntParam($_GET['audio_id']);
     
     if ($userId <= 0 || $audioId <= 0) {
         echo json_encode([
@@ -333,11 +273,8 @@ function cancelUserAudioCollection($pdo) {
     }
 }
 
-/**
- * 进度相关 - 保存/更新音频进度
- */
+// ===================== 进度相关 =====================
 function saveAudioProgress($pdo) {
-    // 统一参数校验
     $userId = validateIntParam($_REQUEST['user_id']);
     $audioId = validateIntParam($_REQUEST['audio_id']);
     $progressPercent = validateIntParam($_REQUEST['progress_percent']);
@@ -345,7 +282,6 @@ function saveAudioProgress($pdo) {
     $progressData = isset($_REQUEST['progress_data']) ? $_REQUEST['progress_data'] : '[]';
     $status = isset($_REQUEST['status']) ? trim($_REQUEST['status']) : 'in_progress';
 
-    // 关键修复：避免重复json_encode（前端已传JSON字符串）
     if (!is_string($progressData)) {
         $progressData = json_encode($progressData, JSON_UNESCAPED_UNICODE);
     }
@@ -380,11 +316,7 @@ function saveAudioProgress($pdo) {
     }
 }
 
-/**
- * 进度相关 - 获取音频进度
- */
 function getAudioProgress($pdo) {
-    // 兼容GET/POST，适配所有调用方式
     $userId = validateIntParam($_REQUEST['user_id'], 1);
     $audioId = validateIntParam($_REQUEST['audio_id']);
 
@@ -404,7 +336,6 @@ function getAudioProgress($pdo) {
                 'data' => []
             ], JSON_UNESCAPED_UNICODE);
         } else {
-            // 容错解析：避免JSON格式错误导致崩溃
             $progress['progress_data'] = json_decode($progress['progress_data'], true) ?: [];
             echo json_encode([
                 'code' => 0,

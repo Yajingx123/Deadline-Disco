@@ -7,6 +7,10 @@ import ExamListPage from "../modules/listening-exam/pages/ExamListPage";
 import ExamPage from "../modules/listening-exam/pages/ExamPage";
 import ReviewPage from "../modules/listening-exam/pages/ReviewPage";
 import { loadExams } from "../modules/listening-exam/services/listeningExamApi";
+import CollectionsPage from "../../../../Intensive_Listening/CollectionsPage";
+import CommunityPage from "../../../../Intensive_Listening/CommunityPage";
+import Player from "../../../../Intensive_Listening/Player";
+// import IntensiveListening from "./IntensiveListening";
 
 const CURRENT_USERNAME = "user1";
 
@@ -56,9 +60,9 @@ export default function App() {
     }
 
     if (moduleName === "Listening" && actionLabel === "Audio Stream") {
-
-      window.location.href = "http://127.0.0.1:5500/Listening2/collections.html"; 
-
+      setActiveModule("Listening");
+      setSection("materials");
+      setView("collections"); 
       return;
     }
 
@@ -66,6 +70,12 @@ export default function App() {
       setActiveModule(moduleName);
     }
     setSection("home");
+  };
+
+
+  const handleSubNav = (target) => {
+    setSection("materials"); // 确保在材料区
+    setView(target);         // 切换 view 状态
   };
 
   const openModeSelection = (exam) => {
@@ -100,10 +110,19 @@ export default function App() {
         <div className={fullscreenExam ? "materials-page-shell fullscreen-materials" : "materials-page-shell"}>
           <section className="materials-page-body">
             {view === "list" ? (
-              <ExamListPage exams={exams} onStart={openModeSelection} currentUser={CURRENT_USERNAME} />
-            ) : null}
-            {view === "list" && loading ? <p>Loading exams...</p> : null}
-            {view === "exam" && selectedExam ? (
+              <>
+                <ExamListPage exams={exams} onStart={openModeSelection} currentUser={CURRENT_USERNAME} />
+                {loading && <p>Loading exams...</p>}
+              </>
+            ) : view === "collections" ? (
+              <CollectionsPage onNavigate={handleSubNav} />
+            ) : view === "player" ? (
+              <Player onNavigate={handleSubNav} />
+            ) : view === "intensivelistening" ? (
+              <IntensiveListening onBackToCollections={() => handleSubNav("collections")} />
+            ) : view === "community" ? (
+              <CommunityPage onNavigate={handleSubNav} />
+            ) : view === "exam" && selectedExam ? (
               <ExamPage
                 exam={selectedExam}
                 mode={mode}
@@ -114,8 +133,7 @@ export default function App() {
                   setView("review");
                 }}
               />
-            ) : null}
-            {view === "review" && selectedExam && result ? (
+            ) : view === "review" && selectedExam && result ? (
               <ReviewPage exam={selectedExam} result={result} onBack={() => setView("list")} />
             ) : null}
           </section>
