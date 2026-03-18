@@ -1,4 +1,4 @@
-USE listening_exam;
+USE my_test_schema;
 
 TRUNCATE TABLE `user`;
 
