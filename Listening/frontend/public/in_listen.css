@@ -1,0 +1,237 @@
+        /* 互动听力页面样式 */
+        .listening-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 200px 0 50px 0;
+            gap: 30px;
+        }
+        /* 耳机容器 */
+        .headphone-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        /* 耳机图标 */
+        .headphone-icon {
+            color: #9BB7D4; /* Haze Blue */
+            z-index: 2;
+        }
+        .headphone-icon svg {
+            width: 64px;
+            height: 64px;
+        }
+        /* 扩散圆环 */
+        .ripple-ring {
+            position: absolute;
+            border: 2px solid #9BB7D4; /* Haze Blue */
+            border-radius: 50%;
+            animation: ripple-animation 3s infinite;
+        }
+        .ripple-ring:nth-child(2) {
+            width: 70px;
+            height: 70px;
+            animation-delay: 0s;
+        }
+        .ripple-ring:nth-child(3) {
+            width: 70px;
+            height: 70px;
+            animation-delay: 1s;
+        }
+        .ripple-ring:nth-child(4) {
+            width: 70px;
+            height: 70px;
+            animation-delay: 2s;
+        }
+        @keyframes ripple-animation {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(2.5);
+                opacity: 0;
+            }
+        }
+        /* 状态选择文字 */
+        .status-text {
+            font-size: 18px;
+            color: #3A4E6B; /* Midnight Navy */
+            font-weight: 500;
+            text-align: center;
+        }
+        /* 状态选择按钮 */
+        .status-buttons {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: flex-start; /* 原space-between改为flex-start */
+            margin: 15px 0;
+        }
+        .status-btn-group {
+            display: flex;
+            gap: 10px;
+        }
+        .status-btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 150px;
+            justify-content: center;
+        }
+        .status-btn.not-understood {
+            background-color: #9BB7D4;
+            color: white;
+        }
+
+        .status-btn.understood {
+            background-color: #9BB7D4; /* Haze Blue */
+            color: white;
+        }
+        .status-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .back-button {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: #9BB7D4; /* Haze Blue */
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+            margin-top: 5px;
+        }
+        .back-button:hover {
+            background-color: #7ca0b5; /* Darker shade of Haze Blue */
+        }
+        .btn-icon {
+            font-size: 18px;
+        }
+        /* 文章理解进度条 */
+        .progress-wrapper {
+            width: 100%;
+            margin: 20px 0;
+        }
+        .progress-label {
+            font-size: 14px;
+            color: #3A4E6B;
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+        }
+        /* 新增图例样式 */
+        .progress-legend {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin: 10px 0;
+            flex-wrap: wrap;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+        }
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 2px;
+        }
+        /* 调整后的图例颜色（蓝/灰/白系） */
+        .legend-understood {
+            background-color: #9BB7D4; /* 浅蓝 - 已理解 */
+        }
+        .legend-not-understood {
+            background-color: #3A4E6B; /* 深蓝 - 未理解 */
+        }
+        .legend-skipped {
+            background-color: #E4DFD8; /* 浅灰/白 - 跳过 */
+        }
+        .legend-current {
+            border: 2px solid #2196F3; /* 蓝色边框 - 当前句 */
+            background-color: transparent;
+        }
+        
+        /* 页面标题样式调整（用于放置Save按钮） */
+        .page-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .title-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        /* 保存按钮样式（调整为蓝系主色） */
+        .save-btn {
+            padding: 8px 16px;
+            background-color: #9BB7D4; /* 浅蓝主色 */
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .save-btn:hover {
+            background-color: #8aa6c3; /* hover加深 */
+        }
+
+        /* 进度条分段样式（匹配图例颜色） */
+        .overall-progress-bar {
+            display: flex;
+            width: 100%;
+            height: 24px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-segment {
+            height: 100%;
+            box-sizing: border-box;
+        }
+        .progress-understood {
+            background-color: #9BB7D4; /* 浅蓝 - 已理解 */
+        }
+        .progress-not-understood {
+            background-color: #3A4E6B; /* 深蓝 - 未理解 */
+        }
+        .progress-skipped {
+            background-color: #E4DFD8; /* 浅灰/白 - 跳过 */
+        }
+        .progress-segment.current {
+            border: 2px solid #2196F3; /* 蓝色边框 - 当前句 */
+        }
+        /* 播放器容器 */
+        .player-container {
+            width: 100%;
+            max-width: 600px;
+            margin-top: 0px;
+        }
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .status-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            .status-btn {
+                width: 200px;
+            }
+            .player-container {
+                max-width: 100%;
+            }
+        }
