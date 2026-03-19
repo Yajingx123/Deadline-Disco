@@ -284,7 +284,7 @@ require_once __DIR__ . '/includes/header.php';
               var w = step.word;
 
               function imgHtml(wordObj) {
-                var url = wordObj.imageUrl || '';
+                var url = wordObj.imageUrl ? '/' + wordObj.imageUrl : '';
                 return '<div class="sessionImgWrap" id="imgWrap">' +
                   (url
                     ? '<img src="' + url + '" alt="" onerror="var w=document.getElementById(\'imgWrap\');if(w){w.innerHTML=\'<span style=&quot;color:var(--muted2);font-weight:600&quot;>Image unavailable</span>\';}">'

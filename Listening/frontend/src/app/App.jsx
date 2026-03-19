@@ -10,14 +10,17 @@ import { loadExams } from "../modules/listening-exam/services/listeningExamApi";
 import CollectionsPage from "../../../../Intensive_Listening/CollectionsPage";
 import CommunityPage from "../../../../Intensive_Listening/CommunityPage";
 import Player from "../../../../Intensive_Listening/Player";
-// import IntensiveListening from "./IntensiveListening";
 
-const CURRENT_USERNAME = "user1";
-// Vocabulary (vocba_prac) is a separate PHP app.
-// Run it with: php -S 127.0.0.1:8002 -t "...\vocba_prac"
+import AuthPage from "../../../../Auth/frontend/AuthPage.jsx";
+
 const VOCAB_BASE_URL = "http://127.0.0.1:8002";
 
 export default function App() {
+  // ================= 状态管理 =================
+  // 【修改】：使用 localStorage 缓存用户名，刷新页面也不会掉线！
+  const [currentUser, setCurrentUser] = useState(() => localStorage.getItem("currentUser") || null);
+  const [showAuthPage, setShowAuthPage] = useState(false);
+
   const [section, setSection] = useState("home");
   const [activeModule, setActiveModule] = useState("Vocabulary");
   const [quoteIndex, setQuoteIndex] = useState(0);
@@ -29,6 +32,7 @@ export default function App() {
   const [exams, setExams] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  // ================= 生命周期 =================
   useEffect(() => {
     let active = true;
     loadExams().then((data) => {
@@ -37,9 +41,7 @@ export default function App() {
         setLoading(false);
       }
     });
-    return () => {
-      active = false;
-    };
+    return () => { active = false; };
   }, []);
 
   useEffect(() => {
@@ -48,6 +50,7 @@ export default function App() {
     }
   }, [activeModule]);
 
+  // ================= 跳转逻辑 =================
   const handleSelectModule = (moduleName) => {
     setActiveModule(moduleName);
     setSection("home");
@@ -55,16 +58,18 @@ export default function App() {
   };
 
   const handleModuleAction = (moduleName, actionLabel) => {
-    // Vocabulary buttons from HomeLanding / SiteNav
     if (moduleName === "Vocabulary" && actionLabel === "Word Quest") {
-      // Go to vocabulary practice PHP app
-      window.location.href = `${VOCAB_BASE_URL}/`;
+      window.location.href = `${VOCAB_BASE_URL}/backend/practice.php`;
       return;
     }
-
     if (moduleName === "Vocabulary" && actionLabel === "Mastery Check") {
-      // Go to standalone vocabulary exam app
-      window.location.href = "http://127.0.0.1:8003/vocabulary-exam.html";
+      if (!currentUser) {
+        alert("请先登录或注册，才能参加词汇测验！");
+        setShowAuthPage(true);
+        return;
+      }
+      // 【修改】：将用户名拼接到 URL 后面传递给 8003 端口的测试页面
+      window.location.href = `http://127.0.0.1:8003/vocabulary-exam.html?username=${encodeURIComponent(currentUser)}`;
       return;
     }
 
@@ -74,7 +79,6 @@ export default function App() {
       setView("list");
       return;
     }
-
     if (moduleName === "Listening" && actionLabel === "Audio Stream") {
       setActiveModule("Listening");
       setSection("materials");
@@ -88,10 +92,9 @@ export default function App() {
     setSection("home");
   };
 
-
   const handleSubNav = (target) => {
-    setSection("materials"); // 确保在材料区
-    setView(target);         // 切换 view 状态
+    setSection("materials"); 
+    setView(target);         
   };
 
   const openModeSelection = (exam) => {
@@ -114,9 +117,14 @@ export default function App() {
         <SiteNav
           activeModule={activeModule}
           currentSection={section}
-          currentUser={CURRENT_USERNAME}
+          currentUser={currentUser} 
           onSelectModule={handleSelectModule}
           onAction={handleModuleAction}
+          onAuthClick={() => setShowAuthPage(true)} 
+          onLogout={() => {
+            setCurrentUser(null);
+            localStorage.removeItem("currentUser"); // 【修改】：登出时清除缓存
+          }}     
         />
       ) : null}
 
@@ -127,22 +135,22 @@ export default function App() {
           <section className="materials-page-body">
             {view === "list" ? (
               <>
-                <ExamListPage exams={exams} onStart={openModeSelection} currentUser={CURRENT_USERNAME} />
+                <ExamListPage exams={exams} onStart={openModeSelection} currentUser={currentUser || "Guest"} />
                 {loading && <p>Loading exams...</p>}
               </>
             ) : view === "collections" ? (
-              <CollectionsPage onNavigate={handleSubNav} />
+               <CollectionsPage onNavigate={handleSubNav} />
             ) : view === "player" ? (
-              <Player onNavigate={handleSubNav} />
+               <Player onNavigate={handleSubNav} />
             ) : view === "intensivelistening" ? (
-              <IntensiveListening onBackToCollections={() => handleSubNav("collections")} />
+               <div>Intensive Listening Module (Component loading)</div> 
             ) : view === "community" ? (
-              <CommunityPage onNavigate={handleSubNav} />
+               <CommunityPage onNavigate={handleSubNav} />
             ) : view === "exam" && selectedExam ? (
               <ExamPage
                 exam={selectedExam}
                 mode={mode}
-                currentUser={CURRENT_USERNAME}
+                currentUser={currentUser || "Guest"} 
                 onExit={() => setView("list")}
                 onSubmit={(nextResult) => {
                   setResult(nextResult);
@@ -157,12 +165,19 @@ export default function App() {
       )}
 
       {showMode && selectedExam ? (
-        <ModeSelectionModal
-          examTitle={selectedExam.title}
-          onClose={() => setShowMode(false)}
-          onStart={startExam}
-        />
+        <ModeSelectionModal examTitle={selectedExam.title} onClose={() => setShowMode(false)} onStart={startExam} />
       ) : null}
+
+      {showAuthPage && (
+        <AuthPage 
+          onClose={() => setShowAuthPage(false)} 
+          onSuccess={(username) => {
+            setCurrentUser(username);
+            localStorage.setItem("currentUser", username); // 【修改】：登录成功存入缓存
+            setShowAuthPage(false); 
+          }} 
+        />
+      )}
     </div>
   );
 }

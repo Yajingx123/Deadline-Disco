@@ -217,8 +217,21 @@ function retakeExam() {
   if (top) top.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
-// 页面加载完成后立即初始化
 window.onload = () => {
+  // --- 👇 新增：从 URL 参数中读取 username 并更新到导航栏 ---
+  const urlParams = new URLSearchParams(window.location.search);
+  const username = urlParams.get('username');
+  if (username) {
+    const userSpan = document.querySelector('.user-section span');
+    const avatarDiv = document.querySelector('.user-section .avatar');
+    
+    // 把右上角的文字替换为全大写的用户名
+    if (userSpan) userSpan.innerText = username.toUpperCase();
+    // 把头像的字母替换为用户名的前两个字母
+    if (avatarDiv) avatarDiv.innerText = username.substring(0, 2).toUpperCase();
+  }
+  // --- 👆 新增结束 ---
+
   const select = document.getElementById('level-select');
   if (select) {
     select.onchange = () => initExam();
