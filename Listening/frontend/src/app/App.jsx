@@ -55,15 +55,16 @@ export default function App() {
   };
 
   const handleModuleAction = (moduleName, actionLabel) => {
-    // Vocabulary button actions from HomeLanding.
-    // We navigate to the standalone PHP pages (Word Quest / Mastery Check).
+    // Vocabulary buttons from HomeLanding / SiteNav
     if (moduleName === "Vocabulary" && actionLabel === "Word Quest") {
-      window.location.href = `${VOCAB_BASE_URL}/backend/practice.php`;
+      // Go to vocabulary practice PHP app
+      window.location.href = `${VOCAB_BASE_URL}/`;
       return;
     }
 
     if (moduleName === "Vocabulary" && actionLabel === "Mastery Check") {
-      window.location.href = `${VOCAB_BASE_URL}/backend/progress.php`;
+      // Go to standalone vocabulary exam app
+      window.location.href = "http://127.0.0.1:8003/vocabulary-exam.html";
       return;
     }
 

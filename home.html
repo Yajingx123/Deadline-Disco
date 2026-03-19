@@ -572,12 +572,32 @@
             }
 
             html += `<div class="bottom-actions">
-                        <button class="btn-small btn-primary-small">${m.btns[0]}</button>
-                        <button class="btn-small">${m.btns[1]}</button>
+                        <button class="btn-small btn-primary-small" onclick="handleModuleAction('${name}', 0)">${m.btns[0]}</button>
+                        <button class="btn-small" onclick="handleModuleAction('${name}', 1)">${m.btns[1]}</button>
                     </div>`;
 
             html += `</div>`;
             viewport.innerHTML = html;
+        }
+
+        function handleModuleAction(moduleName, btnIndex) {
+            // Vocabulary: Word Quest → vocab practice (PHP), Mastery Check → vocab exam (static)
+            if (moduleName === 'Vocabulary' && btnIndex === 0) {
+                window.location.href = 'http://127.0.0.1:8002/';
+                return;
+            }
+            if (moduleName === 'Vocabulary' && btnIndex === 1) {
+                window.location.href = 'http://127.0.0.1:8003/vocabulary-exam.html';
+                return;
+            }
+
+            // Listening: both buttons go to React frontend
+            if (moduleName === 'Listening') {
+                window.location.href = 'http://127.0.0.1:5173/';
+                return;
+            }
+
+            // Other modules (Speaking / Reading / Writing): currently stay on landing page
         }
 
         window.onload = () => loadModule('Vocabulary', document.querySelector('.nav-item'));
