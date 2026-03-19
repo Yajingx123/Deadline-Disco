@@ -7,11 +7,10 @@ import ExamListPage from "../modules/listening-exam/pages/ExamListPage";
 import ExamPage from "../modules/listening-exam/pages/ExamPage";
 import ReviewPage from "../modules/listening-exam/pages/ReviewPage";
 import { loadExams } from "../modules/listening-exam/services/listeningExamApi";
-import CollectionsPage from "../../../../Intensive_Listening/CollectionsPage";
-import CommunityPage from "../../../../Intensive_Listening/CommunityPage";
-import Player from "../../../../Intensive_Listening/Player";
-
-import AuthPage from "../../../../Auth/frontend/AuthPage.jsx";
+import CollectionsPage from "../modules/intensive-listening/CollectionsPage";
+import CommunityPage from "../modules/intensive-listening/CommunityPage";
+import Player from "../modules/intensive-listening/Player";
+import AuthPage from "../shared/auth/AuthPage.jsx";
 
 const VOCAB_BASE_URL = "http://127.0.0.1:8002";
 

@@ -1,5 +1,5 @@
 -- auto-generated definition
-create table intensive_listening_audio
+CREATE TABLE IF NOT EXISTS intensive_listening_audio
 (
     audio_id       int auto_increment comment '音频唯一标识（自增主键）'
         primary key,
@@ -14,6 +14,8 @@ create table intensive_listening_audio
     sentence_count int                                not null
 )
     comment '英语音频学习信息表';
+
+DELETE FROM `intensive_listening_audio`;
 
 INSERT INTO `intensive_listening_audio`
     (`title`, `duration`, `difficulty`, `description`, `tags`, `author`, `path`, `sentence_count`)

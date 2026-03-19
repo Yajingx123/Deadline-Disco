@@ -1,5 +1,5 @@
 -- auto-generated definition
-create table user_audio_progress
+CREATE TABLE IF NOT EXISTS user_audio_progress
 (
     progress_id      int auto_increment comment '主键'
         primary key,
@@ -14,6 +14,8 @@ create table user_audio_progress
         unique (user_id, audio_id)
 )
     comment '偷懒版：用户音频进度表（含句子理解状态）';
+
+DELETE FROM `user_audio_progress`;
 
 INSERT INTO `user_audio_progress`
     (`user_id`, `audio_id`, `progress_percent`, `current_index`, `progress_data`, `status`)
