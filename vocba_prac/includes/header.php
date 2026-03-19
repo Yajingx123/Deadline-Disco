@@ -8,9 +8,9 @@ $base = $baseHref ?? '';
 // Keep the URL you came from when you first entered this vocab module,
 // then always use it even after navigating within vocab pages.
 session_start();
-$defaultBackUrl = 'http://127.0.0.1:5173/';
+$defaultBackUrl = '../home.html';
 $ref = (string)($_SERVER['HTTP_REFERER'] ?? '');
-if ($ref !== '' && strpos($ref, '127.0.0.1:5173') !== false) {
+if ($ref !== '' && strpos($ref, 'home.html') !== false) {
   $_SESSION['vocab_return_url'] = $ref;
 }
 $backUrl = $_SESSION['vocab_return_url'] ?? $defaultBackUrl;

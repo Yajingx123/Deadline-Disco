@@ -1,4 +1,5 @@
 -- 词书初始数据（6 本）
+USE vocab_dd;
 
 INSERT INTO `word_books` (`slug`, `title`, `description`) VALUES
 ('daily', 'Daily & campus vocabulary', 'Campus life, group discussion, study planning. For all majors.'),

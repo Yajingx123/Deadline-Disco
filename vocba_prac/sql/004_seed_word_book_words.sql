@@ -1,6 +1,7 @@
 -- 词书-单词关联（多对多）
 -- Daily: 10 个水果词；CS/Mechanical/Civil/Traffic/Math: 各 10 个动词（共享）
 -- 依赖：001_schema.sql, 002_seed_wordbooks.sql, 003_seed_words.sql 已执行
+USE vocab_dd;
 
 -- Daily 词书 (id=1) → 单词 id 1–10
 INSERT INTO `word_book_words` (`word_book_id`, `word_id`, `sort_order`) VALUES

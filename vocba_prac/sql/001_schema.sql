@@ -1,6 +1,9 @@
 -- Vocabulary module – 数据库结构
 -- 词书、单词、多对多关联（单词可属于多个词书）
 
+CREATE DATABASE IF NOT EXISTS vocab_dd DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE vocab_dd;
+
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 

@@ -1,5 +1,6 @@
 -- 单词初始数据（20 个：10 日常 + 10 专业，专业词书共享同一批动词）
 -- 依赖：001_schema.sql, 002_seed_wordbooks.sql 已执行
+USE vocab_dd;
 
 -- Daily 词书：水果类
 INSERT INTO `words` (`word`, `phonetic`, `meaning`, `sentence`, `image_url`, `audio_url`) VALUES
