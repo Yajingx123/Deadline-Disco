@@ -13,6 +13,9 @@ import Player from "../../../../Intensive_Listening/Player";
 // import IntensiveListening from "./IntensiveListening";
 
 const CURRENT_USERNAME = "user1";
+// Vocabulary (vocba_prac) is a separate PHP app.
+// Run it with: php -S 127.0.0.1:8002 -t "...\vocba_prac"
+const VOCAB_BASE_URL = "http://127.0.0.1:8002";
 
 export default function App() {
   const [section, setSection] = useState("home");
@@ -52,6 +55,18 @@ export default function App() {
   };
 
   const handleModuleAction = (moduleName, actionLabel) => {
+    // Vocabulary button actions from HomeLanding.
+    // We navigate to the standalone PHP pages (Word Quest / Mastery Check).
+    if (moduleName === "Vocabulary" && actionLabel === "Word Quest") {
+      window.location.href = `${VOCAB_BASE_URL}/backend/practice.php`;
+      return;
+    }
+
+    if (moduleName === "Vocabulary" && actionLabel === "Mastery Check") {
+      window.location.href = `${VOCAB_BASE_URL}/backend/progress.php`;
+      return;
+    }
+
     if (moduleName === "Listening" && actionLabel === "Echo Challenge") {
       setActiveModule("Listening");
       setSection("materials");
