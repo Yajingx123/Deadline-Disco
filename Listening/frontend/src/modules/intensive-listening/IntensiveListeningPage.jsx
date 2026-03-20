@@ -3,17 +3,17 @@ import "./IntensiveListeningPage.css";
 
 const API_BASE = import.meta.env?.VITE_API_BASE_URL || "http://127.0.0.1:8000";
 
-function buildProgressSegments(total, progressData, currentIndex) {
+function buildSegments(total, progressData, currentIndex) {
   return Array.from({ length: total }, (_, index) => {
-    const value = Number(progressData[index] || 0);
+    const status = Number(progressData[index] || 0);
     return {
       key: index,
       className: [
-        "segment",
-        value === 1 ? "understood" : "",
-        value === 2 ? "not-understood" : "",
-        value === 3 ? "skipped" : "",
-        currentIndex === index ? "current" : "",
+        "progress-segment",
+        status === 1 ? "progress-understood" : "",
+        status === 2 ? "progress-not-understood" : "",
+        status === 3 ? "progress-skipped" : "",
+        index === currentIndex ? "current" : "",
       ]
         .filter(Boolean)
         .join(" "),
@@ -23,26 +23,35 @@ function buildProgressSegments(total, progressData, currentIndex) {
 
 export default function IntensiveListeningPage({ audioId, currentUserId = 1, onNavigate, currentView = "intensivelistening" }) {
   const audioRef = useRef(null);
-  const subtitleContainerRef = useRef(null);
+  const latestProgressRef = useRef([]);
+  const latestIndexRef = useRef(0);
 
   const [audioMeta, setAudioMeta] = useState(null);
-  const [subtitles, setSubtitles] = useState([]);
-  const [progressData, setProgressData] = useState([]);
+  const [sentences, setSentences] = useState([]);
+  const [progress, setProgress] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [isManualScrolling, setIsManualScrolling] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
 
-  const totalCount = subtitles.length;
-  const completedCount = progressData.filter((item) => Number(item) === 1 || Number(item) === 2).length;
-  const progressPercent = totalCount ? Math.round((completedCount / totalCount) * 100) : 0;
+  const totalCount = sentences.length;
+  const currentSentence = sentences[currentIndex] || null;
+  const doneCount = progress.filter((item) => Number(item) === 1 || Number(item) === 2).length;
 
   const progressSegments = useMemo(
-    () => buildProgressSegments(totalCount, progressData, currentIndex),
-    [currentIndex, progressData, totalCount],
+    () => buildSegments(totalCount, progress, currentIndex),
+    [currentIndex, progress, totalCount],
   );
 
-  const saveServerProgress = async (nextProgress = progressData, nextIndex = currentIndex) => {
+  useEffect(() => {
+    latestProgressRef.current = progress;
+  }, [progress]);
+
+  useEffect(() => {
+    latestIndexRef.current = currentIndex;
+  }, [currentIndex]);
+
+  const saveServerProgress = async (nextProgress = latestProgressRef.current, nextIndex = latestIndexRef.current) => {
     if (!audioId || !totalCount) return;
 
     const answeredCount = nextProgress.filter((item) => Number(item) === 1 || Number(item) === 2).length;
@@ -68,11 +77,30 @@ export default function IntensiveListeningPage({ audioId, currentUserId = 1, onN
     }
   };
 
-  const loadIntensiveData = async () => {
+  const seekToSentence = (index, autoPlay = false) => {
+    const player = audioRef.current;
+    const sentence = sentences[index];
+    if (!player || !sentence) return;
+
+    player.currentTime = Number(sentence.start || 0);
+    if (autoPlay) {
+      player.play().catch((requestError) => console.warn("Audio play failed:", requestError));
+    }
+  };
+
+  const moveToSentence = (nextIndex, options = {}) => {
+    if (!sentences.length) return;
+    const clampedIndex = Math.max(0, Math.min(nextIndex, sentences.length - 1));
+    setCurrentIndex(clampedIndex);
+    seekToSentence(clampedIndex, options.autoPlay ?? isPlaying);
+    saveServerProgress(latestProgressRef.current, clampedIndex);
+  };
+
+  const loadPageData = async () => {
     if (!audioId) {
       setAudioMeta(null);
-      setSubtitles([]);
-      setProgressData([]);
+      setSentences([]);
+      setProgress([]);
       setCurrentIndex(0);
       setError("");
       return;
@@ -89,15 +117,13 @@ export default function IntensiveListeningPage({ audioId, currentUserId = 1, onN
       }
 
       const meta = detailResult.data;
-      setAudioMeta(meta);
-
       const fileKey = String(meta.path || meta.audio_id);
       const subtitleResponse = await fetch(`/listening/${fileKey}.json`);
       if (!subtitleResponse.ok) {
         throw new Error(`Subtitle file /listening/${fileKey}.json not found`);
       }
+
       const subtitleJson = await subtitleResponse.json();
-      setSubtitles(subtitleJson);
 
       const progressResponse = await fetch(
         `${API_BASE}/api/audio/progress?user_id=${currentUserId}&audio_id=${audioId}`,
@@ -105,96 +131,130 @@ export default function IntensiveListeningPage({ audioId, currentUserId = 1, onN
       const progressResult = await progressResponse.json();
       const serverProgress = progressResult.code === 0 ? progressResult.data || {} : {};
 
-      const nextProgress = Array.isArray(serverProgress.progress_data) && serverProgress.progress_data.length === subtitleJson.length
-        ? serverProgress.progress_data.map((item) => Number(item))
-        : Array(subtitleJson.length).fill(0);
+      const nextProgress =
+        Array.isArray(serverProgress.progress_data) && serverProgress.progress_data.length === subtitleJson.length
+          ? serverProgress.progress_data.map((item) => Number(item))
+          : Array(subtitleJson.length).fill(0);
 
-      setProgressData(nextProgress);
-      setCurrentIndex(Math.min(Number(serverProgress.current_index || 0), Math.max(subtitleJson.length - 1, 0)));
+      const nextIndex = Math.max(
+        0,
+        Math.min(Number(serverProgress.current_index || 0), Math.max(subtitleJson.length - 1, 0)),
+      );
+
+      setAudioMeta(meta);
+      setSentences(subtitleJson);
+      setProgress(nextProgress);
+      setCurrentIndex(nextIndex);
+      setIsPlaying(false);
 
       if (audioRef.current) {
         audioRef.current.src = `/listening/${fileKey}.mp3`;
         audioRef.current.load();
+        audioRef.current.onloadedmetadata = () => {
+          seekToSentence(nextIndex, false);
+        };
       }
     } catch (requestError) {
       console.error(requestError);
       setError(requestError.message || "Failed to load intensive listening resources");
       setAudioMeta(null);
-      setSubtitles([]);
-      setProgressData([]);
+      setSentences([]);
+      setProgress([]);
       setCurrentIndex(0);
+      setIsPlaying(false);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    loadIntensiveData();
+    loadPageData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [audioId, currentUserId]);
 
   useEffect(() => {
     const player = audioRef.current;
-    if (!player || !subtitles.length) return undefined;
+    if (!player || !currentSentence) return undefined;
 
     const handleTimeUpdate = () => {
-      const activeIndex = subtitles.findIndex((item) => {
-        const start = Number(item.start);
-        const end = Number(item.end);
-        return player.currentTime >= start && player.currentTime < end;
-      });
-
-      if (activeIndex !== -1 && activeIndex !== currentIndex) {
-        setCurrentIndex(activeIndex);
-        if (!isManualScrolling) {
-          const activeLineElement = document.querySelector(`.intensive-subtitle-line[data-index="${activeIndex}"]`);
-          activeLineElement?.scrollIntoView({ behavior: "smooth", block: "center" });
-        }
+      if (!isPlaying) return;
+      const sentenceEnd = Number(currentSentence.end || 0);
+      const sentenceStart = Number(currentSentence.start || 0);
+      if (player.currentTime >= sentenceEnd) {
+        player.currentTime = sentenceStart;
       }
     };
 
+    const handlePlay = () => setIsPlaying(true);
+    const handlePause = () => setIsPlaying(false);
+
     player.addEventListener("timeupdate", handleTimeUpdate);
+    player.addEventListener("play", handlePlay);
+    player.addEventListener("pause", handlePause);
+
     return () => {
       player.removeEventListener("timeupdate", handleTimeUpdate);
+      player.removeEventListener("play", handlePlay);
+      player.removeEventListener("pause", handlePause);
     };
-  }, [currentIndex, isManualScrolling, subtitles]);
+  }, [currentSentence, isPlaying]);
 
   useEffect(() => {
     return () => {
-      saveServerProgress(progressData, currentIndex);
+      saveServerProgress();
     };
-  }, [currentIndex, progressData]);
+  }, []);
 
   const markCurrent = (value) => {
-    if (!subtitles.length) return;
-    const nextProgress = [...progressData];
+    if (!sentences.length) return;
+
+    const nextProgress = [...latestProgressRef.current];
     nextProgress[currentIndex] = value;
-    setProgressData(nextProgress);
-    saveServerProgress(nextProgress, currentIndex);
+    setProgress(nextProgress);
+    latestProgressRef.current = nextProgress;
 
-    if (currentIndex < subtitles.length - 1) {
-      setCurrentIndex(currentIndex + 1);
-      const nextSentence = subtitles[currentIndex + 1];
-      if (audioRef.current && nextSentence) {
-        audioRef.current.currentTime = Number(nextSentence.start);
-        audioRef.current.play().catch((requestError) => console.warn("Audio play failed:", requestError));
-      }
+    const nextIndex = Math.min(currentIndex + 1, sentences.length - 1);
+    saveServerProgress(nextProgress, nextIndex);
+
+    if (currentIndex < sentences.length - 1) {
+      setCurrentIndex(nextIndex);
+      seekToSentence(nextIndex, true);
     }
   };
 
-  const handleSubtitleClick = (index, start) => {
-    setCurrentIndex(index);
-    if (audioRef.current) {
-      audioRef.current.currentTime = Number(start);
-      audioRef.current.play().catch((requestError) => console.warn("Audio play failed:", requestError));
+  const goNext = () => {
+    if (!sentences.length) return;
+
+    const nextProgress = [...latestProgressRef.current];
+    if (Number(nextProgress[currentIndex] || 0) === 0) {
+      nextProgress[currentIndex] = 3;
+      setProgress(nextProgress);
+      latestProgressRef.current = nextProgress;
     }
-    saveServerProgress(progressData, index);
+
+    const nextIndex = Math.min(currentIndex + 1, sentences.length - 1);
+    saveServerProgress(nextProgress, nextIndex);
+
+    if (currentIndex < sentences.length - 1) {
+      setCurrentIndex(nextIndex);
+      seekToSentence(nextIndex, true);
+    }
   };
 
-  const handleWheel = () => {
-    setIsManualScrolling(true);
-    window.clearTimeout(window.__acadbeatIntensiveScrollTimer);
-    window.__acadbeatIntensiveScrollTimer = window.setTimeout(() => setIsManualScrolling(false), 1500);
+  const goPrevious = () => {
+    if (currentIndex <= 0) return;
+    moveToSentence(currentIndex - 1, { autoPlay: true });
+  };
+
+  const togglePlay = () => {
+    const player = audioRef.current;
+    if (!player || !currentSentence) return;
+
+    if (player.paused) {
+      seekToSentence(currentIndex, true);
+    } else {
+      player.pause();
+    }
   };
 
   return (
@@ -213,12 +273,17 @@ export default function IntensiveListeningPage({ audioId, currentUserId = 1, onN
       </div>
 
       <div className="content-container">
-        <div className="content-area">
-          <div className="page-title intensive-title">
-            <span>{audioMeta ? `Intensive Listening - ${audioMeta.title}` : "Intensive Listening"}</span>
-            <button className="save-btn" onClick={() => saveServerProgress()}>
-              Save Progress
-            </button>
+        <div className="content-area intensive-shell">
+          <div className="page-title">
+            <span>{audioMeta ? `In_Listening - ${audioMeta.title}` : "In_Listening - Intensive Listening"}</span>
+            <div className="title-right">
+              <button className="save-btn" onClick={() => saveServerProgress()}>
+                Save Progress to Server
+              </button>
+              <button className="save-btn" onClick={() => onNavigate?.("collections", { audioId })}>
+                ← Back to Collections
+              </button>
+            </div>
           </div>
 
           {!audioId ? (
@@ -229,55 +294,92 @@ export default function IntensiveListeningPage({ audioId, currentUserId = 1, onN
             <div className="intensive-empty-state intensive-error-state">{error}</div>
           ) : (
             <div className="listening-content">
+              <div className="headphone-container">
+                <div className="headphone-icon">
+                  <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M3 18v-6a9 9 0 0 1 18 0v6" />
+                    <path d="M21 19a2 2 0 0 1-2 2h-1a2 2 0 0 1-2-2v-3a2 2 0 0 1 2-2h3zM3 19a2 2 0 0 0 2 2h1a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2H3z" />
+                  </svg>
+                </div>
+                <div className="ripple-ring" />
+                <div className="ripple-ring" />
+                <div className="ripple-ring" />
+              </div>
+
               <div className="progress-wrapper">
                 <div className="progress-label">
                   <span>Article Comprehension</span>
-                  <span>{completedCount} / {totalCount}</span>
+                  <span>{doneCount} / {totalCount}</span>
                 </div>
                 <div className="overall-progress-bar">
-                  {progressSegments.map((segment) => (
-                    <div key={segment.key} className={segment.className} style={{ width: `${100 / totalCount}%` }} />
+                  {progressSegments.map((segment, index) => (
+                    <div key={segment.key} className={segment.className} style={{ width: `${100 / totalCount}%` }} data-index={index} />
                   ))}
                 </div>
-                <div className="progress-summary">{progressPercent}% completed</div>
+                <div className="progress-legend">
+                  <div className="legend-item">
+                    <div className="legend-color legend-understood" />
+                    <span>Understood</span>
+                  </div>
+                  <div className="legend-item">
+                    <div className="legend-color legend-not-understood" />
+                    <span>Didn't Understand</span>
+                  </div>
+                  <div className="legend-item">
+                    <div className="legend-color legend-skipped" />
+                    <span>Skipped</span>
+                  </div>
+                  <div className="legend-item">
+                    <div className="legend-color legend-current" />
+                    <span>Current Sentence</span>
+                  </div>
+                </div>
               </div>
 
-              <div className="status-text">Mark your understanding for the current sentence</div>
+              <div className="status-text">Please select your understanding status</div>
               <div className="status-buttons">
                 <div className="status-btn-group">
                   <button className="status-btn not-understood" onClick={() => markCurrent(2)}>
-                    Didn't understand
+                    <span className="btn-icon">😵</span> Didn't understand
                   </button>
                   <button className="status-btn understood" onClick={() => markCurrent(1)}>
-                    Understood
+                    <span className="btn-icon">😊</span> Understood
+                  </button>
+                  <button className="status-btn next-btn" onClick={goNext}>
+                    Next
                   </button>
                 </div>
               </div>
 
-              <div className="intensive-audio-panel">
-                <audio ref={audioRef} controls />
-              </div>
-
-              <div className="intensive-subtitle-container" ref={subtitleContainerRef} onWheel={handleWheel}>
-                {subtitles.map((item, index) => (
-                  <button
-                    key={`${audioId}-${index}`}
-                    type="button"
-                    className={`intensive-subtitle-line ${currentIndex === index ? "active" : ""}`}
-                    data-index={index}
-                    onClick={() => handleSubtitleClick(index, item.start)}
-                  >
-                    <span className="sentence-number">{index + 1}</span>
-                    <span className="sentence-text">{item.text}</span>
-                    <span className={`sentence-badge badge-${Number(progressData[index] || 0)}`}>
-                      {Number(progressData[index] || 0) === 1
-                        ? "Understood"
-                        : Number(progressData[index] || 0) === 2
-                          ? "Need Review"
-                          : "Pending"}
-                    </span>
-                  </button>
-                ))}
+              <div className="player-container">
+                <div className="sentence-player-wrapper">
+                  <div className="sentence-progress-bar">
+                    <div className="sentence-progress-fill" style={{ width: `${totalCount ? ((currentIndex + 1) / totalCount) * 100 : 0}%` }} />
+                  </div>
+                  <div className="sentence-controls">
+                    <button className="sentence-control-btn" onClick={goPrevious} disabled={currentIndex <= 0}>
+                      ◀
+                    </button>
+                    <button className="sentence-control-btn primary" onClick={togglePlay}>
+                      {isPlaying ? "❚❚" : "▶"}
+                    </button>
+                    <button className="sentence-control-btn" onClick={goNext} disabled={currentIndex >= totalCount - 1}>
+                      ▶
+                    </button>
+                  </div>
+                  <div className="sentence-info-card">
+                    <div className="sentence-info-title">
+                      Sentence {Math.min(currentIndex + 1, totalCount)} of {totalCount}
+                    </div>
+                    <div className="sentence-info-content">
+                      <span className="sentence-content">
+                        {currentSentence?.text || ""}
+                        <span className="sentence-mask">hidden text (hover me)</span>
+                      </span>
+                    </div>
+                  </div>
+                  <audio ref={audioRef} className="native-audio" controls />
+                </div>
               </div>
             </div>
           )}
