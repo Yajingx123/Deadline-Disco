@@ -10,7 +10,9 @@ export default function SiteNav({
   currentSection,
   currentUser,
   onSelectModule,
-  onAction
+  onAction,
+  onAuthClick, 
+  onLogout     
 }) {
   return (
     <header className="site-nav-wrap">
@@ -42,10 +44,22 @@ export default function SiteNav({
             </div>
           ))}
         </div>
+        
+  
         <div className="user-section">
-          <span className="nav-user-name">{currentUser}</span>
-          <div className="avatar">{initialsForUser(currentUser)}</div>
+          {currentUser ? (
+            <>
+              <span className="nav-user-name">{currentUser}</span>
+              <div className="avatar">{initialsForUser(currentUser)}</div>
+              <button className="nav-item" onClick={onLogout} style={{ marginLeft: "10px" }}>Logout</button>
+            </>
+          ) : (
+            <button className="nav-item active" onClick={onAuthClick} style={{ padding: "6px 16px", borderRadius: "20px" }}>
+              Login / Register
+            </button>
+          )}
         </div>
+
       </nav>
     </header>
   );

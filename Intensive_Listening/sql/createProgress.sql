@@ -1,5 +1,5 @@
 -- auto-generated definition
-create table user_audio_progress
+CREATE TABLE IF NOT EXISTS user_audio_progress
 (
     progress_id      int auto_increment comment '主键'
         primary key,
@@ -15,14 +15,11 @@ create table user_audio_progress
 )
     comment '偷懒版：用户音频进度表（含句子理解状态）';
 
+DELETE FROM `user_audio_progress`;
+
 INSERT INTO `user_audio_progress`
     (`user_id`, `audio_id`, `progress_percent`, `current_index`, `progress_data`, `status`)
 VALUES
-    -- 第 1 条数据 (对应截图 ID 2)
-    (2, 1, 50, 2, '[1, 2, 0, 0]', 'processing'),
-
-    -- 第 2 条数据 (对应截图 ID 9)
-    (9, 1, 80, 4, '[1, 1, 2, 1, 0]', 'processing'),
-
-    -- 第 3 条数据 (对应截图 ID 14)
-    (14, 1, 0, 0, '[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]', 'Not Started');
+    (1, 1, 50, 2, '[1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]', 'in_progress'),
+    (2, 2, 36, 7, '[1, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]', 'in_progress'),
+    (1, 4, 0, 0, '[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]', 'Not Started');

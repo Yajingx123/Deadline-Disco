@@ -7,17 +7,20 @@ import ExamListPage from "../modules/listening-exam/pages/ExamListPage";
 import ExamPage from "../modules/listening-exam/pages/ExamPage";
 import ReviewPage from "../modules/listening-exam/pages/ReviewPage";
 import { loadExams } from "../modules/listening-exam/services/listeningExamApi";
-import CollectionsPage from "../../../../Intensive_Listening/CollectionsPage";
-import CommunityPage from "../../../../Intensive_Listening/CommunityPage";
-import Player from "../../../../Intensive_Listening/Player";
-// import IntensiveListening from "./IntensiveListening";
+import CollectionsPage from "../modules/intensive-listening/CollectionsPage";
+import CommunityPage from "../modules/intensive-listening/CommunityPage";
+import Player from "../modules/intensive-listening/Player";
+import IntensiveListeningPage from "../modules/intensive-listening/IntensiveListeningPage";
+import AuthPage from "../shared/auth/AuthPage.jsx";
 
-const CURRENT_USERNAME = "user1";
-// Vocabulary (vocba_prac) is a separate PHP app.
-// Run it with: php -S 127.0.0.1:8002 -t "...\vocba_prac"
 const VOCAB_BASE_URL = "http://127.0.0.1:8002";
 
 export default function App() {
+  // ================= 状态管理 =================
+  // 【修改】：使用 localStorage 缓存用户名，刷新页面也不会掉线！
+  const [currentUser, setCurrentUser] = useState(() => localStorage.getItem("currentUser") || null);
+  const [showAuthPage, setShowAuthPage] = useState(false);
+
   const [section, setSection] = useState("home");
   const [activeModule, setActiveModule] = useState("Vocabulary");
   const [quoteIndex, setQuoteIndex] = useState(0);
@@ -28,7 +31,9 @@ export default function App() {
   const [result, setResult] = useState(null);
   const [exams, setExams] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedIntensiveAudioId, setSelectedIntensiveAudioId] = useState(null);
 
+  // ================= 生命周期 =================
   useEffect(() => {
     let active = true;
     loadExams().then((data) => {
@@ -37,9 +42,7 @@ export default function App() {
         setLoading(false);
       }
     });
-    return () => {
-      active = false;
-    };
+    return () => { active = false; };
   }, []);
 
   useEffect(() => {
@@ -48,6 +51,7 @@ export default function App() {
     }
   }, [activeModule]);
 
+  // ================= 跳转逻辑 =================
   const handleSelectModule = (moduleName) => {
     setActiveModule(moduleName);
     setSection("home");
@@ -55,16 +59,18 @@ export default function App() {
   };
 
   const handleModuleAction = (moduleName, actionLabel) => {
-    // Vocabulary buttons from HomeLanding / SiteNav
     if (moduleName === "Vocabulary" && actionLabel === "Word Quest") {
-      // Go to vocabulary practice PHP app
-      window.location.href = `${VOCAB_BASE_URL}/`;
+      window.location.href = `${VOCAB_BASE_URL}/backend/practice.php`;
       return;
     }
-
     if (moduleName === "Vocabulary" && actionLabel === "Mastery Check") {
-      // Go to standalone vocabulary exam app
-      window.location.href = "http://127.0.0.1:8003/vocabulary-exam.html";
+      if (!currentUser) {
+        alert("请先登录或注册，才能参加词汇测验！");
+        setShowAuthPage(true);
+        return;
+      }
+      // 【修改】：将用户名拼接到 URL 后面传递给 8003 端口的测试页面
+      window.location.href = `http://127.0.0.1:8003/vocabulary-exam.html?username=${encodeURIComponent(currentUser)}`;
       return;
     }
 
@@ -74,11 +80,11 @@ export default function App() {
       setView("list");
       return;
     }
-
     if (moduleName === "Listening" && actionLabel === "Audio Stream") {
       setActiveModule("Listening");
       setSection("materials");
-      setView("collections"); 
+      setView("collections");
+      setSelectedIntensiveAudioId(null);
       return;
     }
 
@@ -88,10 +94,12 @@ export default function App() {
     setSection("home");
   };
 
-
-  const handleSubNav = (target) => {
-    setSection("materials"); // 确保在材料区
-    setView(target);         // 切换 view 状态
+  const handleSubNav = (target, options = {}) => {
+    setSection("materials");
+    setView(target);
+    if (Object.prototype.hasOwnProperty.call(options, "audioId")) {
+      setSelectedIntensiveAudioId(options.audioId);
+    }
   };
 
   const openModeSelection = (exam) => {
@@ -114,9 +122,14 @@ export default function App() {
         <SiteNav
           activeModule={activeModule}
           currentSection={section}
-          currentUser={CURRENT_USERNAME}
+          currentUser={currentUser} 
           onSelectModule={handleSelectModule}
           onAction={handleModuleAction}
+          onAuthClick={() => setShowAuthPage(true)} 
+          onLogout={() => {
+            setCurrentUser(null);
+            localStorage.removeItem("currentUser"); // 【修改】：登出时清除缓存
+          }}     
         />
       ) : null}
 
@@ -127,22 +140,40 @@ export default function App() {
           <section className="materials-page-body">
             {view === "list" ? (
               <>
-                <ExamListPage exams={exams} onStart={openModeSelection} currentUser={CURRENT_USERNAME} />
+                <ExamListPage exams={exams} onStart={openModeSelection} currentUser={currentUser || "Guest"} />
                 {loading && <p>Loading exams...</p>}
               </>
             ) : view === "collections" ? (
-              <CollectionsPage onNavigate={handleSubNav} />
+              <CollectionsPage
+                currentUserId={1}
+                onNavigate={handleSubNav}
+                selectedAudioId={selectedIntensiveAudioId}
+              />
             ) : view === "player" ? (
-              <Player onNavigate={handleSubNav} />
+              <Player
+                audioId={selectedIntensiveAudioId}
+                currentUserId={1}
+                currentView="player"
+                onNavigate={handleSubNav}
+              />
             ) : view === "intensivelistening" ? (
-              <IntensiveListening onBackToCollections={() => handleSubNav("collections")} />
+              <IntensiveListeningPage
+                audioId={selectedIntensiveAudioId}
+                currentUserId={1}
+                currentView="intensivelistening"
+                onNavigate={handleSubNav}
+              />
             ) : view === "community" ? (
-              <CommunityPage onNavigate={handleSubNav} />
+              <CommunityPage
+                currentUserId={1}
+                onNavigate={handleSubNav}
+                selectedAudioId={selectedIntensiveAudioId}
+              />
             ) : view === "exam" && selectedExam ? (
               <ExamPage
                 exam={selectedExam}
                 mode={mode}
-                currentUser={CURRENT_USERNAME}
+                currentUser={currentUser || "Guest"} 
                 onExit={() => setView("list")}
                 onSubmit={(nextResult) => {
                   setResult(nextResult);
@@ -157,12 +188,19 @@ export default function App() {
       )}
 
       {showMode && selectedExam ? (
-        <ModeSelectionModal
-          examTitle={selectedExam.title}
-          onClose={() => setShowMode(false)}
-          onStart={startExam}
-        />
+        <ModeSelectionModal examTitle={selectedExam.title} onClose={() => setShowMode(false)} onStart={startExam} />
       ) : null}
+
+      {showAuthPage && (
+        <AuthPage 
+          onClose={() => setShowAuthPage(false)} 
+          onSuccess={(username) => {
+            setCurrentUser(username);
+            localStorage.setItem("currentUser", username); // 【修改】：登录成功存入缓存
+            setShowAuthPage(false); 
+          }} 
+        />
+      )}
     </div>
   );
 }

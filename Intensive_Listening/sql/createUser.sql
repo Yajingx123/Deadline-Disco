@@ -7,9 +7,9 @@ CREATE TABLE IF NOT EXISTS `intensive_listening_user` (
     `create_time` DATETIME DEFAULT NOW() COMMENT '创建时间'
 ) COMMENT = '用户信息表';
 
--- 3. 插入2个测试用户
+DELETE FROM `intensive_listening_user`;
+
 INSERT INTO `intensive_listening_user` (username, password, email)
 VALUES
 ('user1', '123456', 'user1@example.com'),  -- 第一个用户：用户名user1，密码123456
 ('user2', '654321', 'user2@example.com');  -- 第二个用户：用户名user2，密码654321
-
