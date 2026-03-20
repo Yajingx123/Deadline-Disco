@@ -7,11 +7,11 @@ import ExamListPage from "../modules/listening-exam/pages/ExamListPage";
 import ExamPage from "../modules/listening-exam/pages/ExamPage";
 import ReviewPage from "../modules/listening-exam/pages/ReviewPage";
 import { loadExams } from "../modules/listening-exam/services/listeningExamApi";
-import CollectionsPage from "../../../../Intensive_Listening/CollectionsPage";
-import CommunityPage from "../../../../Intensive_Listening/CommunityPage";
-import Player from "../../../../Intensive_Listening/Player";
-
-import AuthPage from "../../../../Auth/frontend/AuthPage.jsx";
+import CollectionsPage from "../modules/intensive-listening/CollectionsPage";
+import CommunityPage from "../modules/intensive-listening/CommunityPage";
+import Player from "../modules/intensive-listening/Player";
+import IntensiveListeningPage from "../modules/intensive-listening/IntensiveListeningPage";
+import AuthPage from "../shared/auth/AuthPage.jsx";
 
 const VOCAB_BASE_URL = "http://127.0.0.1:8002";
 
@@ -31,6 +31,7 @@ export default function App() {
   const [result, setResult] = useState(null);
   const [exams, setExams] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedIntensiveAudioId, setSelectedIntensiveAudioId] = useState(null);
 
   // ================= 生命周期 =================
   useEffect(() => {
@@ -82,7 +83,8 @@ export default function App() {
     if (moduleName === "Listening" && actionLabel === "Audio Stream") {
       setActiveModule("Listening");
       setSection("materials");
-      setView("collections"); 
+      setView("collections");
+      setSelectedIntensiveAudioId(null);
       return;
     }
 
@@ -92,9 +94,12 @@ export default function App() {
     setSection("home");
   };
 
-  const handleSubNav = (target) => {
-    setSection("materials"); 
-    setView(target);         
+  const handleSubNav = (target, options = {}) => {
+    setSection("materials");
+    setView(target);
+    if (Object.prototype.hasOwnProperty.call(options, "audioId")) {
+      setSelectedIntensiveAudioId(options.audioId);
+    }
   };
 
   const openModeSelection = (exam) => {
@@ -139,13 +144,31 @@ export default function App() {
                 {loading && <p>Loading exams...</p>}
               </>
             ) : view === "collections" ? (
-               <CollectionsPage onNavigate={handleSubNav} />
+              <CollectionsPage
+                currentUserId={1}
+                onNavigate={handleSubNav}
+                selectedAudioId={selectedIntensiveAudioId}
+              />
             ) : view === "player" ? (
-               <Player onNavigate={handleSubNav} />
+              <Player
+                audioId={selectedIntensiveAudioId}
+                currentUserId={1}
+                currentView="player"
+                onNavigate={handleSubNav}
+              />
             ) : view === "intensivelistening" ? (
-               <div>Intensive Listening Module (Component loading)</div> 
+              <IntensiveListeningPage
+                audioId={selectedIntensiveAudioId}
+                currentUserId={1}
+                currentView="intensivelistening"
+                onNavigate={handleSubNav}
+              />
             ) : view === "community" ? (
-               <CommunityPage onNavigate={handleSubNav} />
+              <CommunityPage
+                currentUserId={1}
+                onNavigate={handleSubNav}
+                selectedAudioId={selectedIntensiveAudioId}
+              />
             ) : view === "exam" && selectedExam ? (
               <ExamPage
                 exam={selectedExam}

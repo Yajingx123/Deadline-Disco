@@ -1,6 +1,6 @@
 USE my_test_schema;
 
-TRUNCATE TABLE `user`;
+DELETE FROM `user`;
 
 INSERT INTO `user` (username, password, email)
 VALUES

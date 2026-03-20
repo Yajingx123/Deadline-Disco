@@ -1,6 +1,6 @@
 import { mockExams } from "../data/mockExams";
 
-const API_BASE = "http://localhost:8000";
+const API_BASE = import.meta.env?.VITE_API_BASE_URL || "http://127.0.0.1:8000";
 async function fetchJson(url) {
   const response = await fetch(url);
   if (!response.ok) throw new Error(`Fetch failed: ${response.status}`);
