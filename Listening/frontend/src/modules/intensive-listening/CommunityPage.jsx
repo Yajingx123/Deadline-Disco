@@ -3,8 +3,7 @@ import "./CommunityPage.css";
 
 const API_BASE = import.meta.env?.VITE_API_BASE_URL || "http://127.0.0.1:8000";
 
-// ✅ 接收父组件传来的 onNavigate 回调
-export default function CommunityPage({ onNavigate }) {
+export default function CommunityPage({ onNavigate, currentUserId = 1, selectedAudioId = null }) {
   const [audioList, setAudioList] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -15,7 +14,7 @@ export default function CommunityPage({ onNavigate }) {
   const loadAudioData = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${API_BASE}/api/audio/all-with-collect?user_id=1`);
+      const response = await fetch(`${API_BASE}/api/audio/all-with-collect?user_id=${currentUserId}`);
       if (!response.ok) throw new Error("API request failed");
 
       const data = await response.json();
@@ -34,7 +33,7 @@ export default function CommunityPage({ onNavigate }) {
   const collectAudio = async (audio) => {
     if (audio.is_collected === 1 || submittingAudioIds.includes(audio.audio_id)) return;
 
-    const userId = 1;
+    const userId = currentUserId;
     const audioId = audio.audio_id;
 
     try {
@@ -67,29 +66,30 @@ export default function CommunityPage({ onNavigate }) {
 
   useEffect(() => {
     loadAudioData();
-  }, []);
+  }, [currentUserId]);
+
+  const fallbackAudioId =
+    selectedAudioId ||
+    audioList.find((item) => Number(item.is_collected) === 1)?.audio_id ||
+    audioList[0]?.audio_id ||
+    null;
 
   return (
     <div className="main-container">
-      {/* ✅ 修复：移除 sidebar，改为与 CollectionsPage 一致的顶部 Tabs */}
       <div className="top-tabs">
-        <button 
-          className="tab" 
-          // ✅ 修复：点击跳回 Collections，使用回调而非 window.location
-          onClick={() => onNavigate && onNavigate("collections")}
-        >
+        <button className="tab" onClick={() => onNavigate?.("collections", { audioId: fallbackAudioId })}>
           Collections
         </button>
         <button className="tab active">Community</button>
-        <button 
-          className="tab" 
-          onClick={() => onNavigate && onNavigate("player")}
+        <button
+          className="tab"
+          disabled={!fallbackAudioId}
+          onClick={() => fallbackAudioId && onNavigate?.("player", { audioId: fallbackAudioId })}
         >
           Player
         </button>
       </div>
 
-      {/* 社区内容区 */}
       <div className="content-container">
         <div className="content-area">
           <div className="page-title">
@@ -128,6 +128,12 @@ export default function CommunityPage({ onNavigate }) {
                     <div className="article-footer">
                       <span className="article-author">{audio.author || "Unknown Author"}</span>
                       <div className="article-actions">
+                        <button
+                          className="article-button"
+                          onClick={() => onNavigate?.("player", { audioId: audio.audio_id })}
+                        >
+                          Open Player
+                        </button>
                         <button
                           className={`article-button ${audio.is_collected === 1 ? "added" : ""}`}
                           onClick={() => collectAudio(audio)}

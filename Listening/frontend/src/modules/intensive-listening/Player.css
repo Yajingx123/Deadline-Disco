@@ -4,6 +4,21 @@ body {
     background-color: #f5f5f5;
 }
 
+.player-empty-state {
+    background: white;
+    border: 1px solid #d7e2ee;
+    border-radius: 12px;
+    padding: 32px 24px;
+    color: #3A4E6B;
+    font-size: 16px;
+    text-align: center;
+}
+
+.player-error-state {
+    color: #b15f7a;
+    border-color: #e0b8c6;
+}
+
 /* 内容容器基础适配 */
 .content-container {
     padding: 2rem;
@@ -161,6 +176,7 @@ audio {
 
 .main-container {
     display: flex;
+    flex-direction: column;
 }
 
 .content-area {
@@ -171,4 +187,9 @@ audio {
     margin-bottom: 1rem;
     font-size: 1.5rem;
     font-weight: bold;
+}
+
+.tab:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
 }

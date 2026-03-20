@@ -16,11 +16,13 @@ CREATE TABLE IF NOT EXISTS intensive_listening_audio
     comment '英语音频学习信息表';
 
 DELETE FROM `intensive_listening_audio`;
+ALTER TABLE `intensive_listening_audio` AUTO_INCREMENT = 1;
 
 INSERT INTO `intensive_listening_audio`
-    (`title`, `duration`, `difficulty`, `description`, `tags`, `author`, `path`, `sentence_count`)
+    (`audio_id`, `title`, `duration`, `difficulty`, `description`, `tags`, `author`, `path`, `sentence_count`)
 VALUES
     (
+        1,
         'Daily Life in the UK',
         '2:19',
         'Easy',
@@ -31,32 +33,35 @@ VALUES
         12
     ),
     (
+        2,
         'Business Meeting Essentials',
         '2:34',
         'Medium',
         'Learn key phrases and etiquette for business meetings in English, including introductions, agendas, and closing remarks.',
         'Business,Meetings,Intermediate',
         'By: John Smith',
-        '1',
+        '2',
         22
     ),
     (
+        3,
         'Environmental Conservation',
         '2:41',
         'Medium',
         'Explore topics related to environmental conservation, including climate change, renewable energy, and sustainable practices.',
         'Environment,Science,Intermediate',
         'By: Sarah Johnson',
-        '1',
+        '3',
         17
     ),
     (
+        4,
         'Advanced Academic Vocabulary',
         '2:18',
         'Hard',
         'Learn advanced academic vocabulary and expressions commonly used in university lectures and research papers.',
         'Academic,Vocabulary,Advanced',
         'By: Professor Robert Davis',
-        '1',
+        '4',
         12
     );

@@ -3,19 +3,16 @@ import "./CollectionsPage.css";
 
 const API_BASE = import.meta.env?.VITE_API_BASE_URL || "http://127.0.0.1:8000";
 
-// 接收父组件的导航方法，用于Tab跳转
-export default function CollectionsPage({ onNavigate }) {
+export default function CollectionsPage({ onNavigate, currentUserId = 1, selectedAudioId = null }) {
   const [collections, setCollections] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const userId = 1;
 
-  // 加载收藏列表
   const loadCollections = async () => {
     try {
       setLoading(true);
       setError(null);
-      const res = await fetch(`${API_BASE}/api/audio/collection?user_id=${userId}`);
+      const res = await fetch(`${API_BASE}/api/audio/collection?user_id=${currentUserId}`);
       const data = await res.json();
 
       if (data.code === 0) {
@@ -30,30 +27,17 @@ export default function CollectionsPage({ onNavigate }) {
     }
   };
 
-  // 开始练习
   const startPractice = (audioId) => {
-    // 使用传入的 onNavigate 函数进行导航
-    if (onNavigate) { // ✅ 使用正确的变量名 onNavigate
-      // 先切换到 'player' 视图
-      onNavigate('player'); 
-      // 然后通过 URL search params 传递 audioId
-      // 为了让 Player 组件能接收到这个 ID
-      const url = new URL(window.location);
-      url.searchParams.set('audio_id', audioId);
-      window.history.pushState({}, '', url);
-      // 注意：Player 组件需要能够从 URL search params 中读取 ID
-    } else {
-      // 如果没有提供 onNavigate，则回退到原始的页面跳转行为
-      window.location.href = `player.html?audio_id=${audioId}`;
+    if (onNavigate) {
+      onNavigate("player", { audioId });
     }
   };
 
-  // 取消收藏
   const removeCollection = async (audioId) => {
     if (!window.confirm("Remove from collection?")) return;
 
     try {
-      const res = await fetch(`${API_BASE}/api/audio/collection/cancel?user_id=${userId}&audio_id=${audioId}`);
+      const res = await fetch(`${API_BASE}/api/audio/collection/cancel?user_id=${currentUserId}&audio_id=${audioId}`);
       const data = await res.json();
 
       if (data.code === 0) {
@@ -67,49 +51,42 @@ export default function CollectionsPage({ onNavigate }) {
     }
   };
 
-  // 前往 Inclusive Listening
   const goToInclusiveListen = (audioId) => {
-    window.location.href = `in_listen.html?audio_id=${audioId}`;
+    if (onNavigate) {
+      onNavigate("intensivelistening", { audioId });
+    }
   };
 
-    // 前往 Intensive Listening (强制跳转到独立 HTML 文件)
   const goToIntensiveListening = (audioId) => {
-    // 直接跳转，不再检查 onNavigate
-    window.location.href = `in_listen.html?audio_id=${audioId}`;
+    if (onNavigate) {
+      onNavigate("intensivelistening", { audioId });
+    }
   };
 
   useEffect(() => {
     loadCollections();
-  }, []);
+  }, [currentUserId]);
+
+  const fallbackAudioId = selectedAudioId || collections[0]?.audio_id || null;
 
   return (
     <div className="main-container">
-      {/* 顶部 Tab 栏（核心跳转区域，无侧边栏） */}
       <div className="top-tabs">
-        <button 
-          className="tab active" 
-          // 点击自身Tab：刷新当前组件（可选）
-          onClick={() => loadCollections()}
-        >
+        <button className="tab active" onClick={() => loadCollections()}>
           Collections
         </button>
-        <button 
-          className="tab" 
-          // 点击Community Tab：调用父组件方法跳转到CommunityPage
-          onClick={() => onNavigate("community")}
-        >
+        <button className="tab" onClick={() => onNavigate?.("community", { audioId: fallbackAudioId })}>
           Community
         </button>
-        <button 
-          className="tab" 
-          // 预留Player Tab跳转
-          onClick={() => onNavigate("player")}
+        <button
+          className="tab"
+          disabled={!fallbackAudioId}
+          onClick={() => fallbackAudioId && onNavigate?.("player", { audioId: fallbackAudioId })}
         >
           Player
         </button>
       </div>
 
-      {/* 内容区（无侧边栏，直接显示内容） */}
       <div className="content-container">
         <div className="content-area">
           <div className="page-title">
@@ -173,7 +150,7 @@ export default function CollectionsPage({ onNavigate }) {
                   </div>
                   <button
                     className="listening-btn"
-                    onClick={() => goToIntensiveListening(material.audio_id || material.id)}
+                    onClick={() => goToInclusiveListen(material.audio_id || material.id)}
                   >
                     Intensive Listening
                   </button>
