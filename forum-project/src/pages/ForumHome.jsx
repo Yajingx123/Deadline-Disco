@@ -8,6 +8,8 @@ import PostModal from '../components/PostModal';
 import { getSummary } from '../utils/formatText';
 import { fetchLabels, fetchPosts, createPost, fetchPostDetail, incrementPostViews, createComment, deletePost, deleteComment } from '../api/forumApi';
 
+const FORUM_PREFILL_WINDOW_NAME_KEY = '__acadbeat_forum_prefill__';
+
 function normalizeComment(comment = {}) {
   return {
     ...comment,
@@ -67,8 +69,20 @@ export default function ForumHome() {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const shouldCompose = params.get('compose') === '1';
-    const prefillTitle = params.get('prefillTitle') || '';
-    const prefillContent = params.get('prefillContent') || '';
+    let prefillTitle = params.get('prefillTitle') || '';
+    let prefillContent = params.get('prefillContent') || '';
+
+    if (!prefillTitle && !prefillContent) {
+      try {
+        const bridgePayload = JSON.parse(window.name || '{}');
+        const storedDraft = bridgePayload?.[FORUM_PREFILL_WINDOW_NAME_KEY] || null;
+        prefillTitle = storedDraft?.title || '';
+        prefillContent = storedDraft?.content || '';
+      } catch (_err) {
+        prefillTitle = '';
+        prefillContent = '';
+      }
+    }
 
     if (!shouldCompose || (!prefillTitle && !prefillContent)) {
       return;
@@ -79,6 +93,7 @@ export default function ForumHome() {
       content: prefillContent,
     });
     setIsModalOpen(true);
+    window.name = '';
 
     const cleanUrl = `${window.location.pathname}${window.location.hash || ''}`;
     window.history.replaceState({}, document.title, cleanUrl);

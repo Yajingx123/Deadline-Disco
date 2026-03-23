@@ -3,6 +3,7 @@
   const LISTENING_RECORD_API = "./api/save-record.php";
   const INTEGRATED_RECORD_API = "./api/save-integrated-record.php";
   const FORUM_COMPOSE_URL = "http://127.0.0.1:5173/?compose=1";
+  const FORUM_PREFILL_WINDOW_NAME_KEY = "__acadbeat_forum_prefill__";
   if (!data) {
     return;
   }
@@ -27,6 +28,17 @@
 
   function buildAbsoluteProjectUrl(pathWithQuery) {
     return new URL(pathWithQuery, window.location.origin + "/").toString();
+  }
+
+  function openForumWithDraft(draft) {
+    try {
+      const bridgePayload = {};
+      bridgePayload[FORUM_PREFILL_WINDOW_NAME_KEY] = draft || {};
+      window.name = JSON.stringify(bridgePayload);
+    } catch (_err) {
+      window.name = "";
+    }
+    window.location.href = FORUM_COMPOSE_URL;
   }
 
   function goBack(target) {
@@ -1062,9 +1074,10 @@
         answerText
       ].join("\n");
 
-      const forumUrl = new URL(FORUM_COMPOSE_URL);
-      forumUrl.searchParams.set("prefillContent", prefillContent);
-      window.location.href = forumUrl.toString();
+      openForumWithDraft({
+        title: "",
+        content: prefillContent
+      });
     });
 
     if (recordAnswerBtn && recordAnswerFeedback) {
@@ -1183,6 +1196,7 @@
     const recordStatus = qs("#respondRecordStatus");
     const playbackEl = qs("#respondPlayback");
     const respondSaveBtn = qs("#respondSaveBtn");
+    const respondShareBtn = qs("#respondShareBtn");
     const respondSaveError = qs("#respondSaveError");
     const respondSaveFeedback = qs("#respondSaveFeedback");
 
@@ -1209,6 +1223,15 @@
     let currentAudioData = "";
     let currentAudioMime = "audio/webm";
 
+    function getAudioExtensionFromMime(mimeType) {
+      const normalized = String(mimeType || "").toLowerCase();
+      if (normalized.indexOf("ogg") !== -1) return "ogg";
+      if (normalized.indexOf("wav") !== -1) return "wav";
+      if (normalized.indexOf("mp4") !== -1 || normalized.indexOf("m4a") !== -1) return "m4a";
+      if (normalized.indexOf("mpeg") !== -1 || normalized.indexOf("mp3") !== -1) return "mp3";
+      return "webm";
+    }
+
     function setPlaybackSource(src) {
       playbackEl.src = src || "";
       if (!src) {
@@ -1220,6 +1243,18 @@
     function setRespondIdleState() {
       recordBtn.classList.remove("is-recording");
       recordBtn.textContent = currentAudioData ? "Re-record" : "SPEAKING";
+    }
+
+    function buildRespondShareContent() {
+      const trainingPath = "Academic-Practice/respond_training.html?mode=" + encodeURIComponent(mode) + "&videoId=" + encodeURIComponent(video.id);
+      const trainingUrl = buildAbsoluteProjectUrl(trainingPath);
+      const audioFileName = "response-" + video.id + "." + getAudioExtensionFromMime(currentAudioMime);
+      return [
+        "Related training: [" + (video.title || "Open training") + "](" + trainingUrl + ")",
+        "",
+        "My answer: ",
+        "![audio:" + audioFileName + "](" + currentAudioData + ")"
+      ].join("\n");
     }
 
     function resetRespondAttempt() {
@@ -1297,6 +1332,23 @@
         } finally {
           respondSaveBtn.disabled = false;
         }
+      });
+    }
+
+    if (respondShareBtn && respondSaveError && respondSaveFeedback) {
+      respondShareBtn.addEventListener("click", function () {
+        if (!currentAudioData) {
+          respondSaveError.textContent = "no recording yet";
+          respondSaveError.classList.remove("hidden");
+          respondSaveFeedback.classList.add("hidden");
+          return;
+        }
+
+        respondSaveError.classList.add("hidden");
+        openForumWithDraft({
+          title: "",
+          content: buildRespondShareContent()
+        });
       });
     }
 

@@ -1508,6 +1508,14 @@ body[data-page="response-detail"] .transcript-content {
   gap: 14px;
 }
 
+.respond-panel-head {
+  margin-bottom: 2px;
+}
+
+.respond-panel-head h3 {
+  margin: 0;
+}
+
 .respond-hint {
   color: var(--text-soft);
   font-size: 1rem;
