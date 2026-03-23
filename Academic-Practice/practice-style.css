@@ -1604,6 +1604,12 @@ body[data-page="response-detail"] .transcript-content {
   font-weight: 600;
 }
 
+.detail-meta-pill--country .country-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
 .answer-area {
   margin-top: 14px;
   padding: 12px 14px;

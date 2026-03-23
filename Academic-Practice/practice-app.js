@@ -952,14 +952,14 @@
     }
 
     titleEl.textContent = video.title;
-    detailPersonMetaEl.textContent = getPersonMetaText(video);
+    detailPersonMetaEl.innerHTML = getPersonMetaHtml(video);
     metaEl.innerHTML =
       "<span class='detail-meta-pill'>" + modeInfo.label + "</span>" +
       "<span class='detail-meta-pill'>" + video.type + "</span>" +
       "<span class='detail-meta-pill'>" + video.difficulty + "</span>" +
       "<span class='detail-meta-pill'>" + (video.duration || "N/A") + "</span>" +
       "<span class='detail-meta-pill'>" + (video.source || "N/A") + "</span>" +
-      "<span class='detail-meta-pill'>" + getCountryFlag(video.country) + " " + video.country + "</span>";
+      "<span class='detail-meta-pill detail-meta-pill--country'>" + getCountryInlineHtml(video.country) + "</span>";
     videoEl.src = getVideoSource(video);
     applySubtitleTrack(videoEl, video);
     initDetailResourceTabs(transcriptToggleBtn, sampleNotesToggleBtn, transcriptPanelEl, detailResourceTitleEl, transcriptContentEl, video);
@@ -1205,14 +1205,14 @@
     }
 
     titleEl.textContent = video.title;
-    personMetaEl.textContent = getPersonMetaText(video);
+    personMetaEl.innerHTML = getPersonMetaHtml(video);
     metaEl.innerHTML =
       "<span class='detail-meta-pill'>" + modeInfo.label + "</span>" +
       "<span class='detail-meta-pill'>" + video.type + "</span>" +
       "<span class='detail-meta-pill'>" + video.difficulty + "</span>" +
       "<span class='detail-meta-pill'>" + (video.duration || "N/A") + "</span>" +
       "<span class='detail-meta-pill'>" + (video.source || "N/A") + "</span>" +
-      "<span class='detail-meta-pill'>" + getCountryFlag(video.country) + " " + video.country + "</span>";
+      "<span class='detail-meta-pill detail-meta-pill--country'>" + getCountryInlineHtml(video.country) + "</span>";
     videoEl.src = getVideoSource(video);
     applySubtitleTrack(videoEl, video);
     initDetailResourceTabs(transcriptToggleBtn, null, transcriptPanelEl, respondResourceTitleEl, transcriptContentEl, video);
