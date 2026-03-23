@@ -29,6 +29,7 @@ export default function ForumHome() {
   const [sortOrder, setSortOrder] = useState('latest_reply');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [prefillDraft, setPrefillDraft] = useState(null);
 
   const loadForumData = async () => {
     setLoading(true);
@@ -63,6 +64,26 @@ export default function ForumHome() {
     loadForumData();
   }, [searchQuery, selectedTags, sortOrder]);
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const shouldCompose = params.get('compose') === '1';
+    const prefillTitle = params.get('prefillTitle') || '';
+    const prefillContent = params.get('prefillContent') || '';
+
+    if (!shouldCompose || (!prefillTitle && !prefillContent)) {
+      return;
+    }
+
+    setPrefillDraft({
+      title: prefillTitle,
+      content: prefillContent,
+    });
+    setIsModalOpen(true);
+
+    const cleanUrl = `${window.location.pathname}${window.location.hash || ''}`;
+    window.history.replaceState({}, document.title, cleanUrl);
+  }, []);
+
   const handleCreatePost = async (newData) => {
     const data = await createPost({
       title: newData.title,
@@ -77,6 +98,7 @@ export default function ForumHome() {
   };
 
   const handleOpenPostModal = () => {
+    setPrefillDraft(null);
     setIsModalOpen(true);
   };
 
@@ -177,13 +199,17 @@ export default function ForumHome() {
       {isModalOpen && (
         <PostModal 
           isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
+          onClose={() => {
+            setIsModalOpen(false);
+            setPrefillDraft(null);
+          }}
           onSubmit={handleCreatePost}
           isReplyMode={false}
           quoteText=""
           parentTitle=""
           labelOptions={labels}
           currentUser={currentUser}
+          prefillDraft={prefillDraft}
         />
       )}
     </div>

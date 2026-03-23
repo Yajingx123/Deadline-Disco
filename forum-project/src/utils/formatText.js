@@ -176,6 +176,7 @@ export const renderFormattedText = (text) => {
   // 👇 第二步：处理普通图片
   // 注意：因为音频已经被替换掉了，这里的正则不会再匹配到 audio 标记
   html = html.replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1" style="max-width: 100%; border-radius: 8px; margin: 10px 0; display:block;" />');
+  html = html.replace(/\[(.*?)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
   
   // 处理加粗、斜体、下划线
   html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
@@ -205,6 +206,7 @@ export const getReplyPreview = (text, maxLength = 90) => {
   });
 
   preview = preview
+    .replace(/\[(.*?)\]\((https?:\/\/[^\s)]+)\)/g, '$1')
     .replace(/\*\*(.+?)\*\*/g, '$1')
     .replace(/\*(.+?)\*/g, '$1')
     .replace(/<u>(.+?)<\/u>/g, '$1')
@@ -233,6 +235,7 @@ export const getSummary = (text, maxLength = 100) => {
 
   // 2. 处理图片标记：替换为 [图片]
   cleanText = cleanText.replace(/!\[(.*?)\]\((.*?)\)/g, '[图片]');
+  cleanText = cleanText.replace(/\[(.*?)\]\((https?:\/\/[^\s)]+)\)/g, '$1');
   
   // 3. 移除 Markdown 符号，只留纯文本
   cleanText = cleanText

@@ -2,6 +2,7 @@
   const data = window.PracticeData;
   const LISTENING_RECORD_API = "./api/save-record.php";
   const INTEGRATED_RECORD_API = "./api/save-integrated-record.php";
+  const FORUM_COMPOSE_URL = "http://127.0.0.1:5173/?compose=1";
   if (!data) {
     return;
   }
@@ -22,6 +23,10 @@
   function getParam(name, fallback) {
     const params = new URLSearchParams(window.location.search);
     return params.get(name) || fallback;
+  }
+
+  function buildAbsoluteProjectUrl(pathWithQuery) {
+    return new URL(pathWithQuery, window.location.origin + "/").toString();
   }
 
   function goBack(target) {
@@ -978,6 +983,20 @@
       localStorage.setItem(noteStorageKey, JSON.stringify(noteValues()));
     }
 
+    function buildSharedAnswerText(values) {
+      const sections = [];
+      if (values.mainContent) {
+        sections.push("Main Content: " + values.mainContent);
+      }
+      if (values.keyWord) {
+        sections.push("Key Word: " + values.keyWord);
+      }
+      if (values.personalView) {
+        sections.push("Personal View: " + values.personalView);
+      }
+      return sections.join("\n");
+    }
+
     function setEditingMode() {
       noteMainContentEl.value = "";
       noteKeyWordEl.value = "";
@@ -1024,7 +1043,28 @@
 
     noteShareBtn.addEventListener("click", function () {
       persistNoteDraft();
-      // Placeholder for future route/jump behavior.
+      const values = noteValues();
+      if (!values.mainContent && !values.keyWord && !values.personalView) {
+        if (recordAnswerFeedback) recordAnswerFeedback.classList.add("hidden");
+        if (recordAnswerError) recordAnswerError.classList.remove("hidden");
+        return;
+      }
+
+      if (recordAnswerError) recordAnswerError.classList.add("hidden");
+
+      const trainingPath = "Academic-Practice/note_training.html?mode=" + encodeURIComponent(mode) + "&videoId=" + encodeURIComponent(video.id);
+      const trainingUrl = buildAbsoluteProjectUrl(trainingPath);
+      const answerText = buildSharedAnswerText(values);
+      const prefillContent = [
+        "Related training: [" + (video.title || "Open training") + "](" + trainingUrl + ")",
+        "",
+        "My answer: ",
+        answerText
+      ].join("\n");
+
+      const forumUrl = new URL(FORUM_COMPOSE_URL);
+      forumUrl.searchParams.set("prefillContent", prefillContent);
+      window.location.href = forumUrl.toString();
     });
 
     if (recordAnswerBtn && recordAnswerFeedback) {

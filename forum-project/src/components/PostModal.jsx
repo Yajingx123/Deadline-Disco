@@ -19,6 +19,7 @@ const PostModal = ({
   parentTitle = '',
   labelOptions = [],
   currentUser = null,
+  prefillDraft = null,
 }) => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
@@ -43,8 +44,8 @@ const PostModal = ({
         setTitle('');
         setContent('');
       } else {
-        setTitle('');
-        setContent('');
+        setTitle(prefillDraft?.title || '');
+        setContent(prefillDraft?.content || '');
       }
       setSelectedTags([]); // 👇 重置标签
       setIsPreview(false);
@@ -77,7 +78,7 @@ const PostModal = ({
         document.body.classList.remove('pm-modal-open');
       };
     }
-  }, [isOpen, isReplyMode, parentTitle]);
+  }, [isOpen, isReplyMode, parentTitle, prefillDraft]);
 
   useEffect(() => {
     if (!isRecording) {
@@ -112,6 +113,7 @@ const PostModal = ({
     html = html.replace(/!\[audio:(.*?)\]\((.*?)\)/g, (match, fileName, src) => {
       return `<div style="margin: 12px 0; padding: 10px; background: #f4f3ec; border-radius: 8px; border: 1px solid #e5e4e7;"><div style="font-size: 12px; color: #6b6375; margin-bottom: 6px;">🎵 ${fileName}</div><audio controls style="width: 100%; height: 32px;"><source src="${src}" type="audio/mpeg" /><source src="${src}" type="audio/wav" /><source src="${src}" type="audio/ogg" />Your browser does not support the audio element.</audio></div>`;
     });
+    html = html.replace(/\[(.*?)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
     html = html.replace(/\n/g, '<br/>');
     return html;
   };
