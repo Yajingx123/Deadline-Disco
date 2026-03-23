@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Practice Detail | AcadBeat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="acadbeat-global.css">
+  <link rel="stylesheet" href="practice-style.css">
+</head>
+<body data-page="video-detail">
+  <nav>
+    <div class="logo">Acad<span>Beat</span></div>
+    <div class="nav-menu">
+      <a class="nav-item" href="index.html">Home</a>
+      <a class="nav-item active" href="ui_draft_1.html">Training</a>
+      <a class="nav-item" href="#">Community</a>
+      <a class="nav-item" href="#">Profile</a>
+    </div>
+  </nav>
+
+  <main class="module-content page-shell">
+    <button class="btn-small back-btn" data-back-target="ui_draft_2.html">Back</button>
+
+    <section class="detail-layout">
+      <div class="video-panel">
+        <h2 id="detailTitle">Video title</h2>
+        <p id="detailMeta">Type | Difficulty | Country</p>
+
+        <video id="practiceVideo" controls preload="metadata"></video>
+
+        <div class="answer-controls">
+          <button class="btn-small" id="showAnswerBtn" type="button">Show Answer</button>
+          <button class="btn-small" id="playAnswerBtn" type="button">Play Reference Audio</button>
+          <button class="btn-small" id="recordBtn" type="button">Record My Retell</button>
+        </div>
+
+        <div id="recordingStatus" class="recording-status">Ready</div>
+        <audio id="userRecordingPlayer" controls class="hidden"></audio>
+        <button class="btn-small hidden" id="deleteUserRecordingBtn" type="button">Delete Recording</button>
+        <audio id="answerAudioPlayer" controls class="hidden"></audio>
+
+        <div id="answerArea" class="answer-area hidden"></div>
+      </div>
+
+      <aside class="note-panel">
+        <h3>Note</h3>
+        <textarea id="noteArea" rows="20" placeholder="Write your notes or answers here..."></textarea>
+        <button class="btn-small btn-primary-small" id="saveNoteBtn" type="button">Save Note</button>
+        <p id="noteStatus">Not saved yet.</p>
+      </aside>
+    </section>
+  </main>
+
+  <script src="practice-data.js"></script>
+  <script src="practice-app.js"></script>
+</body>
+</html>

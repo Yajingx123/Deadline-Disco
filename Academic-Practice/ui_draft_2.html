@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video Selection | AcadBeat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="acadbeat-global.css">
+  <link rel="stylesheet" href="practice-style.css">
+</head>
+<body data-page="video-list">
+  <nav>
+    <div class="logo">Acad<span>Beat</span></div>
+    <div class="nav-menu">
+      <a class="nav-item" href="index.html">Home</a>
+      <a class="nav-item active" href="ui_draft_1.html">Training</a>
+      <a class="nav-item" href="#">Community</a>
+      <a class="nav-item" href="#">Profile</a>
+    </div>
+  </nav>
+
+  <main class="module-content page-shell">
+    <button class="btn-small back-btn" data-back-target="ui_draft_1.html">Back</button>
+
+    <section class="selector-layout">
+      <aside class="filter-panel">
+        <h2 id="modeTitle">Self-training</h2>
+        <p class="filter-subtitle">Filter videos by learning preference.</p>
+
+        <div class="filter-group">
+          <label for="filterType">Type</label>
+          <select id="filterType"></select>
+        </div>
+
+        <div class="filter-group">
+          <label for="filterDifficulty">Difficulty</label>
+          <select id="filterDifficulty"></select>
+        </div>
+
+        <div class="filter-group">
+          <label for="filterCountry">Speaker's country</label>
+          <select id="filterCountry"></select>
+        </div>
+      </aside>
+
+      <section class="video-results">
+        <div class="results-header">
+          <h3>Filtered videos</h3>
+          <p id="resultsCount">0 videos</p>
+        </div>
+        <div id="videoResultList" class="video-card-list"></div>
+      </section>
+    </section>
+  </main>
+
+  <script src="practice-data.js"></script>
+  <script src="practice-app.js"></script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Training Hub | AcadBeat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="acadbeat-global.css">
+  <link rel="stylesheet" href="practice-style.css">
+</head>
+<body data-page="training-home">
+  <nav>
+    <div class="logo">Acad<span>Beat</span></div>
+    <div class="nav-menu">
+      <a class="nav-item" href="index.html">Home</a>
+      <a class="nav-item active" href="ui_draft_1.html">Training</a>
+      <a class="nav-item" href="#">Community</a>
+      <a class="nav-item" href="#">Profile</a>
+    </div>
+  </nav>
+
+  <main class="module-content page-shell">
+    <button class="btn-small back-btn" data-back-target="index.html">Back</button>
+
+    <section class="section-block">
+      <div class="section-header">
+        <p class="module-label">Self-Training</p>
+        <h2>Choose a focused mode</h2>
+      </div>
+
+      <div class="mode-grid">
+        <article class="mode-card">
+          <h3>Listening and Understand</h3>
+          <p>Watch, identify key ideas, and write your summary in Notes.</p>
+          <a class="btn-small" href="ui_draft_2.html?mode=understand">Start</a>
+        </article>
+
+        <article class="mode-card">
+          <h3>Listening and Retell</h3>
+          <p>Retell the clip with your own words and compare with model audio.</p>
+          <a class="btn-small" href="ui_draft_2.html?mode=retell">Start</a>
+        </article>
+
+        <article class="mode-card">
+          <h3>Listening and Respond</h3>
+          <p>Answer a question based on the clip and check reference responses.</p>
+          <a class="btn-small" href="ui_draft_2.html?mode=respond">Start</a>
+        </article>
+      </div>
+    </section>
+
+    <section class="section-block">
+      <div class="section-header">
+        <p class="module-label">Training With Others</p>
+        <h2>Campus discussion topics</h2>
+      </div>
+
+      <div class="topics-wrap">
+        <aside class="topic-list" id="topicList"></aside>
+        <section class="topic-thread">
+          <div class="topic-thread-header">
+            <h3 id="topicTitle">Select one topic</h3>
+            <p id="topicDesc">Open a topic to post text or audio replies.</p>
+          </div>
+
+          <div class="posts" id="topicPosts"></div>
+
+          <form id="textPostForm" class="post-form">
+            <textarea id="postText" placeholder="Write your response..." rows="4"></textarea>
+            <button class="btn-small btn-primary-small" type="submit">Post Text Reply</button>
+          </form>
+
+          <div class="audio-post-panel">
+            <button class="btn-small" id="topicRecordBtn" type="button">Record Voice Reply</button>
+            <span id="topicRecordStatus">Ready</span>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <script src="practice-data.js"></script>
+  <script src="practice-app.js"></script>
+</body>
+</html>
