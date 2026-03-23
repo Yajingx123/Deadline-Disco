@@ -1,0 +1,9 @@
+2
+topic: Would you rather write a paper or take a test?
+labels: campus&life
+author: On
+from: Thailand
+time：0-1min
+specific time: 00:37
+difficulty: medium
+source: elllo

@@ -1,0 +1,10 @@
+1
+type: listening
+topic: What is the secret to learning English?
+labels: campus&life
+author: Christina
+from: Germany
+time:0-1min
+timeSpecific: 00:40
+difficulty: easy
+source: elllo
