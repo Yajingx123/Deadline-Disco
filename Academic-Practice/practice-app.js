@@ -8,6 +8,15 @@
     return document.querySelector(selector);
   }
 
+  function escapeHtml(value) {
+    return String(value == null ? "" : value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
+  }
+
   function getParam(name, fallback) {
     const params = new URLSearchParams(window.location.search);
     return params.get(name) || fallback;
@@ -33,15 +42,7 @@
     });
   }
 
-  function getPersonMetaText(video) {
-    const author = video.author || "Unknown";
-    const country = video.country || "N/A";
-    const flag = getCountryFlag(country);
-    const timeSpecific = video.timeSpecific || video.duration || "N/A";
-    return author + " | " + flag + " " + country + " | " + timeSpecific;
-  }
-
-  function getCountryFlag(country) {
+  function getCountryIso(country) {
     const raw = String(country || "").trim();
     const normalized = raw.toLowerCase();
     const isoMap = {
@@ -68,11 +69,51 @@
       fr: "FR",
       de: "DE",
       th: "TH",
-      au: "AU",
-      us: "US"
+      au: "AU"
     };
 
-    const iso = isoMap[normalized] || (normalized.length === 2 ? normalized.toUpperCase() : null);
+    if (normalized === "us") {
+      return "US";
+    }
+    return isoMap[normalized] || (normalized.length === 2 ? normalized.toUpperCase() : null);
+  }
+
+  function getCountryFlagPath(country) {
+    const iso = getCountryIso(country);
+    return iso ? "flags/flags/" + iso.toLowerCase() + ".png" : "";
+  }
+
+  function getCountryFlagImgHtml(country) {
+    const src = getCountryFlagPath(country);
+    if (!src) {
+      return "";
+    }
+    return "<img class='country-flag-icon' src='" + escapeHtml(src) + "' alt='" + escapeHtml(country || "Country") + " flag'>";
+  }
+
+  function getCountryLabelHtml(country) {
+    return "<span class='country-label'>" + escapeHtml(country || "N/A") + "</span>";
+  }
+
+  function getCountryInlineHtml(country) {
+    const flagHtml = getCountryFlagImgHtml(country);
+    const labelHtml = getCountryLabelHtml(country);
+    if (!flagHtml) {
+      return labelHtml;
+    }
+    return "<span class='country-inline'>" + flagHtml + labelHtml + "</span>";
+  }
+
+  function getPersonMetaText(video) {
+    const author = video.author || "Unknown";
+    const country = video.country || "N/A";
+    const flag = getCountryFlag(country);
+    const timeSpecific = video.timeSpecific || video.duration || "N/A";
+    return author + " | " + flag + " " + country + " | " + timeSpecific;
+  }
+
+  function getCountryFlag(country) {
+    const iso = getCountryIso(country);
     if (!iso || iso.length !== 2) {
       return "🏳️";
     }
@@ -82,6 +123,121 @@
       return "🏳️";
     }
     return String.fromCodePoint(127397 + codeA) + String.fromCodePoint(127397 + codeB);
+  }
+
+  function getPersonMetaHtml(video) {
+    const author = escapeHtml(video.author || "Unknown");
+    const countryHtml = getCountryInlineHtml(video.country || "N/A");
+    const timeSpecific = escapeHtml(video.timeSpecific || video.duration || "N/A");
+    return "<span>" + author + "</span><span class='person-meta-separator'>|</span>" + countryHtml + "<span class='person-meta-separator'>|</span><span>" + timeSpecific + "</span>";
+  }
+
+  function createCountryFilter(containerEl, values, initialValue, onChange) {
+    if (!containerEl) {
+      return { setValue: function () {} };
+    }
+
+    let currentValue = initialValue || "All";
+    let isOpen = false;
+    containerEl.innerHTML = "";
+
+    const dropdownEl = document.createElement("div");
+    dropdownEl.className = "country-select";
+
+    const triggerEl = document.createElement("button");
+    triggerEl.type = "button";
+    triggerEl.className = "country-select-btn";
+    triggerEl.setAttribute("aria-haspopup", "listbox");
+    triggerEl.setAttribute("aria-expanded", "false");
+
+    const menuEl = document.createElement("div");
+    menuEl.className = "country-select-menu hidden";
+    menuEl.setAttribute("role", "listbox");
+
+    function renderTrigger() {
+      const contentHtml = currentValue === "All"
+        ? "<span class='country-inline'><span class='country-label'>Country: All</span></span>"
+        : getCountryInlineHtml(currentValue);
+      triggerEl.innerHTML = contentHtml + "<span class='country-select-caret' aria-hidden='true'>▾</span>";
+      triggerEl.setAttribute("aria-expanded", isOpen ? "true" : "false");
+    }
+
+    function closeMenu() {
+      isOpen = false;
+      menuEl.classList.add("hidden");
+      dropdownEl.classList.remove("is-open");
+      renderTrigger();
+    }
+
+    function openMenu() {
+      isOpen = true;
+      menuEl.classList.remove("hidden");
+      dropdownEl.classList.add("is-open");
+      renderTrigger();
+    }
+
+    function setValue(nextValue, notify) {
+      currentValue = nextValue;
+      Array.from(menuEl.children).forEach(function (child) {
+        child.classList.toggle("is-active", child.dataset.value === currentValue);
+        child.setAttribute("aria-selected", child.dataset.value === currentValue ? "true" : "false");
+      });
+      renderTrigger();
+      if (notify && typeof onChange === "function") {
+        onChange(currentValue);
+      }
+    }
+
+    values.forEach(function (value) {
+      const optionEl = document.createElement("button");
+      optionEl.type = "button";
+      optionEl.className = "country-select-option";
+      optionEl.dataset.value = value;
+      optionEl.setAttribute("role", "option");
+      optionEl.setAttribute("aria-selected", value === currentValue ? "true" : "false");
+      optionEl.innerHTML = value === "All"
+        ? "<span class='country-inline'><span class='country-label'>Country: All</span></span>"
+        : getCountryInlineHtml(value);
+      optionEl.addEventListener("click", function () {
+        setValue(value, true);
+        closeMenu();
+      });
+      menuEl.appendChild(optionEl);
+    });
+
+    triggerEl.addEventListener("click", function () {
+      if (isOpen) {
+        closeMenu();
+        return;
+      }
+      openMenu();
+    });
+
+    document.addEventListener("click", function (event) {
+      if (!containerEl.contains(event.target)) {
+        closeMenu();
+      }
+    });
+
+    document.addEventListener("keydown", function (event) {
+      if (event.key === "Escape") {
+        closeMenu();
+      }
+    });
+
+    dropdownEl.appendChild(triggerEl);
+    dropdownEl.appendChild(menuEl);
+    containerEl.appendChild(dropdownEl);
+    setValue(currentValue, false);
+
+    return {
+      setValue: function (value) {
+        setValue(value, false);
+        Array.from(menuEl.children).forEach(function (child) {
+          child.setAttribute("aria-selected", child.dataset.value === currentValue ? "true" : "false");
+        });
+      }
+    };
   }
 
   function getVideoSource(video) {
@@ -121,6 +277,111 @@
       contentEl.textContent = await response.text();
     } catch (_err) {
       contentEl.textContent = "Failed to load transcript text.";
+    }
+  }
+
+  function getSampleNotesPath(video) {
+    if (!video || video.id !== "u1") {
+      return "";
+    }
+    return "material/1_sample_notes.txt";
+  }
+
+  function getSampleNotesText(video) {
+    if (!video || video.id !== "u1") {
+      return "";
+    }
+    return [
+      "1. Main content",
+      " - Christina shares her personal experience of improving English by living abroad in New Zealand for one year.",
+      " - She emphasizes that learning basic English skills like listening and reading at school first is important before practicing English constantly in real situations.",
+      "",
+      "2. Key words",
+      " - learn some basics",
+      " - listenings and readings",
+      " - first do basic",
+      " - then go over",
+      " - speak English all the time"
+    ].join("\n");
+  }
+
+  async function loadTextContent(path, fallbackText, failureText) {
+    if (fallbackText) {
+      return fallbackText;
+    }
+    if (!path) {
+      return failureText;
+    }
+    try {
+      const response = await fetch(path);
+      if (!response.ok) {
+        throw new Error("text fetch failed");
+      }
+      return await response.text();
+    } catch (_err) {
+      return failureText;
+    }
+  }
+
+  async function initDetailResourceTabs(transcriptBtn, sampleNotesBtn, panelEl, titleEl, contentEl, video) {
+    if (!transcriptBtn || !panelEl || !titleEl || !contentEl) {
+      return;
+    }
+
+    const sampleNotesPath = getSampleNotesPath(video);
+    const sampleNotesText = getSampleNotesText(video);
+    const tabButtons = [transcriptBtn];
+    const contentCache = {};
+    let activeTab = "";
+
+    if (sampleNotesBtn && sampleNotesPath) {
+      sampleNotesBtn.classList.remove("hidden");
+      tabButtons.push(sampleNotesBtn);
+    }
+
+    function setActiveButton(targetBtn) {
+      tabButtons.forEach(function (btn) {
+        btn.classList.toggle("is-active", btn === targetBtn);
+      });
+    }
+
+    async function openTab(tabName) {
+      if (activeTab === tabName && !panelEl.classList.contains("hidden")) {
+        panelEl.classList.add("hidden");
+        activeTab = "";
+        setActiveButton(null);
+        return;
+      }
+
+      activeTab = tabName;
+      panelEl.classList.remove("hidden");
+
+      if (tabName === "sample-notes") {
+        titleEl.textContent = "Sample Notes";
+        if (!contentCache.sampleNotes) {
+          contentCache.sampleNotes = await loadTextContent(sampleNotesPath, sampleNotesText, "No sample notes available for this video.");
+        }
+        contentEl.textContent = contentCache.sampleNotes;
+        setActiveButton(sampleNotesBtn);
+        return;
+      }
+
+      titleEl.textContent = "Transcript";
+      if (!contentCache.transcript) {
+        contentCache.transcript = await loadTextContent(video.transcriptPath, video.transcriptText, "Failed to load transcript text.");
+      }
+      contentEl.textContent = contentCache.transcript || "No transcript file for this video.";
+      setActiveButton(transcriptBtn);
+    }
+
+    transcriptBtn.addEventListener("click", function () {
+      openTab("transcript");
+    });
+
+    if (sampleNotesBtn && sampleNotesPath) {
+      sampleNotesBtn.addEventListener("click", function () {
+        openTab("sample-notes");
+      });
     }
   }
 
@@ -456,12 +717,12 @@
     const difficultyEl = qs("#smartDifficulty");
     const durationEl = qs("#smartDuration");
     const sourceEl = qs("#smartSource");
-    const countryEl = qs("#smartCountry");
+    const countryFilterEl = qs("#smartCountryFilter");
     const clearBtn = qs("#clearSmartFilters");
     const resultList = qs("#videoResultList");
     const resultsCount = qs("#resultsCount");
 
-    if (!modeTitle || !searchEl || !typeEl || !difficultyEl || !durationEl || !sourceEl || !countryEl || !clearBtn || !resultList || !resultsCount) {
+    if (!modeTitle || !searchEl || !typeEl || !difficultyEl || !durationEl || !sourceEl || !countryFilterEl || !clearBtn || !resultList || !resultsCount) {
       return;
     }
 
@@ -498,9 +759,11 @@
     const allCountries = ["All"].concat(Array.from(new Set(modeVideos.map(function (v) { return v.country; }))));
 
     buildOptions(allTypes, typeEl);
-    buildOptions(allCountries, countryEl);
+    const countryFilter = createCountryFilter(countryFilterEl, allCountries, "All", function (value) {
+      filterState.country = value;
+      renderResults();
+    });
     typeEl.options[0].textContent = "Type: All";
-    countryEl.options[0].textContent = "Country: All";
 
     const filterState = {
       search: "",
@@ -556,7 +819,7 @@
           "<span class='video-meta-pill'>" + video.difficulty + "</span>" +
           "<span class='video-meta-pill'>" + (video.duration || "N/A") + "</span>" +
           "<span class='video-meta-pill'>" + (video.source || "N/A") + "</span>" +
-          "<span class='video-meta-pill'>" + getCountryFlag(video.country) + " " + video.country + "</span>" +
+          "<span class='video-meta-pill video-country-pill'>" + getCountryInlineHtml(video.country) + "</span>" +
           "</div>";
         const coverFile = getCoverFile(video);
         const coverFolder = getCoverFolder();
@@ -568,7 +831,7 @@
           "<button class='btn-small video-go-btn' type='button' aria-label='Play video' title='Play'>&#9658;</button>" +
           "<div class='video-cover-title'>" + video.title + "</div>" +
           "</div>";
-        const personLine = "<p class='video-person-line'>" + getPersonMetaText(video) + "</p>";
+        const personLine = "<p class='video-person-line'>" + getPersonMetaHtml(video) + "</p>";
         const questionLine = video.question ? "<p class='video-question'>Q: " + video.question + "</p>" : "";
         card.innerHTML =
           metaLine +
@@ -577,7 +840,7 @@
           questionLine;
 
         card.querySelector(".video-go-btn").addEventListener("click", function () {
-          const targetPage = mode === "respond" ? "ui_draft_respond.html" : "ui_draft_3.html";
+          const targetPage = mode === "respond" ? "respond_training.html" : "note_training.html";
           window.location.href = targetPage + "?mode=" + mode + "&videoId=" + video.id;
         });
 
@@ -610,11 +873,6 @@
       renderResults();
     });
 
-    countryEl.addEventListener("change", function () {
-      filterState.country = countryEl.value;
-      renderResults();
-    });
-
     clearBtn.addEventListener("click", function () {
       filterState.search = "";
       filterState.difficulty = "All";
@@ -627,7 +885,7 @@
       difficultyEl.value = "All";
       durationEl.value = "All";
       sourceEl.value = "All";
-      countryEl.value = "All";
+      countryFilter.setValue("All");
       renderResults();
     });
 
@@ -652,8 +910,9 @@
     const metaEl = qs("#detailMeta");
     const videoEl = qs("#practiceVideo");
     const transcriptToggleBtn = qs("#transcriptToggleBtn");
-    const transcriptCloseBtn = qs("#transcriptCloseBtn");
+    const sampleNotesToggleBtn = qs("#sampleNotesToggleBtn");
     const transcriptPanelEl = qs("#transcriptPanel");
+    const detailResourceTitleEl = qs("#detailResourceTitle");
     const transcriptContentEl = qs("#transcriptContent");
     const noteLayoutEl = qs(".detail-note-layout");
     const studyWorkspaceEl = qs("#studyWorkspace");
@@ -678,7 +937,7 @@
       "<span class='detail-meta-pill'>" + getCountryFlag(video.country) + " " + video.country + "</span>";
     videoEl.src = getVideoSource(video);
     applySubtitleTrack(videoEl, video);
-    initTranscriptPanel(transcriptToggleBtn, transcriptCloseBtn, transcriptPanelEl, transcriptContentEl, video);
+    initDetailResourceTabs(transcriptToggleBtn, sampleNotesToggleBtn, transcriptPanelEl, detailResourceTitleEl, transcriptContentEl, video);
 
     if (mode === "respond" && noteLayoutEl) {
       noteLayoutEl.classList.add("hidden");
@@ -770,8 +1029,8 @@
     const personMetaEl = qs("#respondPersonMeta");
     const metaEl = qs("#respondMeta");
     const transcriptToggleBtn = qs("#respondTranscriptToggleBtn");
-    const transcriptCloseBtn = qs("#respondTranscriptCloseBtn");
     const transcriptPanelEl = qs("#respondTranscriptPanel");
+    const respondResourceTitleEl = qs("#respondResourceTitle");
     const transcriptContentEl = qs("#respondTranscriptContent");
     const videoEl = qs("#respondVideo");
     const recordBtn = qs("#respondRecordBtn");
@@ -793,7 +1052,7 @@
       "<span class='detail-meta-pill'>" + getCountryFlag(video.country) + " " + video.country + "</span>";
     videoEl.src = getVideoSource(video);
     applySubtitleTrack(videoEl, video);
-    initTranscriptPanel(transcriptToggleBtn, transcriptCloseBtn, transcriptPanelEl, transcriptContentEl, video);
+    initDetailResourceTabs(transcriptToggleBtn, null, transcriptPanelEl, respondResourceTitleEl, transcriptContentEl, video);
 
     const responseStorageKey = "practice-response-audio-" + video.id;
     let recorder = null;
