@@ -1583,6 +1583,17 @@ body[data-page="response-detail"] .transcript-content {
   min-height: 160px;
 }
 
+.note-field-display {
+  min-height: 160px;
+  padding: 14px 16px;
+  border-radius: var(--radius-small);
+  background: rgba(255, 255, 255, 0.32);
+  border: 1px solid rgba(58, 78, 107, 0.08);
+  color: var(--secondary-color);
+  line-height: 1.8;
+  white-space: pre-wrap;
+}
+
 .note-inline-btn {
   margin-top: 8px;
   padding: 8px 12px;
@@ -1595,6 +1606,48 @@ body[data-page="response-detail"] .transcript-content {
   flex-wrap: wrap;
   gap: 8px;
   margin-top: 8px;
+}
+
+.note-record-action {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.note-record-action-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.note-record-error {
+  color: #b64f60;
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.note-record-feedback {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: rgba(155, 183, 212, 0.16);
+  border: 1px solid rgba(155, 183, 212, 0.24);
+  color: var(--secondary-color);
+}
+
+.note-record-feedback strong {
+  font-size: 0.96rem;
+  font-weight: 800;
+}
+
+.note-record-feedback span {
+  font-size: 0.84rem;
+  opacity: 0.7;
+  line-height: 1.5;
 }
 
 #saveNoteBtn {

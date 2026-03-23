@@ -1,5 +1,6 @@
 (function () {
   const data = window.PracticeData;
+  const LISTENING_RECORD_API = "./api/save-record.php";
   if (!data) {
     return;
   }
@@ -921,6 +922,12 @@
     const noteMainContentEl = qs("#noteMainContent");
     const noteKeyWordEl = qs("#noteKeyWord");
     const notePersonalViewEl = qs("#notePersonalView");
+    const noteMainContentDisplayEl = qs("#noteMainContentDisplay");
+    const noteKeyWordDisplayEl = qs("#noteKeyWordDisplay");
+    const notePersonalViewDisplayEl = qs("#notePersonalViewDisplay");
+    const recordAnswerBtn = qs("#recordAnswerBtn");
+    const recordAnswerError = qs("#recordAnswerError");
+    const recordAnswerFeedback = qs("#recordAnswerFeedback");
 
     if (!titleEl || !detailPersonMetaEl || !metaEl || !videoEl || !studyWorkspaceEl || !noteShareBtn || !noteDockToggleBtn || !noteMainContentEl || !noteKeyWordEl || !notePersonalViewEl) {
       return;
@@ -958,12 +965,56 @@
     noteKeyWordEl.value = noteDraft.keyWord || "";
     notePersonalViewEl.value = noteDraft.personalView || "";
 
-    function persistNoteDraft() {
-      localStorage.setItem(noteStorageKey, JSON.stringify({
+    function noteValues() {
+      return {
         mainContent: noteMainContentEl.value.trim(),
         keyWord: noteKeyWordEl.value.trim(),
         personalView: notePersonalViewEl.value.trim()
-      }));
+      };
+    }
+
+    function persistNoteDraft() {
+      localStorage.setItem(noteStorageKey, JSON.stringify(noteValues()));
+    }
+
+    function setEditingMode() {
+      noteMainContentEl.value = "";
+      noteKeyWordEl.value = "";
+      notePersonalViewEl.value = "";
+      noteMainContentEl.classList.remove("hidden");
+      noteKeyWordEl.classList.remove("hidden");
+      notePersonalViewEl.classList.remove("hidden");
+      if (noteMainContentDisplayEl) noteMainContentDisplayEl.classList.add("hidden");
+      if (noteKeyWordDisplayEl) noteKeyWordDisplayEl.classList.add("hidden");
+      if (notePersonalViewDisplayEl) notePersonalViewDisplayEl.classList.add("hidden");
+      if (recordAnswerError) recordAnswerError.classList.add("hidden");
+      if (recordAnswerFeedback) recordAnswerFeedback.classList.add("hidden");
+      recordAnswerBtn.textContent = "Record your answer";
+      persistNoteDraft();
+    }
+
+    function setSavedMode(values) {
+      noteMainContentEl.classList.add("hidden");
+      noteKeyWordEl.classList.add("hidden");
+      notePersonalViewEl.classList.add("hidden");
+      if (noteMainContentDisplayEl) {
+        noteMainContentDisplayEl.textContent = values.mainContent;
+        noteMainContentDisplayEl.classList.remove("hidden");
+      }
+      if (noteKeyWordDisplayEl) {
+        noteKeyWordDisplayEl.textContent = values.keyWord;
+        noteKeyWordDisplayEl.classList.remove("hidden");
+      }
+      if (notePersonalViewDisplayEl) {
+        notePersonalViewDisplayEl.textContent = values.personalView;
+        notePersonalViewDisplayEl.classList.remove("hidden");
+      }
+      if (recordAnswerError) recordAnswerError.classList.add("hidden");
+      if (recordAnswerFeedback) {
+        recordAnswerFeedback.innerHTML = "<strong>Saved to your study record</strong><span>You can still make multiple attempts and save</span>";
+        recordAnswerFeedback.classList.remove("hidden");
+      }
+      recordAnswerBtn.textContent = "Saved. Start second attempt";
     }
 
     noteMainContentEl.addEventListener("input", persistNoteDraft);
@@ -974,6 +1025,60 @@
       persistNoteDraft();
       // Placeholder for future route/jump behavior.
     });
+
+    if (recordAnswerBtn && recordAnswerFeedback) {
+      recordAnswerBtn.addEventListener("click", async function () {
+        if (recordAnswerBtn.textContent === "Saved. Start second attempt") {
+          setEditingMode();
+          return;
+        }
+
+        persistNoteDraft();
+        const values = noteValues();
+        if (!values.mainContent && !values.keyWord && !values.personalView) {
+          if (recordAnswerError) recordAnswerError.classList.remove("hidden");
+          if (recordAnswerFeedback) recordAnswerFeedback.classList.add("hidden");
+          return;
+        }
+        if (recordAnswerError) recordAnswerError.classList.add("hidden");
+        recordAnswerBtn.disabled = true;
+        recordAnswerBtn.textContent = "Saving...";
+        try {
+          const response = await fetch(LISTENING_RECORD_API, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({
+              videoId: video.id,
+              mode: mode,
+              title: video.title,
+              personMeta: getPersonMetaText(video),
+              difficulty: video.difficulty || "",
+              duration: video.duration || "",
+              source: video.source || "",
+              country: video.country || "",
+              mainContent: values.mainContent,
+              keyWord: values.keyWord,
+              personalView: values.personalView
+            })
+          });
+          const payload = await response.json().catch(function () {
+            return { ok: false, message: "Invalid response." };
+          });
+          if (!response.ok || !payload.ok) {
+            throw new Error(payload.message || "Unable to save this record.");
+          }
+
+          setSavedMode(values);
+        } catch (error) {
+          recordAnswerFeedback.innerHTML = "<strong>" + escapeHtml((error && error.message) || "Unable to save this record.") + "</strong><span>Please log in first, then try again.</span>";
+          recordAnswerFeedback.classList.remove("hidden");
+          recordAnswerBtn.textContent = "Try Again";
+        } finally {
+          recordAnswerBtn.disabled = false;
+        }
+      });
+    }
 
     function refreshNoteDockBtnText() {
       const isCollapsed = studyWorkspaceEl.classList.contains("note-dock-collapsed");
