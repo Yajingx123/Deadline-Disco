@@ -626,6 +626,7 @@
         const AUTH_API_BASE = './Auth/backend/api';
         const OWNER_VOCAB_API = './vocba_prac/api/owner-vocabulary.php';
         const OWNER_LISTENING_API = './Academic-Practice/api/records.php';
+        const OWNER_INTEGRATED_API = './Academic-Practice/api/integrated-records.php';
         const PEER_API_BASE = './peer-resonance/api';
         let viewDate = new Date();
         const today = new Date();
@@ -633,6 +634,7 @@
         let ownerListMode = 'records';
         let ownerVocabularyData = { records: [], favorites: [] };
         let ownerListeningRecords = [];
+        let ownerIntegratedRecords = [];
         let ownerAuthUser = null;
         let peerResonanceState = { activeTeam: null, incomingInvites: [], outgoingInvites: [], myCheckinDates: [] };
 
@@ -880,6 +882,12 @@
             ownerListeningRecords = data.ok && Array.isArray(data.records) ? data.records : [];
         }
 
+        async function loadOwnerIntegratedData() {
+            const response = await fetch(OWNER_INTEGRATED_API, { credentials: 'include' });
+            const data = await response.json().catch(() => ({ ok: false }));
+            ownerIntegratedRecords = data.ok && Array.isArray(data.records) ? data.records : [];
+        }
+
         function formatShortDate(value) {
             if (!value) return 'Recent';
             const d = new Date(String(value).replace(' ', 'T'));
@@ -1040,6 +1048,69 @@
             );
         }
 
+        function renderIntegratedRecords() {
+            const container = document.getElementById('items-container');
+            const records = ownerIntegratedRecords || [];
+            if (!records.length) {
+                container.innerHTML = `
+                <div class="daily-focus-card list-item">
+                    <div>
+                        <h4 style="font-size:0.78rem; opacity:0.45;">INTEGRATED • NO RECORDS YET</h4>
+                        <p style="font-family:'Playfair Display'; font-size:1.35rem;">No integrated speaking records saved yet</p>
+                        <p style="font-size:0.86rem; opacity:0.62; margin-top:10px;">Use Response Practice and save your audio answer to create an integrated record here.</p>
+                    </div>
+                </div>`;
+                return;
+            }
+            container.innerHTML = records.map((record, index) => `
+                <button class="daily-focus-card list-item" type="button" onclick="openIntegratedRecord(${record.recordId})" style="display:block; width:100%; text-align:left; border:none; cursor:pointer;">
+                    <div style="display:flex; justify-content:space-between; gap:18px; align-items:flex-start;">
+                        <div style="flex:1;">
+                            <h4 style="font-size:0.78rem; opacity:0.45;">INTEGRATED • ${escapeHtml(formatShortDate(record.createdAt))}</h4>
+                            <p style="font-family:'Playfair Display'; font-size:1.35rem;">${escapeHtml(record.title)}</p>
+                            <p style="font-size:0.84rem; opacity:0.62; margin-top:8px;">${escapeHtml(record.personMeta || 'Response Practice')}</p>
+                            <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:12px;">
+                                ${record.mode ? `<span style="padding:8px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.82rem;">${escapeHtml(record.mode)}</span>` : ''}
+                                ${record.difficulty ? `<span style="padding:8px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.82rem;">${escapeHtml(record.difficulty)}</span>` : ''}
+                                ${record.duration ? `<span style="padding:8px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.82rem;">${escapeHtml(record.duration)}</span>` : ''}
+                            </div>
+                        </div>
+                        <div style="font-family:'Playfair Display'; font-size:2.5rem; opacity:0.18; font-style:italic;">${String(index + 1).padStart(2, '0')}</div>
+                    </div>
+                    <p style="font-size:0.82rem; opacity:0.64; margin-top:14px;">Tap to play your saved response.</p>
+                </button>
+            `).join('');
+        }
+
+        async function openIntegratedRecord(recordId) {
+            const response = await fetch(`${OWNER_INTEGRATED_API}?id=${encodeURIComponent(recordId)}`, { credentials: 'include' });
+            const data = await response.json().catch(() => ({ ok: false }));
+            if (!data.ok || !data.record) {
+                openSiteModal('Unable to open record', 'This integrated record could not be loaded right now.');
+                return;
+            }
+            const record = data.record;
+            openSiteModal(
+                record.title || 'Integrated Record',
+                `
+                <div style="display:grid; gap:14px; text-align:left;">
+                    <div style="font-size:0.86rem; opacity:0.68;">${escapeHtml(formatShortDate(record.createdAt))}</div>
+                    <div style="display:flex; flex-wrap:wrap; gap:8px;">
+                        ${record.mode ? `<span style="padding:7px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.8rem;">${escapeHtml(record.mode)}</span>` : ''}
+                        ${record.difficulty ? `<span style="padding:7px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.8rem;">${escapeHtml(record.difficulty)}</span>` : ''}
+                        ${record.duration ? `<span style="padding:7px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.8rem;">${escapeHtml(record.duration)}</span>` : ''}
+                        ${record.source ? `<span style="padding:7px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.8rem;">${escapeHtml(record.source)}</span>` : ''}
+                    </div>
+                    <audio controls style="width:100%;">
+                        <source src="${record.audioData}" type="${escapeHtml(record.audioMime || 'audio/webm')}">
+                    </audio>
+                </div>
+                `,
+                null,
+                true
+            );
+        }
+
         function renderPlaceholderList(cat) {
             document.getElementById('items-container').innerHTML = `
             <div class="daily-focus-card list-item" style="display:flex; justify-content:space-between; align-items:center;">
@@ -1122,6 +1193,10 @@
                 renderListeningRecords();
                 return;
             }
+            if (cat === 'integrated' && ownerListMode === 'records') {
+                renderIntegratedRecords();
+                return;
+            }
             if (cat !== 'vocabulary') {
                 renderPlaceholderList(cat);
                 return;
@@ -1138,6 +1213,7 @@
             if (!ok) return;
             await loadOwnerVocabularyData();
             await loadOwnerListeningData();
+            await loadOwnerIntegratedData();
             await loadPeerResonanceState();
             renderCalendar();
         };

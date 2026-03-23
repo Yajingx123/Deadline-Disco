@@ -35,11 +35,19 @@
       <aside class="note-panel respond-record-panel">
         <h3>Your Response</h3>
         <p class="respond-hint">Record your answer and replay it to self-check fluency and clarity.</p>
-        <div class="respond-actions">
-          <button class="btn-small btn-primary-small" id="respondRecordBtn" type="button">Start Recording</button>
+        <div class="respond-speaking-wrap">
+          <button class="respond-speaking-btn" id="respondRecordBtn" type="button">SPEAKING</button>
         </div>
         <p id="respondRecordStatus" class="recording-status">Ready to record.</p>
         <audio id="respondPlayback" class="respond-audio" controls></audio>
+        <div class="respond-save-row">
+          <button class="btn-small btn-primary-small" id="respondSaveBtn" type="button">Save your answer</button>
+          <span class="note-record-error hidden" id="respondSaveError">no recording yet</span>
+        </div>
+        <div class="note-record-feedback hidden" id="respondSaveFeedback">
+          <strong>Saved to your study record</strong>
+          <span>You can still make multiple attempts and save</span>
+        </div>
       </aside>
     </section>
   </main>

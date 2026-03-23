@@ -1,6 +1,7 @@
 (function () {
   const data = window.PracticeData;
   const LISTENING_RECORD_API = "./api/save-record.php";
+  const INTEGRATED_RECORD_API = "./api/save-integrated-record.php";
   if (!data) {
     return;
   }
@@ -1141,6 +1142,9 @@
     const recordBtn = qs("#respondRecordBtn");
     const recordStatus = qs("#respondRecordStatus");
     const playbackEl = qs("#respondPlayback");
+    const respondSaveBtn = qs("#respondSaveBtn");
+    const respondSaveError = qs("#respondSaveError");
+    const respondSaveFeedback = qs("#respondSaveFeedback");
 
     if (!titleEl || !personMetaEl || !metaEl || !transcriptToggleBtn || !transcriptPanelEl || !transcriptContentEl || !videoEl || !recordBtn || !recordStatus || !playbackEl) {
       return;
@@ -1159,10 +1163,11 @@
     applySubtitleTrack(videoEl, video);
     initDetailResourceTabs(transcriptToggleBtn, null, transcriptPanelEl, respondResourceTitleEl, transcriptContentEl, video);
 
-    const responseStorageKey = "practice-response-audio-" + video.id;
     let recorder = null;
     let chunks = [];
     let currentStream = null;
+    let currentAudioData = "";
+    let currentAudioMime = "audio/webm";
 
     function setPlaybackSource(src) {
       playbackEl.src = src || "";
@@ -1172,10 +1177,87 @@
       }
     }
 
-    const savedAudio = localStorage.getItem(responseStorageKey);
-    if (savedAudio) {
-      setPlaybackSource(savedAudio);
-      recordStatus.textContent = "Loaded your last recording.";
+    function setRespondIdleState() {
+      recordBtn.classList.remove("is-recording");
+      recordBtn.textContent = currentAudioData ? "Re-record" : "SPEAKING";
+    }
+
+    function resetRespondAttempt() {
+      currentAudioData = "";
+      currentAudioMime = "audio/webm";
+      chunks = [];
+      if (recorder && recorder.state === "recording") {
+        try {
+          recorder.stop();
+        } catch (_err) {}
+      }
+      recorder = null;
+      if (currentStream) {
+        currentStream.getTracks().forEach(function (track) { track.stop(); });
+        currentStream = null;
+      }
+      setPlaybackSource("");
+      recordStatus.textContent = "Ready to record.";
+      if (respondSaveError) respondSaveError.classList.add("hidden");
+      if (respondSaveFeedback) respondSaveFeedback.classList.add("hidden");
+      if (respondSaveBtn) {
+        respondSaveBtn.disabled = false;
+        respondSaveBtn.textContent = "Save your answer";
+      }
+      setRespondIdleState();
+    }
+
+    setRespondIdleState();
+
+    if (respondSaveBtn && respondSaveFeedback && respondSaveError) {
+      respondSaveBtn.addEventListener("click", async function () {
+        if (respondSaveBtn.textContent === "Saved. Start second attempt") {
+          resetRespondAttempt();
+          return;
+        }
+        if (!currentAudioData) {
+          respondSaveError.classList.remove("hidden");
+          respondSaveFeedback.classList.add("hidden");
+          return;
+        }
+        respondSaveError.classList.add("hidden");
+        respondSaveBtn.disabled = true;
+        respondSaveBtn.textContent = "Saving...";
+        try {
+          const response = await fetch(INTEGRATED_RECORD_API, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({
+              videoId: video.id,
+              mode: mode,
+              title: video.title,
+              personMeta: getPersonMetaText(video),
+              difficulty: video.difficulty || "",
+              duration: video.duration || "",
+              source: video.source || "",
+              country: video.country || "",
+              audioData: currentAudioData,
+              audioMime: currentAudioMime
+            })
+          });
+          const payload = await response.json().catch(function () {
+            return { ok: false, message: "Invalid response." };
+          });
+          if (!response.ok || !payload.ok) {
+            throw new Error(payload.message || "Unable to save this record.");
+          }
+          respondSaveFeedback.innerHTML = "<strong>Saved to your study record</strong><span>You can still make multiple attempts and save</span>";
+          respondSaveFeedback.classList.remove("hidden");
+          respondSaveBtn.textContent = "Saved. Start second attempt";
+        } catch (error) {
+          respondSaveFeedback.innerHTML = "<strong>" + escapeHtml((error && error.message) || "Unable to save this record.") + "</strong><span>Please log in first, then try again.</span>";
+          respondSaveFeedback.classList.remove("hidden");
+          respondSaveBtn.textContent = "Try Again";
+        } finally {
+          respondSaveBtn.disabled = false;
+        }
+      });
     }
 
     recordBtn.addEventListener("click", async function () {
@@ -1190,9 +1272,11 @@
       }
 
       try {
+        if (respondSaveError) respondSaveError.classList.add("hidden");
         currentStream = await navigator.mediaDevices.getUserMedia({ audio: true });
         chunks = [];
         recorder = new MediaRecorder(currentStream);
+        currentAudioMime = recorder.mimeType || "audio/webm";
 
         recorder.ondataavailable = function (event) {
           if (event.data.size > 0) {
@@ -1201,17 +1285,17 @@
         };
 
         recorder.onstop = function () {
-          const blob = new Blob(chunks, { type: "audio/webm" });
+          const blob = new Blob(chunks, { type: currentAudioMime });
           const reader = new FileReader();
           reader.onloadend = function () {
-            const base64Audio = String(reader.result || "");
-            localStorage.setItem(responseStorageKey, base64Audio);
-            setPlaybackSource(base64Audio);
-            recordStatus.textContent = "Recorded. You can now replay.";
+            currentAudioData = String(reader.result || "");
+            setPlaybackSource(currentAudioData);
+            recordStatus.textContent = "Recorded. You can replay or save your answer.";
+            if (respondSaveFeedback) respondSaveFeedback.classList.add("hidden");
           };
           reader.readAsDataURL(blob);
 
-          recordBtn.textContent = "Start Recording";
+          setRespondIdleState();
           if (currentStream) {
             currentStream.getTracks().forEach(function (track) { track.stop(); });
             currentStream = null;
@@ -1219,10 +1303,12 @@
         };
 
         recorder.start();
-        recordBtn.textContent = "Stop Recording";
+        recordBtn.classList.add("is-recording");
+        recordBtn.textContent = "RECORDING";
         recordStatus.textContent = "Recording...";
       } catch (_err) {
         recordStatus.textContent = "Microphone permission denied or unavailable.";
+        setRespondIdleState();
       }
     });
   }

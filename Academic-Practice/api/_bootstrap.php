@@ -86,3 +86,26 @@ function listening_ensure_table(PDO $pdo): void {
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
     ");
 }
+
+function integrated_ensure_table(PDO $pdo): void {
+    $pdo->exec("
+        CREATE TABLE IF NOT EXISTS integrated_response_records (
+            record_id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+            user_id BIGINT NOT NULL,
+            video_id VARCHAR(100) NOT NULL,
+            mode VARCHAR(40) NOT NULL DEFAULT 'respond',
+            title VARCHAR(255) NOT NULL,
+            person_meta TEXT NULL,
+            difficulty VARCHAR(40) NULL,
+            duration_label VARCHAR(40) NULL,
+            source_name VARCHAR(80) NULL,
+            country_name VARCHAR(80) NULL,
+            audio_data LONGTEXT NOT NULL,
+            audio_mime VARCHAR(80) NULL,
+            created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+            KEY idx_integrated_response_records_user_created (user_id, created_at),
+            KEY idx_integrated_response_records_video (video_id)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+    ");
+}
