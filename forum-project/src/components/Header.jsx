@@ -13,7 +13,6 @@ export default function Header({ searchQuery, setSearchQuery, onOpenModal, curre
           <a className="forum-topnav__item" href="http://127.0.0.1:8001/home.html?module=Method">Technology</a>
         </nav>
         <div className="forum-topnav__actions">
-          <button className="post-btn" onClick={onOpenModal}>+ Publish Post</button>
           <div className="forum-topnav__userGroup">
             <a className="forum-topnav__user" href="http://127.0.0.1:8001/owner.html">
               <span className="forum-topnav__userLabel">{userName}</span>
@@ -33,6 +32,9 @@ export default function Header({ searchQuery, setSearchQuery, onOpenModal, curre
           <div className="forum-hero__eyebrow">Section III — Collective Intellect</div>
           <h1 className="forum-hero__title">Forum</h1>
           <p className="forum-hero__sub">Discuss ideas, ask for help, and archive useful threads in one place.</p>
+          <div className="forum-hero__actions">
+            <button className="post-btn post-btn--hero" onClick={onOpenModal}>Publish Post</button>
+          </div>
         </div>
         <div className="forum-header__searchWrap">
           <input 

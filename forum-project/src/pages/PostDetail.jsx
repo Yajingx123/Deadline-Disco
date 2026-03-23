@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { renderFormattedText } from '../utils/formatText';
+import React, { useEffect, useRef, useState } from 'react';
+import { enhanceRenderedAudioPlayers, getReplyPreview, renderFormattedText } from '../utils/formatText';
 import PostModal from '../components/PostModal';
 import './PostDetail.css';
 
@@ -13,6 +13,11 @@ const PostDetail = ({ post, onBack, onAddComment, onDeletePost, onDeleteComment,
   const [isReplyModalOpen, setIsReplyModalOpen] = useState(false);
   const [replyTarget, setReplyTarget] = useState(null);
   const comments = post.comments || [];
+  const contentRootRef = useRef(null);
+
+  useEffect(() => {
+    return enhanceRenderedAudioPlayers(contentRootRef.current);
+  }, [post]);
 
   const handleReplySubmit = async (newComment) => {
     await onAddComment({
@@ -40,7 +45,7 @@ const PostDetail = ({ post, onBack, onAddComment, onDeletePost, onDeleteComment,
   const canDeletePost = Number(currentUser?.user_id || 0) === Number(post.authorUserId || 0);
 
   return (
-    <div className="detail-page-wrapper">
+    <div className="detail-page-wrapper" ref={contentRootRef}>
       {/* Top Navigation Bar */}
       <div className="detail-header">
         <div className="header-left">
@@ -119,7 +124,7 @@ const PostDetail = ({ post, onBack, onAddComment, onDeletePost, onDeleteComment,
                     <div className="comment-quote-box">
                       <div className="quote-icon">❝</div>
                       <div className="quote-content">
-                        Replying to {comment.replyTo.author}: {comment.replyTo.content}
+                        Replying to {comment.replyTo.author}: {getReplyPreview(comment.replyTo.content)}
                       </div>
                     </div>
                   )}
@@ -161,7 +166,7 @@ const PostDetail = ({ post, onBack, onAddComment, onDeletePost, onDeleteComment,
         }}
         onSubmit={handleReplySubmit}
         isReplyMode={true}
-        quoteText={replyTarget ? replyTarget.content : ''}
+        quoteText={replyTarget ? getReplyPreview(replyTarget.content) : ''}
         parentTitle={post.title}
         labelOptions={labelOptions}
         currentUser={currentUser}

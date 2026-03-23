@@ -193,6 +193,10 @@ body {
   justify-content: flex-end;
 }
 
+.forum-hero__actions {
+  margin-top: 22px;
+}
+
 .search-bar {
   padding: 14px 18px;
   width: min(100%, 360px);
@@ -226,6 +230,10 @@ body {
 .post-btn:hover {
   background-color: var(--primary-color);
   transform: translateY(-2px);
+}
+
+.post-btn--hero {
+  background: rgba(58, 78, 107, 0.94);
 }
 
 .forum-layout {
@@ -524,6 +532,14 @@ body {
   .forum-topnav__actions {
     width: 100%;
     justify-content: space-between;
+  }
+
+  .forum-header__searchWrap {
+    justify-content: stretch;
+  }
+
+  .post-btn--hero {
+    width: 100%;
   }
 
   .forum-hero__title {

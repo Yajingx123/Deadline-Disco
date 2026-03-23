@@ -246,11 +246,11 @@
             <div class="nav-item active" onclick="window.location.href='home.html?module=Method'">Technology</div>
         </div>
         <div class="user-group">
-            <div class="user-section" onclick="window.location.href='home.html?login=1'">
-                <span style="font-size: 0.75rem; font-weight: 700;">LOGIN</span>
-                <div class="avatar">IN</div>
+            <div class="user-section" id="userSection" onclick="handleUserAction()">
+                <span id="userLabel" style="font-size: 0.75rem; font-weight: 700;">LOGIN</span>
+                <div class="avatar" id="userAvatar">IN</div>
             </div>
-            <a href="home.html" class="logout-link" style="display:none;">Log out</a>
+            <a href="#" class="logout-link" id="logoutLink" onclick="return handleLogout(event)" style="display:none;">Log out</a>
         </div>
     </nav>
 
@@ -300,5 +300,68 @@
             <div class="tool-link">Video Tutorials &rarr;</div>
         </div>
     </div>
+    <script>
+        const AUTH_API_BASE = './Auth/backend/api';
+        const authState = { user: null };
+
+        function initialsOf(name) {
+            const trimmed = String(name || '').trim();
+            if (!trimmed) return 'IN';
+            return trimmed.slice(0, 2).toUpperCase();
+        }
+
+        function renderAuthUI() {
+            const label = document.getElementById('userLabel');
+            const avatar = document.getElementById('userAvatar');
+            const logoutLink = document.getElementById('logoutLink');
+            if (!label || !avatar || !logoutLink) return;
+
+            if (authState.user) {
+                label.textContent = authState.user.username;
+                avatar.textContent = initialsOf(authState.user.username);
+                logoutLink.style.display = 'inline-flex';
+            } else {
+                label.textContent = 'LOGIN';
+                avatar.textContent = 'IN';
+                logoutLink.style.display = 'none';
+            }
+        }
+
+        async function authFetch(path, options = {}) {
+            const response = await fetch(`${AUTH_API_BASE}/${path}`, {
+                method: options.method || 'GET',
+                headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+                credentials: 'include',
+                body: options.body || undefined
+            });
+            return response.json().catch(() => ({ status: 'error', message: 'Invalid response' }));
+        }
+
+        async function loadAuthUser() {
+            const data = await authFetch('me.php');
+            authState.user = data.status === 'success' ? data.user : null;
+            renderAuthUI();
+        }
+
+        function handleUserAction() {
+            if (authState.user) {
+                window.location.href = 'owner.html';
+                return;
+            }
+            window.location.href = 'home.html?login=1';
+        }
+
+        async function handleLogout(event) {
+            if (event) event.preventDefault();
+            if (!authState.user) return false;
+            await authFetch('logout.php');
+            authState.user = null;
+            renderAuthUI();
+            window.location.href = 'home.html';
+            return false;
+        }
+
+        window.addEventListener('load', loadAuthUser);
+    </script>
 </body>
 </html>

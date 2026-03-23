@@ -247,6 +247,100 @@
   margin-top: 12px;
 }
 
+.forumAudioPlayer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: fit-content;
+  max-width: min(100%, 560px);
+  margin: 12px 0 6px;
+  padding: 6px 10px 6px 6px;
+  border-radius: 999px;
+  border: 1px solid rgba(58, 78, 107, 0.1);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(155, 183, 212, 0.14));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+.forumAudioPlayer audio {
+  display: none;
+}
+
+.forumAudioPlayer__toggle {
+  flex-shrink: 0;
+  min-width: 54px;
+  border: 0;
+  border-radius: 999px;
+  padding: 7px 12px;
+  background: #3A4E6B;
+  color: #fff;
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 12px 24px rgba(58, 78, 107, 0.14);
+}
+
+.forumAudioPlayer__toggle:hover {
+  transform: translateY(-1px);
+}
+
+.forumAudioPlayer.is-playing .forumAudioPlayer__toggle {
+  background: #9BB7D4;
+  color: #3A4E6B;
+}
+
+.forumAudioPlayer__body {
+  min-width: 0;
+  flex: 0 1 auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.forumAudioPlayer__timeline {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.forumAudioPlayer__duration,
+.forumAudioPlayer__timeline {
+  color: rgba(58, 78, 107, 0.56);
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.forumAudioPlayer__wave {
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  width: fit-content;
+  max-width: min(100%, 320px);
+  height: 24px;
+  padding: 0;
+  overflow: hidden;
+}
+
+.forumAudioPlayer__bar {
+  width: 3px;
+  min-height: 6px;
+  border-radius: 999px;
+  background: rgba(58, 78, 107, 0.16);
+  transition: background 0.18s ease, transform 0.18s ease, opacity 0.18s ease;
+}
+
+.forumAudioPlayer__bar.is-played {
+  background: linear-gradient(180deg, #9BB7D4, #3A4E6B);
+}
+
+.forumAudioPlayer.is-playing .forumAudioPlayer__bar.is-played {
+  transform: translateY(-1px);
+}
+
 .comment-actions {
   margin-top: 12px;
   display: flex;
@@ -297,5 +391,23 @@
 
   .detail-post-title {
     font-size: 1.55rem;
+  }
+
+  .forumAudioPlayer {
+    max-width: 100%;
+    gap: 8px;
+    padding: 6px 8px 6px 6px;
+  }
+
+  .forumAudioPlayer__toggle {
+    min-width: 54px;
+  }
+
+  .forumAudioPlayer__body {
+    gap: 8px;
+  }
+
+  .forumAudioPlayer__wave {
+    max-width: 180px;
   }
 }
