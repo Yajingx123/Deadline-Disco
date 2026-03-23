@@ -1,55 +1,41 @@
-import { ALL_TAGS } from '../data/mockData';
-
-export default function SidebarFilter({ selectedTags, setSelectedTags, minViews, setMinViews, maxViews, setMaxViews }) {
-  const handleTagToggle = (tag) => {
-    if (selectedTags.includes(tag)) {
-      setSelectedTags(selectedTags.filter(t => t !== tag));
+export default function SidebarFilter({ labels, selectedTags, setSelectedTags, sortOrder, setSortOrder }) {
+  const handleTagToggle = (labelName) => {
+    if (selectedTags.includes(labelName)) {
+      setSelectedTags(selectedTags.filter(t => t !== labelName));
     } else {
-      setSelectedTags([...selectedTags, tag]);
+      setSelectedTags([...selectedTags, labelName]);
     }
   };
 
-  // 检查输入是否成立：最小浏览量不能大于最大浏览量
-  const isInvalidRange = minViews !== '' && maxViews !== '' && Number(minViews) > Number(maxViews);
-
   return (
     <aside className="sidebar">
-      <h3>Filter by Tags</h3>
+      <h3>Browse labels</h3>
       <div className="filter-options">
-        {ALL_TAGS.map(tag => (
-          <label key={tag} className="tag-label">
-            <input 
+        {labels.map(label => (
+          <label key={label.id} className="tag-label">
+            <input
               type="checkbox" 
-              checked={selectedTags.includes(tag)}
-              onChange={() => handleTagToggle(tag)}
-              style={{ marginRight: '8px' }}
+              checked={selectedTags.includes(label.name)}
+              onChange={() => handleTagToggle(label.name)}
             />
-            {tag}
+            {label.name}
           </label>
         ))}
       </div>
-      
-      {/* 使用 CSS 类调大间距 */}
+
       <hr className="filter-section-divider" />
-      
-      <h3>Views Range</h3>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-        <input 
-          type="number" 
-          placeholder="Min Views (e.g. 0)" 
-          value={minViews} 
-          onChange={(e) => setMinViews(e.target.value)} 
-        />
-        <input 
-          type="number" 
-          placeholder="Max Views (e.g. 1000)" 
-          value={maxViews} 
-          onChange={(e) => setMaxViews(e.target.value)}
-        />
-        {/* 如果输入不成立，显示警告 */}
-        {isInvalidRange && (
-          <span className="error-text">⚠️ Min views cannot exceed Max views.</span>
-        )}
+
+      <h3>Sort threads</h3>
+      <div className="sort-select-wrap">
+        <select
+          className="sort-select"
+          value={sortOrder}
+          onChange={(e) => setSortOrder(e.target.value)}
+        >
+          <option value="latest_reply">Latest reply</option>
+          <option value="latest_post">Latest post</option>
+          <option value="most_viewed">Most viewed</option>
+        </select>
       </div>
     </aside>
   );

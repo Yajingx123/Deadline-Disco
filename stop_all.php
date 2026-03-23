@@ -4,6 +4,7 @@ declare(strict_types=1);
 $pidFiles = [
     __DIR__ . '/.run/main_8001.pid',
     __DIR__ . '/.run/vocab_8002.pid',
+    __DIR__ . '/.run/forum_5173.pid',
 ];
 
 foreach ($pidFiles as $pidFile) {

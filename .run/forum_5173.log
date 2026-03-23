@@ -1,0 +1,14 @@
+
+> react-forum-project@0.0.0 dev
+> vite --host 127.0.0.1 --port 5173
+
+
+  VITE v5.4.21  ready in 188 ms
+
+  ➜  Local:   http://127.0.0.1:5173/
+11:14:57 PM [vite] hmr update /src/components/Header.jsx
+11:15:02 PM [vite] hmr update /src/pages/ForumHome.jsx
+11:15:11 PM [vite] hmr update /src/index.css
+11:16:32 PM [vite] hmr update /src/components/Header.jsx
+11:16:46 PM [vite] hmr update /src/index.css
+11:18:52 PM [vite] hmr update /src/components/Header.jsx

@@ -1,39 +1,46 @@
 export default function PostItem({ post, onPostClick }) {
-  
-  // 新增：浏览量格式化逻辑
   const formatViews = (views) => {
     if (views >= 10000) {
-      // 保留一位小数，例如 10500 -> 1.1w, 123450 -> 12.3w
       return (views / 10000).toFixed(1) + 'w';
     }
     return views;
   };
 
   return (
-    <div className="post-item" onClick={() => onPostClick(post.id)} style={{ cursor: 'pointer' }}>
-      {/* 绑定点击事件，并设置鼠标样式提示可点击 */}
-      <div className="post-main">
-        <h3 className="post-title">
-          {post.title} <span style={{fontSize:'12px', color:'#999'}}>(ID: {post.id})</span>
-        </h3>
-        <div className="post-tags">
-          {post.tags.map(tag => (
-            <span key={tag} className="tag-badge">{tag}</span>
-          ))}
-        </div>
+    <article className="post-item" onClick={() => onPostClick(post.id)} style={{ cursor: 'pointer' }}>
+      <div className="post-avatarRail">
+        <div className="post-avatarCircle">{post.authorInitial || post.author?.[0] || 'U'}</div>
       </div>
 
-      <div className="post-meta">
-        <div className="meta-row"><strong>Type:</strong> <span>{post.mediaType}</span></div>
-        <div className="meta-row"><strong>Author:</strong> <span>{post.author}</span></div>
-        {/* 调用格式化函数渲染浏览量，并加亮显示以便测试 */}
-        <div className="meta-row">
-          <strong>Views:</strong> 
-          <span style={{ color: '#0056b3', fontWeight: 'bold' }}>{formatViews(post.views)}</span>
+      <div className="post-main">
+        <div className="post-authorRow">
+          <span className="post-authorName">{post.author}</span>
+          <span className="post-authorTime">posted on {post.publishTime}</span>
         </div>
-        <div className="meta-row"><strong>Time:</strong> <span>{post.publishTime}</span></div>
+        <h3 className="post-title">
+          {post.title}
+        </h3>
+        {post.summary && <p className="post-summary">{post.summary}</p>}
       </div>
-      
-    </div>
+
+      <div className="post-side">
+        <div className="post-tags post-tags--side">
+          {post.labels.map((tag) => (
+            <span key={tag} className="tag-badge">{tag}</span>
+          ))}
+          <span className="post-typeBadge">{post.mediaType}</span>
+        </div>
+        <div className="post-stats">
+          <div className="post-stats__line">
+            <span className="post-stats__icon">💬</span>
+            <span>{post.commentCount}</span>
+          </div>
+          <div className="post-stats__line">
+            <span className="post-stats__icon">👁</span>
+            <span>{formatViews(post.views)}</span>
+          </div>
+        </div>
+      </div>
+    </article>
   );
 }

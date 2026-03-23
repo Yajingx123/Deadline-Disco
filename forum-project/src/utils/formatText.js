@@ -19,6 +19,7 @@ export const renderFormattedText = (text) => {
     if (fileName.endsWith('.wav')) type = 'audio/wav';
     if (fileName.endsWith('.ogg')) type = 'audio/ogg';
     if (fileName.endsWith('.m4a')) type = 'audio/mp4';
+    if (fileName.endsWith('.webm')) type = 'audio/webm';
 
     return `
       <div style="margin: 15px 0; padding: 12px; background: #f4f3ec; border-radius: 8px; border: 1px solid #e5e4e7;">

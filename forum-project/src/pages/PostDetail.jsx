@@ -3,35 +3,41 @@ import { renderFormattedText } from '../utils/formatText';
 import PostModal from '../components/PostModal';
 import './PostDetail.css';
 
-const PostDetail = ({ post, onBack }) => {
+function getCommentId(comment = {}) {
+  return Number(comment.id ?? comment.commentId ?? comment.comment_id ?? 0);
+}
+
+const PostDetail = ({ post, onBack, onAddComment, onDeletePost, onDeleteComment, labelOptions, currentUser }) => {
   if (!post) return null;
 
-  // Initialize comment list
-  const [comments, setComments] = useState(post.comments || []);
   const [isReplyModalOpen, setIsReplyModalOpen] = useState(false);
-  const [replyQuote, setReplyQuote] = useState('');
+  const [replyTarget, setReplyTarget] = useState(null);
+  const comments = post.comments || [];
 
-  // Handle submitting a reply
-  const handleReplySubmit = (newComment) => {
-    const commentData = {
-      id: Date.now(),
-      author: 'Current User', 
-      avatar: 'U', // Avatar letter
-      time: new Date().toLocaleString(),
+  const handleReplySubmit = async (newComment) => {
+    await onAddComment({
+      postId: post.id,
       content: newComment.content,
-      quote: replyQuote
-    };
-
-    setComments([...comments, commentData]);
+      parentCommentId: replyTarget?.id || null,
+    });
     setIsReplyModalOpen(false);
-    setReplyQuote('');
+    setReplyTarget(null);
   };
 
-  // Open reply modal
-  const handleReplyClick = (quoteText = '') => {
-    setReplyQuote(quoteText);
+  const handleReplyClick = (comment = null) => {
+    setReplyTarget(comment);
     setIsReplyModalOpen(true);
   };
+
+  const handleDeleteCommentClick = async (comment) => {
+    const commentId = getCommentId(comment);
+    if (commentId <= 0) {
+      throw new Error('Comment ID is missing. Refresh the post and try again.');
+    }
+    await onDeleteComment(commentId);
+  };
+
+  const canDeletePost = Number(currentUser?.user_id || 0) === Number(post.authorUserId || 0);
 
   return (
     <div className="detail-page-wrapper">
@@ -43,6 +49,14 @@ const PostDetail = ({ post, onBack }) => {
           </button>
         </div>
         <div className="header-right">
+          {canDeletePost && (
+            <button
+              onClick={() => onDeletePost(post.id)}
+              className="btn-delete-ghost"
+            >
+              Delete Post
+            </button>
+          )}
           <button 
             onClick={() => handleReplyClick()} 
             className="btn-reply-main"
@@ -54,15 +68,15 @@ const PostDetail = ({ post, onBack }) => {
 
       {/* Main Post Content Card */}
       <div className="detail-card main-post">
-        <div className="post-header">
-          <h1 className="post-title">{post.title}</h1>
-          <div className="post-meta">
-            <div className="meta-user">
-              <div className="avatar-circle">{post.author[0]}</div>
-              <span className="author-name">{post.author}</span>
+        <div className="detail-post-header">
+          <div className="detail-post-author">
+            <div className="detail-avatar-circle">{post.author[0]}</div>
+            <div className="detail-post-authorText">
+              <span className="detail-author-name">{post.author}</span>
+              <span className="detail-meta-date">{post.publishTime}</span>
             </div>
-            <span className="meta-date">📅 {post.time}</span>
           </div>
+          <h1 className="detail-post-title">{post.title}</h1>
         </div>
 
         <div className="post-divider"></div>
@@ -92,7 +106,7 @@ const PostDetail = ({ post, onBack }) => {
             {comments.map((comment) => (
               <div key={comment.id} className="comment-item">
                 <div className="comment-avatar">
-                  <div className="avatar-circle small">{comment.avatar || comment.author[0]}</div>
+                  <div className="detail-avatar-circle detail-avatar-circle--small">{comment.avatar || comment.author[0]}</div>
                 </div>
                 <div className="comment-body">
                   <div className="comment-info">
@@ -101,10 +115,12 @@ const PostDetail = ({ post, onBack }) => {
                   </div>
 
                   {/* Quote Block */}
-                  {comment.quote && (
+                  {comment.replyTo && (
                     <div className="comment-quote-box">
                       <div className="quote-icon">❝</div>
-                      <div className="quote-content">{comment.quote}</div>
+                      <div className="quote-content">
+                        Replying to {comment.replyTo.author}: {comment.replyTo.content}
+                      </div>
                     </div>
                   )}
 
@@ -114,11 +130,20 @@ const PostDetail = ({ post, onBack }) => {
 
                   <div className="comment-actions">
                     <button 
-                      onClick={() => handleReplyClick(comment.content)}
+                      onClick={() => handleReplyClick(comment)}
                       className="btn-reply-small"
                     >
                       Reply
                     </button>
+                    {Number(currentUser?.user_id || 0) === Number(comment.authorUserId || 0) && (
+                      <button
+                        onClick={() => handleDeleteCommentClick(comment)}
+                        className="btn-delete-inline"
+                        disabled={getCommentId(comment) <= 0}
+                      >
+                        Delete
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>
@@ -132,12 +157,14 @@ const PostDetail = ({ post, onBack }) => {
         isOpen={isReplyModalOpen}
         onClose={() => {
           setIsReplyModalOpen(false);
-          setReplyQuote('');
+          setReplyTarget(null);
         }}
         onSubmit={handleReplySubmit}
         isReplyMode={true}
-        quoteText={replyQuote}
+        quoteText={replyTarget ? replyTarget.content : ''}
         parentTitle={post.title}
+        labelOptions={labelOptions}
+        currentUser={currentUser}
       />
     </div>
   );

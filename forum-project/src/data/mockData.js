@@ -59,7 +59,7 @@ const initialPosts = [
   }
 ];
 
-export const ALL_TAGS = ["Frontend", "Database", "C++", "HTML", "Study", "Bug", "General", "image", "video", "audio", "link"];
+export const ALL_TAGS = ["Current news", "Seek help", "Viewpoint topic","image", "video", "audio", "link"];
 
 const STORAGE_KEY = 'react_forum_posts_v2';
 

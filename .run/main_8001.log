@@ -1,407 +1,417 @@
-[Mon Mar 23 18:03:59 2026] PHP 8.4.7 Development Server (http://127.0.0.1:8001) started
-[Mon Mar 23 18:04:05 2026] 127.0.0.1:54813 Accepted
-[Mon Mar 23 18:04:05 2026] 127.0.0.1:54813 [200]: GET /home.html
-[Mon Mar 23 18:04:05 2026] 127.0.0.1:54815 Accepted
-[Mon Mar 23 18:04:05 2026] 127.0.0.1:54813 Closing
-[Mon Mar 23 18:04:05 2026] 127.0.0.1:54815 [401]: GET /Auth/backend/api/me.php
-[Mon Mar 23 18:04:05 2026] 127.0.0.1:54815 Closing
-[Mon Mar 23 18:04:05 2026] 127.0.0.1:54820 Accepted
-[Mon Mar 23 18:04:05 2026] 127.0.0.1:54820 [404]: GET /favicon.ico - No such file or directory
-[Mon Mar 23 18:04:05 2026] 127.0.0.1:54820 Closing
-[Mon Mar 23 18:04:20 2026] 127.0.0.1:54842 Accepted
-[Mon Mar 23 18:04:21 2026] 127.0.0.1:54842 [200]: POST /Auth/backend/api/register.php
-[Mon Mar 23 18:04:21 2026] 127.0.0.1:54842 Closing
-[Mon Mar 23 18:04:46 2026] 127.0.0.1:54945 Accepted
-[Mon Mar 23 18:04:46 2026] 127.0.0.1:54945 [200]: GET /home.html?module=Insight
-[Mon Mar 23 18:04:46 2026] 127.0.0.1:54946 Accepted
-[Mon Mar 23 18:04:46 2026] 127.0.0.1:54945 Closing
-[Mon Mar 23 18:04:46 2026] 127.0.0.1:54946 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 18:04:46 2026] 127.0.0.1:54946 Closing
-[Mon Mar 23 18:04:57 2026] 127.0.0.1:54992 Accepted
-[Mon Mar 23 18:04:58 2026] 127.0.0.1:54992 [200]: GET /home.html?module=Insight
-[Mon Mar 23 18:04:58 2026] 127.0.0.1:54992 Closing
-[Mon Mar 23 18:04:58 2026] 127.0.0.1:54993 Accepted
-[Mon Mar 23 18:04:58 2026] 127.0.0.1:54993 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 18:04:58 2026] 127.0.0.1:54993 Closing
-[Mon Mar 23 18:05:18 2026] 127.0.0.1:55035 Accepted
-[Mon Mar 23 18:05:18 2026] 127.0.0.1:55035 [200]: GET /owner.html
-[Mon Mar 23 18:05:18 2026] 127.0.0.1:55035 Closing
-[Mon Mar 23 18:05:18 2026] 127.0.0.1:55036 Accepted
-[Mon Mar 23 18:05:20 2026] 127.0.0.1:55036 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 18:05:20 2026] 127.0.0.1:55036 Closing
-[Mon Mar 23 18:05:25 2026] 127.0.0.1:55059 Accepted
-[Mon Mar 23 18:05:25 2026] 127.0.0.1:55059 [200]: GET /home.html
-[Mon Mar 23 18:05:25 2026] 127.0.0.1:55059 Closing
-[Mon Mar 23 18:05:25 2026] 127.0.0.1:55060 Accepted
-[Mon Mar 23 18:05:25 2026] 127.0.0.1:55061 Accepted
-[Mon Mar 23 18:05:25 2026] 127.0.0.1:55060 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 18:05:25 2026] 127.0.0.1:55060 Closing
-[Mon Mar 23 18:05:29 2026] 127.0.0.1:55061 [200]: GET /home.html?module=Insight
-[Mon Mar 23 18:05:29 2026] 127.0.0.1:55061 Closing
-[Mon Mar 23 18:05:29 2026] 127.0.0.1:55080 Accepted
-[Mon Mar 23 18:05:29 2026] 127.0.0.1:55080 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 18:05:29 2026] 127.0.0.1:55080 Closing
-[Mon Mar 23 18:05:41 2026] 127.0.0.1:55103 Accepted
-[Mon Mar 23 18:05:41 2026] 127.0.0.1:55103 [200]: GET /home.html?module=Dialogue
-[Mon Mar 23 18:05:41 2026] 127.0.0.1:55104 Accepted
-[Mon Mar 23 18:05:41 2026] 127.0.0.1:55103 Closing
-[Mon Mar 23 18:05:41 2026] 127.0.0.1:55104 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 18:05:41 2026] 127.0.0.1:55104 Closing
-[Mon Mar 23 18:06:07 2026] 127.0.0.1:55175 Accepted
-[Mon Mar 23 18:06:07 2026] 127.0.0.1:55175 [200]: GET /home.html?module=Insight
-[Mon Mar 23 18:06:07 2026] 127.0.0.1:55175 Closing
-[Mon Mar 23 18:06:07 2026] 127.0.0.1:55176 Accepted
-[Mon Mar 23 18:06:07 2026] 127.0.0.1:55177 Accepted
-[Mon Mar 23 18:06:07 2026] 127.0.0.1:55176 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 18:06:07 2026] 127.0.0.1:55176 Closing
-[Mon Mar 23 18:06:08 2026] 127.0.0.1:55177 [200]: GET /home.html?module=Insight
-[Mon Mar 23 18:06:08 2026] 127.0.0.1:55177 Closing
-[Mon Mar 23 18:06:08 2026] 127.0.0.1:55178 Accepted
-[Mon Mar 23 18:06:08 2026] 127.0.0.1:55179 Accepted
-[Mon Mar 23 18:06:08 2026] 127.0.0.1:55178 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 18:06:08 2026] 127.0.0.1:55178 Closing
-[Mon Mar 23 18:07:44 2026] 127.0.0.1:55179 Closed without sending a request; it was probably just an unused speculative preconnection
-[Mon Mar 23 18:07:44 2026] 127.0.0.1:55179 Closing
-[Mon Mar 23 18:10:01 2026] 127.0.0.1:55516 Accepted
-[Mon Mar 23 18:10:01 2026] 127.0.0.1:55516 [200]: GET /owner.html
-[Mon Mar 23 18:10:01 2026] 127.0.0.1:55517 Accepted
-[Mon Mar 23 18:10:01 2026] 127.0.0.1:55516 Closing
-[Mon Mar 23 18:10:01 2026] 127.0.0.1:55517 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 18:10:01 2026] 127.0.0.1:55517 Closing
-[Mon Mar 23 18:10:14 2026] 127.0.0.1:55528 Accepted
-[Mon Mar 23 18:10:14 2026] 127.0.0.1:55529 Accepted
-[Mon Mar 23 18:10:14 2026] 127.0.0.1:55528 [200]: GET /home.html
-[Mon Mar 23 18:10:14 2026] 127.0.0.1:55528 Closing
-[Mon Mar 23 18:10:14 2026] 127.0.0.1:55529 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 18:10:14 2026] 127.0.0.1:55529 Closing
-[Mon Mar 23 18:20:19 2026] 127.0.0.1:56392 Accepted
-[Mon Mar 23 18:20:19 2026] 127.0.0.1:56392 [200]: GET /owner.html
-[Mon Mar 23 18:20:19 2026] 127.0.0.1:56392 Closing
-[Mon Mar 23 18:20:19 2026] 127.0.0.1:56393 Accepted
-[Mon Mar 23 18:20:19 2026] 127.0.0.1:56393 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 18:20:19 2026] 127.0.0.1:56393 Closing
-[Mon Mar 23 18:20:45 2026] 127.0.0.1:56434 Accepted
-[Mon Mar 23 18:20:45 2026] 127.0.0.1:56434 [200]: GET /owner.html
-[Mon Mar 23 18:20:45 2026] 127.0.0.1:56434 Closing
-[Mon Mar 23 18:20:45 2026] 127.0.0.1:56435 Accepted
-[Mon Mar 23 18:20:45 2026] 127.0.0.1:56436 Accepted
-[Mon Mar 23 18:20:45 2026] 127.0.0.1:56435 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 18:20:45 2026] 127.0.0.1:56435 Closing
-[Mon Mar 23 18:21:09 2026] 127.0.0.1:56436 [200]: GET /owner.html
-[Mon Mar 23 18:21:09 2026] 127.0.0.1:56436 Closing
-[Mon Mar 23 18:21:09 2026] 127.0.0.1:56463 Accepted
-[Mon Mar 23 18:21:09 2026] 127.0.0.1:56464 Accepted
-[Mon Mar 23 18:21:09 2026] 127.0.0.1:56463 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 18:21:09 2026] 127.0.0.1:56463 Closing
-[Mon Mar 23 18:21:25 2026] 127.0.0.1:56464 [200]: GET /home.html
-[Mon Mar 23 18:21:25 2026] 127.0.0.1:56464 Closing
-[Mon Mar 23 18:21:25 2026] 127.0.0.1:56483 Accepted
-[Mon Mar 23 18:21:25 2026] 127.0.0.1:56484 Accepted
-[Mon Mar 23 18:21:25 2026] 127.0.0.1:56483 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 18:21:25 2026] 127.0.0.1:56483 Closing
-[Mon Mar 23 18:21:42 2026] 127.0.0.1:56484 [200]: GET /owner.html
-[Mon Mar 23 18:21:42 2026] 127.0.0.1:56484 Closing
-[Mon Mar 23 18:21:42 2026] 127.0.0.1:56521 Accepted
-[Mon Mar 23 18:21:42 2026] 127.0.0.1:56522 Accepted
-[Mon Mar 23 18:21:42 2026] 127.0.0.1:56521 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 18:21:42 2026] 127.0.0.1:56521 Closing
-[Mon Mar 23 18:22:28 2026] 127.0.0.1:56522 [200]: GET /owner.html
-[Mon Mar 23 18:22:28 2026] 127.0.0.1:56522 Closing
-[Mon Mar 23 18:22:28 2026] 127.0.0.1:56569 Accepted
-[Mon Mar 23 18:22:28 2026] 127.0.0.1:56570 Accepted
-[Mon Mar 23 18:22:28 2026] 127.0.0.1:56569 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 18:22:28 2026] 127.0.0.1:56569 Closing
-[Mon Mar 23 18:22:33 2026] 127.0.0.1:56570 [200]: GET /owner.html
-[Mon Mar 23 18:22:33 2026] 127.0.0.1:56570 Closing
-[Mon Mar 23 18:22:33 2026] 127.0.0.1:56577 Accepted
-[Mon Mar 23 18:22:33 2026] 127.0.0.1:56578 Accepted
-[Mon Mar 23 18:22:33 2026] 127.0.0.1:56577 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 18:22:33 2026] 127.0.0.1:56577 Closing
-[Mon Mar 23 18:22:37 2026] 127.0.0.1:56578 [200]: GET /home.html
-[Mon Mar 23 18:22:37 2026] 127.0.0.1:56578 Closing
-[Mon Mar 23 18:22:37 2026] 127.0.0.1:56581 Accepted
-[Mon Mar 23 18:22:37 2026] 127.0.0.1:56582 Accepted
-[Mon Mar 23 18:22:37 2026] 127.0.0.1:56581 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 18:22:37 2026] 127.0.0.1:56581 Closing
-[Mon Mar 23 18:22:57 2026] 127.0.0.1:56582 [200]: GET /home.html?module=Insight
-[Mon Mar 23 18:22:57 2026] 127.0.0.1:56613 Accepted
-[Mon Mar 23 18:22:57 2026] 127.0.0.1:56582 Closing
-[Mon Mar 23 18:22:57 2026] 127.0.0.1:56613 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 18:22:57 2026] 127.0.0.1:56613 Closing
-[Mon Mar 23 18:26:36 2026] 127.0.0.1:56814 Accepted
-[Mon Mar 23 18:26:36 2026] 127.0.0.1:56814 [200]: GET /owner.html
-[Mon Mar 23 18:26:36 2026] 127.0.0.1:56814 Closing
-[Mon Mar 23 18:26:36 2026] 127.0.0.1:56815 Accepted
-[Mon Mar 23 18:26:37 2026] 127.0.0.1:56815 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 18:26:37 2026] 127.0.0.1:56815 Closing
-[Mon Mar 23 18:41:26 2026] 127.0.0.1:57811 Accepted
-[Mon Mar 23 18:41:26 2026] 127.0.0.1:57812 Accepted
-[Mon Mar 23 18:41:26 2026] 127.0.0.1:57811 [200]: GET /home.html
-[Mon Mar 23 18:41:26 2026] 127.0.0.1:57811 Closing
-[Mon Mar 23 18:41:26 2026] 127.0.0.1:57812 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 18:41:26 2026] 127.0.0.1:57812 Closing
-[Mon Mar 23 18:41:54 2026] 127.0.0.1:57867 Accepted
-[Mon Mar 23 18:41:54 2026] 127.0.0.1:57867 [200]: GET /owner.html
-[Mon Mar 23 18:41:54 2026] 127.0.0.1:57867 Closing
-[Mon Mar 23 18:41:54 2026] 127.0.0.1:57868 Accepted
-[Mon Mar 23 18:41:54 2026] 127.0.0.1:57869 Accepted
-[Mon Mar 23 18:41:54 2026] 127.0.0.1:57868 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 18:41:54 2026] 127.0.0.1:57868 Closing
-[Mon Mar 23 18:41:54 2026] 127.0.0.1:57869 [200]: GET /vocba_prac/api/owner-vocabulary.php
-[Mon Mar 23 18:41:54 2026] 127.0.0.1:57869 Closing
-[Mon Mar 23 18:42:00 2026] 127.0.0.1:57875 Accepted
-[Mon Mar 23 18:42:00 2026] 127.0.0.1:57875 [200]: GET /home.html
-[Mon Mar 23 18:42:00 2026] 127.0.0.1:57875 Closing
-[Mon Mar 23 18:42:00 2026] 127.0.0.1:57876 Accepted
-[Mon Mar 23 18:42:00 2026] 127.0.0.1:57877 Accepted
-[Mon Mar 23 18:42:00 2026] 127.0.0.1:57876 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 18:42:00 2026] 127.0.0.1:57876 Closing
-[Mon Mar 23 18:42:03 2026] 127.0.0.1:57877 [200]: GET /home.html?module=Lexis
-[Mon Mar 23 18:42:03 2026] 127.0.0.1:57877 Closing
-[Mon Mar 23 18:42:03 2026] 127.0.0.1:57887 Accepted
-[Mon Mar 23 18:42:03 2026] 127.0.0.1:57888 Accepted
-[Mon Mar 23 18:42:03 2026] 127.0.0.1:57887 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 18:42:03 2026] 127.0.0.1:57887 Closing
-[Mon Mar 23 18:42:40 2026] 127.0.0.1:57888 [200]: GET /home.html?module=Method
-[Mon Mar 23 18:42:40 2026] 127.0.0.1:57888 Closing
-[Mon Mar 23 18:42:40 2026] 127.0.0.1:58006 Accepted
-[Mon Mar 23 18:42:40 2026] 127.0.0.1:58007 Accepted
-[Mon Mar 23 18:42:40 2026] 127.0.0.1:58006 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 18:42:40 2026] 127.0.0.1:58006 Closing
-[Mon Mar 23 18:42:41 2026] 127.0.0.1:58007 [200]: GET /owner.html
-[Mon Mar 23 18:42:41 2026] 127.0.0.1:58007 Closing
-[Mon Mar 23 18:42:41 2026] 127.0.0.1:58008 Accepted
-[Mon Mar 23 18:42:41 2026] 127.0.0.1:58009 Accepted
-[Mon Mar 23 18:42:41 2026] 127.0.0.1:58008 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 18:42:41 2026] 127.0.0.1:58008 Closing
-[Mon Mar 23 18:42:41 2026] 127.0.0.1:58009 [200]: GET /vocba_prac/api/owner-vocabulary.php
-[Mon Mar 23 18:42:41 2026] 127.0.0.1:58009 Closing
-[Mon Mar 23 18:42:43 2026] 127.0.0.1:58011 Accepted
-[Mon Mar 23 18:42:43 2026] 127.0.0.1:58011 [200]: GET /home.html
-[Mon Mar 23 18:42:43 2026] 127.0.0.1:58011 Closing
-[Mon Mar 23 18:42:43 2026] 127.0.0.1:58012 Accepted
-[Mon Mar 23 18:42:44 2026] 127.0.0.1:58012 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 18:42:44 2026] 127.0.0.1:58012 Closing
-[Mon Mar 23 18:44:14 2026] 127.0.0.1:58196 Accepted
-[Mon Mar 23 18:44:14 2026] 127.0.0.1:58196 [200]: GET /home.html?module=Method
-[Mon Mar 23 18:44:14 2026] 127.0.0.1:58196 Closing
-[Mon Mar 23 18:44:14 2026] 127.0.0.1:58197 Accepted
-[Mon Mar 23 18:44:14 2026] 127.0.0.1:58197 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 18:44:14 2026] 127.0.0.1:58197 Closing
-[Mon Mar 23 18:44:15 2026] 127.0.0.1:58200 Accepted
-[Mon Mar 23 18:44:15 2026] 127.0.0.1:58200 [200]: GET /owner.html
-[Mon Mar 23 18:44:15 2026] 127.0.0.1:58200 Closing
-[Mon Mar 23 18:44:15 2026] 127.0.0.1:58201 Accepted
-[Mon Mar 23 18:44:15 2026] 127.0.0.1:58201 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 18:44:15 2026] 127.0.0.1:58201 Closing
-[Mon Mar 23 18:44:15 2026] 127.0.0.1:58202 Accepted
-[Mon Mar 23 18:44:15 2026] 127.0.0.1:58202 [200]: GET /vocba_prac/api/owner-vocabulary.php
-[Mon Mar 23 18:44:15 2026] 127.0.0.1:58202 Closing
-[Mon Mar 23 18:44:20 2026] 127.0.0.1:58214 Accepted
-[Mon Mar 23 18:44:20 2026] 127.0.0.1:58215 Accepted
-[Mon Mar 23 18:44:20 2026] 127.0.0.1:58214 [404]: GET /book-cover.php?slug=daily - No such file or directory
-[Mon Mar 23 18:44:20 2026] 127.0.0.1:58214 Closing
-[Mon Mar 23 18:44:20 2026] 127.0.0.1:58215 [404]: GET /book-cover.php?slug=cs - No such file or directory
-[Mon Mar 23 18:44:20 2026] 127.0.0.1:58215 Closing
-[Mon Mar 23 18:44:30 2026] 127.0.0.1:58220 Accepted
-[Mon Mar 23 18:44:30 2026] 127.0.0.1:58221 Accepted
-[Mon Mar 23 18:44:30 2026] 127.0.0.1:58220 [404]: GET /book-cover.php?slug=daily - No such file or directory
-[Mon Mar 23 18:44:30 2026] 127.0.0.1:58220 Closing
-[Mon Mar 23 18:44:30 2026] 127.0.0.1:58221 [404]: GET /book-cover.php?slug=cs - No such file or directory
-[Mon Mar 23 18:44:30 2026] 127.0.0.1:58221 Closing
-[Mon Mar 23 18:45:58 2026] 127.0.0.1:58302 Accepted
-[Mon Mar 23 18:45:58 2026] 127.0.0.1:58302 [200]: GET /owner.html
-[Mon Mar 23 18:45:58 2026] 127.0.0.1:58303 Accepted
-[Mon Mar 23 18:45:58 2026] 127.0.0.1:58302 Closing
-[Mon Mar 23 18:45:58 2026] 127.0.0.1:58303 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 18:45:58 2026] 127.0.0.1:58303 Closing
-[Mon Mar 23 18:45:58 2026] 127.0.0.1:58304 Accepted
-[Mon Mar 23 18:45:58 2026] 127.0.0.1:58304 [200]: GET /vocba_prac/api/owner-vocabulary.php
-[Mon Mar 23 18:45:58 2026] 127.0.0.1:58304 Closing
-[Mon Mar 23 18:45:59 2026] 127.0.0.1:58310 Accepted
-[Mon Mar 23 18:45:59 2026] 127.0.0.1:58311 Accepted
-[Mon Mar 23 18:45:59 2026] 127.0.0.1:58310 [200]: GET /vocba_prac/book-cover.php?slug=daily
-[Mon Mar 23 18:45:59 2026] 127.0.0.1:58310 Closing
-[Mon Mar 23 18:45:59 2026] 127.0.0.1:58311 [200]: GET /vocba_prac/book-cover.php?slug=cs
-[Mon Mar 23 18:45:59 2026] 127.0.0.1:58311 Closing
-[Mon Mar 23 18:46:02 2026] 127.0.0.1:58314 Accepted
-[Mon Mar 23 18:46:02 2026] 127.0.0.1:58314 [200]: GET /home.html
-[Mon Mar 23 18:46:02 2026] 127.0.0.1:58314 Closing
-[Mon Mar 23 18:46:02 2026] 127.0.0.1:58315 Accepted
-[Mon Mar 23 18:46:02 2026] 127.0.0.1:58316 Accepted
-[Mon Mar 23 18:46:02 2026] 127.0.0.1:58315 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 18:46:02 2026] 127.0.0.1:58315 Closing
-[Mon Mar 23 18:49:11 2026] 127.0.0.1:58316 Closed without sending a request; it was probably just an unused speculative preconnection
-[Mon Mar 23 18:49:11 2026] 127.0.0.1:58316 Closing
-[Mon Mar 23 18:49:11 2026] 127.0.0.1:58626 Accepted
-[Mon Mar 23 18:49:11 2026] 127.0.0.1:58626 [200]: GET /owner.html
-[Mon Mar 23 18:49:11 2026] 127.0.0.1:58626 Closing
-[Mon Mar 23 18:49:11 2026] 127.0.0.1:58627 Accepted
-[Mon Mar 23 18:49:11 2026] 127.0.0.1:58627 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 18:49:11 2026] 127.0.0.1:58627 Closing
-[Mon Mar 23 18:49:11 2026] 127.0.0.1:58628 Accepted
-[Mon Mar 23 18:49:11 2026] 127.0.0.1:58628 [200]: GET /vocba_prac/api/owner-vocabulary.php
-[Mon Mar 23 18:49:11 2026] 127.0.0.1:58628 Closing
-[Mon Mar 23 18:49:12 2026] 127.0.0.1:58630 Accepted
-[Mon Mar 23 18:49:12 2026] 127.0.0.1:58630 [200]: GET /home.html
-[Mon Mar 23 18:49:12 2026] 127.0.0.1:58630 Closing
-[Mon Mar 23 18:49:12 2026] 127.0.0.1:58631 Accepted
-[Mon Mar 23 18:49:12 2026] 127.0.0.1:58632 Accepted
-[Mon Mar 23 18:49:12 2026] 127.0.0.1:58631 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 18:49:12 2026] 127.0.0.1:58631 Closing
-[Mon Mar 23 18:49:15 2026] 127.0.0.1:58632 [200]: GET /owner.html
-[Mon Mar 23 18:49:15 2026] 127.0.0.1:58632 Closing
-[Mon Mar 23 18:49:15 2026] 127.0.0.1:58633 Accepted
-[Mon Mar 23 18:49:15 2026] 127.0.0.1:58634 Accepted
-[Mon Mar 23 18:49:15 2026] 127.0.0.1:58633 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 18:49:15 2026] 127.0.0.1:58633 Closing
-[Mon Mar 23 18:49:15 2026] 127.0.0.1:58634 [200]: GET /vocba_prac/api/owner-vocabulary.php
-[Mon Mar 23 18:49:15 2026] 127.0.0.1:58634 Closing
-[Mon Mar 23 18:49:15 2026] 127.0.0.1:58636 Accepted
-[Mon Mar 23 18:49:15 2026] 127.0.0.1:58636 [200]: GET /home.html
-[Mon Mar 23 18:49:15 2026] 127.0.0.1:58636 Closing
-[Mon Mar 23 18:49:15 2026] 127.0.0.1:58637 Accepted
-[Mon Mar 23 18:49:15 2026] 127.0.0.1:58638 Accepted
-[Mon Mar 23 18:49:15 2026] 127.0.0.1:58637 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 18:49:15 2026] 127.0.0.1:58637 Closing
-[Mon Mar 23 18:51:56 2026] 127.0.0.1:58638 Closed without sending a request; it was probably just an unused speculative preconnection
-[Mon Mar 23 18:51:56 2026] 127.0.0.1:58638 Closing
-[Mon Mar 23 18:52:00 2026] 127.0.0.1:58885 Accepted
-[Mon Mar 23 18:52:00 2026] 127.0.0.1:58885 [200]: GET /owner.html
-[Mon Mar 23 18:52:00 2026] 127.0.0.1:58886 Accepted
-[Mon Mar 23 18:52:00 2026] 127.0.0.1:58885 Closing
-[Mon Mar 23 18:52:00 2026] 127.0.0.1:58886 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 18:52:00 2026] 127.0.0.1:58886 Closing
-[Mon Mar 23 18:52:00 2026] 127.0.0.1:58887 Accepted
-[Mon Mar 23 18:52:00 2026] 127.0.0.1:58887 [200]: GET /vocba_prac/api/owner-vocabulary.php
-[Mon Mar 23 18:52:00 2026] 127.0.0.1:58887 Closing
-[Mon Mar 23 18:52:01 2026] 127.0.0.1:58889 Accepted
-[Mon Mar 23 18:52:01 2026] 127.0.0.1:58889 [200]: GET /home.html
-[Mon Mar 23 18:52:01 2026] 127.0.0.1:58889 Closing
-[Mon Mar 23 18:52:01 2026] 127.0.0.1:58890 Accepted
-[Mon Mar 23 18:52:01 2026] 127.0.0.1:58891 Accepted
-[Mon Mar 23 18:52:01 2026] 127.0.0.1:58890 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 18:52:01 2026] 127.0.0.1:58890 Closing
-[Mon Mar 23 18:52:35 2026] 127.0.0.1:58891 [200]: GET /home.html
-[Mon Mar 23 18:52:35 2026] 127.0.0.1:58891 Closing
-[Mon Mar 23 18:52:35 2026] 127.0.0.1:59021 Accepted
-[Mon Mar 23 18:52:35 2026] 127.0.0.1:59021 [401]: GET /Auth/backend/api/me.php
-[Mon Mar 23 18:52:35 2026] 127.0.0.1:59021 Closing
-[Mon Mar 23 18:52:59 2026] 127.0.0.1:59036 Accepted
-[Mon Mar 23 18:53:00 2026] 127.0.0.1:59036 [200]: POST /Auth/backend/api/register.php
-[Mon Mar 23 18:53:00 2026] 127.0.0.1:59036 Closing
-[Mon Mar 23 18:53:04 2026] 127.0.0.1:59054 Accepted
-[Mon Mar 23 18:53:04 2026] 127.0.0.1:59054 [200]: GET /home.html?module=Lexis
-[Mon Mar 23 18:53:04 2026] 127.0.0.1:59054 Closing
-[Mon Mar 23 18:53:04 2026] 127.0.0.1:59055 Accepted
-[Mon Mar 23 18:53:04 2026] 127.0.0.1:59055 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 18:53:04 2026] 127.0.0.1:59055 Closing
-[Mon Mar 23 18:53:39 2026] 127.0.0.1:59154 Accepted
-[Mon Mar 23 18:53:40 2026] 127.0.0.1:59154 [200]: GET /owner.html
-[Mon Mar 23 18:53:40 2026] 127.0.0.1:59154 Closing
-[Mon Mar 23 18:53:40 2026] 127.0.0.1:59155 Accepted
-[Mon Mar 23 18:53:40 2026] 127.0.0.1:59155 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 18:53:40 2026] 127.0.0.1:59155 Closing
-[Mon Mar 23 18:53:40 2026] 127.0.0.1:59156 Accepted
-[Mon Mar 23 18:53:40 2026] 127.0.0.1:59156 [200]: GET /vocba_prac/api/owner-vocabulary.php
-[Mon Mar 23 18:53:40 2026] 127.0.0.1:59156 Closing
-[Mon Mar 23 19:11:16 2026] 127.0.0.1:60267 Accepted
-[Mon Mar 23 19:11:16 2026] 127.0.0.1:60267 [200]: GET /home.html
-[Mon Mar 23 19:11:16 2026] 127.0.0.1:60268 Accepted
-[Mon Mar 23 19:11:16 2026] 127.0.0.1:60267 Closing
-[Mon Mar 23 19:11:16 2026] 127.0.0.1:60268 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 19:11:16 2026] 127.0.0.1:60268 Closing
-[Mon Mar 23 19:11:17 2026] 127.0.0.1:60269 Accepted
-[Mon Mar 23 19:11:17 2026] 127.0.0.1:60269 [200]: GET /home.html
-[Mon Mar 23 19:11:17 2026] 127.0.0.1:60269 Closing
-[Mon Mar 23 19:11:17 2026] 127.0.0.1:60270 Accepted
-[Mon Mar 23 19:11:17 2026] 127.0.0.1:60271 Accepted
-[Mon Mar 23 19:11:17 2026] 127.0.0.1:60270 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 19:11:17 2026] 127.0.0.1:60270 Closing
-[Mon Mar 23 19:12:19 2026] 127.0.0.1:60271 Closed without sending a request; it was probably just an unused speculative preconnection
-[Mon Mar 23 19:12:19 2026] 127.0.0.1:60271 Closing
-[Mon Mar 23 19:13:09 2026] 127.0.0.1:60476 Accepted
-[Mon Mar 23 19:13:09 2026] 127.0.0.1:60476 [200]: GET /owner.html
-[Mon Mar 23 19:13:09 2026] 127.0.0.1:60476 Closing
-[Mon Mar 23 19:13:09 2026] 127.0.0.1:60477 Accepted
-[Mon Mar 23 19:13:09 2026] 127.0.0.1:60478 Accepted
-[Mon Mar 23 19:13:09 2026] 127.0.0.1:60477 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 19:13:09 2026] 127.0.0.1:60477 Closing
-[Mon Mar 23 19:13:09 2026] 127.0.0.1:60478 [200]: GET /vocba_prac/api/owner-vocabulary.php
-[Mon Mar 23 19:13:09 2026] 127.0.0.1:60478 Closing
-[Mon Mar 23 19:13:24 2026] 127.0.0.1:60498 Accepted
-[Mon Mar 23 19:13:24 2026] 127.0.0.1:60498 [200]: GET /vocba_prac/book-cover.php?slug=cs
-[Mon Mar 23 19:13:24 2026] 127.0.0.1:60498 Closing
-[Mon Mar 23 19:17:55 2026] 127.0.0.1:60713 Accepted
-[Mon Mar 23 19:17:55 2026] 127.0.0.1:60713 [200]: GET /home.html
-[Mon Mar 23 19:17:55 2026] 127.0.0.1:60714 Accepted
-[Mon Mar 23 19:17:55 2026] 127.0.0.1:60713 Closing
-[Mon Mar 23 19:17:55 2026] 127.0.0.1:60714 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 19:17:55 2026] 127.0.0.1:60714 Closing
-[Mon Mar 23 19:17:56 2026] 127.0.0.1:60715 Accepted
-[Mon Mar 23 19:17:56 2026] 127.0.0.1:60715 [200]: GET /Auth/backend/api/logout.php
-[Mon Mar 23 19:17:56 2026] 127.0.0.1:60715 Closing
-[Mon Mar 23 19:18:43 2026] 127.0.0.1:60770 Accepted
-[Mon Mar 23 19:18:43 2026] 127.0.0.1:60770 [200]: GET /home.html
-[Mon Mar 23 19:18:43 2026] 127.0.0.1:60771 Accepted
-[Mon Mar 23 19:18:43 2026] 127.0.0.1:60770 Closing
-[Mon Mar 23 19:18:43 2026] 127.0.0.1:60771 [401]: GET /Auth/backend/api/me.php
-[Mon Mar 23 19:18:43 2026] 127.0.0.1:60771 Closing
-[Mon Mar 23 19:18:59 2026] 127.0.0.1:60786 Accepted
-[Mon Mar 23 19:19:00 2026] 127.0.0.1:60786 [200]: POST /Auth/backend/api/login.php
-[Mon Mar 23 19:19:00 2026] 127.0.0.1:60786 Closing
-[Mon Mar 23 19:19:32 2026] 127.0.0.1:60838 Accepted
-[Mon Mar 23 19:19:32 2026] 127.0.0.1:60838 [200]: GET /home.html?module=Lexis
-[Mon Mar 23 19:19:32 2026] 127.0.0.1:60839 Accepted
-[Mon Mar 23 19:19:32 2026] 127.0.0.1:60838 Closing
-[Mon Mar 23 19:19:32 2026] 127.0.0.1:60839 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 19:19:32 2026] 127.0.0.1:60839 Closing
-[Mon Mar 23 19:19:37 2026] 127.0.0.1:60854 Accepted
-[Mon Mar 23 19:19:37 2026] 127.0.0.1:60854 [200]: GET /home.html?module=Insight
-[Mon Mar 23 19:19:37 2026] 127.0.0.1:60854 Closing
-[Mon Mar 23 19:19:37 2026] 127.0.0.1:60855 Accepted
-[Mon Mar 23 19:19:37 2026] 127.0.0.1:60855 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 19:19:37 2026] 127.0.0.1:60855 Closing
-[Mon Mar 23 19:19:39 2026] 127.0.0.1:60866 Accepted
-[Mon Mar 23 19:19:39 2026] 127.0.0.1:60866 [200]: GET /home.html?module=Dialogue
-[Mon Mar 23 19:19:39 2026] 127.0.0.1:60866 Closing
-[Mon Mar 23 19:19:39 2026] 127.0.0.1:60867 Accepted
-[Mon Mar 23 19:19:39 2026] 127.0.0.1:60867 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 19:19:39 2026] 127.0.0.1:60867 Closing
-[Mon Mar 23 19:20:56 2026] 127.0.0.1:60958 Accepted
-[Mon Mar 23 19:20:56 2026] 127.0.0.1:60958 [200]: GET /home.html
-[Mon Mar 23 19:20:56 2026] 127.0.0.1:60958 Closing
-[Mon Mar 23 19:20:56 2026] 127.0.0.1:60959 Accepted
-[Mon Mar 23 19:20:56 2026] 127.0.0.1:60959 [401]: GET /Auth/backend/api/me.php
-[Mon Mar 23 19:20:56 2026] 127.0.0.1:60959 Closing
-[Mon Mar 23 19:23:31 2026] 127.0.0.1:61241 Accepted
-[Mon Mar 23 19:23:31 2026] 127.0.0.1:61241 [200]: GET /home.html
-[Mon Mar 23 19:23:31 2026] 127.0.0.1:61241 Closing
-[Mon Mar 23 19:23:31 2026] 127.0.0.1:61242 Accepted
-[Mon Mar 23 19:23:31 2026] 127.0.0.1:61242 [401]: GET /Auth/backend/api/me.php
-[Mon Mar 23 19:23:31 2026] 127.0.0.1:61242 Closing
-[Mon Mar 23 19:23:45 2026] 127.0.0.1:61279 Accepted
-[Mon Mar 23 19:23:45 2026] 127.0.0.1:61279 [200]: POST /Auth/backend/api/login.php
-[Mon Mar 23 19:23:45 2026] 127.0.0.1:61279 Closing
-[Mon Mar 23 19:23:48 2026] 127.0.0.1:61303 Accepted
-[Mon Mar 23 19:23:48 2026] 127.0.0.1:61303 [200]: GET /home.html?module=Insight
-[Mon Mar 23 19:23:48 2026] 127.0.0.1:61303 Closing
-[Mon Mar 23 19:23:48 2026] 127.0.0.1:61304 Accepted
-[Mon Mar 23 19:23:48 2026] 127.0.0.1:61305 Accepted
-[Mon Mar 23 19:23:48 2026] 127.0.0.1:61304 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 19:23:48 2026] 127.0.0.1:61304 Closing
-[Mon Mar 23 19:23:53 2026] 127.0.0.1:61305 [200]: GET /home.html?module=Insight
-[Mon Mar 23 19:23:53 2026] 127.0.0.1:61305 Closing
-[Mon Mar 23 19:23:53 2026] 127.0.0.1:61338 Accepted
-[Mon Mar 23 19:23:53 2026] 127.0.0.1:61339 Accepted
-[Mon Mar 23 19:23:53 2026] 127.0.0.1:61338 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 19:23:53 2026] 127.0.0.1:61338 Closing
-[Mon Mar 23 19:25:14 2026] 127.0.0.1:61339 Closed without sending a request; it was probably just an unused speculative preconnection
-[Mon Mar 23 19:25:14 2026] 127.0.0.1:61339 Closing
-[Mon Mar 23 19:40:53 2026] 127.0.0.1:62964 Accepted
-[Mon Mar 23 19:40:53 2026] 127.0.0.1:62964 [200]: GET /home.html?module=Insight
-[Mon Mar 23 19:40:53 2026] 127.0.0.1:62964 Closing
-[Mon Mar 23 19:40:53 2026] 127.0.0.1:62965 Accepted
-[Mon Mar 23 19:40:53 2026] 127.0.0.1:62966 Accepted
-[Mon Mar 23 19:40:53 2026] 127.0.0.1:62965 [200]: GET /Auth/backend/api/me.php
-[Mon Mar 23 19:40:53 2026] 127.0.0.1:62965 Closing
+[Mon Mar 23 23:10:29 2026] PHP 8.4.7 Development Server (http://127.0.0.1:8001) started
+[Mon Mar 23 23:10:31 2026] 127.0.0.1:49154 Accepted
+[Mon Mar 23 23:10:31 2026] 127.0.0.1:49154 [200]: GET /home.html
+[Mon Mar 23 23:10:31 2026] 127.0.0.1:49154 Closing
+[Mon Mar 23 23:10:31 2026] 127.0.0.1:49155 Accepted
+[Mon Mar 23 23:10:31 2026] 127.0.0.1:49156 Accepted
+[Mon Mar 23 23:10:31 2026] 127.0.0.1:49155 [200]: GET /Auth/backend/api/me.php
+[Mon Mar 23 23:10:32 2026] 127.0.0.1:49155 Closing
+[Mon Mar 23 23:10:35 2026] 127.0.0.1:49168 Accepted
+[Mon Mar 23 23:10:35 2026] 127.0.0.1:49169 Accepted
+[Mon Mar 23 23:10:35 2026] 127.0.0.1:49168 [204]: OPTIONS /forum-project/api/labels.php
+[Mon Mar 23 23:10:35 2026] 127.0.0.1:49168 Closing
+[Mon Mar 23 23:10:35 2026] 127.0.0.1:49169 [204]: OPTIONS /forum-project/api/posts.php?sort=latest_reply
+[Mon Mar 23 23:10:35 2026] 127.0.0.1:49169 Closing
+[Mon Mar 23 23:10:35 2026] 127.0.0.1:49170 Accepted
+[Mon Mar 23 23:10:35 2026] 127.0.0.1:49156 [200]: GET /forum-project/api/labels.php
+[Mon Mar 23 23:10:35 2026] 127.0.0.1:49156 Closing
+[Mon Mar 23 23:10:35 2026] 127.0.0.1:49171 Accepted
+[Mon Mar 23 23:10:35 2026] 127.0.0.1:49170 [204]: OPTIONS /forum-project/api/labels.php
+[Mon Mar 23 23:10:35 2026] 127.0.0.1:49170 Closing
+[Mon Mar 23 23:10:35 2026] 127.0.0.1:49172 Accepted
+[Mon Mar 23 23:10:35 2026] 127.0.0.1:49171 [204]: OPTIONS /forum-project/api/posts.php?sort=latest_reply
+[Mon Mar 23 23:10:35 2026] 127.0.0.1:49171 Closing
+[Mon Mar 23 23:10:35 2026] 127.0.0.1:49172 [200]: GET /forum-project/api/posts.php?sort=latest_reply
+[Mon Mar 23 23:10:35 2026] 127.0.0.1:49172 Closing
+[Mon Mar 23 23:10:35 2026] 127.0.0.1:49174 Accepted
+[Mon Mar 23 23:10:35 2026] 127.0.0.1:49174 [200]: GET /forum-project/api/labels.php
+[Mon Mar 23 23:10:35 2026] 127.0.0.1:49174 Closing
+[Mon Mar 23 23:10:35 2026] 127.0.0.1:49176 Accepted
+[Mon Mar 23 23:10:35 2026] 127.0.0.1:49176 [200]: GET /forum-project/api/posts.php?sort=latest_reply
+[Mon Mar 23 23:10:35 2026] 127.0.0.1:49176 Closing
+[Mon Mar 23 23:11:12 2026] 127.0.0.1:49213 Accepted
+[Mon Mar 23 23:11:12 2026] 127.0.0.1:49213 [204]: OPTIONS /forum-project/api/view.php
+[Mon Mar 23 23:11:12 2026] 127.0.0.1:49213 Closing
+[Mon Mar 23 23:11:12 2026] 127.0.0.1:49214 Accepted
+[Mon Mar 23 23:11:12 2026] 127.0.0.1:49214 [200]: POST /forum-project/api/view.php
+[Mon Mar 23 23:11:12 2026] 127.0.0.1:49214 Closing
+[Mon Mar 23 23:11:12 2026] 127.0.0.1:49216 Accepted
+[Mon Mar 23 23:11:12 2026] 127.0.0.1:49216 [204]: OPTIONS /forum-project/api/post.php?id=4
+[Mon Mar 23 23:11:12 2026] 127.0.0.1:49216 Closing
+[Mon Mar 23 23:11:12 2026] 127.0.0.1:49217 Accepted
+[Mon Mar 23 23:11:12 2026] 127.0.0.1:49217 [200]: GET /forum-project/api/post.php?id=4
+[Mon Mar 23 23:11:12 2026] 127.0.0.1:49217 Closing
+[Mon Mar 23 23:11:12 2026] 127.0.0.1:49219 Accepted
+[Mon Mar 23 23:11:12 2026] 127.0.0.1:49219 [200]: GET /forum-project/uploads/audio/recording-1774278069892-16370c528271.webm
+[Mon Mar 23 23:11:12 2026] 127.0.0.1:49219 Closing
+[Mon Mar 23 23:11:31 2026] 127.0.0.1:49226 Accepted
+[Mon Mar 23 23:11:31 2026] 127.0.0.1:49226 [204]: OPTIONS /forum-project/api/view.php
+[Mon Mar 23 23:11:31 2026] 127.0.0.1:49226 Closing
+[Mon Mar 23 23:11:31 2026] 127.0.0.1:49227 Accepted
+[Mon Mar 23 23:11:31 2026] 127.0.0.1:49227 [200]: POST /forum-project/api/view.php
+[Mon Mar 23 23:11:31 2026] 127.0.0.1:49227 Closing
+[Mon Mar 23 23:11:31 2026] 127.0.0.1:49229 Accepted
+[Mon Mar 23 23:11:31 2026] 127.0.0.1:49229 [204]: OPTIONS /forum-project/api/post.php?id=4
+[Mon Mar 23 23:11:31 2026] 127.0.0.1:49229 Closing
+[Mon Mar 23 23:11:31 2026] 127.0.0.1:49230 Accepted
+[Mon Mar 23 23:11:31 2026] 127.0.0.1:49230 [200]: GET /forum-project/api/post.php?id=4
+[Mon Mar 23 23:11:31 2026] 127.0.0.1:49230 Closing
+[Mon Mar 23 23:11:31 2026] 127.0.0.1:49232 Accepted
+[Mon Mar 23 23:11:31 2026] 127.0.0.1:49232 [200]: GET /forum-project/uploads/audio/recording-1774278069892-16370c528271.webm
+[Mon Mar 23 23:11:31 2026] 127.0.0.1:49232 Closing
+[Mon Mar 23 23:11:37 2026] 127.0.0.1:49235 Accepted
+[Mon Mar 23 23:11:37 2026] 127.0.0.1:49235 [200]: POST /forum-project/api/upload.php
+[Mon Mar 23 23:11:37 2026] 127.0.0.1:49235 Closing
+[Mon Mar 23 23:11:37 2026] 127.0.0.1:49236 Accepted
+[Mon Mar 23 23:11:37 2026] 127.0.0.1:49236 [204]: OPTIONS /forum-project/api/comments.php
+[Mon Mar 23 23:11:37 2026] 127.0.0.1:49236 Closing
+[Mon Mar 23 23:11:37 2026] 127.0.0.1:49237 Accepted
+[Mon Mar 23 23:11:37 2026] [forum comments media] SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`acadbeat`.`forum_comment_media`, CONSTRAINT `fk_forum_comment_media_comment` FOREIGN KEY (`comment_id`) REFERENCES `forum_comments` (`comment_id`) ON DELETE CASCADE ON UPDATE CASCADE)
+[Mon Mar 23 23:11:37 2026] 127.0.0.1:49237 [201]: POST /forum-project/api/comments.php
+[Mon Mar 23 23:11:37 2026] 127.0.0.1:49237 Closing
+[Mon Mar 23 23:11:37 2026] 127.0.0.1:49239 Accepted
+[Mon Mar 23 23:11:37 2026] 127.0.0.1:49239 [204]: OPTIONS /forum-project/api/post.php?id=4
+[Mon Mar 23 23:11:37 2026] 127.0.0.1:49239 Closing
+[Mon Mar 23 23:11:37 2026] 127.0.0.1:49240 Accepted
+[Mon Mar 23 23:11:37 2026] 127.0.0.1:49240 [200]: GET /forum-project/api/post.php?id=4
+[Mon Mar 23 23:11:37 2026] 127.0.0.1:49240 Closing
+[Mon Mar 23 23:11:37 2026] 127.0.0.1:49242 Accepted
+[Mon Mar 23 23:11:37 2026] 127.0.0.1:49242 [200]: GET /forum-project/uploads/image/SCR-20251013-nhoc-ddb412dad0f5.png
+[Mon Mar 23 23:11:37 2026] 127.0.0.1:49242 Closing
+[Mon Mar 23 23:11:45 2026] 127.0.0.1:49255 Accepted
+[Mon Mar 23 23:11:45 2026] 127.0.0.1:49255 [204]: OPTIONS /forum-project/api/delete-comment.php
+[Mon Mar 23 23:11:45 2026] 127.0.0.1:49255 Closing
+[Mon Mar 23 23:11:45 2026] 127.0.0.1:49256 Accepted
+[Mon Mar 23 23:11:45 2026] 127.0.0.1:49256 [200]: POST /forum-project/api/delete-comment.php
+[Mon Mar 23 23:11:45 2026] 127.0.0.1:49256 Closing
+[Mon Mar 23 23:11:54 2026] 127.0.0.1:49262 Accepted
+[Mon Mar 23 23:11:54 2026] 127.0.0.1:49262 [200]: POST /forum-project/api/upload.php
+[Mon Mar 23 23:11:54 2026] 127.0.0.1:49262 Closing
+[Mon Mar 23 23:11:55 2026] 127.0.0.1:49265 Accepted
+[Mon Mar 23 23:11:55 2026] 127.0.0.1:49265 [204]: OPTIONS /forum-project/api/comments.php
+[Mon Mar 23 23:11:55 2026] 127.0.0.1:49265 Closing
+[Mon Mar 23 23:11:55 2026] 127.0.0.1:49266 Accepted
+[Mon Mar 23 23:11:55 2026] [forum comments media] SQLSTATE[23000]: Integrity constraint violation: 1452 Cannot add or update a child row: a foreign key constraint fails (`acadbeat`.`forum_comment_media`, CONSTRAINT `fk_forum_comment_media_comment` FOREIGN KEY (`comment_id`) REFERENCES `forum_comments` (`comment_id`) ON DELETE CASCADE ON UPDATE CASCADE)
+[Mon Mar 23 23:11:55 2026] 127.0.0.1:49266 [201]: POST /forum-project/api/comments.php
+[Mon Mar 23 23:11:55 2026] 127.0.0.1:49266 Closing
+[Mon Mar 23 23:11:55 2026] 127.0.0.1:49268 Accepted
+[Mon Mar 23 23:11:55 2026] 127.0.0.1:49268 [204]: OPTIONS /forum-project/api/post.php?id=4
+[Mon Mar 23 23:11:55 2026] 127.0.0.1:49268 Closing
+[Mon Mar 23 23:11:55 2026] 127.0.0.1:49269 Accepted
+[Mon Mar 23 23:11:55 2026] 127.0.0.1:49269 [200]: GET /forum-project/api/post.php?id=4
+[Mon Mar 23 23:11:55 2026] 127.0.0.1:49269 Closing
+[Mon Mar 23 23:11:55 2026] 127.0.0.1:49271 Accepted
+[Mon Mar 23 23:11:55 2026] 127.0.0.1:49271 [200]: GET /forum-project/uploads/audio/recording-1774278714644-c4e0705ca1ab.webm
+[Mon Mar 23 23:11:55 2026] 127.0.0.1:49271 Closing
+[Mon Mar 23 23:12:00 2026] 127.0.0.1:49275 Accepted
+[Mon Mar 23 23:12:00 2026] 127.0.0.1:49275 [204]: OPTIONS /forum-project/api/delete-comment.php
+[Mon Mar 23 23:12:00 2026] 127.0.0.1:49275 Closing
+[Mon Mar 23 23:12:00 2026] 127.0.0.1:49276 Accepted
+[Mon Mar 23 23:12:00 2026] 127.0.0.1:49276 [200]: POST /forum-project/api/delete-comment.php
+[Mon Mar 23 23:12:00 2026] 127.0.0.1:49276 Closing
+[Mon Mar 23 23:12:04 2026] 127.0.0.1:49278 Accepted
+[Mon Mar 23 23:12:04 2026] 127.0.0.1:49278 [200]: GET /home.html?module=Method
+[Mon Mar 23 23:12:04 2026] 127.0.0.1:49278 Closing
+[Mon Mar 23 23:12:04 2026] 127.0.0.1:49279 Accepted
+[Mon Mar 23 23:12:04 2026] 127.0.0.1:49280 Accepted
+[Mon Mar 23 23:12:04 2026] 127.0.0.1:49279 [200]: GET /Auth/backend/api/me.php
+[Mon Mar 23 23:12:04 2026] 127.0.0.1:49279 Closing
+[Mon Mar 23 23:12:06 2026] 127.0.0.1:49280 [200]: GET /technology.html
+[Mon Mar 23 23:12:06 2026] 127.0.0.1:49281 Accepted
+[Mon Mar 23 23:12:06 2026] 127.0.0.1:49280 Closing
+[Mon Mar 23 23:12:15 2026] 127.0.0.1:49281 [200]: GET /home.html?module=Dialogue
+[Mon Mar 23 23:12:15 2026] 127.0.0.1:49334 Accepted
+[Mon Mar 23 23:12:15 2026] 127.0.0.1:49281 Closing
+[Mon Mar 23 23:12:15 2026] 127.0.0.1:49334 [200]: GET /Auth/backend/api/me.php
+[Mon Mar 23 23:12:15 2026] 127.0.0.1:49334 Closing
+[Mon Mar 23 23:13:13 2026] 127.0.0.1:49441 Accepted
+[Mon Mar 23 23:13:13 2026] 127.0.0.1:49441 [200]: GET /home.html?module=Insight
+[Mon Mar 23 23:13:13 2026] 127.0.0.1:49441 Closing
+[Mon Mar 23 23:13:13 2026] 127.0.0.1:49442 Accepted
+[Mon Mar 23 23:13:13 2026] 127.0.0.1:49443 Accepted
+[Mon Mar 23 23:13:13 2026] 127.0.0.1:49442 [200]: GET /Auth/backend/api/me.php
+[Mon Mar 23 23:13:13 2026] 127.0.0.1:49442 Closing
+[Mon Mar 23 23:13:15 2026] 127.0.0.1:49451 Accepted
+[Mon Mar 23 23:13:15 2026] 127.0.0.1:49452 Accepted
+[Mon Mar 23 23:13:15 2026] 127.0.0.1:49451 [204]: OPTIONS /forum-project/api/labels.php
+[Mon Mar 23 23:13:15 2026] 127.0.0.1:49451 Closing
+[Mon Mar 23 23:13:15 2026] 127.0.0.1:49453 Accepted
+[Mon Mar 23 23:13:15 2026] 127.0.0.1:49452 [204]: OPTIONS /forum-project/api/posts.php?sort=latest_reply
+[Mon Mar 23 23:13:15 2026] 127.0.0.1:49452 Closing
+[Mon Mar 23 23:13:15 2026] 127.0.0.1:49454 Accepted
+[Mon Mar 23 23:13:15 2026] 127.0.0.1:49453 [204]: OPTIONS /forum-project/api/labels.php
+[Mon Mar 23 23:13:15 2026] 127.0.0.1:49453 Closing
+[Mon Mar 23 23:13:15 2026] 127.0.0.1:49443 [200]: GET /forum-project/api/labels.php
+[Mon Mar 23 23:13:15 2026] 127.0.0.1:49443 Closing
+[Mon Mar 23 23:13:15 2026] 127.0.0.1:49454 [204]: OPTIONS /forum-project/api/posts.php?sort=latest_reply
+[Mon Mar 23 23:13:15 2026] 127.0.0.1:49454 Closing
+[Mon Mar 23 23:13:15 2026] 127.0.0.1:49455 Accepted
+[Mon Mar 23 23:13:15 2026] 127.0.0.1:49457 Accepted
+[Mon Mar 23 23:13:16 2026] 127.0.0.1:49455 [200]: GET /forum-project/api/posts.php?sort=latest_reply
+[Mon Mar 23 23:13:16 2026] 127.0.0.1:49455 Closing
+[Mon Mar 23 23:13:16 2026] 127.0.0.1:49457 [200]: GET /forum-project/api/labels.php
+[Mon Mar 23 23:13:16 2026] 127.0.0.1:49457 Closing
+[Mon Mar 23 23:13:16 2026] 127.0.0.1:49459 Accepted
+[Mon Mar 23 23:13:16 2026] 127.0.0.1:49459 [200]: GET /forum-project/api/posts.php?sort=latest_reply
+[Mon Mar 23 23:13:16 2026] 127.0.0.1:49459 Closing
+[Mon Mar 23 23:13:20 2026] 127.0.0.1:49462 Accepted
+[Mon Mar 23 23:13:20 2026] 127.0.0.1:49462 [204]: OPTIONS /forum-project/api/view.php
+[Mon Mar 23 23:13:20 2026] 127.0.0.1:49462 Closing
+[Mon Mar 23 23:13:20 2026] 127.0.0.1:49463 Accepted
+[Mon Mar 23 23:13:20 2026] 127.0.0.1:49463 [200]: POST /forum-project/api/view.php
+[Mon Mar 23 23:13:20 2026] 127.0.0.1:49463 Closing
+[Mon Mar 23 23:13:20 2026] 127.0.0.1:49465 Accepted
+[Mon Mar 23 23:13:20 2026] 127.0.0.1:49465 [204]: OPTIONS /forum-project/api/post.php?id=5
+[Mon Mar 23 23:13:20 2026] 127.0.0.1:49465 Closing
+[Mon Mar 23 23:13:20 2026] 127.0.0.1:49466 Accepted
+[Mon Mar 23 23:13:20 2026] 127.0.0.1:49466 [200]: GET /forum-project/api/post.php?id=5
+[Mon Mar 23 23:13:20 2026] 127.0.0.1:49466 Closing
+[Mon Mar 23 23:14:26 2026] 127.0.0.1:49530 Accepted
+[Mon Mar 23 23:14:26 2026] 127.0.0.1:49530 [200]: GET /home.html?module=Method
+[Mon Mar 23 23:14:26 2026] 127.0.0.1:49530 Closing
+[Mon Mar 23 23:14:26 2026] 127.0.0.1:49531 Accepted
+[Mon Mar 23 23:14:26 2026] 127.0.0.1:49531 [200]: GET /Auth/backend/api/me.php
+[Mon Mar 23 23:14:26 2026] 127.0.0.1:49531 Closing
+[Mon Mar 23 23:14:27 2026] 127.0.0.1:49532 Accepted
+[Mon Mar 23 23:14:27 2026] 127.0.0.1:49533 Accepted
+[Mon Mar 23 23:14:27 2026] 127.0.0.1:49532 [200]: GET /technology.html
+[Mon Mar 23 23:14:27 2026] 127.0.0.1:49532 Closing
+[Mon Mar 23 23:14:29 2026] 127.0.0.1:49533 [200]: GET /home.html?module=Dialogue
+[Mon Mar 23 23:14:29 2026] 127.0.0.1:49533 Closing
+[Mon Mar 23 23:14:29 2026] 127.0.0.1:49534 Accepted
+[Mon Mar 23 23:14:29 2026] 127.0.0.1:49534 [200]: GET /Auth/backend/api/me.php
+[Mon Mar 23 23:14:29 2026] 127.0.0.1:49534 Closing
+[Mon Mar 23 23:14:35 2026] 127.0.0.1:49541 Accepted
+[Mon Mar 23 23:14:35 2026] 127.0.0.1:49541 [200]: GET /technology.html
+[Mon Mar 23 23:14:35 2026] 127.0.0.1:49541 Closing
+[Mon Mar 23 23:14:35 2026] 127.0.0.1:49542 Accepted
+[Mon Mar 23 23:14:36 2026] 127.0.0.1:49542 [200]: GET /home.html?module=Method
+[Mon Mar 23 23:14:36 2026] 127.0.0.1:49542 Closing
+[Mon Mar 23 23:14:36 2026] 127.0.0.1:49545 Accepted
+[Mon Mar 23 23:14:36 2026] 127.0.0.1:49546 Accepted
+[Mon Mar 23 23:14:36 2026] 127.0.0.1:49545 [200]: GET /Auth/backend/api/me.php
+[Mon Mar 23 23:14:36 2026] 127.0.0.1:49545 Closing
+[Mon Mar 23 23:14:38 2026] 127.0.0.1:49554 Accepted
+[Mon Mar 23 23:14:38 2026] 127.0.0.1:49555 Accepted
+[Mon Mar 23 23:14:38 2026] 127.0.0.1:49556 Accepted
+[Mon Mar 23 23:14:38 2026] 127.0.0.1:49554 [204]: OPTIONS /forum-project/api/labels.php
+[Mon Mar 23 23:14:38 2026] 127.0.0.1:49554 Closing
+[Mon Mar 23 23:14:38 2026] 127.0.0.1:49557 Accepted
+[Mon Mar 23 23:14:38 2026] 127.0.0.1:49555 [204]: OPTIONS /forum-project/api/posts.php?sort=latest_reply
+[Mon Mar 23 23:14:38 2026] 127.0.0.1:49555 Closing
+[Mon Mar 23 23:14:38 2026] 127.0.0.1:49556 [204]: OPTIONS /forum-project/api/labels.php
+[Mon Mar 23 23:14:38 2026] 127.0.0.1:49556 Closing
+[Mon Mar 23 23:14:38 2026] 127.0.0.1:49557 [204]: OPTIONS /forum-project/api/posts.php?sort=latest_reply
+[Mon Mar 23 23:14:38 2026] 127.0.0.1:49557 Closing
+[Mon Mar 23 23:14:38 2026] 127.0.0.1:49546 [200]: GET /forum-project/api/labels.php
+[Mon Mar 23 23:14:38 2026] 127.0.0.1:49546 Closing
+[Mon Mar 23 23:14:38 2026] 127.0.0.1:49558 Accepted
+[Mon Mar 23 23:14:38 2026] 127.0.0.1:49558 [200]: GET /forum-project/api/posts.php?sort=latest_reply
+[Mon Mar 23 23:14:38 2026] 127.0.0.1:49558 Closing
+[Mon Mar 23 23:14:38 2026] 127.0.0.1:49560 Accepted
+[Mon Mar 23 23:14:38 2026] 127.0.0.1:49560 [200]: GET /forum-project/api/labels.php
+[Mon Mar 23 23:14:38 2026] 127.0.0.1:49560 Closing
+[Mon Mar 23 23:14:38 2026] 127.0.0.1:49562 Accepted
+[Mon Mar 23 23:14:38 2026] 127.0.0.1:49562 [200]: GET /forum-project/api/posts.php?sort=latest_reply
+[Mon Mar 23 23:14:38 2026] 127.0.0.1:49562 Closing
+[Mon Mar 23 23:15:02 2026] 127.0.0.1:49582 Accepted
+[Mon Mar 23 23:15:02 2026] 127.0.0.1:49582 [204]: OPTIONS /forum-project/api/labels.php
+[Mon Mar 23 23:15:02 2026] 127.0.0.1:49582 Closing
+[Mon Mar 23 23:15:02 2026] 127.0.0.1:49583 Accepted
+[Mon Mar 23 23:15:02 2026] 127.0.0.1:49583 [200]: GET /forum-project/api/labels.php
+[Mon Mar 23 23:15:02 2026] 127.0.0.1:49583 Closing
+[Mon Mar 23 23:15:02 2026] 127.0.0.1:49585 Accepted
+[Mon Mar 23 23:15:02 2026] 127.0.0.1:49585 [204]: OPTIONS /forum-project/api/posts.php?sort=latest_reply
+[Mon Mar 23 23:15:02 2026] 127.0.0.1:49585 Closing
+[Mon Mar 23 23:15:02 2026] 127.0.0.1:49586 Accepted
+[Mon Mar 23 23:15:02 2026] 127.0.0.1:49586 [200]: GET /forum-project/api/posts.php?sort=latest_reply
+[Mon Mar 23 23:15:02 2026] 127.0.0.1:49586 Closing
+[Mon Mar 23 23:15:45 2026] 127.0.0.1:49649 Accepted
+[Mon Mar 23 23:15:45 2026] 127.0.0.1:49650 Accepted
+[Mon Mar 23 23:15:45 2026] 127.0.0.1:49649 [204]: OPTIONS /forum-project/api/labels.php
+[Mon Mar 23 23:15:45 2026] 127.0.0.1:49649 Closing
+[Mon Mar 23 23:15:45 2026] 127.0.0.1:49651 Accepted
+[Mon Mar 23 23:15:45 2026] 127.0.0.1:49650 [204]: OPTIONS /forum-project/api/posts.php?sort=latest_reply
+[Mon Mar 23 23:15:45 2026] 127.0.0.1:49650 Closing
+[Mon Mar 23 23:15:45 2026] 127.0.0.1:49652 Accepted
+[Mon Mar 23 23:15:45 2026] 127.0.0.1:49651 [204]: OPTIONS /forum-project/api/labels.php
+[Mon Mar 23 23:15:45 2026] 127.0.0.1:49651 Closing
+[Mon Mar 23 23:15:45 2026] 127.0.0.1:49653 Accepted
+[Mon Mar 23 23:15:45 2026] 127.0.0.1:49652 [204]: OPTIONS /forum-project/api/posts.php?sort=latest_reply
+[Mon Mar 23 23:15:45 2026] 127.0.0.1:49652 Closing
+[Mon Mar 23 23:15:45 2026] 127.0.0.1:49654 Accepted
+[Mon Mar 23 23:15:45 2026] 127.0.0.1:49653 [200]: GET /forum-project/api/labels.php
+[Mon Mar 23 23:15:45 2026] 127.0.0.1:49653 Closing
+[Mon Mar 23 23:15:45 2026] 127.0.0.1:49654 [200]: GET /forum-project/api/posts.php?sort=latest_reply
+[Mon Mar 23 23:15:45 2026] 127.0.0.1:49654 Closing
+[Mon Mar 23 23:15:45 2026] 127.0.0.1:49656 Accepted
+[Mon Mar 23 23:15:45 2026] 127.0.0.1:49656 [200]: GET /forum-project/api/labels.php
+[Mon Mar 23 23:15:45 2026] 127.0.0.1:49656 Closing
+[Mon Mar 23 23:15:45 2026] 127.0.0.1:49658 Accepted
+[Mon Mar 23 23:15:45 2026] 127.0.0.1:49658 [200]: GET /forum-project/api/posts.php?sort=latest_reply
+[Mon Mar 23 23:15:45 2026] 127.0.0.1:49658 Closing
+[Mon Mar 23 23:15:47 2026] 127.0.0.1:49661 Accepted
+[Mon Mar 23 23:15:47 2026] 127.0.0.1:49661 [200]: GET /owner.html
+[Mon Mar 23 23:15:47 2026] 127.0.0.1:49661 Closing
+[Mon Mar 23 23:15:47 2026] 127.0.0.1:49662 Accepted
+[Mon Mar 23 23:15:47 2026] 127.0.0.1:49662 [200]: GET /Auth/backend/api/me.php
+[Mon Mar 23 23:15:47 2026] 127.0.0.1:49662 Closing
+[Mon Mar 23 23:15:47 2026] 127.0.0.1:49663 Accepted
+[Mon Mar 23 23:15:47 2026] 127.0.0.1:49663 [200]: GET /vocba_prac/api/owner-vocabulary.php
+[Mon Mar 23 23:15:47 2026] 127.0.0.1:49663 Closing
+[Mon Mar 23 23:15:48 2026] 127.0.0.1:49667 Accepted
+[Mon Mar 23 23:15:48 2026] 127.0.0.1:49667 [200]: GET /home.html
+[Mon Mar 23 23:15:48 2026] 127.0.0.1:49667 Closing
+[Mon Mar 23 23:15:48 2026] 127.0.0.1:49668 Accepted
+[Mon Mar 23 23:15:48 2026] 127.0.0.1:49668 [200]: GET /Auth/backend/api/me.php
+[Mon Mar 23 23:15:48 2026] 127.0.0.1:49668 Closing
+[Mon Mar 23 23:15:51 2026] 127.0.0.1:49672 Accepted
+[Mon Mar 23 23:15:51 2026] 127.0.0.1:49673 Accepted
+[Mon Mar 23 23:15:51 2026] 127.0.0.1:49674 Accepted
+[Mon Mar 23 23:15:51 2026] 127.0.0.1:49675 Accepted
+[Mon Mar 23 23:15:51 2026] 127.0.0.1:49672 [204]: OPTIONS /forum-project/api/labels.php
+[Mon Mar 23 23:15:51 2026] 127.0.0.1:49672 Closing
+[Mon Mar 23 23:15:51 2026] 127.0.0.1:49673 [204]: OPTIONS /forum-project/api/posts.php?sort=latest_reply
+[Mon Mar 23 23:15:51 2026] 127.0.0.1:49673 Closing
+[Mon Mar 23 23:15:51 2026] 127.0.0.1:49674 [204]: OPTIONS /forum-project/api/labels.php
+[Mon Mar 23 23:15:51 2026] 127.0.0.1:49674 Closing
+[Mon Mar 23 23:15:51 2026] 127.0.0.1:49675 [204]: OPTIONS /forum-project/api/posts.php?sort=latest_reply
+[Mon Mar 23 23:15:51 2026] 127.0.0.1:49675 Closing
+[Mon Mar 23 23:15:51 2026] 127.0.0.1:49676 Accepted
+[Mon Mar 23 23:15:51 2026] 127.0.0.1:49677 Accepted
+[Mon Mar 23 23:15:51 2026] 127.0.0.1:49676 [200]: GET /forum-project/api/labels.php
+[Mon Mar 23 23:15:51 2026] 127.0.0.1:49676 Closing
+[Mon Mar 23 23:15:51 2026] 127.0.0.1:49677 [200]: GET /forum-project/api/posts.php?sort=latest_reply
+[Mon Mar 23 23:15:51 2026] 127.0.0.1:49677 Closing
+[Mon Mar 23 23:15:51 2026] 127.0.0.1:49679 Accepted
+[Mon Mar 23 23:15:51 2026] 127.0.0.1:49679 [200]: GET /forum-project/api/labels.php
+[Mon Mar 23 23:15:51 2026] 127.0.0.1:49679 Closing
+[Mon Mar 23 23:15:51 2026] 127.0.0.1:49681 Accepted
+[Mon Mar 23 23:15:51 2026] 127.0.0.1:49681 [200]: GET /forum-project/api/posts.php?sort=latest_reply
+[Mon Mar 23 23:15:51 2026] 127.0.0.1:49681 Closing
+[Mon Mar 23 23:17:10 2026] 127.0.0.1:49805 Accepted
+[Mon Mar 23 23:17:10 2026] 127.0.0.1:49806 Accepted
+[Mon Mar 23 23:17:10 2026] 127.0.0.1:49805 [204]: OPTIONS /forum-project/api/labels.php
+[Mon Mar 23 23:17:10 2026] 127.0.0.1:49805 Closing
+[Mon Mar 23 23:17:10 2026] 127.0.0.1:49807 Accepted
+[Mon Mar 23 23:17:10 2026] 127.0.0.1:49806 [204]: OPTIONS /forum-project/api/posts.php?sort=latest_reply
+[Mon Mar 23 23:17:10 2026] 127.0.0.1:49806 Closing
+[Mon Mar 23 23:17:10 2026] 127.0.0.1:49808 Accepted
+[Mon Mar 23 23:17:10 2026] 127.0.0.1:49807 [204]: OPTIONS /forum-project/api/labels.php
+[Mon Mar 23 23:17:10 2026] 127.0.0.1:49807 Closing
+[Mon Mar 23 23:17:10 2026] 127.0.0.1:49809 Accepted
+[Mon Mar 23 23:17:10 2026] 127.0.0.1:49808 [204]: OPTIONS /forum-project/api/posts.php?sort=latest_reply
+[Mon Mar 23 23:17:10 2026] 127.0.0.1:49808 Closing
+[Mon Mar 23 23:17:10 2026] 127.0.0.1:49810 Accepted
+[Mon Mar 23 23:17:10 2026] 127.0.0.1:49809 [200]: GET /forum-project/api/labels.php
+[Mon Mar 23 23:17:10 2026] 127.0.0.1:49809 Closing
+[Mon Mar 23 23:17:10 2026] 127.0.0.1:49810 [200]: GET /forum-project/api/posts.php?sort=latest_reply
+[Mon Mar 23 23:17:10 2026] 127.0.0.1:49810 Closing
+[Mon Mar 23 23:17:10 2026] 127.0.0.1:49812 Accepted
+[Mon Mar 23 23:17:10 2026] 127.0.0.1:49812 [200]: GET /forum-project/api/labels.php
+[Mon Mar 23 23:17:10 2026] 127.0.0.1:49812 Closing
+[Mon Mar 23 23:17:10 2026] 127.0.0.1:49814 Accepted
+[Mon Mar 23 23:17:10 2026] 127.0.0.1:49814 [200]: GET /forum-project/api/posts.php?sort=latest_reply
+[Mon Mar 23 23:17:10 2026] 127.0.0.1:49814 Closing
+[Mon Mar 23 23:17:13 2026] 127.0.0.1:49820 Accepted
+[Mon Mar 23 23:17:13 2026] 127.0.0.1:49821 Accepted
+[Mon Mar 23 23:17:13 2026] 127.0.0.1:49820 [200]: GET /forum-project/api/labels.php
+[Mon Mar 23 23:17:13 2026] 127.0.0.1:49820 Closing
+[Mon Mar 23 23:17:13 2026] 127.0.0.1:49821 [200]: GET /forum-project/api/posts.php?sort=latest_reply
+[Mon Mar 23 23:17:13 2026] 127.0.0.1:49821 Closing
+[Mon Mar 23 23:17:13 2026] 127.0.0.1:49823 Accepted
+[Mon Mar 23 23:17:13 2026] 127.0.0.1:49823 [200]: GET /forum-project/api/labels.php
+[Mon Mar 23 23:17:13 2026] 127.0.0.1:49823 Closing
+[Mon Mar 23 23:17:13 2026] 127.0.0.1:49825 Accepted
+[Mon Mar 23 23:17:13 2026] 127.0.0.1:49825 [200]: GET /forum-project/api/posts.php?sort=latest_reply
+[Mon Mar 23 23:17:13 2026] 127.0.0.1:49825 Closing
+[Mon Mar 23 23:17:13 2026] 127.0.0.1:49828 Accepted
+[Mon Mar 23 23:17:14 2026] 127.0.0.1:49828 [200]: GET /home.html?module=Insight
+[Mon Mar 23 23:17:14 2026] 127.0.0.1:49829 Accepted
+[Mon Mar 23 23:17:14 2026] 127.0.0.1:49828 Closing
+[Mon Mar 23 23:17:14 2026] 127.0.0.1:49829 [200]: GET /Auth/backend/api/me.php
+[Mon Mar 23 23:17:14 2026] 127.0.0.1:49829 Closing
+[Mon Mar 23 23:17:16 2026] 127.0.0.1:49831 Accepted
+[Mon Mar 23 23:17:16 2026] 127.0.0.1:49832 Accepted
+[Mon Mar 23 23:17:16 2026] 127.0.0.1:49833 Accepted
+[Mon Mar 23 23:17:16 2026] 127.0.0.1:49831 [204]: OPTIONS /forum-project/api/labels.php
+[Mon Mar 23 23:17:16 2026] 127.0.0.1:49831 Closing
+[Mon Mar 23 23:17:16 2026] 127.0.0.1:49834 Accepted
+[Mon Mar 23 23:17:16 2026] 127.0.0.1:49832 [204]: OPTIONS /forum-project/api/posts.php?sort=latest_reply
+[Mon Mar 23 23:17:16 2026] 127.0.0.1:49832 Closing
+[Mon Mar 23 23:17:16 2026] 127.0.0.1:49833 [204]: OPTIONS /forum-project/api/labels.php
+[Mon Mar 23 23:17:16 2026] 127.0.0.1:49833 Closing
+[Mon Mar 23 23:17:16 2026] 127.0.0.1:49835 Accepted
+[Mon Mar 23 23:17:16 2026] 127.0.0.1:49834 [204]: OPTIONS /forum-project/api/posts.php?sort=latest_reply
+[Mon Mar 23 23:17:16 2026] 127.0.0.1:49834 Closing
+[Mon Mar 23 23:17:16 2026] 127.0.0.1:49836 Accepted
+[Mon Mar 23 23:17:16 2026] 127.0.0.1:49835 [200]: GET /forum-project/api/labels.php
+[Mon Mar 23 23:17:16 2026] 127.0.0.1:49835 Closing
+[Mon Mar 23 23:17:16 2026] 127.0.0.1:49836 [200]: GET /forum-project/api/posts.php?sort=latest_reply
+[Mon Mar 23 23:17:16 2026] 127.0.0.1:49836 Closing
+[Mon Mar 23 23:17:16 2026] 127.0.0.1:49838 Accepted
+[Mon Mar 23 23:17:16 2026] 127.0.0.1:49838 [200]: GET /forum-project/api/labels.php
+[Mon Mar 23 23:17:16 2026] 127.0.0.1:49838 Closing
+[Mon Mar 23 23:17:16 2026] 127.0.0.1:49840 Accepted
+[Mon Mar 23 23:17:16 2026] 127.0.0.1:49840 [200]: GET /forum-project/api/posts.php?sort=latest_reply
+[Mon Mar 23 23:17:16 2026] 127.0.0.1:49840 Closing
+[Mon Mar 23 23:17:17 2026] 127.0.0.1:49846 Accepted
+[Mon Mar 23 23:17:17 2026] 127.0.0.1:49847 Accepted
+[Mon Mar 23 23:17:17 2026] 127.0.0.1:49846 [200]: GET /forum-project/api/labels.php
+[Mon Mar 23 23:17:17 2026] 127.0.0.1:49846 Closing
+[Mon Mar 23 23:17:17 2026] 127.0.0.1:49847 [200]: GET /forum-project/api/posts.php?sort=latest_reply
+[Mon Mar 23 23:17:17 2026] 127.0.0.1:49847 Closing
+[Mon Mar 23 23:17:17 2026] 127.0.0.1:49849 Accepted
+[Mon Mar 23 23:17:17 2026] 127.0.0.1:49849 [200]: GET /forum-project/api/labels.php
+[Mon Mar 23 23:17:17 2026] 127.0.0.1:49849 Closing
+[Mon Mar 23 23:17:17 2026] 127.0.0.1:49851 Accepted
+[Mon Mar 23 23:17:17 2026] 127.0.0.1:49851 [200]: GET /forum-project/api/posts.php?sort=latest_reply
+[Mon Mar 23 23:17:17 2026] 127.0.0.1:49851 Closing
+[Mon Mar 23 23:17:17 2026] 127.0.0.1:49855 Accepted
+[Mon Mar 23 23:17:17 2026] 127.0.0.1:49855 [200]: GET /home.html?module=Method
+[Mon Mar 23 23:17:17 2026] 127.0.0.1:49855 Closing
+[Mon Mar 23 23:17:17 2026] 127.0.0.1:49858 Accepted
+[Mon Mar 23 23:17:17 2026] 127.0.0.1:49858 [200]: GET /Auth/backend/api/me.php
+[Mon Mar 23 23:17:17 2026] 127.0.0.1:49858 Closing
+[Mon Mar 23 23:17:19 2026] 127.0.0.1:49859 Accepted
+[Mon Mar 23 23:17:19 2026] 127.0.0.1:49860 Accepted
+[Mon Mar 23 23:17:19 2026] 127.0.0.1:49859 [200]: GET /technology.html
+[Mon Mar 23 23:17:19 2026] 127.0.0.1:49859 Closing
+[Mon Mar 23 23:17:20 2026] 127.0.0.1:49860 [200]: GET /home.html?module=Method
+[Mon Mar 23 23:17:20 2026] 127.0.0.1:49860 Closing
+[Mon Mar 23 23:17:20 2026] 127.0.0.1:49863 Accepted
+[Mon Mar 23 23:17:20 2026] 127.0.0.1:49864 Accepted
+[Mon Mar 23 23:17:20 2026] 127.0.0.1:49863 [200]: GET /Auth/backend/api/me.php
+[Mon Mar 23 23:17:20 2026] 127.0.0.1:49863 Closing
+[Mon Mar 23 23:18:58 2026] 127.0.0.1:49864 Closed without sending a request; it was probably just an unused speculative preconnection
+[Mon Mar 23 23:18:58 2026] 127.0.0.1:49864 Closing
+[Mon Mar 23 23:18:58 2026] 127.0.0.1:49973 Accepted
+[Mon Mar 23 23:18:58 2026] 127.0.0.1:49974 Accepted
+[Mon Mar 23 23:18:58 2026] 127.0.0.1:49973 [204]: OPTIONS /forum-project/api/labels.php
+[Mon Mar 23 23:18:58 2026] 127.0.0.1:49973 Closing
+[Mon Mar 23 23:18:58 2026] 127.0.0.1:49975 Accepted
+[Mon Mar 23 23:18:58 2026] 127.0.0.1:49974 [204]: OPTIONS /forum-project/api/posts.php?sort=latest_reply
+[Mon Mar 23 23:18:58 2026] 127.0.0.1:49974 Closing
+[Mon Mar 23 23:18:58 2026] 127.0.0.1:49976 Accepted
+[Mon Mar 23 23:18:58 2026] 127.0.0.1:49975 [204]: OPTIONS /forum-project/api/labels.php
+[Mon Mar 23 23:18:58 2026] 127.0.0.1:49975 Closing
+[Mon Mar 23 23:18:58 2026] 127.0.0.1:49977 Accepted
+[Mon Mar 23 23:18:58 2026] 127.0.0.1:49976 [204]: OPTIONS /forum-project/api/posts.php?sort=latest_reply
+[Mon Mar 23 23:18:58 2026] 127.0.0.1:49976 Closing
+[Mon Mar 23 23:18:58 2026] 127.0.0.1:49978 Accepted
+[Mon Mar 23 23:18:58 2026] 127.0.0.1:49977 [200]: GET /forum-project/api/labels.php
+[Mon Mar 23 23:18:58 2026] 127.0.0.1:49977 Closing
+[Mon Mar 23 23:18:58 2026] 127.0.0.1:49980 Accepted
+[Mon Mar 23 23:18:58 2026] 127.0.0.1:49978 [200]: GET /forum-project/api/posts.php?sort=latest_reply
+[Mon Mar 23 23:18:58 2026] 127.0.0.1:49978 Closing
+[Mon Mar 23 23:18:58 2026] 127.0.0.1:49980 [200]: GET /forum-project/api/labels.php
+[Mon Mar 23 23:18:58 2026] 127.0.0.1:49980 Closing
+[Mon Mar 23 23:18:58 2026] 127.0.0.1:49982 Accepted
+[Mon Mar 23 23:18:58 2026] 127.0.0.1:49982 [200]: GET /forum-project/api/posts.php?sort=latest_reply
+[Mon Mar 23 23:18:58 2026] 127.0.0.1:49982 Closing
+[Mon Mar 23 23:18:58 2026] 127.0.0.1:49985 Accepted
+[Mon Mar 23 23:18:58 2026] 127.0.0.1:49985 [200]: GET /home.html?module=Dialogue
+[Mon Mar 23 23:18:58 2026] 127.0.0.1:49985 Closing
+[Mon Mar 23 23:18:58 2026] 127.0.0.1:49986 Accepted
+[Mon Mar 23 23:18:58 2026] 127.0.0.1:49986 [200]: GET /Auth/backend/api/me.php
+[Mon Mar 23 23:18:58 2026] 127.0.0.1:49986 Closing

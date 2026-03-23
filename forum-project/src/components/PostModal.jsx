@@ -2,8 +2,13 @@
 
 import { useState, useRef, useEffect } from 'react';
 import './PostModal.css';
-// 👇 1. 引入所有标签定义
-import { ALL_TAGS } from '../data/mockData'; 
+import { uploadForumAsset } from '../api/forumApi';
+
+function formatRecordingDuration(totalSeconds) {
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+}
 
 const PostModal = ({ 
   isOpen, 
@@ -11,35 +16,49 @@ const PostModal = ({
   onSubmit, 
   isReplyMode = false, 
   quoteText = '',
-  parentTitle = ''
+  parentTitle = '',
+  labelOptions = [],
+  currentUser = null,
 }) => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [selectedTags, setSelectedTags] = useState([]); // 👇 2. 新增：选中的标签状态
   const [isPreview, setIsPreview] = useState(false);
+  const [error, setError] = useState('');
+  const [isRecording, setIsRecording] = useState(false);
+  const [isRecorderBusy, setIsRecorderBusy] = useState(false);
+  const [recordingSeconds, setRecordingSeconds] = useState(0);
   
   const editorRef = useRef(null);
   const fileInputRef = useRef(null);
   const audioInputRef = useRef(null);
+  const mediaRecorderRef = useRef(null);
+  const mediaStreamRef = useRef(null);
+  const recordedChunksRef = useRef([]);
   
-  const imageMapRef = useRef({});
-  const audioMapRef = useRef({});
-
   // 初始化逻辑
   useEffect(() => {
     if (isOpen) {
       if (isReplyMode) {
-        setTitle(`Re: ${parentTitle}`);
+        setTitle('');
+        setContent('');
       } else {
         setTitle('');
         setContent('');
       }
       setSelectedTags([]); // 👇 重置标签
       setIsPreview(false);
-      imageMapRef.current = {};
-      audioMapRef.current = {};
+      setError('');
+      setIsRecording(false);
+      setIsRecorderBusy(false);
+      setRecordingSeconds(0);
+      recordedChunksRef.current = [];
 
       const timer = setTimeout(() => {
+        if (isReplyMode && editorRef.current) {
+          editorRef.current.focus();
+          return;
+        }
         const input = document.getElementById('modal-title-input');
         if (input) input.focus();
       }, 100);
@@ -47,34 +66,36 @@ const PostModal = ({
       document.body.classList.add('pm-modal-open');
       return () => {
         clearTimeout(timer);
+        if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+          mediaRecorderRef.current.stop();
+        }
+        if (mediaStreamRef.current) {
+          mediaStreamRef.current.getTracks().forEach((track) => track.stop());
+          mediaStreamRef.current = null;
+        }
+        setRecordingSeconds(0);
         document.body.classList.remove('pm-modal-open');
       };
     }
   }, [isOpen, isReplyMode, parentTitle]);
 
+  useEffect(() => {
+    if (!isRecording) {
+      setRecordingSeconds(0);
+      return undefined;
+    }
+
+    const intervalId = window.setInterval(() => {
+      setRecordingSeconds((prev) => prev + 1);
+    }, 1000);
+
+    return () => window.clearInterval(intervalId);
+  }, [isRecording]);
+
   // ... (中间的 helper 函数 createImagePlaceholder, decodeContentForSubmit, parseMarkdown 等保持不变) ...
   // 为了节省篇幅，这里省略未变动的 helper 函数，请保留你之前的代码
-  const createImagePlaceholder = (fileName) => {
-    const id = 'img_' + Date.now() + Math.random().toString(36).substr(2, 5);
-    return { placeholder: `%%IMG_${id}%%`, id };
-  };
-  const createAudioPlaceholder = (fileName) => {
-    const id = 'aud_' + Date.now() + Math.random().toString(36).substr(2, 5);
-    return { placeholder: `%%AUDIO_${id}%%`, id };
-  };
   const decodeContentForSubmit = (editText) => {
-    let text = editText;
-    Object.keys(imageMapRef.current).forEach(id => {
-      const { fileName, base64 } = imageMapRef.current[id];
-      const placeholder = `%%IMG_${id}%%`;
-      text = text.split(placeholder).join(`![${fileName}](${base64})`);
-    });
-    Object.keys(audioMapRef.current).forEach(id => {
-      const { fileName, base64 } = audioMapRef.current[id];
-      const placeholder = `%%AUDIO_${id}%%`;
-      text = text.split(placeholder).join(`![audio:${fileName}](${base64})`);
-    });
-    return text;
+    return editText;
   };
   const parseMarkdown = (text) => {
     if (!text) return '';
@@ -110,38 +131,11 @@ const PostModal = ({
       textarea.setSelectionRange(start + prefix.length, end + prefix.length);
     }, 0);
   };
-  const handleImageUpload = (e) => {
-    const file = e.target.files[0];
-    if (!file || !file.type.startsWith('image/')) return;
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const base64String = event.target.result;
-      const { placeholder, id } = createImagePlaceholder(file.name);
-      imageMapRef.current[id] = { fileName: file.name, base64: base64String };
-      insertPlaceholder(placeholder);
-    };
-    reader.readAsDataURL(file);
-    e.target.value = '';
-  };
-  const handleAudioUpload = (e) => {
-    const file = e.target.files[0];
-    if (!file || !file.type.startsWith('audio/')) { alert('Please upload a valid audio file'); return; }
-    if (file.size > 5 * 1024 * 1024) { alert('Audio file too large (>5MB)'); return; }
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const base64String = event.target.result;
-      const { placeholder, id } = createAudioPlaceholder(file.name);
-      audioMapRef.current[id] = { fileName: file.name, base64: base64String };
-      insertPlaceholder(placeholder);
-    };
-    reader.readAsDataURL(file);
-    e.target.value = '';
-  };
-  const insertPlaceholder = (placeholder) => {
+  const insertUploadedMarkup = (markup) => {
     const textarea = editorRef.current;
     if (!textarea) return;
     const start = textarea.selectionStart;
-    const insertText = `\n${placeholder}\n`;
+    const insertText = `\n${markup}\n`;
     const newText = content.substring(0, start) + insertText + content.substring(textarea.selectionEnd);
     setContent(newText);
     setTimeout(() => {
@@ -149,20 +143,134 @@ const PostModal = ({
       textarea.setSelectionRange(start + insertText.length, start + insertText.length);
     }, 0);
   };
-  const handlePaste = (e) => {
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file || !file.type.startsWith('image/')) return;
+    try {
+      setError('');
+      const uploaded = await uploadForumAsset(file, 'image');
+      insertUploadedMarkup(`![${uploaded.fileName}](${uploaded.url})`);
+    } catch (err) {
+      setError(err?.message || 'Failed to upload image.');
+    }
+    e.target.value = '';
+  };
+  const handleAudioUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file || !file.type.startsWith('audio/')) { setError('Please upload a valid audio file.'); return; }
+    try {
+      setError('');
+      const uploaded = await uploadForumAsset(file, 'audio');
+      insertUploadedMarkup(`![audio:${uploaded.fileName}](${uploaded.url})`);
+    } catch (err) {
+      setError(err?.message || 'Failed to upload audio.');
+    }
+    e.target.value = '';
+  };
+
+  const stopRecordingStream = () => {
+    if (mediaStreamRef.current) {
+      mediaStreamRef.current.getTracks().forEach((track) => track.stop());
+      mediaStreamRef.current = null;
+    }
+  };
+
+  const handleRecordAudio = async () => {
+    if (isRecorderBusy) {
+      return;
+    }
+
+    if (isRecording) {
+      if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
+        setIsRecorderBusy(true);
+        mediaRecorderRef.current.stop();
+      }
+      return;
+    }
+
+    if (!navigator.mediaDevices || typeof navigator.mediaDevices.getUserMedia !== 'function' || typeof MediaRecorder === 'undefined') {
+      setError('This browser does not support direct audio recording.');
+      return;
+    }
+
+    try {
+      setError('');
+      setIsRecorderBusy(true);
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaStreamRef.current = stream;
+
+      let mimeType = '';
+      if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
+        mimeType = 'audio/webm;codecs=opus';
+      } else if (MediaRecorder.isTypeSupported('audio/webm')) {
+        mimeType = 'audio/webm';
+      }
+
+      const recorder = mimeType ? new MediaRecorder(stream, { mimeType }) : new MediaRecorder(stream);
+      mediaRecorderRef.current = recorder;
+      recordedChunksRef.current = [];
+
+      recorder.ondataavailable = (event) => {
+        if (event.data && event.data.size > 0) {
+          recordedChunksRef.current.push(event.data);
+        }
+      };
+
+      recorder.onstop = async () => {
+        const fallbackType = recorder.mimeType || 'audio/webm';
+        const blob = new Blob(recordedChunksRef.current, { type: fallbackType });
+        const extension = fallbackType.includes('ogg') ? 'ogg' : fallbackType.includes('mp4') ? 'm4a' : 'webm';
+        const file = new File([blob], `recording-${Date.now()}.${extension}`, { type: fallbackType });
+
+        try {
+          const uploaded = await uploadForumAsset(file, 'audio');
+          insertUploadedMarkup(`![audio:${uploaded.fileName}](${uploaded.url})`);
+        } catch (err) {
+          setError(err?.message || 'Failed to upload recorded audio.');
+        } finally {
+          recordedChunksRef.current = [];
+          setIsRecording(false);
+          setIsRecorderBusy(false);
+          setRecordingSeconds(0);
+          stopRecordingStream();
+        }
+      };
+
+      recorder.onerror = () => {
+        setError('Recording failed. Please try again.');
+        setIsRecording(false);
+        setIsRecorderBusy(false);
+        setRecordingSeconds(0);
+        stopRecordingStream();
+      };
+
+      recorder.start();
+      setIsRecording(true);
+      setIsRecorderBusy(false);
+    } catch (err) {
+      setError('Microphone access is required to record audio.');
+      setIsRecording(false);
+      setIsRecorderBusy(false);
+      setRecordingSeconds(0);
+      stopRecordingStream();
+    }
+  };
+  const handlePaste = async (e) => {
      const items = e.clipboardData.items;
      for (let i = 0; i < items.length; i++) {
       if (items[i].type.indexOf('image') !== -1) {
         e.preventDefault();
         const file = items[i].getAsFile();
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          const base64String = event.target.result;
-          const { placeholder, id } = createImagePlaceholder('Pasted_Image');
-          imageMapRef.current[id] = { fileName: 'Pasted_Image.png', base64: base64String };
-          insertPlaceholder(placeholder);
-        };
-        reader.readAsDataURL(file);
+        if (!file) break;
+        const pastedFile = new File([file], 'pasted-image.png', { type: file.type || 'image/png' });
+        try {
+          setError('');
+          const uploaded = await uploadForumAsset(pastedFile, 'image');
+          insertUploadedMarkup(`![${uploaded.fileName}](${uploaded.url})`);
+        } catch (err) {
+          setError(err?.message || 'Failed to upload pasted image.');
+        }
         break;
       }
     }
@@ -175,22 +283,23 @@ const PostModal = ({
     } else {
       // 限制最多选 3 个标签，避免太多
       if (selectedTags.length >= 3) {
-        alert("You can select up to 3 tags.");
+        setError("You can select up to 3 labels.");
         return;
       }
       setSelectedTags([...selectedTags, tag]);
     }
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (!content.trim()) {
-      alert('Content cannot be empty!');
+      setError('Content cannot be empty.');
       return;
     }
     if (!isReplyMode && !title.trim()) {
-       alert('Title cannot be empty!');
+       setError('Title cannot be empty.');
        return;
     }
+    setError('');
 
     const finalContent = decodeContentForSubmit(content);
 
@@ -199,18 +308,21 @@ const PostModal = ({
       id: Date.now(),
       title: title, 
       content: finalContent,
-      tags: selectedTags, // 传递选中的标签
-      author: 'Current User',
+      labels: selectedTags,
+      author: currentUser?.username || 'Current User',
       time: new Date().toLocaleDateString()
     };
 
-    onSubmit(newData);
-    
-    setTitle('');
-    setContent('');
-    setSelectedTags([]);
-    setIsPreview(false);
-    onClose();
+    try {
+      await onSubmit(newData);
+      setTitle('');
+      setContent('');
+      setSelectedTags([]);
+      setIsPreview(false);
+      onClose();
+    } catch (err) {
+      setError(err?.message || 'Failed to submit. Please try again.');
+    }
   };
 
   if (!isOpen) return null;
@@ -249,33 +361,37 @@ const PostModal = ({
             )}
 
             <div className="post-modal-input-group">
-              <div className="post-modal-avatar">Y</div>
+              <div className="post-modal-avatar">{(currentUser?.username || 'Y').slice(0, 1).toUpperCase()}</div>
               <div className="post-modal-input-wrapper">
-                <input
-                  id="modal-title-input"
-                  type="text"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  placeholder={isReplyMode ? "Reply title (optional)" : "Enter post title..."}
-                  className="post-modal-title-input"
-                  disabled={isPreview}
-                />
+                {isReplyMode ? (
+                  <div className="post-modal-reply-heading">{parentTitle}</div>
+                ) : (
+                  <input
+                    id="modal-title-input"
+                    type="text"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    placeholder="Enter post title..."
+                    className="post-modal-title-input"
+                    disabled={isPreview}
+                  />
+                )}
               </div>
             </div>
 
             {/* 👇 5. 新增：标签选择区域 */}
-            {!isPreview && (
+            {!isPreview && !isReplyMode && (
               <div className="post-modal-tags-section">
-                <label className="tags-label">Select Tags (Max 3):</label>
+                <label className="tags-label">Select labels (max 3)</label>
                 <div className="tags-container">
-                  {ALL_TAGS.map(tag => (
+                  {labelOptions.map(tag => (
                     <button
-                      key={tag}
+                      key={tag.id}
                       type="button"
-                      onClick={() => toggleTag(tag)}
-                      className={`tag-chip ${selectedTags.includes(tag) ? 'active' : ''}`}
+                      onClick={() => toggleTag(tag.name)}
+                      className={`tag-chip ${selectedTags.includes(tag.name) ? 'active' : ''}`}
                     >
-                      {tag}
+                      {tag.name}
                     </button>
                   ))}
                 </div>
@@ -284,6 +400,25 @@ const PostModal = ({
                     Selected: <strong>{selectedTags.join(', ')}</strong>
                   </div>
                 )}
+              </div>
+            )}
+
+            {!!error && <div className="post-modal-error">{error}</div>}
+
+            {(isRecording || isRecorderBusy) && (
+              <div className={`post-modal-recorder-panel ${isRecording ? 'is-live' : 'is-processing'}`}>
+                <div className="post-modal-recorder-panel__pulse" aria-hidden="true" />
+                <div className="post-modal-recorder-panel__body">
+                  <div className="post-modal-recorder-panel__eyebrow">
+                    {isRecording ? 'Recording in progress' : 'Processing recording'}
+                  </div>
+                  <div className="post-modal-recorder-panel__title">
+                    {isRecording ? `Mic is on · ${formatRecordingDuration(recordingSeconds)}` : 'Uploading audio clip...'}
+                  </div>
+                  <div className="post-modal-recorder-panel__hint">
+                    {isRecording ? 'Click the stop button when you want to insert this audio into the reply.' : 'Please wait. The audio will be inserted into the editor automatically.'}
+                  </div>
+                </div>
               </div>
             )}
 
@@ -329,6 +464,14 @@ const PostModal = ({
               </button>
               <button onClick={() => audioInputRef.current.click()} title="Upload audio" className="post-modal-format-btn">
                 🎵
+              </button>
+              <button
+                type="button"
+                onClick={handleRecordAudio}
+                title={isRecording ? 'Stop recording' : 'Record audio'}
+                className={`post-modal-format-btn ${isRecording ? 'is-recording' : ''}`}
+              >
+                {isRecording ? '⏹' : '🎙'}
               </button>
             </div>
           )}

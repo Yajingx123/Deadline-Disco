@@ -1,81 +1,67 @@
-/* PostModal.css - Ultra Compact Version */
-
 :root {
   --pm-bg: #E4DFD8;
   --pm-primary: #9BB7D4;
   --pm-secondary: #3A4E6B;
-  --pm-text: #3A4E6B;
-  --pm-text-light: rgba(58, 78, 107, 0.6);
-  --pm-avatar: #9BB7D4;
-  --pm-border: rgba(58, 78, 107, 0.15);
-  --pm-card-bg: rgba(255, 255, 255, 0.4);
-  --pm-white-bg: rgba(255, 255, 255, 0.3);
+  --pm-text-light: rgba(58, 78, 107, 0.58);
+  --pm-border: rgba(58, 78, 107, 0.12);
 }
 
-/* 遮罩层 */
 .post-modal-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: rgba(58, 78, 107, 0.4);
-  backdrop-filter: blur(4px);
+  inset: 0;
+  background: rgba(58, 78, 107, 0.24);
+  backdrop-filter: blur(10px);
   z-index: 1040;
-  animation: pm-fade-in 0.3s ease forwards;
+  animation: pm-fade-in 0.25s ease forwards;
 }
 
-/* 弹窗主体容器 —— 高度更小，宽度略宽以容纳紧凑内容 */
 .post-modal-container {
   position: fixed;
-  bottom: 0;
-  left: 20%;   
-  right: 20%;  
-  height: 45vh;       /* 稍微增加高度比例以适应紧凑排版，但实际内容更密 */
-  max-height: 450px;  /* 最大高度限制 */
-  background-color: var(--pm-bg);
-  border-top-left-radius: 12px;  
-  border-top-right-radius: 12px;
-  box-shadow: 0 -4px 20px rgba(58, 78, 107, 0.15);
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: min(980px, calc(100vw - 72px));
+  height: min(680px, calc(100vh - 88px));
+  background: rgba(244, 241, 236, 0.96);
+  border: 1px solid rgba(58, 78, 107, 0.1);
+  border-radius: 24px;
+  box-shadow: 0 28px 80px rgba(58, 78, 107, 0.18);
   z-index: 1050;
   display: flex;
   flex-direction: column;
-  transform: translateY(100%);
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  animation: pm-slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  overflow: hidden;
+  animation: pm-scale-in 0.25s ease forwards;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
-/* 顶部导航栏 —— 极简 */
 .post-modal-header {
-  padding: 8px 16px;  /* 👈 大幅减小 padding */
+  padding: 14px 20px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid var(--pm-border);
-  flex-shrink: 0;
-  background-color: var(--pm-bg);
+  background: rgba(228, 223, 216, 0.82);
 }
 
 .post-modal-title-group {
   display: flex;
   align-items: center;
-  gap: 8px;  /* 👈 间隙减小 */
+  gap: 12px;
 }
 
 .post-modal-cancel-btn {
   background: none;
   border: none;
   color: var(--pm-secondary);
-  font-size: 12px;  /* 👈 统一小字体 */
+  font-size: 0.88rem;
   cursor: pointer;
   font-weight: 500;
   display: flex;
   align-items: center;
-  gap: 4px;
-  opacity: 0.7;
-  transition: opacity 0.2s;
-  padding: 4px; /* 增加点击区域 */
+  gap: 8px;
+  opacity: 0.78;
+  transition: opacity 0.2s ease;
+  padding: 0;
 }
 
 .post-modal-cancel-btn:hover {
@@ -83,156 +69,307 @@
 }
 
 .post-modal-title {
-  font-size: 12px;  /* 👈 标题与正文同大 */
-  font-weight: 700;
   margin: 0;
-  color: var(--pm-text);
-  letter-spacing: 0;
+  color: var(--pm-secondary);
+  font-size: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
-/* 内容滚动区 */
+.post-modal-draft-label {
+  color: var(--pm-secondary);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
 .post-modal-content-scroll {
   flex: 1;
   overflow-y: auto;
-  padding: 8px 16px;  /* 👈 上下左右都减小 */
-  display: flex;
-  flex-direction: column;
+  padding: 16px 20px;
 }
 
 .post-modal-card {
-  background-color: var(--pm-card-bg);
-  backdrop-filter: blur(8px);
+  min-height: 100%;
+  background: rgba(255, 255, 255, 0.72);
   border: 1px solid var(--pm-border);
-  border-radius: 8px;  /* 👈 圆角更小 */
-  padding: 10px;        /* 👈 内部极紧凑 */
-  flex: 1;
+  border-radius: 18px;
+  padding: 14px;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+  gap: 14px;
+}
+
+.reply-info-banner {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(155, 183, 212, 0.12);
+  color: var(--pm-secondary);
+}
+
+.reply-target {
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.reply-quote-preview {
+  color: rgba(58, 78, 107, 0.8);
+}
+
+.quote-label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: rgba(58, 78, 107, 0.55);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.quote-text-short {
+  font-size: 0.9rem;
+  line-height: 1.5;
 }
 
 .post-modal-input-group {
   display: flex;
-  gap: 8px;  /* 👈 头像和输入框紧贴 */
-  margin-bottom: 8px;  /* 👈 下边距减小 */
-  align-items: center; /* 垂直居中 */
+  align-items: center;
+  gap: 12px;
 }
 
 .post-modal-avatar {
-  width: 24px;   /* 👈 头像更小 */
-  height: 24px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
-  background-color: var(--pm-avatar);
-  color: var(--pm-secondary);
+  background: linear-gradient(135deg, #9BB7D4, #c5d6e8);
+  color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 11px;  /* 👈 头像文字更小 */
-  font-weight: 700;
+  font-size: 0.9rem;
+  font-weight: 800;
   flex-shrink: 0;
-  font-family: 'Playfair Display', serif;
 }
 
 .post-modal-input-wrapper {
   flex: 1;
-  min-width: 0; /* 防止溢出 */
+  min-width: 0;
+}
+
+.post-modal-title-input,
+.post-modal-reply-heading {
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid var(--pm-border);
+  background: transparent;
+  color: var(--pm-secondary);
+  padding: 8px 0 10px;
+  font-size: 1.34rem;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: -0.02em;
 }
 
 .post-modal-title-input {
-  border: none;
-  border-bottom: 1px solid var(--pm-border);
   outline: none;
-  font-size: 12px;  /* 👈 标题输入统一小字体 */
-  font-weight: 600;
-  color: var(--pm-text);
-  width: 100%;
-  background-color: transparent;
-  padding: 4px 0;   /* 👈 上下 padding 极小 */
-  margin-bottom: 4px;
-  font-family: 'Playfair Display', serif;
-  transition: border-color 0.3s;
-}
-
-.post-modal-title-input:focus {
-  border-bottom-color: var(--pm-primary);
 }
 
 .post-modal-title-input::placeholder {
   color: var(--pm-text-light);
-  font-weight: 400;
+  font-weight: 500;
 }
 
-/* 编辑器区域 */
-.post-modal-editor-container {
-  flex: 1;
-  border: 1px solid var(--pm-border);
-  border-radius: 4px;  /* 👈 圆角极小 */
-  overflow: hidden;
+.post-modal-tags-section {
   display: flex;
   flex-direction: column;
-  background-color: var(--pm-white-bg);
+  gap: 10px;
+}
+
+.tags-label {
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(58, 78, 107, 0.58);
+}
+
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag-chip {
+  border: 1px solid rgba(58, 78, 107, 0.12);
+  background: rgba(255, 255, 255, 0.8);
+  color: var(--pm-secondary);
+  border-radius: 999px;
+  padding: 8px 13px;
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.tag-chip.active,
+.tag-chip:hover {
+  background: rgba(155, 183, 212, 0.24);
+  transform: translateY(-1px);
+}
+
+.selected-tags-summary {
+  color: rgba(58, 78, 107, 0.66);
+  font-size: 0.84rem;
+}
+
+.post-modal-error {
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: rgba(194, 87, 87, 0.14);
+  color: #b64f60;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.post-modal-recorder-panel {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 16px 18px;
+  border-radius: 18px;
+  border: 1px solid rgba(58, 78, 107, 0.1);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(155, 183, 212, 0.18));
+}
+
+.post-modal-recorder-panel.is-live {
+  border-color: rgba(182, 79, 96, 0.18);
+  background: linear-gradient(135deg, rgba(255, 248, 249, 0.96), rgba(182, 79, 96, 0.12));
+}
+
+.post-modal-recorder-panel.is-processing {
+  border-color: rgba(155, 183, 212, 0.28);
+}
+
+.post-modal-recorder-panel__pulse {
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  flex-shrink: 0;
+  background: #b64f60;
+  box-shadow: 0 0 0 0 rgba(182, 79, 96, 0.35);
+  animation: pm-recorder-pulse 1.4s ease-out infinite;
+}
+
+.post-modal-recorder-panel.is-processing .post-modal-recorder-panel__pulse {
+  background: #9BB7D4;
+  box-shadow: 0 0 0 0 rgba(155, 183, 212, 0.3);
+}
+
+.post-modal-recorder-panel__body {
+  min-width: 0;
+}
+
+.post-modal-recorder-panel__eyebrow {
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(58, 78, 107, 0.55);
+}
+
+.post-modal-recorder-panel__title {
+  margin-top: 4px;
+  color: var(--pm-secondary);
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.post-modal-recorder-panel__hint {
+  margin-top: 6px;
+  color: rgba(58, 78, 107, 0.76);
+  font-size: 0.88rem;
+  line-height: 1.5;
+}
+
+.post-modal-editor-container {
+  flex: 1;
+  min-height: 250px;
+  border: 1px solid var(--pm-border);
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.88);
+}
+
+.post-modal-textarea,
+.post-modal-preview-content {
+  width: 100%;
+  height: 100%;
+  min-height: 250px;
+  border: none;
+  outline: none;
+  padding: 16px;
+  background: transparent;
+  color: var(--pm-secondary);
+  font-size: 0.96rem;
+  line-height: 1.7;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .post-modal-textarea {
-  flex: 1;
-  border: none;
-  outline: none;
-  font-size: 12px;  /* 👈 正文字体统一 */
   resize: none;
-  color: var(--pm-text);
-  padding: 8px;     /* 👈 内部 padding 减小 */
-  background-color: transparent;
-  line-height: 1.5; /* 行高稍紧 */
-  font-family: inherit;
-  min-height: 80px; 
 }
 
 .post-modal-textarea::placeholder {
   color: var(--pm-text-light);
 }
 
-/* 底部工具栏 */
+.post-modal-preview-content img {
+  max-width: 100%;
+  border-radius: 14px;
+}
+
 .post-modal-footer {
   display: flex;
   align-items: center;
-  padding: 6px 16px;  /* 👈 上下极窄 */
-  gap: 8px;           
-  background-color: var(--pm-bg);
+  gap: 10px;
+  padding: 12px 20px;
+  background: rgba(228, 223, 216, 0.82);
   border-top: 1px solid var(--pm-border);
-  flex-shrink: 0;
 }
 
 .post-modal-format-group {
   display: flex;
   align-items: center;
-  gap: 4px;            
-  padding: 2px;        
-  border-radius: 20px;
-  background-color: var(--pm-white-bg);
+  gap: 6px;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.68);
 }
 
 .post-modal-format-btn {
-  background: none;
+  width: 32px;
+  height: 32px;
   border: none;
-  font-size: 11px;     /* 👈 按钮字体更小 */
-  color: var(--pm-secondary);
-  cursor: pointer;
-  padding: 4px;        
   border-radius: 50%;
-  transition: all 0.2s ease;
-  font-weight: normal;
-  font-style: normal;
-  text-decoration: none;
-  width: 26px;         /* 👈 按钮尺寸更小 */
-  height: 26px;
-  display: flex;
+  background: transparent;
+  color: var(--pm-secondary);
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
 
 .post-modal-format-btn.bold {
-  font-weight: 700;
+  font-weight: 800;
 }
 
 .post-modal-format-btn.italic {
@@ -244,194 +381,95 @@
 }
 
 .post-modal-format-btn:hover {
-  color: var(--pm-bg);
-  background-color: var(--pm-primary);
+  background: rgba(155, 183, 212, 0.22);
   transform: translateY(-1px);
+}
+
+.post-modal-format-btn.is-recording {
+  background: rgba(182, 79, 96, 0.14);
+  color: #b64f60;
 }
 
 .post-modal-actions {
   margin-left: auto;
   display: flex;
   align-items: center;
-  gap: 6px;           
+  gap: 8px;
 }
 
 .post-modal-submit-btn {
-  padding: 6px 16px;   /* 👈 发布按钮更扁 */
-  background-color: var(--pm-primary);
-  color: var(--pm-secondary);
-  border: 1px solid var(--pm-primary);
-  border-radius: 20px; 
-  font-size: 10px;     /* 👈 字体极小 */
+  border: none;
+  border-radius: 999px;
+  padding: 10px 18px;
+  background: #9BB7D4;
+  color: #fff;
+  font-size: 0.88rem;
   font-weight: 800;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
+  letter-spacing: 0.04em;
   cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 2px 4px rgba(155, 183, 212, 0.3);
-  white-space: nowrap;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 12px 26px rgba(155, 183, 212, 0.24);
 }
 
 .post-modal-submit-btn:hover {
-  background-color: var(--pm-secondary);
-  border-color: var(--pm-secondary);
-  color: var(--pm-bg);
   transform: translateY(-1px);
 }
 
-/* 动画关键帧 */
 @keyframes pm-fade-in {
   from { opacity: 0; }
   to { opacity: 1; }
 }
 
-@keyframes pm-slide-up {
-  from { transform: translateY(100%); }
-  to { transform: translateY(0); }
+@keyframes pm-scale-in {
+  from {
+    opacity: 0;
+    transform: translate(-50%, -48%);
+  }
+  to {
+    opacity: 1;
+    transform: translate(-50%, -50%);
+  }
 }
 
-/* 防止背景滚动 */
-body.pm-modal-open {
-  overflow: hidden;
+@keyframes pm-recorder-pulse {
+  0% {
+    transform: scale(0.92);
+    box-shadow: 0 0 0 0 rgba(182, 79, 96, 0.35);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 16px rgba(182, 79, 96, 0);
+  }
+  100% {
+    transform: scale(0.92);
+    box-shadow: 0 0 0 0 rgba(182, 79, 96, 0);
+  }
 }
 
-/* 预览内容样式 */
-.post-modal-preview-content {
-  flex: 1;
-  padding: 8px;
-  text-align: left; 
-  margin: 0;
-  font-size: 12px;    /* 👈 预览字体统一 */
-  line-height: 1.5;
-  color: var(--pm-text);
-  overflow-y: auto;
-  background-color: transparent;
-  font-family: inherit;
-  display: block; 
-  width: 100%;
-  box-sizing: border-box;
-}
+@media (max-width: 820px) {
+  .post-modal-container {
+    width: calc(100vw - 24px);
+    height: calc(100vh - 24px);
+    border-radius: 20px;
+  }
 
-.post-modal-preview-content p,
-.post-modal-preview-content div,
-.post-modal-preview-content span {
-  text-align: left;
-  margin: 0 0 6px 0; /* 段落间距更紧 */
-}
+  .post-modal-title-input,
+  .post-modal-reply-heading {
+    font-size: 1.28rem;
+  }
 
-.post-modal-preview-content strong {
-  font-weight: 700;
-  color: var(--pm-secondary);
-}
+  .post-modal-textarea,
+  .post-modal-preview-content {
+    min-height: 240px;
+    font-size: 1rem;
+  }
 
-.post-modal-preview-content em {
-  font-style: italic;
-  color: var(--pm-text-light);
-}
+  .post-modal-footer {
+    flex-wrap: wrap;
+  }
 
-.post-modal-preview-content u {
-  text-decoration: underline;
-  text-decoration-color: var(--pm-primary);
-  text-underline-offset: 2px;
-}
-
-/* 回复信息横幅 - 紧凑版 */
-.reply-info-banner {
-  background-color: rgba(240, 247, 255, 0.6);
-  border: 1px solid rgba(208, 227, 247, 0.5);
-  border-radius: 4px;
-  padding: 6px 8px;
-  margin: 0 0 8px 0; 
-  font-size: 11px;
-  color: #3A4E6B;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.reply-target {
-  font-weight: 700;
-  text-transform: uppercase;
-  font-size: 10px;
-  letter-spacing: 0.5px;
-}
-
-.reply-quote-preview {
-  display: flex;
-  gap: 4px;
-  align-items: center;
-}
-
-.quote-label {
-  font-weight: 600;
-  color: #555;
-  flex-shrink: 0;
-  font-size: 10px;
-}
-
-.quote-text-short {
-  color: #666;
-  background: #fff;
-  padding: 2px 6px;
-  border-radius: 3px;
-  border: 1px solid #eee;
-  max-width: 90%;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  font-size: 11px;
-}
-/* src/components/PostModal.css */
-
-/* ... 原有的样式 ... */
-
-/* 👇 新增：标签选择器样式 */
-.post-modal-tags-section {
-  padding: 10px 0;
-  border-bottom: 1px solid #eee;
-  margin-bottom: 10px;
-}
-
-.tags-label {
-  font-size: 12px;
-  color: #666;
-  font-weight: 600;
-  display: block;
-  margin-bottom: 8px;
-}
-
-.tags-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.tag-chip {
-  padding: 4px 12px;
-  border-radius: 16px;
-  border: 1px solid #ddd;
-  background-color: #f9f9f9;
-  color: #555;
-  font-size: 12px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  user-select: none;
-}
-
-.tag-chip:hover {
-  border-color: #aaa;
-  background-color: #eee;
-}
-
-.tag-chip.active {
-  background-color: #3A4E6B; /* 使用你的主题色 */
-  color: white;
-  border-color: #3A4E6B;
-  font-weight: 500;
-}
-
-.selected-tags-summary {
-  margin-top: 8px;
-  font-size: 11px;
-  color: #3A4E6B;
+  .post-modal-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
 }

@@ -1,457 +1,301 @@
-/* src/pages/PostDetail.css */
-/* AcadBeat 风格重构版 */
-
-:root {
-  /* 定义 AcadBeat 配色变量，方便统一修改 */
-  --ab-bg-color: #fff;       /* 浅米色背景 */
-  --ab-primary-color: #9BB7D4;  /* 柔和蓝 */
-  --ab-secondary-color: #3A4E6B;/* 深青蓝 (文字主色) */
-  --ab-white-glass: #fff; /* 卡片半透明白 */
-  --ab-border-color: rgba(58, 78, 107, 0.15); /* 极淡边框 */
-  --ab-font-serif: 'Playfair Display', 'Georgia', 'Times New Roman', serif;
-  --ab-font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --ab-radius-card: 2px;        /* 卡片锐利边角 */
-  --ab-radius-btn: 40px;        /* 按钮圆润边角 */
-}
-
-/* --- 全局容器 --- */
 .detail-page-wrapper {
-  max-width: 100%;
-  width: 100%;
-  margin: 0;
-  padding: 40px 5%; /* 增加上下留白，更有呼吸感 */
-  font-family: var(--ab-font-sans);
-  color: var(--ab-secondary-color);
-  background-color: #E4DFD8; /* 👈 关键：浅米色背景 */
-  min-height: 100vh;
-  box-sizing: border-box;
+  max-width: 1320px;
+  margin: 0 auto;
+  padding: 40px 20px 72px;
+  color: #3A4E6B;
 }
 
-/* --- 顶部导航栏 --- */
 .detail-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 40px; /* 增加间距 */
-  padding: 0 4px;
+  gap: 16px;
+  margin-bottom: 30px;
 }
 
-/* 返回按钮：改为 AcadBeat 风格的小按钮 */
+.btn-back,
+.btn-reply-main,
+.btn-delete-ghost {
+  border-radius: 999px;
+  padding: 12px 22px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
 .btn-back {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: transparent;
-  border: 1.2px solid var(--ab-secondary-color);
-  color: var(--ab-secondary-color);
-  padding: 10px 24px;
-  border-radius: var(--ab-radius-btn); /* 胶囊形状 */
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  cursor: pointer;
-  transition: all 0.4s ease;
+  border: 1px solid rgba(58, 78, 107, 0.24);
+  background: rgba(255, 255, 255, 0.66);
+  color: #3A4E6B;
 }
 
-.btn-back:hover {
-  background-color: var(--ab-secondary-color);
-  color: var(--ab-bg-color);
-  transform: translateY(-3px);
-}
-
-/* 回复主按钮：主色调填充 */
 .btn-reply-main {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background-color: var(--ab-primary-color); /* 柔和蓝 */
-  color: var(--ab-white);
-  border: 1.2px solid var(--ab-primary-color);
-  padding: 12px 28px;
-  border-radius: var(--ab-radius-btn);
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  cursor: pointer;
-  box-shadow: 0 4px 10px rgba(58, 78, 107, 0.1);
-  transition: all 0.4s ease;
+  border: 0;
+  background: #9BB7D4;
+  color: #fff;
+  box-shadow: 0 12px 26px rgba(155, 183, 212, 0.28);
 }
 
-.btn-reply-main:hover {
-  background-color: var(--ab-secondary-color);
-  border-color: var(--ab-secondary-color);
-  transform: translateY(-3px);
-  box-shadow: 0 6px 15px rgba(58, 78, 107, 0.2);
+.btn-delete-ghost {
+  border: 1px solid rgba(182, 79, 96, 0.22);
+  background: rgba(255, 255, 255, 0.72);
+  color: #b64f60;
 }
 
-.btn-reply-main:active {
-  transform: translateY(0);
+.btn-back:hover,
+.btn-reply-main:hover,
+.btn-delete-ghost:hover {
+  transform: translateY(-1px);
 }
 
-.icon {
-  font-style: normal;
-  font-size: 1.1em;
+.main-post,
+.comments-section {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(58, 78, 107, 0.1);
+  border-radius: 24px;
+  box-shadow: 0 18px 50px rgba(58, 78, 107, 0.08);
 }
 
-/* 调整主帖子卡片内边距 */
 .main-post {
-  background:#fff;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid var(--ab-border-color);
-  border-radius: var(--ab-radius-card);
-  padding: 2rem; /* 减少内边距 */
-  box-shadow: 0 10px 30px rgba(58, 78, 107, 0.05);
-  margin-bottom: 40px;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.post-header {
+  padding: 34px 34px 28px;
   margin-bottom: 24px;
 }
 
-/* 标题：使用衬线体，更具学术感 */
-/* 调整标题大小 */
-.post-title {
-  font-family: var(--ab-font-serif);
-  font-size: 1.8rem; /* 调整为更合适的大小 */
-  font-weight: 500;
-  color: var(--ab-secondary-color);
-  margin: 0 0 20px 0;
-  line-height: 1.3;
-  text-align: left;
-  letter-spacing: -0.5px;
-}
-
-/* 用户信息区域 */
-.post-meta {
+.detail-post-header {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 16px;
-  margin-bottom: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 18px;
 }
 
-.meta-user {
+.detail-post-author {
   display: flex;
   align-items: center;
-  gap: 10px; /* 稍微恢复一点间距，配合新风格 */
+  justify-content: flex-start;
+  gap: 12px;
 }
 
-/* 头像：保持小尺寸，但颜色适配新风格 */
-.avatar-circle {
-  width: 28px; /* 稍微调回一点点，配合大卡片 */
-  height: 28px;
+.detail-post-authorText {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+}
+
+.detail-avatar-circle {
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
-  background-color: var(--ab-secondary-color);
-  color: var(--ab-bg-color); /* 文字颜色反转为背景色 */
+  background: #3A4E6B;
+  color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
+  font-size: 0.92rem;
   font-weight: 700;
-  font-size: 12px;
   flex-shrink: 0;
-  border: 1px solid #E4DFD8;
 }
 
-.avatar-circle.small {
-  width: 28px;
-  height: 28px;
-  font-size: 10px;
-  background-color: var(--ab-primary-color); /* 评论者用柔和蓝 */
-  color: white;
+.detail-avatar-circle--small {
+  width: 34px;
+  height: 34px;
+  background: #9BB7D4;
 }
 
-.author-name {
-  font-weight: 600;
-  color: var(--ab-secondary-color);
-  font-size: 0.9rem;
-  letter-spacing: 0.5px;
-  text-transform: uppercase; /* 全大写标签感 */
+.detail-author-name {
+  font-size: 0.96rem;
+  font-weight: 700;
+  color: #3A4E6B;
 }
 
-.meta-date {
-  font-size: 0.75rem;
-  color: var(--ab-secondary-color);
-  opacity: 0.6;
-  font-style: italic;
-  font-family: var(--ab-font-serif);
+.detail-meta-date {
+  font-size: 0.82rem;
+  color: rgba(58, 78, 107, 0.58);
+}
+
+.detail-post-title {
+  margin: 0;
+  font-size: 2rem;
+  line-height: 1.2;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #3A4E6B;
+  text-align: left;
 }
 
 .post-divider {
   height: 1px;
-  background-color: var(--ab-border-color);
-  margin: 24px 0;
+  background: rgba(58, 78, 107, 0.1);
+  margin: 22px 0 24px;
 }
 
-/* 正文：衬线体阅读感更佳 */
 .post-body {
-  font-family: var(--ab-font-serif); /* 正文也用衬线体提升质感 */
-  font-size: 1.15rem;
-  line-height: 1.8;
-  color: var(--ab-secondary-color);
-  word-wrap: break-word;
-  text-align: left;
-  font-weight: 400;
-}
-
-.post-body strong { 
-  color: var(--ab-secondary-color); 
-  font-weight: 700; 
-}
-.post-body em { 
-  color: var(--ab-primary-color); 
-  font-style: italic; 
-}
-.post-body u { 
-  text-decoration-color: var(--ab-primary-color); 
-  text-underline-offset: 6px; 
+  font-size: 1.05rem;
+  line-height: 1.9;
+  color: #445977;
 }
 
 .post-body img {
   max-width: 100%;
-  height: auto;
-  border-radius: 4px; /* 小圆角 */
-  margin: 24px 0;
-  box-shadow: 0 8px 20px rgba(58, 78, 107, 0.1);
-  display: block;
-  border: 1px solid var(--ab-border-color);
+  border-radius: 18px;
+  margin: 20px 0;
+  border: 1px solid rgba(58, 78, 107, 0.1);
 }
 
-.post-body br { margin-bottom: 12px; }
-
-/* 调整评论区内边距 */
 .comments-section {
-  background: var(--ab-white-glass);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid var(--ab-border-color);
-  border-radius: var(--ab-radius-card);
-  padding: 2rem; /* 减少内边距 */
-  box-shadow: 0 10px 30px rgba(58, 78, 107, 0.05);
-  width: 100%;
-  box-sizing: border-box;
+  padding: 30px 34px;
 }
 
 .comments-header h3 {
-  margin: 0 0 30px 0;
-  font-family: var(--ab-font-sans);
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 3px;
-  color: var(--ab-secondary-color);
+  margin: 0 0 22px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(58, 78, 107, 0.1);
+  font-size: 0.82rem;
   font-weight: 800;
-  opacity: 0.5;
-  border-bottom: 1px solid var(--ab-border-color);
-  padding-bottom: 16px;
-  text-align: left;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(58, 78, 107, 0.5);
 }
 
 .empty-comments {
   text-align: center;
-  padding: 50px 20px;
-  color: var(--ab-secondary-color);
-  opacity: 0.6;
-  font-family: var(--ab-font-serif);
-  font-style: italic;
+  padding: 42px 18px;
+  color: rgba(58, 78, 107, 0.62);
 }
 
-.empty-icon {
-  font-size: 40px;
-  margin-bottom: 16px;
-  opacity: 0.4;
-}
-
-/* 首评按钮 */
-.btn-first-comment {
-  margin-top: 20px;
-  background: transparent;
-  border: 1.2px solid var(--ab-secondary-color);
-  color: var(--ab-secondary-color);
-  padding: 10px 24px;
-  border-radius: var(--ab-radius-btn);
-  font-size: 0.75rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
+.btn-first-comment,
+.btn-reply-small {
+  border-radius: 999px;
   cursor: pointer;
-  transition: all 0.4s ease;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
 
-.btn-first-comment:hover {
-  background: var(--ab-secondary-color);
-  color: var(--ab-bg-color);
-  transform: translateY(-2px);
+.btn-first-comment {
+  margin-top: 18px;
+  border: 1px solid rgba(58, 78, 107, 0.22);
+  background: transparent;
+  color: #3A4E6B;
+  padding: 10px 18px;
+  font-size: 0.8rem;
+  font-weight: 700;
 }
 
-/* 评论列表项 */
 .comment-item {
   display: flex;
-  gap: 12px; /* 适配新风格的间距 */
-  padding: 24px 0;
-  border-bottom: 1px solid var(--ab-border-color);
-  animation: moduleReveal 0.8s ease-out forwards; /* 使用新动画 */
+  align-items: flex-start;
+  gap: 14px;
+  padding: 20px 0;
+  border-bottom: 1px solid rgba(58, 78, 107, 0.08);
 }
 
 .comment-item:last-child {
-  border-bottom: none;
-}
-
-/* 新动画：从下方浮现并去模糊 */
-@keyframes moduleReveal {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-    filter: blur(5px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-    filter: blur(0);
-  }
+  border-bottom: 0;
 }
 
 .comment-body {
-  flex: 1;
   min-width: 0;
-  text-align: left;
+  flex: 1;
 }
 
 .comment-info {
   display: flex;
   align-items: baseline;
   gap: 12px;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
 }
 
 .comment-author {
+  font-size: 0.94rem;
   font-weight: 700;
-  color: var(--ab-secondary-color);
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  color: #3A4E6B;
 }
 
 .comment-time {
-  font-size: 0.7rem;
-  color: var(--ab-secondary-color);
-  opacity: 0.5;
-  font-family: var(--ab-font-serif);
-  font-style: italic;
+  font-size: 0.8rem;
+  color: rgba(58, 78, 107, 0.54);
 }
 
-/* 引用块： AcadBeat 风格 */
 .comment-quote-box {
-  background-color: rgba(155, 183, 212, 0.1); /* 柔和蓝背景 */
-  border-left: 3px solid var(--ab-primary-color);
-  padding: 16px 20px;
   margin: 12px 0;
-  border-radius: 0 4px 4px 0;
-  font-family: var(--ab-font-serif);
-  font-size: 1.05rem;
-  color: var(--ab-secondary-color);
-  position: relative;
-  text-align: left;
+  padding: 14px 16px;
+  border-left: 3px solid #9BB7D4;
+  background: rgba(155, 183, 212, 0.12);
+  border-radius: 0 16px 16px 0;
+  color: #445977;
 }
 
 .quote-icon {
-  position: absolute;
-  top: -12px;
-  left: 12px;
-  background: var(--ab-bg-color); /* 注意：这里可能需要根据实际背景调整，或者用透明 */
-  /* 由于背景是半透明的，这里最好去掉背景色，或者用父容器背景色 */
-  background: rgba(255, 255, 255, 0.6); 
-  color: var(--ab-primary-color);
-  font-size: 24px;
-  line-height: 1;
-  font-family: var(--ab-font-serif);
+  display: none;
 }
 
 .quote-content {
-  line-height: 1.6;
-  white-space: pre-wrap;
-  text-align: left;
-  font-style: italic;
+  line-height: 1.65;
 }
 
 .comment-text {
-  font-family: var(--ab-font-sans); /* 评论正文用无衬线体保持清晰，或者改 serif */
   font-size: 1rem;
-  line-height: 1.7;
-  color: var(--ab-secondary-color);
-  margin-top: 8px;
-  text-align: left;
-  width: 100%;
+  line-height: 1.8;
+  color: #445977;
 }
 
-.comment-text img { 
-  max-width: 100%; 
-  border-radius: 4px; 
-  margin-top: 12px; 
-  display: block;
-  border: 1px solid var(--ab-border-color);
+.comment-text img {
+  max-width: 100%;
+  border-radius: 16px;
+  margin-top: 12px;
 }
 
 .comment-actions {
-  margin-top: 16px;
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
 }
 
-/* 回复小按钮 */
 .btn-reply-small {
+  border: 0;
   background: transparent;
-  border: none;
-  color: var(--ab-secondary-color);
-  font-size: 0.7rem;
+  color: rgba(58, 78, 107, 0.7);
+  padding: 6px 0;
+  font-size: 0.78rem;
   font-weight: 700;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  letter-spacing: 1px;
+}
+
+.btn-delete-inline {
+  border: 0;
+  background: transparent;
+  color: #b64f60;
+  padding: 6px 0;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   cursor: pointer;
-  padding: 6px 12px;
-  border-radius: 20px;
-  transition: all 0.3s ease;
-  opacity: 0.6;
 }
 
-.btn-reply-small:hover {
-  color: var(--ab-primary-color);
-  background-color: rgba(155, 183, 212, 0.15);
-  opacity: 1;
+@media (max-width: 900px) {
+  .detail-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
 }
 
-/* --- 响应式适配 --- */
-@media (max-width: 600px) {
-  .detail-page-wrapper { 
-    padding: 20px 4%; 
+@media (max-width: 640px) {
+  .detail-page-wrapper {
+    padding: 26px 16px 48px;
   }
-  
-  .main-post, .comments-section { 
-    padding: 24px 20px; 
+
+  .main-post,
+  .comments-section {
+    padding: 24px 20px;
+    border-radius: 20px;
   }
-  
-  .post-title { 
-    font-size: 1.8rem; 
-  }
-  
-  .btn-reply-main span:not(.icon) { 
-    display: none; 
-  }
-  
-  .avatar-circle, .avatar-circle.small {
-    width: 24px;
-    height: 24px;
-    font-size: 10px;
-  }
-  
-  .meta-user, .comment-item {
-    gap: 8px;
-  }
-  
-  .btn-back, .btn-reply-main {
-    padding: 8px 16px;
-    font-size: 0.7rem;
+
+  .detail-post-title {
+    font-size: 1.55rem;
   }
 }
