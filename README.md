@@ -19,9 +19,10 @@ AcadBeat is an English learning platform built for university freshmen. It curre
 Deadline-Disco-dev/
 |-- home.html                  # Main landing page (entry point)
 |-- README.md
+|-- 101_acadbeat_all_tables.sql
+|-- 102_acadbeat_all_data.sql
 |
 |-- vocba_prac/                # Vocabulary Practice module (PHP, port 8002)
-|   |-- sql/                   # Database scripts (vocab_dd)
 |   |-- config.php             # DB config
 |   |-- index.php, wordbank.php, practice.php, ...
 |   +-- includes/              # Shared header/footer
@@ -77,13 +78,11 @@ net start MySQL80
 
 Run the following commands from the project root directory. On Windows, if `mysql` is not in PATH, use the full path (e.g. `"C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql"`).
 
-**Vocabulary module** (database: `vocab_dd`):
+**Vocabulary module** (database: `acadbeat`):
 
 ```bash
-mysql -u root -p123456 < vocba_prac/sql/001_schema.sql
-mysql -u root -p123456 < vocba_prac/sql/002_seed_wordbooks.sql
-mysql -u root -p123456 < vocba_prac/sql/003_seed_words.sql
-mysql -u root -p123456 < vocba_prac/sql/004_seed_word_book_words.sql
+mysql -u root -p123456 < 101_acadbeat_all_tables.sql
+mysql -u root -p123456 < 102_acadbeat_all_data.sql
 ```
 
 **Listening module** (database: `my_test_schema`):
@@ -158,7 +157,7 @@ Navigation behavior (latest):
 
 | Database | Module | Tables |
 |----------|--------|--------|
-| `vocab_dd` | Vocabulary Practice | `word_books`, `words`, `word_book_words` |
+| `acadbeat` | Core platform + Vocabulary Practice | `users`, `training_*`, `forum_*`, `checkin_*`, `vocab_*` |
 | `my_test_schema` | Listening + Intensive Listening | `user`, `exams`, `questions`, `exam_progress`, `exam_results`, `intensive_listening_user`, `intensive_listening_audio`, `user_audio_progress` |
 
 ---

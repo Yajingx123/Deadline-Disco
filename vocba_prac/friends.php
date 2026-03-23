@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/config.php';
+vocab_require_auth();
 $pageTitle = 'Friends & Groups';
 $activeNav = 'friends';
 require_once __DIR__ . '/includes/header.php';
@@ -32,4 +33,3 @@ require_once __DIR__ . '/includes/header.php';
         </section>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-

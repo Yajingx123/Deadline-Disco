@@ -47,13 +47,11 @@ net start MySQL80
 
 在项目根目录下，按顺序执行以下命令。
 
-### 词汇练习模块（数据库：vocab_dd）
+### 词汇练习模块（数据库：acadbeat）
 
 ```bash
-mysql -u root -p123456 < vocba_prac/sql/001_schema.sql
-mysql -u root -p123456 < vocba_prac/sql/002_seed_wordbooks.sql
-mysql -u root -p123456 < vocba_prac/sql/003_seed_words.sql
-mysql -u root -p123456 < vocba_prac/sql/004_seed_word_book_words.sql
+mysql -u root -p123456 < 101_acadbeat_all_tables.sql
+mysql -u root -p123456 < 102_acadbeat_all_data.sql
 ```
 
 ### 听力考试模块（数据库：my_test_schema）
@@ -78,11 +76,11 @@ mysql -u root -p123456 my_test_schema < Intensive_Listening/sql/createProgress.s
 mysql -u root -p123456 -e "SHOW DATABASES;"
 ```
 
-应该能看到 `vocab_dd` 和 `my_test_schema` 两个数据库。
+应该能看到 `acadbeat` 和 `my_test_schema` 两个数据库。
 
 > **Windows PowerShell 用户注意**：如果管道 `<` 报错，请使用以下格式：
 > ```powershell
-> cmd /c 'mysql -u root -p123456 < vocba_prac/sql/001_schema.sql'
+> cmd /c 'mysql -u root -p123456 < 101_acadbeat_all_tables.sql'
 > ```
 
 ---

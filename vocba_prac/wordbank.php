@@ -1,41 +1,46 @@
 <?php
 require_once __DIR__ . '/config.php';
-$pageTitle = 'Word Bank';
+vocab_require_auth();
+$pageTitle = 'Word Books';
 $activeNav = 'wordbank';
 require_once __DIR__ . '/includes/header.php';
 
-// 词书列表（可扩展到更多词书）
+$booksTable = vocab_table('books');
+$bookWordsTable = vocab_table('book_words');
+
 $stmt = db()->query("
   SELECT
-    wb.id,
+    wb.word_book_id AS id,
     wb.slug,
     wb.title,
     wb.description,
     COUNT(DISTINCT wbw.word_id) AS word_count
-  FROM word_books wb
-  LEFT JOIN word_book_words wbw ON wbw.word_book_id = wb.id
-  GROUP BY wb.id, wb.slug, wb.title, wb.description
-  ORDER BY wb.id ASC
+  FROM {$booksTable} wb
+  LEFT JOIN {$bookWordsTable} wbw ON wbw.word_book_id = wb.word_book_id
+  GROUP BY wb.word_book_id, wb.slug, wb.title, wb.description
+  ORDER BY wb.word_book_id ASC
 ");
 $books = $stmt->fetchAll();
 $totalBooks = count($books);
+$initialSelection = vocab_selected_book_slugs(vocab_current_user_id());
 
 $titleMap = [];
 foreach ($books as $b) {
   $slug = (string)($b['slug'] ?? '');
-  $title = (string)($b['title'] ?? $slug);
+  $meta = vocab_book_meta($slug, (string)($b['title'] ?? $slug), (string)($b['description'] ?? ''));
+  $title = (string)$meta['title'];
   if ($slug !== '') $titleMap[$slug] = $title;
 }
 ?>
 
-        <h1 class="hero__title" style="margin-top:0">Word Bank</h1>
-        <p class="hero__subtitle" style="margin-bottom:24px">Choose which word books to use in practice. Tap a book to add or remove it. Your choice is saved automatically.</p>
+        <h1 class="hero__title" style="margin-top:0">Choose word books</h1>
+        <p class="hero__subtitle" style="margin-bottom:24px">Pick the books you want in practice. Selected books are highlighted with a stronger card state so you can tell at a glance what is active.</p>
 
         <section class="card" style="margin-bottom:24px" aria-label="Selected for practice">
           <div class="card__head">
             <div>
               <div class="card__title">Selected for practice</div>
-              <div class="card__sub">These books are used when you start a practice session.</div>
+              <div class="card__sub">These books will appear in your `Books in this session` area on the Practice page.</div>
             </div>
           </div>
           <div class="wordbankSelection" id="wordbankSelection">
@@ -50,8 +55,9 @@ foreach ($books as $b) {
           <div class="card__head">
             <div>
               <div class="card__title">All word books (<span id="wordbookTotalCount"><?php echo (int)$totalBooks; ?></span>)</div>
-              <div class="card__sub">Search to filter. Click a card to add or remove it from practice.</div>
+              <div class="card__sub">Click a book card to add or remove it. Selected cards show a bold outline, lifted shadow, and a check marker.</div>
             </div>
+            <a href="./practice.php" class="secondary" style="display:inline-flex;align-items:center;text-decoration:none">Back to Practice</a>
           </div>
           <div class="wordbankSearchWrap">
             <input type="search" id="wordbookSearch" class="wordbankSearchInput" placeholder="Search by name or topic" autocomplete="off" aria-label="Search word books" />
@@ -65,13 +71,18 @@ foreach ($books as $b) {
             <?php foreach ($books as $b): ?>
               <?php
                 $slug = (string)($b['slug'] ?? '');
-                $title = (string)($b['title'] ?? $slug);
-                $desc = (string)($b['description'] ?? '');
+                $meta = vocab_book_meta($slug, (string)($b['title'] ?? $slug), (string)($b['description'] ?? ''));
+                $title = (string)$meta['title'];
+                $desc = (string)$meta['description'];
+                $coverUrl = vocab_book_cover_url($slug);
                 $count = (int)($b['word_count'] ?? 0);
               ?>
               <div class="wordbook" data-id="<?php echo htmlspecialchars($slug); ?>" id="wb-<?php echo htmlspecialchars($slug); ?>" role="listitem">
                 <input type="checkbox" name="wordbook" value="<?php echo htmlspecialchars($slug); ?>" id="cb-<?php echo htmlspecialchars($slug); ?>" aria-label="Select <?php echo htmlspecialchars($title); ?>" />
-                <div class="wordbook__cover" aria-hidden="true"><!-- optional img: <img src="..." alt="" /> --></div>
+                <div class="wordbook__check" aria-hidden="true">✓ Selected</div>
+                <div class="wordbook__cover" aria-hidden="true">
+                  <img src="<?php echo htmlspecialchars($coverUrl); ?>" alt="" loading="lazy" />
+                </div>
                 <div class="wordbook__body">
                   <span class="wordbook__badge" aria-hidden="true">In use</span>
                   <div class="wordbook__title"><?php echo htmlspecialchars($title); ?></div>
@@ -88,17 +99,36 @@ foreach ($books as $b) {
 
         <script>
           var STORAGE_KEY = 'vocab_wordbook_selection';
+          var API_SELECTION_URL = './api/selection.php';
           var TOTAL_BOOKS = <?php echo (int)$totalBooks; ?>;
-          // 标题映射：从数据库输出
           var TITLES = <?php echo json_encode($titleMap, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
+          var INITIAL_SELECTION = <?php echo json_encode($initialSelection, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
+
           function getSelection() {
             try {
               var raw = localStorage.getItem(STORAGE_KEY);
-              return raw ? JSON.parse(raw) : ['daily'];
-            } catch (e) { return ['daily']; }
+              return raw ? JSON.parse(raw) : INITIAL_SELECTION;
+            } catch (e) { return INITIAL_SELECTION; }
           }
           function setSelection(ids) {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(ids));
+          }
+          async function saveSelection(ids) {
+            setSelection(ids);
+            try {
+              var res = await fetch(API_SELECTION_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({ selectedBooks: ids })
+              });
+              var data = await res.json();
+              if (data && data.ok && Array.isArray(data.selectedBooks)) {
+                setSelection(data.selectedBooks);
+                return data.selectedBooks;
+              }
+            } catch (e) {}
+            return ids;
           }
           function renderSummary() {
             var sel = getSelection();
@@ -107,7 +137,7 @@ foreach ($books as $b) {
             if (countEl) countEl.innerHTML = '<strong>' + sel.length + '</strong> of ' + TOTAL_BOOKS + ' books selected';
             if (!listEl) return;
             if (sel.length === 0) {
-              listEl.innerHTML = '<span class="wordbankSelection__empty">No book selected. Tap a book below to add it.</span>';
+              listEl.innerHTML = '<span class="wordbankSelection__empty">No book selected. Tap a card below to add it.</span>';
               return;
             }
             listEl.innerHTML = sel.map(function(id) {
@@ -122,6 +152,7 @@ foreach ($books as $b) {
               if (row) row.classList.toggle('isSelected', cb.checked);
             });
           }
+          setSelection(INITIAL_SELECTION);
           applySelectionToCheckboxes();
           renderSummary();
 
@@ -164,27 +195,26 @@ foreach ($books as $b) {
           document.querySelectorAll('.wordbook').forEach(function(row) {
             var cb = row.querySelector('input[name="wordbook"]');
             var id = row.dataset.id || cb.value;
-            row.addEventListener('click', function(e) {
+            async function syncSelection(checked) {
+              row.classList.toggle('isSelected', checked);
+              var sel = getSelection();
+              if (checked && sel.indexOf(id) < 0) sel.push(id);
+              if (!checked) sel = sel.filter(function(x) { return x !== id; });
+              sel = await saveSelection(sel);
+              cb.checked = sel.indexOf(id) >= 0;
+              row.classList.toggle('isSelected', cb.checked);
+              renderSummary();
+            }
+            row.addEventListener('click', async function(e) {
               if (e.target.closest('a')) return;
               cb.checked = !cb.checked;
-              row.classList.toggle('isSelected', cb.checked);
-              var sel = getSelection();
-              if (cb.checked && sel.indexOf(id) < 0) sel.push(id);
-              if (!cb.checked) sel = sel.filter(function(x) { return x !== id; });
-              setSelection(sel);
-              renderSummary();
+              await syncSelection(cb.checked);
             });
-            cb.addEventListener('change', function(e) {
+            cb.addEventListener('change', async function(e) {
               e.stopPropagation();
-              row.classList.toggle('isSelected', cb.checked);
-              var sel = getSelection();
-              if (cb.checked && sel.indexOf(id) < 0) sel.push(id);
-              if (!cb.checked) sel = sel.filter(function(x) { return x !== id; });
-              setSelection(sel);
-              renderSummary();
+              await syncSelection(cb.checked);
             });
           });
         </script>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-

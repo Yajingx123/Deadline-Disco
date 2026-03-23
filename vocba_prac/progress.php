@@ -1,27 +1,34 @@
 <?php
 require_once __DIR__ . '/config.php';
+vocab_require_auth();
 $pageTitle = 'Progress';
 $activeNav = 'progress';
 require_once __DIR__ . '/includes/header.php';
 
-// UI-only mock data (will be replaced by user records later).
 $activeBooks = [
-  ['title' => 'Daily & campus', 'learned' => 42, 'total' => 100, 'status' => 'In progress'],
-  ['title' => 'CS starter pack', 'learned' => 18, 'total' => 80, 'status' => 'In progress'],
-  ['title' => 'Academic essentials', 'learned' => 8, 'total' => 60, 'status' => 'New'],
+  ['title' => 'Daily life & campus', 'learned' => 9, 'total' => 15, 'status' => 'In rotation'],
+  ['title' => 'CS core vocabulary', 'learned' => 6, 'total' => 15, 'status' => 'In rotation'],
+  ['title' => 'Daily + CS full review', 'learned' => 15, 'total' => 30, 'status' => 'Building'],
 ];
 
 $todayTasks = [
   [
-    'title' => '10-minute quick session',
-    'meta' => 'Image / Audio / Word completion',
-    'done' => 7,
-    'total' => 10,
+    'title' => '1-minute reset',
+    'meta' => '5 target words, 1 quick round each',
+    'done' => 1,
+    'total' => 1,
+    'status' => 'Done',
+  ],
+  [
+    'title' => '3-5 minute core review',
+    'meta' => '10 words with image, audio, spelling, and sentence fill',
+    'done' => 4,
+    'total' => 6,
     'status' => 'In progress',
   ],
   [
-    'title' => 'Sentence practice (30-minute)',
-    'meta' => 'Sentence fill + Sentence choose',
+    'title' => '10-minute full mix',
+    'meta' => '15 words with sentence choose + sentence fill',
     'done' => 0,
     'total' => 1,
     'status' => 'Not started',
@@ -36,14 +43,14 @@ function pct($done, $total): int {
 ?>
 
         <h1 class="hero__title" style="margin-top:0">Progress</h1>
-        <p class="hero__subtitle" style="margin-bottom:18px">Track what you’re learning now and what you’ve completed today.</p>
+        <p class="hero__subtitle" style="margin-bottom:18px">Track the current 30-word Daily life + CS practice pack and today’s short review sessions.</p>
 
         <div class="progressDash">
           <section class="card progressSection" aria-label="Current word books progress">
             <div class="card__head">
               <div>
                 <div class="card__title">Current word books</div>
-                <div class="card__sub">UI mock. Later this will come from user records.</div>
+                <div class="card__sub">Temporary dashboard copy aligned to the 15-word Daily set, the 15-word CS set, and the combined 30-word review pack.</div>
               </div>
               <span class="tag"><?php echo count($activeBooks); ?> active</span>
             </div>
@@ -76,7 +83,7 @@ function pct($done, $total): int {
             <div class="card__head">
               <div>
                 <div class="card__title">Today</div>
-                <div class="card__sub">Task-based progress (sessions, drills, reviews).</div>
+                <div class="card__sub">Short-session practice goals for the new 1 minute / 3-5 minutes / 10 minutes flow.</div>
               </div>
               <span class="tag">Daily tasks</span>
             </div>
@@ -108,4 +115,3 @@ function pct($done, $total): int {
         </div>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-

@@ -5,7 +5,7 @@ return [
     'db_port' => '3306',         
     'db_user' => 'root',          
     'db_pass' => '123456',    
-    'db_name' => 'auth_database', 
+    'db_name' => 'acadbeat', 
 
-    'allowed_origin' => 'http://127.0.0.1:5500' 
+    'allowed_origin' => 'http://127.0.0.1:8001' 
 ];
