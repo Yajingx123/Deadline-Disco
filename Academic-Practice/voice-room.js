@@ -52,10 +52,6 @@
     const btn = qs('.back-btn');
     if (!btn) return;
     btn.addEventListener('click', function () {
-      if (window.history.length > 1) {
-        window.history.back();
-        return;
-      }
       window.location.href = btn.dataset.backTarget || 'training.html';
     });
   }

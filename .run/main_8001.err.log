@@ -1,1 +1,208 @@
 [Tue Mar 24 06:25:25 2026] PHP 8.4.14 Development Server (http://0.0.0.0:8001) started
+[Tue Mar 24 06:25:37 2026] 192.168.0.104:27255 Accepted
+[Tue Mar 24 06:25:37 2026] 192.168.0.104:56144 Accepted
+[Tue Mar 24 06:25:37 2026] 192.168.0.104:56144 [200]: GET /home.html
+[Tue Mar 24 06:25:37 2026] 192.168.0.104:56144 Closing
+[Tue Mar 24 06:25:39 2026] 192.168.0.104:27255 [401]: GET /Auth/backend/api/me.php
+[Tue Mar 24 06:25:39 2026] 192.168.0.104:27255 Closing
+[Tue Mar 24 06:25:39 2026] 192.168.0.104:24914 Accepted
+[Tue Mar 24 06:25:39 2026] 192.168.0.104:24914 [404]: GET /favicon.ico - No such file or directory
+[Tue Mar 24 06:25:39 2026] 192.168.0.104:24914 Closing
+[Tue Mar 24 06:25:52 2026] 192.168.0.103:39066 Accepted
+[Tue Mar 24 06:25:52 2026] 192.168.0.103:39066 [200]: GET /Academic-Practice/voice_room.html
+[Tue Mar 24 06:25:52 2026] 192.168.0.103:39066 Closing
+[Tue Mar 24 06:25:52 2026] 192.168.0.103:39074 Accepted
+[Tue Mar 24 06:25:52 2026] 192.168.0.103:39082 Accepted
+[Tue Mar 24 06:25:52 2026] 192.168.0.103:39074 [200]: GET /Academic-Practice/practice-style.css
+[Tue Mar 24 06:25:52 2026] 192.168.0.103:39082 [200]: GET /Academic-Practice/voice-room.js
+[Tue Mar 24 06:25:52 2026] 192.168.0.103:39074 Closing
+[Tue Mar 24 06:25:52 2026] 192.168.0.103:39082 Closing
+[Tue Mar 24 06:26:34 2026] 192.168.0.104:8947 Accepted
+[Tue Mar 24 06:26:34 2026] 192.168.0.104:26375 Accepted
+[Tue Mar 24 06:26:34 2026] 192.168.0.104:8947 [200]: GET /home.html
+[Tue Mar 24 06:26:34 2026] 192.168.0.104:8947 Closing
+[Tue Mar 24 06:26:34 2026] 192.168.0.104:26375 [401]: GET /Auth/backend/api/me.php
+[Tue Mar 24 06:26:34 2026] 192.168.0.104:26375 Closing
+[Tue Mar 24 06:26:44 2026] 192.168.0.103:58196 Accepted
+[Tue Mar 24 06:26:44 2026] 192.168.0.103:58196 [200]: GET /Academic-Practice/voice_room.html
+[Tue Mar 24 06:26:44 2026] 192.168.0.103:58196 Closing
+[Tue Mar 24 06:26:44 2026] 192.168.0.103:58200 Accepted
+[Tue Mar 24 06:26:44 2026] 192.168.0.103:58212 Accepted
+[Tue Mar 24 06:26:44 2026] 192.168.0.103:58200 [200]: GET /Academic-Practice/practice-style.css
+[Tue Mar 24 06:26:44 2026] 192.168.0.103:58212 [200]: GET /Academic-Practice/voice-room.js
+[Tue Mar 24 06:26:44 2026] 192.168.0.103:58200 Closing
+[Tue Mar 24 06:26:44 2026] 192.168.0.103:58212 Closing
+[Tue Mar 24 06:27:06 2026] 192.168.0.103:36518 Accepted
+[Tue Mar 24 06:27:06 2026] 192.168.0.103:36518 [200]: GET /Academic-Practice/voice_room.html
+[Tue Mar 24 06:27:06 2026] 192.168.0.103:36518 Closing
+[Tue Mar 24 06:27:06 2026] 192.168.0.103:36534 Accepted
+[Tue Mar 24 06:27:06 2026] 192.168.0.103:36540 Accepted
+[Tue Mar 24 06:27:06 2026] 192.168.0.103:36534 [200]: GET /Academic-Practice/practice-style.css
+[Tue Mar 24 06:27:06 2026] 192.168.0.103:36540 [200]: GET /Academic-Practice/voice-room.js
+[Tue Mar 24 06:27:06 2026] 192.168.0.103:36534 Closing
+[Tue Mar 24 06:27:06 2026] 192.168.0.103:36540 Closing
+[Tue Mar 24 06:27:14 2026] 192.168.0.103:55254 Accepted
+[Tue Mar 24 06:27:14 2026] 192.168.0.103:55262 Accepted
+[Tue Mar 24 06:27:14 2026] 192.168.0.103:55254 [401]: GET /Auth/backend/api/me.php
+[Tue Mar 24 06:27:14 2026] 192.168.0.103:55254 Closing
+[Tue Mar 24 06:27:14 2026] 192.168.0.103:55262 [404]: GET /favicon.ico - No such file or directory
+[Tue Mar 24 06:27:14 2026] 192.168.0.103:55262 Closing
+[Tue Mar 24 06:27:36 2026] 192.168.0.103:39234 Accepted
+[Tue Mar 24 06:27:36 2026] 192.168.0.103:39234 [200]: GET /Academic-Practice/voice_room_session.html?roomId=PSR-23YHLQ
+[Tue Mar 24 06:27:36 2026] 192.168.0.103:39234 Closing
+[Tue Mar 24 06:27:36 2026] 192.168.0.103:39236 Accepted
+[Tue Mar 24 06:27:36 2026] 192.168.0.103:39252 Accepted
+[Tue Mar 24 06:27:36 2026] 192.168.0.103:39236 [200]: GET /Academic-Practice/practice-style.css
+[Tue Mar 24 06:27:36 2026] 192.168.0.103:39252 [200]: GET /Academic-Practice/voice-room.js
+[Tue Mar 24 06:27:36 2026] 192.168.0.103:39236 Closing
+[Tue Mar 24 06:27:36 2026] 192.168.0.103:39252 Closing
+[Tue Mar 24 06:27:52 2026] 192.168.0.104:57110 Accepted
+[Tue Mar 24 06:27:53 2026] 192.168.0.104:57110 [200]: POST /Auth/backend/api/login.php
+[Tue Mar 24 06:27:53 2026] 192.168.0.104:57110 Closing
+[Tue Mar 24 06:27:55 2026] 192.168.0.104:2109 Accepted
+[Tue Mar 24 06:27:55 2026] 192.168.0.104:2109 [200]: GET /Academic-Practice/training.html
+[Tue Mar 24 06:27:55 2026] 192.168.0.104:2109 Closing
+[Tue Mar 24 06:27:55 2026] 192.168.0.104:9870 Accepted
+[Tue Mar 24 06:27:55 2026] 192.168.0.104:9870 [200]: GET /Academic-Practice/acadbeat-global.css
+[Tue Mar 24 06:27:55 2026] 192.168.0.104:38862 Accepted
+[Tue Mar 24 06:27:55 2026] 192.168.0.104:38862 [200]: GET /Academic-Practice/practice-style.css
+[Tue Mar 24 06:27:55 2026] 192.168.0.104:16721 Accepted
+[Tue Mar 24 06:27:55 2026] 192.168.0.104:9870 Closing
+[Tue Mar 24 06:27:55 2026] 192.168.0.104:28173 Accepted
+[Tue Mar 24 06:27:55 2026] 192.168.0.104:16721 [200]: GET /Academic-Practice/practice-data.js
+[Tue Mar 24 06:27:55 2026] 192.168.0.104:28173 [200]: GET /Academic-Practice/practice-app.js
+[Tue Mar 24 06:27:55 2026] 192.168.0.104:38862 Closing
+[Tue Mar 24 06:27:55 2026] 192.168.0.104:16721 Closing
+[Tue Mar 24 06:27:55 2026] 192.168.0.104:28173 Closing
+[Tue Mar 24 06:28:06 2026] 192.168.0.103:46192 Accepted
+[Tue Mar 24 06:28:06 2026] 192.168.0.103:46192 [401]: GET /Auth/backend/api/me.php
+[Tue Mar 24 06:28:06 2026] 192.168.0.103:46192 Closing
+[Tue Mar 24 06:28:18 2026] 192.168.0.103:35664 Accepted
+[Tue Mar 24 06:28:18 2026] 192.168.0.103:35664 [200]: GET /Academic-Practice/voice_room.html
+[Tue Mar 24 06:28:18 2026] 192.168.0.103:35664 Closing
+[Tue Mar 24 06:28:18 2026] 192.168.0.103:35680 Accepted
+[Tue Mar 24 06:28:18 2026] 192.168.0.103:35684 Accepted
+[Tue Mar 24 06:28:18 2026] 192.168.0.103:35680 [200]: GET /Academic-Practice/practice-style.css
+[Tue Mar 24 06:28:18 2026] 192.168.0.103:35684 [200]: GET /Academic-Practice/voice-room.js
+[Tue Mar 24 06:28:18 2026] 192.168.0.103:35680 Closing
+[Tue Mar 24 06:28:18 2026] 192.168.0.103:35684 Closing
+[Tue Mar 24 06:28:19 2026] 192.168.0.104:5295 Accepted
+[Tue Mar 24 06:28:19 2026] 192.168.0.104:5295 [200]: GET /Auth/backend/api/me.php
+[Tue Mar 24 06:28:19 2026] 192.168.0.104:5295 Closing
+[Tue Mar 24 06:28:43 2026] 192.168.0.104:44857 Accepted
+[Tue Mar 24 06:28:43 2026] 192.168.0.104:2888 Accepted
+[Tue Mar 24 06:28:43 2026] 192.168.0.104:44857 [200]: GET /Academic-Practice/training.html
+[Tue Mar 24 06:28:43 2026] 192.168.0.104:44857 Closing
+[Tue Mar 24 06:28:43 2026] 192.168.0.104:2888 [200]: GET /Academic-Practice/acadbeat-global.css
+[Tue Mar 24 06:28:43 2026] 192.168.0.104:2888 Closing
+[Tue Mar 24 06:28:43 2026] 192.168.0.104:48252 Accepted
+[Tue Mar 24 06:28:43 2026] 192.168.0.104:41562 Accepted
+[Tue Mar 24 06:28:43 2026] 192.168.0.104:48252 [200]: GET /Academic-Practice/practice-style.css
+[Tue Mar 24 06:28:43 2026] 192.168.0.104:51559 Accepted
+[Tue Mar 24 06:28:43 2026] 192.168.0.104:41562 [200]: GET /Academic-Practice/practice-data.js
+[Tue Mar 24 06:28:43 2026] 192.168.0.104:51559 [200]: GET /Academic-Practice/practice-app.js
+[Tue Mar 24 06:28:43 2026] 192.168.0.104:48252 Closing
+[Tue Mar 24 06:28:43 2026] 192.168.0.104:41562 Closing
+[Tue Mar 24 06:28:43 2026] 192.168.0.104:51559 Closing
+[Tue Mar 24 06:28:48 2026] 192.168.0.103:34978 Accepted
+[Tue Mar 24 06:28:48 2026] 192.168.0.103:34978 [401]: GET /Auth/backend/api/me.php
+[Tue Mar 24 06:28:48 2026] 192.168.0.103:34978 Closing
+[Tue Mar 24 06:29:04 2026] 192.168.0.104:56254 Accepted
+[Tue Mar 24 06:29:04 2026] 192.168.0.104:56254 [200]: GET /Auth/backend/api/me.php
+[Tue Mar 24 06:29:04 2026] 192.168.0.104:56254 Closing
+[Tue Mar 24 06:29:06 2026] 192.168.0.104:15445 Accepted
+[Tue Mar 24 06:29:06 2026] 192.168.0.104:15445 [200]: GET /Academic-Practice/voice_room.html
+[Tue Mar 24 06:29:06 2026] 192.168.0.104:15445 Closing
+[Tue Mar 24 06:29:06 2026] 192.168.0.104:14096 Accepted
+[Tue Mar 24 06:29:06 2026] 192.168.0.104:4557 Accepted
+[Tue Mar 24 06:29:06 2026] 192.168.0.104:14096 [200]: GET /Academic-Practice/voice-room.js
+[Tue Mar 24 06:29:06 2026] 192.168.0.104:4557 [200]: GET /Academic-Practice/practice-style.css
+[Tue Mar 24 06:29:06 2026] 192.168.0.104:14096 Closing
+[Tue Mar 24 06:29:06 2026] 192.168.0.104:4557 Closing
+[Tue Mar 24 06:29:27 2026] 192.168.0.104:6267 Accepted
+[Tue Mar 24 06:29:27 2026] 192.168.0.104:6267 [200]: GET /Auth/backend/api/me.php
+[Tue Mar 24 06:29:27 2026] 192.168.0.104:6267 Closing
+[Tue Mar 24 06:29:38 2026] 192.168.0.104:31818 Accepted
+[Tue Mar 24 06:29:38 2026] 192.168.0.104:31818 [200]: GET /Academic-Practice/voice_room_session.html?roomId=PSR-CR9B97
+[Tue Mar 24 06:29:38 2026] 192.168.0.104:31818 Closing
+[Tue Mar 24 06:29:38 2026] 192.168.0.104:49667 Accepted
+[Tue Mar 24 06:29:38 2026] 192.168.0.104:49667 [200]: GET /Academic-Practice/practice-style.css
+[Tue Mar 24 06:29:38 2026] 192.168.0.104:22136 Accepted
+[Tue Mar 24 06:29:38 2026] 192.168.0.104:22136 [200]: GET /Academic-Practice/voice-room.js
+[Tue Mar 24 06:29:38 2026] 192.168.0.104:49667 Closing
+[Tue Mar 24 06:29:38 2026] 192.168.0.104:22136 Closing
+[Tue Mar 24 06:29:59 2026] 192.168.0.104:59141 Accepted
+[Tue Mar 24 06:29:59 2026] 192.168.0.104:59141 [200]: GET /Auth/backend/api/me.php
+[Tue Mar 24 06:29:59 2026] 192.168.0.104:59141 Closing
+[Tue Mar 24 06:31:13 2026] 192.168.0.104:19175 Accepted
+[Tue Mar 24 06:31:13 2026] 192.168.0.104:2083 Accepted
+[Tue Mar 24 06:31:13 2026] 192.168.0.104:19175 [200]: GET /Academic-Practice/voice_room.html
+[Tue Mar 24 06:31:13 2026] 192.168.0.104:19175 Closing
+[Tue Mar 24 06:31:13 2026] 192.168.0.104:2083 [200]: GET /Academic-Practice/practice-style.css
+[Tue Mar 24 06:31:13 2026] 192.168.0.104:19383 Accepted
+[Tue Mar 24 06:31:13 2026] 192.168.0.104:19383 [200]: GET /Academic-Practice/voice-room.js
+[Tue Mar 24 06:31:13 2026] 192.168.0.104:2083 Closing
+[Tue Mar 24 06:31:13 2026] 192.168.0.104:19383 Closing
+[Tue Mar 24 06:31:14 2026] 192.168.0.104:44948 Accepted
+[Tue Mar 24 06:31:14 2026] 192.168.0.104:44948 [200]: GET /Auth/backend/api/me.php
+[Tue Mar 24 06:31:14 2026] 192.168.0.104:44948 Closing
+[Tue Mar 24 06:31:33 2026] 192.168.0.104:14017 Accepted
+[Tue Mar 24 06:31:33 2026] 192.168.0.104:56400 Accepted
+[Tue Mar 24 06:31:33 2026] 192.168.0.104:14017 [200]: GET /Academic-Practice/voice_room_session.html?roomId=PSR-L8XYCE
+[Tue Mar 24 06:31:33 2026] 192.168.0.104:14017 Closing
+[Tue Mar 24 06:31:33 2026] 192.168.0.104:56400 [200]: GET /Academic-Practice/practice-style.css
+[Tue Mar 24 06:31:33 2026] 192.168.0.104:37533 Accepted
+[Tue Mar 24 06:31:33 2026] 192.168.0.104:37533 [200]: GET /Academic-Practice/voice-room.js
+[Tue Mar 24 06:31:33 2026] 192.168.0.104:56400 Closing
+[Tue Mar 24 06:31:33 2026] 192.168.0.104:37533 Closing
+[Tue Mar 24 06:31:33 2026] 192.168.0.104:54855 Accepted
+[Tue Mar 24 06:31:33 2026] 192.168.0.104:54855 [200]: GET /Auth/backend/api/me.php
+[Tue Mar 24 06:31:33 2026] 192.168.0.104:54855 Closing
+[Tue Mar 24 06:31:39 2026] 192.168.0.104:10647 Accepted
+[Tue Mar 24 06:31:39 2026] 192.168.0.104:10647 [200]: GET /Academic-Practice/voice_room.html
+[Tue Mar 24 06:31:39 2026] 192.168.0.104:10647 Closing
+[Tue Mar 24 06:31:40 2026] 192.168.0.104:34599 Accepted
+[Tue Mar 24 06:31:40 2026] 192.168.0.104:34599 [200]: GET /Academic-Practice/practice-style.css
+[Tue Mar 24 06:31:40 2026] 192.168.0.104:34599 Closing
+[Tue Mar 24 06:31:40 2026] 192.168.0.104:12187 Accepted
+[Tue Mar 24 06:31:40 2026] 192.168.0.104:12187 [200]: GET /Academic-Practice/voice-room.js
+[Tue Mar 24 06:31:40 2026] 192.168.0.104:12187 Closing
+[Tue Mar 24 06:31:40 2026] 192.168.0.104:15677 Accepted
+[Tue Mar 24 06:31:40 2026] 192.168.0.104:15677 [200]: GET /Auth/backend/api/me.php
+[Tue Mar 24 06:31:40 2026] 192.168.0.104:15677 Closing
+[Tue Mar 24 06:31:42 2026] 192.168.0.104:19697 Accepted
+[Tue Mar 24 06:31:42 2026] 192.168.0.104:19697 [200]: GET /Academic-Practice/voice_room_session.html?roomId=PSR-L8XYCE
+[Tue Mar 24 06:31:42 2026] 192.168.0.104:19697 Closing
+[Tue Mar 24 06:31:42 2026] 192.168.0.104:43067 Accepted
+[Tue Mar 24 06:31:42 2026] 192.168.0.104:43067 [200]: GET /Academic-Practice/practice-style.css
+[Tue Mar 24 06:31:42 2026] 192.168.0.104:43067 Closing
+[Tue Mar 24 06:31:42 2026] 192.168.0.104:56027 Accepted
+[Tue Mar 24 06:31:42 2026] 192.168.0.104:56027 [200]: GET /Academic-Practice/voice-room.js
+[Tue Mar 24 06:31:42 2026] 192.168.0.104:56027 Closing
+[Tue Mar 24 06:31:42 2026] 192.168.0.104:31017 Accepted
+[Tue Mar 24 06:31:42 2026] 192.168.0.104:31017 [200]: GET /Auth/backend/api/me.php
+[Tue Mar 24 06:31:42 2026] 192.168.0.104:31017 Closing
+[Tue Mar 24 06:31:43 2026] 192.168.0.104:49667 Accepted
+[Tue Mar 24 06:31:43 2026] 192.168.0.104:49667 [200]: GET /Academic-Practice/voice_room.html
+[Tue Mar 24 06:31:43 2026] 192.168.0.104:49667 Closing
+[Tue Mar 24 06:31:43 2026] 192.168.0.104:42907 Accepted
+[Tue Mar 24 06:31:43 2026] 192.168.0.104:42907 [200]: GET /Academic-Practice/practice-style.css
+[Tue Mar 24 06:31:43 2026] 192.168.0.104:42907 Closing
+[Tue Mar 24 06:31:43 2026] 192.168.0.104:48723 Accepted
+[Tue Mar 24 06:31:43 2026] 192.168.0.104:48723 [200]: GET /Academic-Practice/voice-room.js
+[Tue Mar 24 06:31:43 2026] 192.168.0.104:48723 Closing
+[Tue Mar 24 06:31:44 2026] 192.168.0.104:43745 Accepted
+[Tue Mar 24 06:31:44 2026] 192.168.0.104:43745 [200]: GET /Auth/backend/api/me.php
+[Tue Mar 24 06:31:44 2026] 192.168.0.104:43745 Closing
+[Tue Mar 24 06:34:00 2026] 192.168.0.104:44347 Accepted
+[Tue Mar 24 06:34:00 2026] 192.168.0.104:44347 [200]: GET /Academic-Practice/voice_room_session.html?roomId=PSR-NNHSEV
+[Tue Mar 24 06:34:00 2026] 192.168.0.104:44347 Closing
+[Tue Mar 24 06:34:00 2026] 192.168.0.104:7043 Accepted
+[Tue Mar 24 06:34:00 2026] 192.168.0.104:7043 [200]: GET /Academic-Practice/practice-style.css
+[Tue Mar 24 06:34:00 2026] 192.168.0.104:59520 Accepted
+[Tue Mar 24 06:34:00 2026] 192.168.0.104:59520 [200]: GET /Academic-Practice/voice-room.js
+[Tue Mar 24 06:34:00 2026] 192.168.0.104:7043 Closing
+[Tue Mar 24 06:34:00 2026] 192.168.0.104:59520 Closing
+[Tue Mar 24 06:34:01 2026] 192.168.0.104:8395 Accepted
+[Tue Mar 24 06:34:01 2026] 192.168.0.104:8395 [200]: GET /Auth/backend/api/me.php
+[Tue Mar 24 06:34:01 2026] 192.168.0.104:8395 Closing
