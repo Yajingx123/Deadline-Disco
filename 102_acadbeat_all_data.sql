@@ -1,5 +1,6 @@
 -- Academic English Practice Platform Seed Data
 -- Run this AFTER 101_acadbeat_all_tables.sql
+SET SQL_SAFE_UPDATES = 0;
 USE acadbeat;
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
