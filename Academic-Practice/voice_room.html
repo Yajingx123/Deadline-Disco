@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pair Speaking Room | AcadBeat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="practice-style.css">
+</head>
+<body data-page="voice-room-home">
+  <main class="module-content page-shell voice-room-shell">
+    <button class="back-btn back-fab voice-room-back" data-back-target="training.html" aria-label="Go back" title="Back" type="button">&#8592;</button>
+
+    <section class="voice-room-hero">
+      <h1>Pair Speaking Room</h1>
+      <span class="voice-room-underline" aria-hidden="true"></span>
+      <p>Every word you say is a step forward^_^</p>
+    </section>
+
+    <section class="section-block voice-room-board">
+      <div class="voice-room-tools">
+        <div class="voice-room-tools-copy">
+          <span class="voice-room-tools-eyebrow">Live Room Finder</span>
+          <h2>Choose A Topic To Practice Together</h2>
+        </div>
+        <div class="voice-room-search-wrap">
+          <input id="voiceRoomSearch" class="voice-room-search" type="search" placeholder="Search topic..." aria-label="Search room topic">
+        </div>
+      </div>
+
+      <div class="voice-room-filter-bar">
+        <div class="voice-room-filter-group">
+          <span class="voice-room-filter-label">Difficulty</span>
+          <div class="voice-room-chip-row" data-filter-group="difficulty">
+            <button type="button" class="voice-room-chip is-active" data-value="all">All</button>
+            <button type="button" class="voice-room-chip" data-value="easy">Easy</button>
+            <button type="button" class="voice-room-chip" data-value="intermediate">Intermediate</button>
+            <button type="button" class="voice-room-chip" data-value="advanced">Advanced</button>
+          </div>
+        </div>
+
+        <div class="voice-room-filter-group">
+          <span class="voice-room-filter-label">Availability</span>
+          <div class="voice-room-chip-row" data-filter-group="availability">
+            <button type="button" class="voice-room-chip is-active" data-value="all">All</button>
+            <button type="button" class="voice-room-chip" data-value="available">Available</button>
+            <button type="button" class="voice-room-chip" data-value="full">Full</button>
+          </div>
+        </div>
+
+        <div class="voice-room-filter-group">
+          <span class="voice-room-filter-label">Duration</span>
+          <div class="voice-room-chip-row" data-filter-group="duration">
+            <button type="button" class="voice-room-chip is-active" data-value="all">All</button>
+            <button type="button" class="voice-room-chip" data-value="3min">3 min</button>
+            <button type="button" class="voice-room-chip" data-value="5min">5 min</button>
+            <button type="button" class="voice-room-chip" data-value="10min">10 min</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="voice-room-board-meta">
+        <p id="voiceRoomResultMeta">Loading rooms...</p>
+      </div>
+
+      <div id="voiceRoomGrid" class="voice-room-grid"></div>
+      <div id="voiceRoomEmpty" class="voice-room-empty hidden">
+        <strong>No rooms match your filters.</strong>
+        <span>Try another keyword or open up the label filters above.</span>
+      </div>
+    </section>
+
+    <button id="voiceRoomCreateBtn" class="voice-room-create-btn" type="button">Create your room</button>
+    <div id="voiceRoomToast" class="voice-room-toast hidden" role="status" aria-live="polite"></div>
+  </main>
+
+  <div id="voiceRoomCreateModal" class="voice-room-modal hidden" role="dialog" aria-modal="true" aria-labelledby="voiceRoomCreateTitle">
+    <div class="voice-room-modal-card voice-room-modal-card--form">
+      <h2 id="voiceRoomCreateTitle">Create your room</h2>
+      <p>Set the topic, speaking length, and level before you enter.</p>
+      <form id="voiceRoomCreateForm" class="voice-room-create-form">
+        <label class="voice-room-form-field">
+          <span>Topic</span>
+          <input id="voiceRoomTopicInput" type="text" maxlength="120" placeholder="Enter your speaking topic">
+        </label>
+        <label class="voice-room-form-field">
+          <span>Duration</span>
+          <select id="voiceRoomDurationSelect">
+            <option value="3min">3 min</option>
+            <option value="5min" selected>5 min</option>
+            <option value="10min">10 min</option>
+          </select>
+        </label>
+        <label class="voice-room-form-field">
+          <span>Difficulty</span>
+          <select id="voiceRoomDifficultySelect">
+            <option value="easy">Easy</option>
+            <option value="intermediate" selected>Intermediate</option>
+            <option value="advanced">Advanced</option>
+          </select>
+        </label>
+        <div class="voice-room-modal-actions">
+          <button id="voiceRoomCreateCancelBtn" class="voice-room-modal-btn voice-room-modal-btn--ghost" type="button">Cancel</button>
+          <button class="voice-room-modal-btn" type="submit">Create</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="voice-room.js"></script>
+</body>
+</html>
