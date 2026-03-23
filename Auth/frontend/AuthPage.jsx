@@ -11,16 +11,20 @@ export default function AuthPage({ onClose, onSuccess }) {
   // 【新增】：确认密码状态
   const [confirmPassword, setConfirmPassword] = useState(""); 
   const [loading, setLoading] = useState(false);
+  const [feedback, setFeedback] = useState("");
+  const [feedbackType, setFeedbackType] = useState("info");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     // 【新增】：注册模式下校验两次密码是否一致
     if (!isLoginMode && password !== confirmPassword) {
-      alert("Passwords do not match. Please try again.");
+      setFeedbackType("error");
+      setFeedback("Passwords do not match. Please try again.");
       return;
     }
 
+    setFeedback("");
     setLoading(true);
     let payload = {};
     let mode = isLoginMode ? "login" : "register";
@@ -35,10 +39,12 @@ export default function AuthPage({ onClose, onSuccess }) {
     setLoading(false);
     
     if (data.status === "success") {
-      alert(`${isLoginMode ? "Login" : "Registration"} successful!`);
+      setFeedbackType("success");
+      setFeedback(`${isLoginMode ? "Login" : "Registration"} successful.`);
       onSuccess(data.username);
     } else {
-      alert(`Failed: ${data.message}`);
+      setFeedbackType("error");
+      setFeedback(`Failed: ${data.message}`);
     }
   };
 
@@ -162,6 +168,23 @@ export default function AuthPage({ onClose, onSuccess }) {
             <div>
               <label style={labelStyle}>Confirm Password</label>
               <input type="password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required style={{ width: "100%" }} placeholder="Re-enter your password" />
+            </div>
+          )}
+
+          {!!feedback && (
+            <div
+              style={{
+                marginTop: "1rem",
+                padding: "12px 14px",
+                borderRadius: "12px",
+                background: feedbackType === "error" ? "rgba(217, 65, 91, 0.1)" : "rgba(26, 160, 109, 0.1)",
+                color: feedbackType === "error" ? "#b33b55" : "#157a56",
+                fontSize: "14px",
+                fontWeight: "600",
+                lineHeight: 1.5,
+              }}
+            >
+              {feedback}
             </div>
           )}
 

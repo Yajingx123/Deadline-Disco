@@ -138,10 +138,10 @@
             animation: moduleReveal 2.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
-        /* --- VOCABULARY --- */
+        /* --- LEXIS (VOCABULARY) --- */
         .quote-wrap {
             max-width: 850px;
-            margin-bottom: 5rem;
+            margin-bottom: 3.5rem;
             padding: 2rem 0;
         }
 
@@ -160,24 +160,45 @@
             opacity: 0.5;
         }
 
-        /* --- LISTENING --- */
-        .sound-landscape {
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-            gap: 6px;
-            height: 100px;
+        /* --- INSIGHT (VIDEO) --- */
+        .lens-visual {
+            width: 450px;
+            height: 220px;
             margin-bottom: 3.5rem;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .bar {
-            width: 3px;
-            background-color: var(--primary-color);
-            border-radius: 3px;
-            animation: soundWave 1.5s ease-in-out infinite alternate;
+        .lens-ring {
+            position: absolute;
+            border: 1.2px solid var(--primary-color);
+            border-radius: 50%;
         }
 
-        /* --- SPEAKING (Final Bubble Masterpiece) --- */
+        .ring-1 {
+            width: 220px;
+            height: 220px;
+            border-style: dashed;
+            animation: rotateCW 12s linear infinite;
+        }
+
+        .ring-2 {
+            width: 170px;
+            height: 170px;
+            animation: rotateCCW 8s linear infinite;
+            opacity: 0.6;
+        }
+
+        .video-bar {
+            width: 2px;
+            background: var(--secondary-color);
+            margin: 0 3px;
+            animation: videoPulse 1.5s ease-in-out infinite alternate;
+        }
+
+        /* --- DIALOGUE (REPLACED WITH SPEAKING BUBBLES) --- */
         .vocal-dialogue {
             width: 380px;
             height: 100px;
@@ -197,7 +218,6 @@
             backdrop-filter: blur(4px);
         }
 
-        /* 更长更扁的比例 */
         .bubble-left {
             width: 180px;
             height: 45px;
@@ -211,7 +231,6 @@
             animation-delay: 2s;
         }
 
-        /* 通用尾巴样式 */
         .bubble::after,
         .bubble::before {
             content: '';
@@ -221,7 +240,6 @@
             border-style: solid;
         }
 
-        /* 左尾巴 (正常保持) */
         .bubble-left::after {
             border-width: 12px 10px 0 0;
             border-color: var(--primary-color) transparent transparent transparent;
@@ -237,9 +255,6 @@
             z-index: 2;
         }
 
-        /* 右尾巴 (精准重写，解决错位) */
-        /* 右尾巴：底部定位 + 尖角朝右 (标准形状) */
-        /* 右尾巴 (底部尖角朝右，镜面左侧，完美对话气泡) */
         .bubble-right::after {
             border-width: 12px 10px 0 0;
             border-color: var(--primary-color) transparent transparent transparent;
@@ -257,71 +272,44 @@
             transform: scaleX(-1);
         }
 
-        /* --- READING (Floating Tags) --- */
-        .reading-topography {
+        /* --- METHOD (TECH SUPPORT) --- */
+        .method-isometric {
             width: 400px;
-            height: 160px;
-            position: relative;
+            height: 200px;
             margin-bottom: 3.5rem;
+            position: relative;
+            perspective: 1200px;
+        }
+
+        .iso-card {
+            position: absolute;
+            width: 120px;
+            height: 140px;
+            border: 1px solid var(--secondary-color);
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(4px);
+            transform: rotateX(45deg) rotateZ(-25deg);
+            padding: 12px;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            gap: 8px;
+            animation: isoFloat 4s ease-in-out infinite alternate;
         }
 
-        .text-strata {
-            height: 2px;
-            background: var(--secondary-color);
-            opacity: 0.1;
-        }
-
-        .scan-focus {
-            position: absolute;
-            left: 0;
-            top: 0;
-            width: 2px;
-            height: 100%;
+        .iso-ui-element {
+            width: 100%;
+            height: 6px;
             background: var(--primary-color);
-            box-shadow: 0 0 15px 2px var(--primary-color);
-            animation: scanMove 5s linear infinite;
-            z-index: 10;
+            opacity: 0.3;
+            border-radius: 2px;
         }
 
-        .tag-text {
-            font-size: 0.5rem;
-            font-weight: 800;
-            color: var(--primary-color);
-            background: var(--bg-color);
-            padding: 2px 8px;
-            border-radius: 4px;
-            position: absolute;
-            border: 0.5px solid rgba(155, 183, 212, 0.3);
-            animation: tagFloat 3s ease-in-out infinite;
-        }
-
-        /* --- WRITING (Paper & Cursive) --- */
-        .writing-hand {
-            width: 450px;
-            height: 150px;
-            margin-bottom: 3.5rem;
-            position: relative;
-            background: linear-gradient(transparent 95%, rgba(58, 78, 107, 0.05) 5%);
-            background-size: 100% 25px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-left: 2px solid rgba(155, 183, 212, 0.2);
-        }
-
-        .cursive-path {
-            fill: none;
-            stroke: var(--secondary-color);
-            stroke-width: 2.2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-            stroke-dasharray: 1200;
-            stroke-dashoffset: 1200;
-            animation: writeWord 8s ease-in-out infinite;
-            opacity: 0.7;
+        .iso-ui-header {
+            width: 40%;
+            height: 10px;
+            background: var(--secondary-color);
+            opacity: 0.2;
+            margin-bottom: 5px;
         }
 
         /* --- DAILY FOCUS CARD --- */
@@ -364,6 +352,7 @@
             font-weight: 500;
         }
 
+        /* --- BUTTONS --- */
         .bottom-actions {
             display: flex;
             gap: 20px;
@@ -384,14 +373,272 @@
         }
 
         .btn-small:hover {
+            transform: translateY(-3px);
             background-color: var(--secondary-color);
             color: var(--bg-color);
-            transform: translateY(-3px);
         }
 
         .btn-primary-small {
             background-color: var(--primary-color);
             border-color: var(--primary-color);
+            color: var(--secondary-color);
+        }
+
+        /* 添加到 style 标签内 */
+        .user-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: var(--transition-fast);
+            /* 使用你已有的过渡变量，或者用 0.4s */
+        }
+
+        .user-section:hover {
+            opacity: 0.7;
+        }
+
+        .user-section:hover .avatar {
+            transform: scale(1.05);
+            border-color: var(--primary-color);
+        }
+
+        .logout-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 34px;
+            padding: 0 12px;
+            border-radius: 999px;
+            border: 1px solid rgba(58, 78, 107, 0.18);
+            background: rgba(255, 255, 255, 0.72);
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-size: 0.72rem;
+            font-weight: 700;
+            transition: 0.25s ease;
+        }
+
+        .logout-link:hover {
+            transform: translateY(-1px);
+            background: rgba(255, 255, 255, 0.94);
+            border-color: rgba(58, 78, 107, 0.3);
+        }
+
+        .auth-modal {
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(circle at top, rgba(155, 183, 212, 0.18), transparent 34%),
+                rgba(34, 41, 55, 0.22);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 3000;
+            padding: 24px;
+            backdrop-filter: blur(10px);
+        }
+
+        .auth-modal.is-open {
+            display: flex;
+        }
+
+        .auth-card {
+            width: min(460px, 100%);
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(248, 244, 238, 0.92)),
+                var(--bg-color);
+            border: 1px solid rgba(58, 78, 107, 0.14);
+            border-radius: 28px;
+            box-shadow:
+                0 28px 90px rgba(58, 78, 107, 0.16),
+                inset 0 1px 0 rgba(255, 255, 255, 0.7);
+            padding: 30px 30px 28px;
+            backdrop-filter: blur(18px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-card::before {
+            content: 'ACADBEAT';
+            display: block;
+            font-size: 0.72rem;
+            letter-spacing: 0.32rem;
+            font-weight: 800;
+            color: rgba(58, 78, 107, 0.4);
+            margin-bottom: 16px;
+        }
+
+        .auth-card h3 {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.75rem;
+            line-height: 1.12;
+            margin-bottom: 10px;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+
+        .auth-sub {
+            color: rgba(58, 78, 107, 0.72);
+            font-size: 0.92rem;
+            line-height: 1.6;
+            margin-bottom: 22px;
+        }
+
+        .auth-tabs {
+            display: inline-flex;
+            gap: 8px;
+            margin-bottom: 20px;
+            padding: 6px;
+            border-radius: 999px;
+            background: rgba(58, 78, 107, 0.06);
+            border: 1px solid rgba(58, 78, 107, 0.08);
+        }
+
+        .auth-tab {
+            border: 1px solid transparent;
+            background: transparent;
+            color: var(--secondary-color);
+            border-radius: 999px;
+            min-width: 112px;
+            padding: 10px 16px;
+            font-weight: 700;
+            cursor: pointer;
+            letter-spacing: 0.02em;
+            transition: 0.22s ease;
+        }
+
+        .auth-tab.active {
+            background: var(--secondary-color);
+            color: white;
+            box-shadow: 0 10px 24px rgba(58, 78, 107, 0.16);
+        }
+
+        .auth-field {
+            margin-bottom: 14px;
+        }
+
+        .auth-field label {
+            display: block;
+            font-size: 0.76rem;
+            font-weight: 700;
+            letter-spacing: 0.12rem;
+            text-transform: uppercase;
+            margin-bottom: 7px;
+            color: rgba(58, 78, 107, 0.72);
+        }
+
+        .auth-field input {
+            width: 100%;
+            border: 1px solid rgba(58, 78, 107, 0.14);
+            background: rgba(255, 255, 255, 0.82);
+            border-radius: 16px;
+            padding: 13px 15px;
+            color: var(--secondary-color);
+            font-size: 0.95rem;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+        }
+
+        .auth-field input:focus {
+            outline: none;
+            border-color: rgba(155, 183, 212, 0.95);
+            box-shadow: 0 0 0 4px rgba(155, 183, 212, 0.18);
+            background: rgba(255, 255, 255, 0.96);
+        }
+
+        .auth-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            margin-top: 14px;
+        }
+
+        .auth-message {
+            min-height: 20px;
+            margin: 10px 0 6px;
+            font-size: 0.85rem;
+            color: #b04e4e;
+        }
+
+        .auth-actions .btn-small {
+            min-width: 110px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.7);
+            border-color: rgba(58, 78, 107, 0.14);
+        }
+
+        .auth-actions .btn-primary-small {
+            background: var(--secondary-color);
+            border-color: var(--secondary-color);
+            color: var(--white);
+        }
+
+        .auth-hidden {
+            display: none;
+        }
+
+        .site-modal {
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(circle at top, rgba(155, 183, 212, 0.14), transparent 32%),
+                rgba(34, 41, 55, 0.2);
+            backdrop-filter: blur(10px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 3100;
+            padding: 24px;
+        }
+
+        .site-modal.is-open {
+            display: flex;
+        }
+
+        .site-modal__card {
+            width: min(440px, 100%);
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(249, 245, 239, 0.96)),
+                var(--bg-color);
+            border: 1px solid rgba(58, 78, 107, 0.1);
+            border-radius: 30px;
+            box-shadow:
+                0 28px 80px rgba(58, 78, 107, 0.12),
+                inset 0 1px 0 rgba(255, 255, 255, 0.78);
+            padding: 30px 30px 24px;
+        }
+
+        .site-modal__title {
+            font-size: 1.9rem;
+            line-height: 1.06;
+            font-weight: 800;
+            margin-bottom: 12px;
+            letter-spacing: -0.03em;
+        }
+
+        .site-modal__body {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: rgba(58, 78, 107, 0.72);
+        }
+
+        .site-modal__actions {
+            display: flex;
+            justify-content: flex-start;
+            margin-top: 24px;
+        }
+
+        .site-modal__actions .btn-small {
+            min-width: 118px;
+            min-height: 44px;
+            border-radius: 999px;
+            box-shadow: 0 12px 28px rgba(58, 78, 107, 0.12);
         }
 
         /* --- ANIMATIONS --- */
@@ -409,15 +656,35 @@
             }
         }
 
-        @keyframes soundWave {
-            0% {
-                height: 15%;
+        @keyframes rotateCW {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes rotateCCW {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(-360deg);
+            }
+        }
+
+        @keyframes videoPulse {
+            from {
+                height: 10%;
                 opacity: 0.3;
             }
 
-            100% {
-                height: 100%;
-                opacity: 1;
+            to {
+                height: 45%;
+                opacity: 0.9;
             }
         }
 
@@ -435,45 +702,13 @@
             }
         }
 
-        @keyframes tagFloat {
-
-            0%,
-            100% {
-                transform: translateY(0);
+        @keyframes isoFloat {
+            from {
+                transform: rotateX(45deg) rotateZ(-25deg) translateY(0);
             }
 
-            50% {
-                transform: translateY(-8px);
-            }
-        }
-
-        @keyframes scanMove {
-            0% {
-                left: 0%;
-            }
-
-            100% {
-                left: 100%;
-            }
-        }
-
-        @keyframes writeWord {
-            0% {
-                stroke-dashoffset: 1200;
-                opacity: 0;
-            }
-
-            5% {
-                opacity: 1;
-            }
-
-            85% {
-                stroke-dashoffset: 0;
-                opacity: 1;
-            }
-
-            100% {
-                opacity: 0;
+            to {
+                transform: rotateX(45deg) rotateZ(-25deg) translateY(-20px);
             }
         }
     </style>
@@ -484,123 +719,341 @@
     <nav>
         <div class="logo">Acad<span>Beat</span></div>
         <div class="nav-menu">
-            <div class="nav-item active" onclick="loadModule('Vocabulary', this)">Vocabulary</div>
-            <div class="nav-item" onclick="loadModule('Listening', this)">Listening</div>
-            <div class="nav-item" onclick="loadModule('Speaking', this)">Speaking</div>
-            <div class="nav-item" onclick="loadModule('Reading', this)">Reading</div>
-            <div class="nav-item" onclick="loadModule('Writing', this)">Writing</div>
+            <div class="nav-item active" onclick="openVocabulary(this)">Vocabulary</div>
+            <div class="nav-item" onclick="loadModule('Insight', this)">Academic</div>
+            <div class="nav-item" onclick="loadModule('Dialogue', this)">Forum</div>
+            <div class="nav-item" onclick="loadModule('Method', this)">Technology</div>
         </div>
-        <div class="user-section">
-            <span style="font-size: 0.75rem; font-weight: 700;">ALEX RIVERA</span>
-            <div class="avatar">AR</div>
+        <div class="user-group">
+            <div class="user-section" id="userSection" onclick="handleUserAction()">
+                <span id="userLabel" style="font-size: 0.75rem; font-weight: 700;">LOGIN</span>
+                <div class="avatar" id="userAvatar">IN</div>
+            </div>
+            <a href="#" class="logout-link" id="logoutLink" onclick="return handleLogout(event)" style="display:none;">Log out</a>
         </div>
     </nav>
 
     <main id="app-viewport"></main>
 
+    <div class="auth-modal" id="authModal" aria-hidden="true">
+        <div class="auth-card">
+            <h3 id="authTitle">Login</h3>
+            <p class="auth-sub" id="authSubtitle">Sign in before entering any module.</p>
+
+            <div class="auth-tabs">
+                <button type="button" class="auth-tab active" id="tabLogin" onclick="setAuthMode('login')">Login</button>
+                <button type="button" class="auth-tab" id="tabRegister" onclick="setAuthMode('register')">Register</button>
+            </div>
+
+            <form id="authForm" onsubmit="submitAuthForm(event)">
+                <div class="auth-field" id="fieldIdentifier">
+                    <label for="authIdentifier">Username or Email</label>
+                    <input id="authIdentifier" type="text" autocomplete="username" />
+                </div>
+
+                <div class="auth-field auth-hidden" id="fieldUsername">
+                    <label for="authUsername">Username</label>
+                    <input id="authUsername" type="text" autocomplete="username" />
+                </div>
+
+                <div class="auth-field auth-hidden" id="fieldEmail">
+                    <label for="authEmail">Email</label>
+                    <input id="authEmail" type="email" autocomplete="email" />
+                </div>
+
+                <div class="auth-field">
+                    <label for="authPassword">Password</label>
+                    <input id="authPassword" type="password" autocomplete="current-password" />
+                </div>
+
+                <div class="auth-field auth-hidden" id="fieldConfirm">
+                    <label for="authConfirm">Confirm Password</label>
+                    <input id="authConfirm" type="password" autocomplete="new-password" />
+                </div>
+
+                <div class="auth-message" id="authMessage"></div>
+
+                <div class="auth-actions">
+                    <button type="button" class="btn-small" onclick="closeAuthModal()">Cancel</button>
+                    <button type="submit" class="btn-small btn-primary-small" id="authSubmitBtn">Login</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="site-modal" id="siteModal" aria-hidden="true">
+        <div class="site-modal__card">
+            <div class="site-modal__title" id="siteModalTitle">Notice</div>
+            <div class="site-modal__body" id="siteModalBody"></div>
+            <div class="site-modal__actions">
+                <button type="button" class="btn-small btn-primary-small" id="siteModalConfirm">OK</button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        const VOCABULARY_URL = 'http://127.0.0.1:8002/';
+        const AUTH_API_BASE = './Auth/backend/api';
+        const authState = { user: null, mode: 'login' };
+
         const data = {
-            Vocabulary: { label: "Section I — Lexical Depth", btns: ["Word Quest", "Mastery Check"] },
-            Listening: { label: "Section II — Listening Intelligence", id: "02", topic: "The Nuances of British Parliamentary Debate", btns: ["Audio Stream", "Echo Challenge"] },
-            Speaking: { label: "Section III — Spoken Eloquence", id: "03", topic: "Articulating Complex Generative AI Ethics", btns: ["Record Prompt", "Expression Drill"] },
-            Reading: { label: "Section IV — Textual Analytics", id: "04", topic: "Deconstructing Post-Colonial Narratives", btns: ["Deep Scan", "Context Duel"] },
-            Writing: { label: "Section V — Syntactic Flow", id: "05", topic: "Structuring Theses in Socio-Economics", btns: ["Draft Studio", "Syntax Trial"] }
+            // 修复点 2: 统一 Lexis 的按钮数据结构，确保 btn 存在
+            Lexis: { label: "Section I — Lexical Depth", btn: "Start Study" },
+            Insight: { label: "Section II — Visual Intelligence", id: "02", topic: "Visual Anthropology: A Cinematic Study", btn: "View Stream" },
+            Dialogue: { label: "Section III — Collective Intellect", id: "03", topic: "Current Thread: Linguistic Relativity in AI", btn: "Enter Forum" },
+            Method: { label: "Section IV — Technical Support", id: "04", topic: "Workflow Optimization: Academic Toolkit", btn: "Get Support" }
         };
+
+        function navElementFor(name) {
+            const map = {
+                Lexis: '.nav-item:nth-child(1)',
+                Insight: '.nav-item:nth-child(2)',
+                Dialogue: '.nav-item:nth-child(3)',
+                Method: '.nav-item:nth-child(4)'
+            };
+            return document.querySelector(map[name] || map.Lexis);
+        }
+
+        function initialsOf(name) {
+            const trimmed = String(name || '').trim();
+            if (!trimmed) return 'IN';
+            return trimmed.slice(0, 2).toUpperCase();
+        }
+
+        function renderAuthUI() {
+            const label = document.getElementById('userLabel');
+            const avatar = document.getElementById('userAvatar');
+            const logoutLink = document.getElementById('logoutLink');
+            if (!label || !avatar || !logoutLink) return;
+            if (authState.user) {
+                label.textContent = authState.user.username;
+                avatar.textContent = initialsOf(authState.user.username);
+                logoutLink.style.display = 'inline-flex';
+            } else {
+                label.textContent = 'LOGIN';
+                avatar.textContent = 'IN';
+                logoutLink.style.display = 'none';
+            }
+        }
+
+        async function authFetch(path, options = {}) {
+            const response = await fetch(`${AUTH_API_BASE}/${path}`, {
+                method: options.method || 'GET',
+                headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+                credentials: 'include',
+                body: options.body || undefined
+            });
+            const data = await response.json().catch(() => ({ status: 'error', message: 'Invalid response' }));
+            return data;
+        }
+
+        async function loadAuthUser() {
+            const data = await authFetch('me.php');
+            authState.user = data.status === 'success' ? data.user : null;
+            renderAuthUI();
+        }
+
+        function openAuthModal(mode = 'login', message = '') {
+            setAuthMode(mode);
+            document.getElementById('authModal').classList.add('is-open');
+            document.getElementById('authModal').setAttribute('aria-hidden', 'false');
+            document.getElementById('authMessage').textContent = message;
+        }
+
+        function closeAuthModal() {
+            document.getElementById('authModal').classList.remove('is-open');
+            document.getElementById('authModal').setAttribute('aria-hidden', 'true');
+            document.getElementById('authMessage').textContent = '';
+        }
+
+        function openSiteModal(title, message, onConfirm) {
+            const modal = document.getElementById('siteModal');
+            const titleEl = document.getElementById('siteModalTitle');
+            const bodyEl = document.getElementById('siteModalBody');
+            const confirmBtn = document.getElementById('siteModalConfirm');
+            if (!modal || !titleEl || !bodyEl || !confirmBtn) return;
+            titleEl.textContent = title || 'Notice';
+            bodyEl.textContent = message || '';
+            confirmBtn.onclick = function () {
+                modal.classList.remove('is-open');
+                modal.setAttribute('aria-hidden', 'true');
+                if (typeof onConfirm === 'function') onConfirm();
+            };
+            modal.classList.add('is-open');
+            modal.setAttribute('aria-hidden', 'false');
+        }
+
+        function setAuthMode(mode) {
+            authState.mode = mode;
+            const loginMode = mode === 'login';
+            document.getElementById('tabLogin').classList.toggle('active', loginMode);
+            document.getElementById('tabRegister').classList.toggle('active', !loginMode);
+            document.getElementById('fieldIdentifier').classList.toggle('auth-hidden', !loginMode);
+            document.getElementById('fieldUsername').classList.toggle('auth-hidden', loginMode);
+            document.getElementById('fieldEmail').classList.toggle('auth-hidden', loginMode);
+            document.getElementById('fieldConfirm').classList.toggle('auth-hidden', loginMode);
+            document.getElementById('authTitle').textContent = loginMode ? 'Login' : 'Register';
+            document.getElementById('authSubtitle').textContent = loginMode ? 'Sign in before entering any module.' : 'Create your account in AcadBeat.';
+            document.getElementById('authSubmitBtn').textContent = loginMode ? 'Login' : 'Register';
+            document.getElementById('authMessage').textContent = '';
+        }
+
+        async function submitAuthForm(event) {
+            event.preventDefault();
+            const mode = authState.mode;
+            const messageEl = document.getElementById('authMessage');
+            messageEl.textContent = '';
+
+            const payload = mode === 'login'
+                ? {
+                    identifier: document.getElementById('authIdentifier').value.trim(),
+                    password: document.getElementById('authPassword').value
+                }
+                : {
+                    username: document.getElementById('authUsername').value.trim(),
+                    email: document.getElementById('authEmail').value.trim(),
+                    password: document.getElementById('authPassword').value
+                };
+
+            if (mode === 'register' && document.getElementById('authPassword').value !== document.getElementById('authConfirm').value) {
+                messageEl.textContent = 'Passwords do not match.';
+                return;
+            }
+
+            const endpoint = mode === 'login' ? 'login.php' : 'register.php';
+            const data = await authFetch(endpoint, {
+                method: 'POST',
+                body: JSON.stringify(payload)
+            });
+
+            if (data.status !== 'success') {
+                messageEl.textContent = data.message || 'Authentication failed.';
+                return;
+            }
+
+            authState.user = data.user || null;
+            renderAuthUI();
+            closeAuthModal();
+        }
+
+        function handleUserAction() {
+            if (authState.user) {
+                window.location.href = 'owner.html';
+                return;
+            }
+            openAuthModal('login');
+        }
+
+        async function handleLogout(event) {
+            if (event) event.preventDefault();
+            if (!authState.user) return false;
+            await authFetch('logout.php');
+            authState.user = null;
+            renderAuthUI();
+            closeAuthModal();
+            loadModule('Lexis', navElementFor('Lexis'));
+            return false;
+        }
+
+        function handleModuleAction(name) {
+            if (!authState.user) {
+                openAuthModal('login', 'Please log in before using module actions.');
+                return;
+            }
+            if (name === 'Lexis') {
+                window.location.href = VOCABULARY_URL;
+                return;
+            }
+            openSiteModal('Not connected yet', 'This module action has not been connected yet.');
+        }
+
+        function openVocabulary(el) {
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            if (el) el.classList.add('active');
+            loadModule('Lexis', el);
+        }
 
         function loadModule(name, el) {
             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-            el.classList.add('active');
+            if (el) el.classList.add('active');
+
             const viewport = document.getElementById('app-viewport');
             const m = data[name];
 
             let html = `<div class="module-content">`;
             html += `<div class="module-label">${m.label}</div>`;
 
-            if (name === 'Vocabulary') {
+            if (name === 'Lexis') {
                 const quotes = [
                     { text: "The limits of my language mean the limits of my world.", author: "— Ludwig Wittgenstein" },
-                    { text: "Language is the dress of thought.", author: "— Samuel Johnson" },
-                    { text: "Language is the armory of human power.", author: "— Ralph Waldo Emerson" },
-                    { text: "The essential function of language is communication.", author: "— Ferdinand de Saussure" },
-                    { text: "Without words, without names, there is no knowledge of things.", author: "— Plato" }
+                    { text: "Language is the dress of thought.", author: "— Samuel Johnson" }
                 ];
-                const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+                const q = quotes[Math.floor(Math.random() * quotes.length)];
                 html += `<div class="quote-wrap">
-                <p class="quote-text">"${randomQuote.text}"</p>
-                <p class="quote-author">${randomQuote.author}</p>
-             </div>`;
+                            <p class="quote-text">"${q.text}"</p>
+                            <p class="quote-author">${q.author}</p>
+                         </div>`;
             }
-            else if (name === 'Listening') {
+            else if (name === 'Insight') {
                 let bars = '';
-                for (let i = 0; i < 30; i++) bars += `<div class="bar" style="height:${Math.random() * 70 + 20}%; animation-duration:${Math.random() * 0.4 + 0.4}s"></div>`;
-                html += `<div class="sound-landscape">${bars}</div>`;
+                for (let i = 0; i < 12; i++) bars += `<div class="video-bar" style="animation-delay:${i * 0.1}s"></div>`;
+                html += `<div class="lens-visual">
+                            <div class="lens-ring ring-1"></div>
+                            <div class="lens-ring ring-2"></div>
+                            ${bars}
+                         </div>`;
             }
-            else if (name === 'Speaking') {
+            else if (name === 'Dialogue') {
                 html += `<div class="vocal-dialogue">
                             <div class="bubble bubble-left"></div>
                             <div class="bubble bubble-right"></div>
                          </div>`;
             }
-            else if (name === 'Reading') {
-                html += `<div class="reading-topography">
-                            <div class="scan-focus"></div>
-                            ${Array(6).fill('<div class="text-strata"></div>').join('')}
-                            <span class="tag-text" style="top:5%; left:15%; animation-delay:0s">SYNTAX</span>
-                            <span class="tag-text" style="top:35%; left:60%; animation-delay:0.5s">LEXIS</span>
-                            <span class="tag-text" style="top:60%; left:10%; animation-delay:1.2s">LOGIC</span>
-                            <span class="tag-text" style="top:85%; left:75%; animation-delay:0.8s">NUANCE</span>
-                            <span class="tag-text" style="top:20%; left:35%; animation-delay:2s">STRUCTURE</span>
-                            <span class="tag-text" style="bottom:10%; left:45%; animation-delay:1.5s">CONTEXT</span>
-                         </div>`;
-            }
-            else if (name === 'Writing') {
-                html += `<div class="writing-hand">
-                            <svg viewBox="0 0 450 100" width="450">
-                                <path class="cursive-path" d="M40,60 C60,10 80,90 100,40 C110,20 130,80 150,60 C180,60 170,20 200,20 C230,20 220,80 250,80 C280,80 270,30 310,30 C340,30 330,70 370,70 S410,20 430,30" />
-                            </svg>
-                         </div>`;
+            else if (name === 'Method') {
+                html += `<div class="method-isometric">
+                            <div class="iso-card" style="left: 60px; top: 20px;">
+                                <div class="iso-ui-header"></div>
+                                <div class="iso-ui-element"></div>
+                                <div class="iso-ui-element" style="width: 70%;"></div>
+                            </div>
+                            <div class="iso-card" style="left: 200px; top: 40px; animation-delay: -2s; border-color: var(--primary-color);">
+                                <div class="iso-ui-header" style="background:var(--primary-color);"></div>
+                                <div class="iso-ui-element"></div>
+                                <div class="iso-ui-element"></div>
+                            </div>
+                        </div>`;
             }
 
-            if (name !== 'Vocabulary') {
+            if (name !== 'Lexis') {
                 html += `<div class="daily-focus-card">
                             <div class="card-number">${m.id}</div>
                             <div class="card-content">
-                                <h4>Daily Focus</h4>
+                                <h4>Academic Content</h4>
                                 <p>${m.topic}</p>
                             </div>
                         </div>`;
             }
 
+            // 修复点 3: 统一渲染底部按钮，使用 m.btn
             html += `<div class="bottom-actions">
-                        <button class="btn-small btn-primary-small" onclick="handleModuleAction('${name}', 0)">${m.btns[0]}</button>
-                        <button class="btn-small" onclick="handleModuleAction('${name}', 1)">${m.btns[1]}</button>
+                        <button class="btn-small btn-primary-small" style="min-width:220px;" onclick="handleModuleAction('${name}')">${m.btn}</button>
                     </div>`;
 
             html += `</div>`;
             viewport.innerHTML = html;
         }
 
-        function handleModuleAction(moduleName, btnIndex) {
-            // Vocabulary: Word Quest → vocab practice (PHP), Mastery Check → vocab exam (static)
-            if (moduleName === 'Vocabulary' && btnIndex === 0) {
-                window.location.href = 'http://127.0.0.1:8002/';
-                return;
+        // 初始化加载
+        window.onload = async () => {
+            const params = new URLSearchParams(window.location.search);
+            const requestedModule = params.get('module');
+            const moduleName = data[requestedModule] ? requestedModule : 'Lexis';
+            loadModule(moduleName, navElementFor(moduleName));
+            await loadAuthUser();
+            if (params.get('login') === '1') {
+                openAuthModal('login', 'Please log in first.');
             }
-            if (moduleName === 'Vocabulary' && btnIndex === 1) {
-                window.location.href = 'http://127.0.0.1:8003/vocabulary-exam.html';
-                return;
-            }
-
-            // Listening: both buttons go to React frontend
-            if (moduleName === 'Listening') {
-                window.location.href = 'http://127.0.0.1:5173/';
-                return;
-            }
-
-            // Other modules (Speaking / Reading / Writing): currently stay on landing page
-        }
-
-        window.onload = () => loadModule('Vocabulary', document.querySelector('.nav-item'));
+        };
     </script>
 </body>
 

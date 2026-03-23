@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/config.php';
+vocab_require_auth();
 $pageTitle = 'Profile';
 $activeNav = 'profile';
 require_once __DIR__ . '/includes/header.php';
@@ -36,7 +37,21 @@ require_once __DIR__ . '/includes/header.php';
           </section>
         </div>
         <script>
-          document.getElementById('btnEditProfile')?.addEventListener('click', () => alert('Edit profile (UI)'));
-          document.getElementById('btnAddGoal')?.addEventListener('click', () => alert('Set a goal (UI)'));
+          document.getElementById('btnEditProfile')?.addEventListener('click', function() {
+            if (typeof window.vocabOpenModal === 'function') {
+              window.vocabOpenModal({
+                title: 'Edit profile',
+                message: 'This profile editor has not been connected yet.'
+              });
+            }
+          });
+          document.getElementById('btnAddGoal')?.addEventListener('click', function() {
+            if (typeof window.vocabOpenModal === 'function') {
+              window.vocabOpenModal({
+                title: 'Set a goal',
+                message: 'This goal-setting panel has not been connected yet.'
+              });
+            }
+          });
         </script>
 <?php require_once __DIR__ . '/includes/footer.php'; ?>

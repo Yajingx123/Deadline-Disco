@@ -1,63 +1,115 @@
 <?php
 require_once __DIR__ . '/config.php';
+vocab_require_auth();
+$hideGlobalHomeNav = true;
 $pageTitle = 'Practice session';
 $activeNav = 'practice';
 
-$mode = isset($_GET['mode']) ? (int)$_GET['mode'] : 10;
-if (!in_array($mode, [10, 30, 60], true)) $mode = 10;
+$mode = isset($_GET['mode']) ? (int)$_GET['mode'] : 1;
+if (!in_array($mode, [1, 5, 10], true)) $mode = 1;
 
-$booksParam = isset($_GET['books']) ? (string)$_GET['books'] : 'daily';
+$booksParam = isset($_GET['books']) ? (string)$_GET['books'] : implode(',', vocab_selected_book_slugs(vocab_current_user_id()));
 $bookSlugs = array_values(array_filter(array_map('trim', explode(',', $booksParam))));
-if (!$bookSlugs) $bookSlugs = ['daily'];
 
-// 只允许数据库里存在的 slug
+$booksTable = vocab_table('books');
+$wordsTable = vocab_table('words');
+$bookWordsTable = vocab_table('book_words');
+
+function sample_words_in_selection_order(array $rows, array $selectedSlugs, int $targetCount): array {
+  $grouped = [];
+  foreach ($selectedSlugs as $slug) {
+    $grouped[$slug] = [];
+  }
+
+  foreach ($rows as $row) {
+    $slug = (string)($row['bookSlug'] ?? '');
+    $wordId = (int)($row['id'] ?? 0);
+    if ($slug === '' || $wordId <= 0) {
+      continue;
+    }
+    if (!isset($grouped[$slug])) {
+      $grouped[$slug] = [];
+    }
+    if (!isset($grouped[$slug][$wordId])) {
+      $grouped[$slug][$wordId] = $row;
+    }
+  }
+
+  $selected = [];
+  $selectedIds = [];
+  foreach ($selectedSlugs as $slug) {
+    foreach ($grouped[$slug] ?? [] as $item) {
+      if (count($selected) >= $targetCount) {
+        break 2;
+      }
+      $wordId = (int)$item['id'];
+      if (isset($selectedIds[$wordId])) {
+        continue;
+      }
+      $selected[] = $item;
+      $selectedIds[$wordId] = true;
+    }
+  }
+  return array_values($selected);
+}
+
+if (!$bookSlugs) {
+  header('Location: ./wordbank.php', true, 302);
+  exit;
+}
+
+// 只允许数据库里存在的 slug，并保留用户选择顺序
 $placeholders = implode(',', array_fill(0, count($bookSlugs), '?'));
-$validStmt = db()->prepare("SELECT slug FROM word_books WHERE slug IN ($placeholders)");
+$validStmt = db()->prepare("SELECT slug FROM {$booksTable} WHERE slug IN ($placeholders)");
 $validStmt->execute($bookSlugs);
-$valid = $validStmt->fetchAll(PDO::FETCH_COLUMN);
-$valid = array_values(array_unique(array_map('strval', $valid)));
-if (!$valid) $valid = ['daily'];
+$validSet = array_values(array_unique(array_map('strval', $validStmt->fetchAll(PDO::FETCH_COLUMN))));
+$valid = [];
+foreach ($bookSlugs as $slug) {
+  if (in_array($slug, $validSet, true) && !in_array($slug, $valid, true)) {
+    $valid[] = $slug;
+  }
+}
+if (!$valid) {
+  header('Location: ./wordbank.php', true, 302);
+  exit;
+}
 
 // 根据词书 slug 拉取去重后的单词（支持词书重叠）
 $placeholders = implode(',', array_fill(0, count($valid), '?'));
 $wordStmt = db()->prepare("
-  SELECT DISTINCT
-    w.id,
+  SELECT
+    w.word_id AS id,
     w.word,
     w.phonetic,
-    w.meaning,
+    w.meaning_en AS meaning,
+    w.meaning_zh AS meaningZh,
     w.sentence,
     w.image_url AS imageUrl,
-    w.audio_url AS audioUrl
-  FROM words w
-  JOIN word_book_words wbw ON wbw.word_id = w.id
-  JOIN word_books wb ON wb.id = wbw.word_book_id
+    w.audio_url AS audioUrl,
+    wb.slug AS bookSlug
+  FROM {$wordsTable} w
+  JOIN {$bookWordsTable} wbw ON wbw.word_id = w.word_id
+  JOIN {$booksTable} wb ON wb.word_book_id = wbw.word_book_id
   WHERE wb.slug IN ($placeholders)
-  ORDER BY w.word ASC
+  ORDER BY wb.word_book_id ASC, wbw.sort_order ASC, w.word ASC
 ");
 $wordStmt->execute($valid);
-$words = $wordStmt->fetchAll();
+$allWords = $wordStmt->fetchAll();
 
-// 若没有数据，兜底：取 daily
-if (!$words) {
-  $wordStmt = db()->prepare("
-    SELECT DISTINCT
-      w.id,
-      w.word,
-      w.phonetic,
-      w.meaning,
-      w.sentence,
-      w.image_url AS imageUrl,
-      w.audio_url AS audioUrl
-    FROM words w
-    JOIN word_book_words wbw ON wbw.word_id = w.id
-    JOIN word_books wb ON wb.id = wbw.word_book_id
-    WHERE wb.slug = 'daily'
-    ORDER BY w.word ASC
-  ");
-  $wordStmt->execute();
-  $words = $wordStmt->fetchAll();
+if (!$allWords) {
+  header('Location: ./wordbank.php', true, 302);
+  exit;
 }
+
+$targetWordCount = $mode === 1 ? 5 : ($mode === 5 ? 10 : 15);
+$words = sample_words_in_selection_order($allWords, $valid, $targetWordCount);
+
+foreach ($words as &$word) {
+  $wordText = (string)($word['word'] ?? '');
+  $word['imageUrl'] = vocab_media_url((string)($word['imageUrl'] ?? ''), $wordText);
+  $word['audioUrl'] = vocab_media_url((string)($word['audioUrl'] ?? ''), null);
+}
+unset($word);
 
 // 顶栏需要显示 mode
 require_once __DIR__ . '/includes/header.php';
@@ -65,9 +117,9 @@ require_once __DIR__ . '/includes/header.php';
 
         <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px">
           <div style="color:var(--muted);font-size:13px">
-            Session: <strong><?php echo htmlspecialchars($mode); ?> min</strong>
+            Session: <strong><?php echo htmlspecialchars($mode === 1 ? '1 minute' : ($mode === 5 ? '3-5 minutes' : '10 minutes')); ?></strong>
           </div>
-          <a href="./practice.php" class="ghost" style="display:inline-flex;align-items:center;padding:6px 14px;text-decoration:none;font-size:14px">Exit</a>
+          <a href="./practice.php" class="sessionExitBtn">Exit</a>
         </div>
 
         <div class="sessionProgress" id="sessionProgress">
@@ -76,21 +128,15 @@ require_once __DIR__ . '/includes/header.php';
         </div>
         <div id="sessionContent"></div>
 
-        <!-- Debug only: allow skipping to next step without answering -->
-        <button
-          id="btnTestNext"
-          type="button"
-          class="debugNextBtn"
-          aria-label="Next (test)"
-        >
-          Next (test)
-        </button>
-
         <script>
           (function() {
             var WORDS = <?php echo json_encode($words, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
             var mode = <?php echo (int)$mode; ?>;
-            var labels = { 10: '10 min', 30: '30 min', 60: '60 min' };
+            var selectedBooks = <?php echo json_encode($valid, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>;
+            var STATUS_API_URL = './api/word-status.php';
+            var COMPLETE_SESSION_API_URL = './api/complete-session.php';
+            var sessionStartedAt = new Date().toISOString().slice(0, 19).replace('T', ' ');
+            var labels = { 1: '1 minute', 5: '3-5 minutes', 10: '10 minutes' };
             // 顶栏的 sessionModeLabel 在旧 HTML 里有，这里不依赖它；若存在则更新
             var modeLabelEl = document.getElementById('sessionModeLabel');
             if (modeLabelEl) modeLabelEl.textContent = labels[mode] || (mode + ' min');
@@ -148,27 +194,79 @@ require_once __DIR__ . '/includes/header.php';
               return { idx: idx, gapLen: len, prefix: prefix, suffix: suffix, expectedMissingLower: expectedMissingLower };
             }
 
+            function getMediaUrl(url) {
+              return String(url || '').trim();
+            }
+
+            var activeAudio = null;
+            function stopAudio() {
+              if (!activeAudio) return;
+              activeAudio.pause();
+              activeAudio.currentTime = 0;
+              activeAudio = null;
+            }
+
+            function speak(text) {
+              if (!window.speechSynthesis || !text) return;
+              window.speechSynthesis.cancel();
+              var utterance = new window.SpeechSynthesisUtterance(text);
+              utterance.lang = 'en-US';
+              utterance.rate = 0.9;
+              window.speechSynthesis.speak(utterance);
+            }
+
+            function playAudioForWord(wordObj, statusEl) {
+              stopAudio();
+              var src = getMediaUrl(wordObj && wordObj.audioUrl);
+              if (!src) {
+                if (statusEl) statusEl.textContent = 'No recording found. Playing browser fallback.';
+                speak(wordObj && wordObj.word);
+                return;
+              }
+              var audio = new Audio(src);
+              activeAudio = audio;
+              if (statusEl) statusEl.textContent = 'Loading pronunciation...';
+              audio.oncanplay = function() {
+                if (statusEl) statusEl.textContent = 'Playing pronunciation';
+              };
+              audio.onended = function() {
+                if (statusEl) statusEl.textContent = 'Ready to replay';
+              };
+              audio.onerror = function() {
+                if (statusEl) statusEl.textContent = 'Recording failed. Using browser fallback.';
+                activeAudio = null;
+                speak(wordObj && wordObj.word);
+              };
+              var playPromise = audio.play();
+              if (playPromise && typeof playPromise.catch === 'function') {
+                playPromise.catch(function() {
+                  if (statusEl) statusEl.textContent = 'Click again to play pronunciation.';
+                  activeAudio = null;
+                });
+              }
+            }
+
             var steps = [];
             var words = shuffle(WORDS);
-            // 10-min: quick warm-up (1 exercise per word).
-            // 30-min: add sentence-based practice.
-            // 60-min: add even more sentence-based practice.
+            var sessionWordStatus = {};
             var exerciseTypes =
-              mode === 10
+              mode === 1
                 ? ['image', 'audio', 'fill']
-                : mode === 30
+                : mode === 5
                   ? ['image', 'audio', 'fill', 'sentence_fill']
                   : ['image', 'audio', 'fill', 'sentence_fill', 'sentence_pick'];
 
-            // Learn card（每个单词先过一遍）
-            words.forEach(function(w) { steps.push({ type: 'learn', word: w }); });
+            words.forEach(function(w) {
+              sessionWordStatus[w.id] = w.masteryStatus || 'new';
+              steps.push({ type: 'learn', word: w });
+            });
 
-            var exercisesPerWord = mode === 10 ? 1 : mode === 30 ? 2 : 3;
+            var exercisesPerWord = mode === 1 ? 1 : 2;
             words.forEach(function(w, i) {
               for (var e = 0; e < exercisesPerWord; e++) {
                 var kind = exerciseTypes[(i + e) % 3];
-                // Diversify for 30/60: allow sentence-based kinds as well.
-                if (mode !== 10) {
+                // Diversify for 3-5 / 10-minute sessions with sentence-based practice.
+                if (mode !== 1) {
                   kind = exerciseTypes[(i + e) % exerciseTypes.length];
                 }
 
@@ -188,7 +286,15 @@ require_once __DIR__ . '/includes/header.php';
                         })()
                       : null;
 
-                steps.push({ type: kind, word: w, options: options });
+                steps.push({
+                  type: kind,
+                  word: w,
+                  options: options,
+                  promptData: null,
+                  responses: [],
+                  attemptCount: 0,
+                  firstAttemptCorrect: null
+                });
               }
             });
 
@@ -198,16 +304,7 @@ require_once __DIR__ . '/includes/header.php';
             var contentEl = document.getElementById('sessionContent');
             var progressFill = document.getElementById('progressFill');
             var progressText = document.getElementById('progressText');
-            var synth = window.speechSynthesis;
-
-            function speak(text) {
-              if (!synth || !text) return;
-              synth.cancel();
-              var u = new window.SpeechSynthesisUtterance(text);
-              u.lang = 'en-US';
-              u.rate = 0.9;
-              synth.speak(u);
-            }
+            var sessionSavePromise = null;
 
             function renderProgress() {
               var p = steps.length ? (stepIndex / steps.length) * 100 : 0;
@@ -217,19 +314,48 @@ require_once __DIR__ . '/includes/header.php';
 
             function makeRetryStep(step) {
               if (!step || step.type === 'learn') return null;
-              var opts = (step.type === 'image' || step.type === 'audio') ? pickOptions(step.word.word, WORDS, 4) : null;
+              var opts =
+                step.type === 'image' || step.type === 'audio'
+                  ? pickOptions(step.word.word, WORDS, 4)
+                  : step.type === 'sentence_pick'
+                    ? (function() {
+                        var sentenceWords = WORDS.filter(hasSentence);
+                        if (sentenceWords.length < 2) return pickOptions(step.word.word, WORDS, 4);
+                        return pickOptions(step.word.word, sentenceWords, 4);
+                      })()
+                    : null;
               return { type: step.type, word: step.word, options: opts };
             }
 
             function escapeHtml(s) { return (s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\"/g, '&quot;'); }
 
+            function lockOptionsAndRevealAnswer(container, chosenBtn, chosenWord, correctWord) {
+              container.querySelectorAll('.sessionOption').forEach(function(btn) {
+                btn.disabled = true;
+                if (btn.textContent === correctWord) {
+                  btn.classList.add('sessionOption--correct');
+                }
+                if (btn === chosenBtn && chosenWord !== correctWord) {
+                  btn.classList.add('sessionOption--wrong');
+                }
+              });
+            }
+
             function showResult(ok, correctWord, meaning) {
               answered = true;
-              if (ok) {
+              var currentStep = steps[stepIndex];
+              if (ok && currentStep && currentStep.type !== 'learn' && (currentStep.responses || []).length === 1) {
                 correctCount++;
               } else {
-                steps.push(makeRetryStep(steps[stepIndex]));
-                renderProgress();
+                if (!ok) {
+                  steps.push(makeRetryStep(steps[stepIndex]));
+                  renderProgress();
+                }
+              }
+              if (currentStep && currentStep.type !== 'learn') {
+                if (currentStep.firstAttemptCorrect === null) {
+                  currentStep.firstAttemptCorrect = ok;
+                }
               }
               var resultClass = ok ? 'sessionResult--ok' : 'sessionResult--bad';
               var resultTitle = ok ? 'Correct' : 'Incorrect';
@@ -248,6 +374,7 @@ require_once __DIR__ . '/includes/header.php';
             }
 
             function nextStep() {
+              stopAudio();
               stepIndex++;
               if (stepIndex >= steps.length) {
                 renderEnd();
@@ -257,19 +384,73 @@ require_once __DIR__ . '/includes/header.php';
               renderStep();
             }
 
-            // Enable "Next (test)" across all practice modes (10/30/60).
-            // This is for testing only: it skips without requiring an answer.
-            var btnTestNext = document.getElementById('btnTestNext');
-            if (btnTestNext) {
-              btnTestNext.addEventListener('click', function() {
-                if (typeof nextStep === 'function') nextStep();
+            async function saveWordStatus(wordId, status, triggerBtn) {
+              sessionWordStatus[wordId] = status;
+              if (triggerBtn) {
+                triggerBtn.closest('.sessionStatusActions').querySelectorAll('.sessionStatusBtn').forEach(function(btn) {
+                  btn.classList.toggle('isSelected', btn === triggerBtn);
+                });
+              }
+              var label = document.getElementById('sessionStatusValue');
+              if (label) {
+                label.textContent =
+                  status === 'mastered' ? 'Marked as learned. This word will stay out of new sessions.' :
+                  status === 'forgot' ? 'Marked as forgot. Keep showing this word in future review.' :
+                  status === 'learning' ? 'Marked as still learning.' :
+                  'No status selected yet.';
+              }
+              try {
+                await fetch(STATUS_API_URL, {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  credentials: 'include',
+                  body: JSON.stringify({ wordId: wordId, status: status })
+                });
+              } catch (e) {}
+            }
+
+            function buildSessionPayload() {
+              return {
+                mode: mode,
+                selectedBooks: selectedBooks,
+                correctFirstTry: correctCount,
+                startedAt: sessionStartedAt,
+                completedAt: new Date().toISOString().slice(0, 19).replace('T', ' '),
+                steps: steps.filter(function(step) {
+                  return step.type !== 'learn';
+                }).map(function(step, idx) {
+                  return {
+                    wordId: Number(step.word && step.word.id || 0),
+                    type: step.type,
+                    promptData: step.promptData || {},
+                    options: step.options || null,
+                    correctAnswer: step.word && step.word.word ? step.word.word : '',
+                    firstAttemptCorrect: step.firstAttemptCorrect,
+                    responses: step.responses || [],
+                    stepOrder: idx + 1
+                  };
+                })
+              };
+            }
+
+            async function persistCompletedSession() {
+              if (sessionSavePromise) return sessionSavePromise;
+              sessionSavePromise = fetch(COMPLETE_SESSION_API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify(buildSessionPayload())
+              }).then(function(res) { return res.json(); }).catch(function() {
+                return { ok: false };
               });
+              return sessionSavePromise;
             }
 
             function renderEnd() {
               progressFill.style.width = '100%';
               progressText.textContent = 'Done';
               var totalAnswered = stepIndex;
+              persistCompletedSession();
               contentEl.innerHTML =
                 '<div class="sessionCard sessionEnd">' +
                 '<div class="sessionEnd__score">' + correctCount + ' correct on first try</div>' +
@@ -284,7 +465,7 @@ require_once __DIR__ . '/includes/header.php';
               var w = step.word;
 
               function imgHtml(wordObj) {
-                var url = wordObj.imageUrl ? '/' + wordObj.imageUrl : '';
+                var url = getMediaUrl(wordObj && wordObj.imageUrl);
                 return '<div class="sessionImgWrap" id="imgWrap">' +
                   (url
                     ? '<img src="' + url + '" alt="" onerror="var w=document.getElementById(\'imgWrap\');if(w){w.innerHTML=\'<span style=&quot;color:var(--muted2);font-weight:600&quot;>Image unavailable</span>\';}">'
@@ -301,21 +482,65 @@ require_once __DIR__ . '/includes/header.php';
                   '<div class="wordCard__phonetic" style="margin-top:4px">' + escapeHtml(w.phonetic || '') + '</div>' +
                   '<div class="divider"></div>' +
                   '<div style="font-weight:600">' + escapeHtml(w.meaning || '') + '</div>' +
-                  (w.sentence ? '<div style="margin-top:8px;color:var(--muted)">' + escapeHtml(w.sentence) + '</div>' : '') +
+                  '<button class="ghost sessionToggleBtn" type="button" id="btnToggleMeaning">' + (w.meaningZh ? 'Show Chinese meaning' : 'Chinese meaning unavailable') + '</button>' +
+                  '<div class="sessionMeaningBlock" id="meaningBlock" hidden>' +
+                  '<div class="sessionMeaningZh">' + escapeHtml(w.meaningZh || '') + '</div>' +
+                  '</div>' +
+                  (w.sentence ? '<div class="sessionSentence">' + escapeHtml(w.sentence) + '</div>' : '') +
+                  '<div class="sessionStatusPanel">' +
+                    '<div class="sessionStatusTitle">How is this word for you?</div>' +
+                    '<div class="sessionStatusActions">' +
+                      '<button class="ghost sessionStatusBtn' + ((sessionWordStatus[w.id] || "new") === 'mastered' ? ' isSelected' : '') + '" type="button" data-status="mastered">Learned</button>' +
+                      '<button class="ghost sessionStatusBtn' + ((sessionWordStatus[w.id] || "new") === 'learning' ? ' isSelected' : '') + '" type="button" data-status="learning">Still learning</button>' +
+                      '<button class="ghost sessionStatusBtn' + ((sessionWordStatus[w.id] || "new") === 'forgot' ? ' isSelected' : '') + '" type="button" data-status="forgot">Forgot</button>' +
+                    '</div>' +
+                    '<div class="sessionStatusValue" id="sessionStatusValue">' +
+                      ((sessionWordStatus[w.id] || "new") === 'mastered' ? 'Marked as learned. This word will stay out of new sessions.' :
+                      (sessionWordStatus[w.id] || "new") === 'learning' ? 'Marked as still learning.' :
+                      (sessionWordStatus[w.id] || "new") === 'forgot' ? 'Marked as forgot. Keep showing this word in future review.' :
+                      'No status selected yet.') +
+                    '</div>' +
+                  '</div>' +
+                  '<div class="sessionAudioHint" id="audioStatus">Use the stored pronunciation audio for this word.</div>' +
                   '<div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">' +
                   '<button class="secondary" type="button" id="btnPlayWord">Play word</button>' +
                   '<button class="primary" type="button" id="btnNextStep">Next</button>' +
                   '</div></div>';
-                document.getElementById('btnPlayWord').onclick = function() { speak(w.word); };
-                document.getElementById('btnNextStep').onclick = nextStep;
+                var toggleBtn = document.getElementById('btnToggleMeaning');
+                if (!w.meaningZh) {
+                  toggleBtn.disabled = true;
+                }
+                toggleBtn.onclick = function() {
+                  if (!w.meaningZh) return;
+                  var block = document.getElementById('meaningBlock');
+                  if (!block) return;
+                  var willShow = block.hasAttribute('hidden');
+                  if (willShow) block.removeAttribute('hidden');
+                  else block.setAttribute('hidden', 'hidden');
+                  this.textContent = willShow ? 'Hide Chinese meaning' : 'Show Chinese meaning';
+                };
+                document.querySelectorAll('.sessionStatusBtn').forEach(function(btn) {
+                  btn.addEventListener('click', function() {
+                    saveWordStatus(w.id, btn.getAttribute('data-status') || 'learning', btn);
+                  });
+                });
+                document.getElementById('btnPlayWord').onclick = function() { playAudioForWord(w, document.getElementById('audioStatus')); };
+                document.getElementById('btnNextStep').onclick = async function() {
+                  if (!sessionWordStatus[w.id] || sessionWordStatus[w.id] === 'new') {
+                    await saveWordStatus(w.id, 'learning', null);
+                  }
+                  nextStep();
+                };
                 return;
               }
 
               if (step.type === 'image') {
+                step.promptData = { meaning_en: w.meaning || '' };
                 contentEl.innerHTML =
                   '<div class="sessionCard">' +
-                  '<div class="sessionCard__label">Which word matches the image?</div>' +
+                  '<div class="sessionCard__label">Match the image and the English meaning to the correct word</div>' +
                   imgHtml(w) +
+                  '<div class="sessionPromptMeaning">' + escapeHtml(w.meaning || '') + '</div>' +
                   '<div id="optionsContainer"></div></div>';
                 var container = document.getElementById('optionsContainer');
                 step.options.forEach(function(opt) {
@@ -325,8 +550,14 @@ require_once __DIR__ . '/includes/header.php';
                   btn.textContent = opt;
                   btn.onclick = function() {
                     if (answered) return;
-                    btn.classList.add(opt === w.word ? 'sessionOption--correct' : 'sessionOption--wrong');
-                    container.querySelectorAll('.sessionOption').forEach(function(b) { b.disabled = true; });
+                    step.attemptCount = (step.attemptCount || 0) + 1;
+                    step.responses = step.responses || [];
+                    step.responses.push({
+                      responseText: opt,
+                      isCorrect: opt === w.word,
+                      answeredAt: new Date().toISOString().slice(0, 19).replace('T', ' ')
+                    });
+                    lockOptionsAndRevealAnswer(container, btn, opt, w.word);
                     showResult(opt === w.word, w.word, w.meaning);
                   };
                   container.appendChild(btn);
@@ -335,12 +566,14 @@ require_once __DIR__ . '/includes/header.php';
               }
 
               if (step.type === 'audio') {
+                step.promptData = { audio: true };
                 contentEl.innerHTML =
                   '<div class="sessionCard">' +
                   '<div class="sessionCard__label">Listen and choose the word</div>' +
+                  '<div class="sessionAudioHint" id="audioStatus">Play the stored pronunciation and choose the matching word.</div>' +
                   '<button class="primary" type="button" id="btnPlay" style="margin-bottom:14px">Play again</button>' +
                   '<div id="optionsContainer"></div></div>';
-                document.getElementById('btnPlay').onclick = function() { speak(w.word); };
+                document.getElementById('btnPlay').onclick = function() { playAudioForWord(w, document.getElementById('audioStatus')); };
                 var container = document.getElementById('optionsContainer');
                 step.options.forEach(function(opt) {
                   var btn = document.createElement('button');
@@ -349,13 +582,19 @@ require_once __DIR__ . '/includes/header.php';
                   btn.textContent = opt;
                   btn.onclick = function() {
                     if (answered) return;
-                    btn.classList.add(opt === w.word ? 'sessionOption--correct' : 'sessionOption--wrong');
-                    container.querySelectorAll('.sessionOption').forEach(function(b) { b.disabled = true; });
+                    step.attemptCount = (step.attemptCount || 0) + 1;
+                    step.responses = step.responses || [];
+                    step.responses.push({
+                      responseText: opt,
+                      isCorrect: opt === w.word,
+                      answeredAt: new Date().toISOString().slice(0, 19).replace('T', ' ')
+                    });
+                    lockOptionsAndRevealAnswer(container, btn, opt, w.word);
                     showResult(opt === w.word, w.word, w.meaning);
                   };
                   container.appendChild(btn);
                 });
-                setTimeout(function() { speak(w.word); }, 300);
+                setTimeout(function() { playAudioForWord(w, document.getElementById('audioStatus')); }, 300);
                 return;
               }
 
@@ -368,10 +607,12 @@ require_once __DIR__ . '/includes/header.php';
                 var expectedMissingLower = parts.expectedMissingLower;
 
                 if (gapLen <= 0) {
+                  step.promptData = { meaning_en: w.meaning || '', masked_word: expectedDisplay };
                   // Fallback for very short words (no real "blank" in this logic).
                   contentEl.innerHTML =
                     '<div class="sessionCard">' +
-                    '<div class="sessionCard__label">Fill in the missing letters</div>' +
+                    '<div class="sessionCard__label">Use the English meaning to complete the word</div>' +
+                    '<div class="sessionPromptMeaning">' + escapeHtml(w.meaning || '') + '</div>' +
                     '<div class="sessionFillRow">' + expectedDisplay + '</div>' +
                     '<input type="text" class="sessionFillInput" id="fillInput" placeholder="Type the word" maxlength="20" style="letter-spacing:.05em">' +
                     '<button class="primary" type="button" id="btnSubmitFill" style="margin-top:14px">Check</button></div>';
@@ -384,6 +625,13 @@ require_once __DIR__ . '/includes/header.php';
                     if (answered) return;
                     var ans = (fillInput.value || "").trim().toLowerCase();
                     var ok = ans === expectedDisplay.toLowerCase();
+                    step.attemptCount = (step.attemptCount || 0) + 1;
+                    step.responses = step.responses || [];
+                    step.responses.push({
+                      responseText: ans,
+                      isCorrect: ok,
+                      answeredAt: new Date().toISOString().slice(0, 19).replace('T', ' ')
+                    });
                     fillInput.disabled = true;
                     btnSubmit.disabled = true;
                     showResult(ok, w.word, w.meaning);
@@ -428,7 +676,8 @@ require_once __DIR__ . '/includes/header.php';
 
                 contentEl.innerHTML =
                   '<div class="sessionCard">' +
-                  '<div class="sessionCard__label">Fill in the missing letters</div>' +
+                  '<div class="sessionCard__label">Use the English meaning to complete the word</div>' +
+                  '<div class="sessionPromptMeaning">' + escapeHtml(w.meaning || '') + '</div>' +
                   '<div class="sessionFillRow">' +
                     '<span class="fillPrefix">' + prefix + '</span>' +
                     '<span class="fillGap" id="fillGap"></span>' +
@@ -436,6 +685,7 @@ require_once __DIR__ . '/includes/header.php';
                   '</div>' +
                   '<input type="text" class="sessionFillInput" id="fillInput" placeholder="Type the missing letters" maxlength="' + gapLen + '" style="letter-spacing:.05em">' +
                   '<button class="primary" type="button" id="btnSubmitFill" style="margin-top:14px">Check</button></div>';
+                step.promptData = { meaning_en: w.meaning || '', masked_word: prefix + '_'.repeat(gapLen) + suffix };
 
                 var fillInput = document.getElementById("fillInput");
                 var btnSubmit = document.getElementById('btnSubmitFill');
@@ -453,6 +703,13 @@ require_once __DIR__ . '/includes/header.php';
                   var raw = (fillInput.value || "").trim().toLowerCase();
                   var typed = raw.slice(0, gapLen);
                   var ok = typed.length > 0 && typed === expectedMissingLower.slice(0, typed.length);
+                  step.attemptCount = (step.attemptCount || 0) + 1;
+                  step.responses = step.responses || [];
+                  step.responses.push({
+                    responseText: typed,
+                    isCorrect: ok,
+                    answeredAt: new Date().toISOString().slice(0, 19).replace('T', ' ')
+                  });
 
                   fillInput.disabled = true;
                   btnSubmit.disabled = true;
@@ -465,6 +722,7 @@ require_once __DIR__ . '/includes/header.php';
               if (step.type === 'sentence_fill') {
                 var sentence = safeText(w.sentence);
                 var blanked = makeSentenceBlank(sentence, w.word);
+                step.promptData = { sentence: sentence, blanked: blanked.prompt };
 
                 contentEl.innerHTML =
                   '<div class="sessionCard">' +
@@ -480,6 +738,13 @@ require_once __DIR__ . '/includes/header.php';
                   if (answered) return;
                   var ans = (input.value || '').trim().toLowerCase();
                   var ok = ans === (w.word || '').toLowerCase();
+                  step.attemptCount = (step.attemptCount || 0) + 1;
+                  step.responses = step.responses || [];
+                  step.responses.push({
+                    responseText: ans,
+                    isCorrect: ok,
+                    answeredAt: new Date().toISOString().slice(0, 19).replace('T', ' ')
+                  });
                   input.disabled = true;
                   btn.disabled = true;
                   showResult(ok, w.word, w.meaning);
@@ -491,6 +756,7 @@ require_once __DIR__ . '/includes/header.php';
               if (step.type === 'sentence_pick') {
                 var sentence = safeText(w.sentence);
                 var blanked = makeSentenceBlank(sentence, w.word);
+                step.promptData = { sentence: sentence, blanked: blanked.prompt };
                 contentEl.innerHTML =
                   '<div class="sessionCard">' +
                   '<div class="sessionCard__label">Choose the word that fits the sentence</div>' +
@@ -505,8 +771,14 @@ require_once __DIR__ . '/includes/header.php';
                   btn.textContent = opt;
                   btn.onclick = function() {
                     if (answered) return;
-                    btn.classList.add(opt === w.word ? 'sessionOption--correct' : 'sessionOption--wrong');
-                    container.querySelectorAll('.sessionOption').forEach(function(b) { b.disabled = true; });
+                    step.attemptCount = (step.attemptCount || 0) + 1;
+                    step.responses = step.responses || [];
+                    step.responses.push({
+                      responseText: opt,
+                      isCorrect: opt === w.word,
+                      answeredAt: new Date().toISOString().slice(0, 19).replace('T', ' ')
+                    });
+                    lockOptionsAndRevealAnswer(container, btn, opt, w.word);
                     showResult(opt === w.word, w.word, w.meaning);
                   };
                   container.appendChild(btn);
@@ -520,4 +792,3 @@ require_once __DIR__ . '/includes/header.php';
         </script>
 
 <?php require_once __DIR__ . '/includes/footer.php'; ?>
-
