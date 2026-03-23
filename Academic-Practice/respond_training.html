@@ -12,11 +12,12 @@
 </head>
 <body data-page="response-detail">
   <main class="module-content page-shell">
-    <button class="back-btn back-fab" data-back-target="listening.html" aria-label="Go back" title="Back" type="button">&#8592;</button>
-
     <section class="respond-layout">
       <article class="video-panel respond-video-panel">
-        <h2 id="respondTitle">Video title</h2>
+        <div class="workspace-top-actions">
+          <button class="back-btn back-fab" data-back-target="listening.html" aria-label="Go back" title="Back" type="button">&#8592;</button>
+          <h2 id="respondTitle">Video title</h2>
+        </div>
         <p id="respondPersonMeta" class="person-meta-line"></p>
         <div id="respondMeta" class="detail-meta-row"></div>
         <video id="respondVideo" controls preload="metadata"></video>
@@ -32,13 +33,26 @@
       </article>
 
       <aside class="note-panel respond-record-panel">
-        <h3>Your Response</h3>
+        <div class="note-panel-head respond-panel-head">
+          <h3>Your Response</h3>
+          <div class="note-panel-head-actions">
+            <button class="btn-small note-share-btn" id="respondShareBtn" type="button">Share</button>
+          </div>
+        </div>
         <p class="respond-hint">Record your answer and replay it to self-check fluency and clarity.</p>
-        <div class="respond-actions">
-          <button class="btn-small btn-primary-small" id="respondRecordBtn" type="button">Start Recording</button>
+        <div class="respond-speaking-wrap">
+          <button class="respond-speaking-btn" id="respondRecordBtn" type="button">SPEAKING</button>
         </div>
         <p id="respondRecordStatus" class="recording-status">Ready to record.</p>
         <audio id="respondPlayback" class="respond-audio" controls></audio>
+        <div class="respond-save-row">
+          <button class="btn-small btn-primary-small" id="respondSaveBtn" type="button">Save your answer</button>
+          <span class="note-record-error hidden" id="respondSaveError">no recording yet</span>
+        </div>
+        <div class="note-record-feedback hidden" id="respondSaveFeedback">
+          <strong>Saved to your study record</strong>
+          <span>You can still make multiple attempts and save</span>
+        </div>
       </aside>
     </section>
   </main>

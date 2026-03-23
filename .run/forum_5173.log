@@ -3,23 +3,296 @@
 > vite --host 127.0.0.1 --port 5173
 
 
-  VITE v5.4.21  ready in 188 ms
+  [32m[1mVITE[22m v5.4.21[39m  [2mready in [0m[1m624[22m[2m[0m ms[22m
 
-  ➜  Local:   http://127.0.0.1:5173/
-11:14:57 PM [vite] hmr update /src/components/Header.jsx
-11:15:02 PM [vite] hmr update /src/pages/ForumHome.jsx
-11:15:11 PM [vite] hmr update /src/index.css
-11:16:32 PM [vite] hmr update /src/components/Header.jsx
-11:16:46 PM [vite] hmr update /src/index.css
-11:18:52 PM [vite] hmr update /src/components/Header.jsx
-11:33:20 PM [vite] hmr update /src/pages/ForumHome.jsx, /src/pages/PostDetail.jsx
-11:33:28 PM [vite] hmr update /src/pages/PostDetail.jsx
-11:33:52 PM [vite] hmr update /src/pages/PostDetail.css
-11:36:41 PM [vite] hmr update /src/pages/PostDetail.css
-11:45:59 PM [vite] hmr update /src/pages/PostDetail.css
-11:48:16 PM [vite] hmr update /src/pages/ForumHome.jsx, /src/pages/PostDetail.jsx
-11:48:23 PM [vite] hmr update /src/pages/PostDetail.css
-11:58:52 PM [vite] hmr update /src/pages/ForumHome.jsx, /src/pages/PostDetail.jsx
-11:59:01 PM [vite] hmr update /src/pages/PostDetail.jsx
-12:27:43 AM [vite] hmr update /src/components/Header.jsx
-12:27:55 AM [vite] hmr update /src/index.css
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://127.0.0.1:[1m5173[22m/[39m
+[2m01:45:12[22m [31m[1m[vite][22m[39m Pre-transform error: [BABEL] C:\Users\123\Desktop\Deadline-Disco\forum-project\src\main.jsx: Cannot find module 'js-tokens'
+Require stack:
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\code-frame\lib\index.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\parse.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\string.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\builder.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\index.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\core\lib\index.js
+[2m01:47:21[22m [31m[1m[vite][22m[39m Pre-transform error: [BABEL] C:\Users\123\Desktop\Deadline-Disco\forum-project\src\main.jsx: Cannot find module 'js-tokens'
+Require stack:
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\code-frame\lib\index.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\parse.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\string.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\builder.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\index.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\core\lib\index.js
+[2m01:48:08[22m [31m[1m[vite][22m[39m Pre-transform error: [BABEL] C:\Users\123\Desktop\Deadline-Disco\forum-project\src\main.jsx: Cannot find module 'js-tokens'
+Require stack:
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\code-frame\lib\index.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\parse.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\string.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\builder.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\index.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\core\lib\index.js
+[2m01:48:08[22m [31m[1m[vite][22m[39m [31mInternal server error: [BABEL] C:\Users\123\Desktop\Deadline-Disco\forum-project\src\main.jsx: Cannot find module 'js-tokens'
+Require stack:
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\code-frame\lib\index.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\parse.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\string.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\builder.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\index.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\core\lib\index.js[39m
+  Plugin: [35mvite:react-babel[39m
+  File: [36mC:/Users/123/Desktop/Deadline-Disco/forum-project/src/main.jsx[39m
+      at Module._resolveFilename (node:internal/modules/cjs/loader:1134:15)
+      at Module._load (node:internal/modules/cjs/loader:975:27)
+      at Module.require (node:internal/modules/cjs/loader:1225:19)
+      at require (node:internal/modules/helpers:177:18)
+      at Object.<anonymous> (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\code-frame\lib\index.js:6:16)
+      at Module._compile (node:internal/modules/cjs/loader:1356:14)
+      at Module._extensions..js (node:internal/modules/cjs/loader:1414:10)
+      at Module.load (node:internal/modules/cjs/loader:1197:32)
+      at Module._load (node:internal/modules/cjs/loader:1013:12)
+      at Module.require (node:internal/modules/cjs/loader:1225:19)
+      at require (node:internal/modules/helpers:177:18)
+      at Object.<anonymous> (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\parse.js:9:18)
+      at Module._compile (node:internal/modules/cjs/loader:1356:14)
+      at Module._extensions..js (node:internal/modules/cjs/loader:1414:10)
+      at Module.load (node:internal/modules/cjs/loader:1197:32)
+      at Module._load (node:internal/modules/cjs/loader:1013:12)
+      at Module.require (node:internal/modules/cjs/loader:1225:19)
+      at require (node:internal/modules/helpers:177:18)
+      at Object.<anonymous> (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\string.js:8:14)
+      at Module._compile (node:internal/modules/cjs/loader:1356:14)
+      at Module._extensions..js (node:internal/modules/cjs/loader:1414:10)
+      at Module.load (node:internal/modules/cjs/loader:1197:32)
+      at Module._load (node:internal/modules/cjs/loader:1013:12)
+      at Module.require (node:internal/modules/cjs/loader:1225:19)
+      at require (node:internal/modules/helpers:177:18)
+      at Object.<anonymous> (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\builder.js:8:15)
+      at Module._compile (node:internal/modules/cjs/loader:1356:14)
+      at Module._extensions..js (node:internal/modules/cjs/loader:1414:10)
+      at Module.load (node:internal/modules/cjs/loader:1197:32)
+      at Module._load (node:internal/modules/cjs/loader:1013:12)
+      at Module.require (node:internal/modules/cjs/loader:1225:19)
+      at require (node:internal/modules/helpers:177:18)
+      at Object.<anonymous> (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\index.js:8:16)
+      at Module._compile (node:internal/modules/cjs/loader:1356:14)
+      at Module._extensions..js (node:internal/modules/cjs/loader:1414:10)
+      at Module.load (node:internal/modules/cjs/loader:1197:32)
+      at Module._load (node:internal/modules/cjs/loader:1013:12)
+      at Module.require (node:internal/modules/cjs/loader:1225:19)
+      at require (node:internal/modules/helpers:177:18)
+      at _template (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\core\lib\index.js:203:16)
+      at Object.get [as template] (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\core\lib\index.js:101:12)
+      at Function.assign (<anonymous>)
+      at C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\core\lib\config\full.js:178:24
+      at Generator.next (<anonymous>)
+      at Function.<anonymous> (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\core\lib\gensync-utils\async.js:21:3)
+      at Generator.next (<anonymous>)
+      at step (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\gensync\index.js:261:32)
+      at evaluateAsync (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\gensync\index.js:291:5)
+      at Function.errback (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\gensync\index.js:113:7)
+      at errback (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\core\lib\gensync-utils\async.js:65:18)
+[2m01:48:12[22m [31m[1m[vite][22m[39m Pre-transform error: [BABEL] C:\Users\123\Desktop\Deadline-Disco\forum-project\src\main.jsx: Cannot find module 'js-tokens'
+Require stack:
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\code-frame\lib\index.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\parse.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\string.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\builder.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\index.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\core\lib\index.js
+[2m01:48:12[22m [31m[1m[vite][22m[39m [31mInternal server error: [BABEL] C:\Users\123\Desktop\Deadline-Disco\forum-project\src\main.jsx: Cannot find module 'js-tokens'
+Require stack:
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\code-frame\lib\index.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\parse.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\string.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\builder.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\index.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\core\lib\index.js[39m
+  Plugin: [35mvite:react-babel[39m
+  File: [36mC:/Users/123/Desktop/Deadline-Disco/forum-project/src/main.jsx[39m
+      at Module._resolveFilename (node:internal/modules/cjs/loader:1134:15)
+      at Module._load (node:internal/modules/cjs/loader:975:27)
+      at Module.require (node:internal/modules/cjs/loader:1225:19)
+      at require (node:internal/modules/helpers:177:18)
+      at Object.<anonymous> (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\code-frame\lib\index.js:6:16)
+      at Module._compile (node:internal/modules/cjs/loader:1356:14)
+      at Module._extensions..js (node:internal/modules/cjs/loader:1414:10)
+      at Module.load (node:internal/modules/cjs/loader:1197:32)
+      at Module._load (node:internal/modules/cjs/loader:1013:12)
+      at Module.require (node:internal/modules/cjs/loader:1225:19)
+      at require (node:internal/modules/helpers:177:18)
+      at Object.<anonymous> (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\parse.js:9:18)
+      at Module._compile (node:internal/modules/cjs/loader:1356:14)
+      at Module._extensions..js (node:internal/modules/cjs/loader:1414:10)
+      at Module.load (node:internal/modules/cjs/loader:1197:32)
+      at Module._load (node:internal/modules/cjs/loader:1013:12)
+      at Module.require (node:internal/modules/cjs/loader:1225:19)
+      at require (node:internal/modules/helpers:177:18)
+      at Object.<anonymous> (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\string.js:8:14)
+      at Module._compile (node:internal/modules/cjs/loader:1356:14)
+      at Module._extensions..js (node:internal/modules/cjs/loader:1414:10)
+      at Module.load (node:internal/modules/cjs/loader:1197:32)
+      at Module._load (node:internal/modules/cjs/loader:1013:12)
+      at Module.require (node:internal/modules/cjs/loader:1225:19)
+      at require (node:internal/modules/helpers:177:18)
+      at Object.<anonymous> (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\builder.js:8:15)
+      at Module._compile (node:internal/modules/cjs/loader:1356:14)
+      at Module._extensions..js (node:internal/modules/cjs/loader:1414:10)
+      at Module.load (node:internal/modules/cjs/loader:1197:32)
+      at Module._load (node:internal/modules/cjs/loader:1013:12)
+      at Module.require (node:internal/modules/cjs/loader:1225:19)
+      at require (node:internal/modules/helpers:177:18)
+      at Object.<anonymous> (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\index.js:8:16)
+      at Module._compile (node:internal/modules/cjs/loader:1356:14)
+      at Module._extensions..js (node:internal/modules/cjs/loader:1414:10)
+      at Module.load (node:internal/modules/cjs/loader:1197:32)
+      at Module._load (node:internal/modules/cjs/loader:1013:12)
+      at Module.require (node:internal/modules/cjs/loader:1225:19)
+      at require (node:internal/modules/helpers:177:18)
+      at _template (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\core\lib\index.js:203:16)
+      at Object.get [as template] (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\core\lib\index.js:101:12)
+      at Function.assign (<anonymous>)
+      at C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\core\lib\config\full.js:178:24
+      at Generator.next (<anonymous>)
+      at Function.<anonymous> (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\core\lib\gensync-utils\async.js:21:3)
+      at Generator.next (<anonymous>)
+      at step (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\gensync\index.js:261:32)
+      at evaluateAsync (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\gensync\index.js:291:5)
+      at Function.errback (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\gensync\index.js:113:7)
+      at errback (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\core\lib\gensync-utils\async.js:65:18)
+[2m01:51:12[22m [31m[1m[vite][22m[39m Pre-transform error: [BABEL] C:\Users\123\Desktop\Deadline-Disco\forum-project\src\main.jsx: Cannot find module 'js-tokens'
+Require stack:
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\code-frame\lib\index.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\parse.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\string.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\builder.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\index.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\core\lib\index.js
+[2m01:51:12[22m [31m[1m[vite][22m[39m [31mInternal server error: [BABEL] C:\Users\123\Desktop\Deadline-Disco\forum-project\src\main.jsx: Cannot find module 'js-tokens'
+Require stack:
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\code-frame\lib\index.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\parse.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\string.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\builder.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\index.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\core\lib\index.js[39m
+  Plugin: [35mvite:react-babel[39m
+  File: [36mC:/Users/123/Desktop/Deadline-Disco/forum-project/src/main.jsx[39m
+      at Module._resolveFilename (node:internal/modules/cjs/loader:1134:15)
+      at Module._load (node:internal/modules/cjs/loader:975:27)
+      at Module.require (node:internal/modules/cjs/loader:1225:19)
+      at require (node:internal/modules/helpers:177:18)
+      at Object.<anonymous> (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\code-frame\lib\index.js:6:16)
+      at Module._compile (node:internal/modules/cjs/loader:1356:14)
+      at Module._extensions..js (node:internal/modules/cjs/loader:1414:10)
+      at Module.load (node:internal/modules/cjs/loader:1197:32)
+      at Module._load (node:internal/modules/cjs/loader:1013:12)
+      at Module.require (node:internal/modules/cjs/loader:1225:19)
+      at require (node:internal/modules/helpers:177:18)
+      at Object.<anonymous> (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\parse.js:9:18)
+      at Module._compile (node:internal/modules/cjs/loader:1356:14)
+      at Module._extensions..js (node:internal/modules/cjs/loader:1414:10)
+      at Module.load (node:internal/modules/cjs/loader:1197:32)
+      at Module._load (node:internal/modules/cjs/loader:1013:12)
+      at Module.require (node:internal/modules/cjs/loader:1225:19)
+      at require (node:internal/modules/helpers:177:18)
+      at Object.<anonymous> (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\string.js:8:14)
+      at Module._compile (node:internal/modules/cjs/loader:1356:14)
+      at Module._extensions..js (node:internal/modules/cjs/loader:1414:10)
+      at Module.load (node:internal/modules/cjs/loader:1197:32)
+      at Module._load (node:internal/modules/cjs/loader:1013:12)
+      at Module.require (node:internal/modules/cjs/loader:1225:19)
+      at require (node:internal/modules/helpers:177:18)
+      at Object.<anonymous> (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\builder.js:8:15)
+      at Module._compile (node:internal/modules/cjs/loader:1356:14)
+      at Module._extensions..js (node:internal/modules/cjs/loader:1414:10)
+      at Module.load (node:internal/modules/cjs/loader:1197:32)
+      at Module._load (node:internal/modules/cjs/loader:1013:12)
+      at Module.require (node:internal/modules/cjs/loader:1225:19)
+      at require (node:internal/modules/helpers:177:18)
+      at Object.<anonymous> (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\index.js:8:16)
+      at Module._compile (node:internal/modules/cjs/loader:1356:14)
+      at Module._extensions..js (node:internal/modules/cjs/loader:1414:10)
+      at Module.load (node:internal/modules/cjs/loader:1197:32)
+      at Module._load (node:internal/modules/cjs/loader:1013:12)
+      at Module.require (node:internal/modules/cjs/loader:1225:19)
+      at require (node:internal/modules/helpers:177:18)
+      at _template (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\core\lib\index.js:203:16)
+      at Object.get [as template] (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\core\lib\index.js:101:12)
+      at Function.assign (<anonymous>)
+      at C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\core\lib\config\full.js:178:24
+      at Generator.next (<anonymous>)
+      at Function.<anonymous> (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\core\lib\gensync-utils\async.js:21:3)
+      at Generator.next (<anonymous>)
+      at step (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\gensync\index.js:261:32)
+      at evaluateAsync (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\gensync\index.js:291:5)
+      at Function.errback (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\gensync\index.js:113:7)
+      at errback (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\core\lib\gensync-utils\async.js:65:18)
+[2m01:51:16[22m [31m[1m[vite][22m[39m Pre-transform error: [BABEL] C:\Users\123\Desktop\Deadline-Disco\forum-project\src\main.jsx: Cannot find module 'js-tokens'
+Require stack:
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\code-frame\lib\index.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\parse.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\string.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\builder.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\index.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\core\lib\index.js
+[2m01:51:16[22m [31m[1m[vite][22m[39m [31mInternal server error: [BABEL] C:\Users\123\Desktop\Deadline-Disco\forum-project\src\main.jsx: Cannot find module 'js-tokens'
+Require stack:
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\code-frame\lib\index.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\parse.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\string.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\builder.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\index.js
+- C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\core\lib\index.js[39m
+  Plugin: [35mvite:react-babel[39m
+  File: [36mC:/Users/123/Desktop/Deadline-Disco/forum-project/src/main.jsx[39m
+      at Module._resolveFilename (node:internal/modules/cjs/loader:1134:15)
+      at Module._load (node:internal/modules/cjs/loader:975:27)
+      at Module.require (node:internal/modules/cjs/loader:1225:19)
+      at require (node:internal/modules/helpers:177:18)
+      at Object.<anonymous> (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\code-frame\lib\index.js:6:16)
+      at Module._compile (node:internal/modules/cjs/loader:1356:14)
+      at Module._extensions..js (node:internal/modules/cjs/loader:1414:10)
+      at Module.load (node:internal/modules/cjs/loader:1197:32)
+      at Module._load (node:internal/modules/cjs/loader:1013:12)
+      at Module.require (node:internal/modules/cjs/loader:1225:19)
+      at require (node:internal/modules/helpers:177:18)
+      at Object.<anonymous> (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\parse.js:9:18)
+      at Module._compile (node:internal/modules/cjs/loader:1356:14)
+      at Module._extensions..js (node:internal/modules/cjs/loader:1414:10)
+      at Module.load (node:internal/modules/cjs/loader:1197:32)
+      at Module._load (node:internal/modules/cjs/loader:1013:12)
+      at Module.require (node:internal/modules/cjs/loader:1225:19)
+      at require (node:internal/modules/helpers:177:18)
+      at Object.<anonymous> (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\string.js:8:14)
+      at Module._compile (node:internal/modules/cjs/loader:1356:14)
+      at Module._extensions..js (node:internal/modules/cjs/loader:1414:10)
+      at Module.load (node:internal/modules/cjs/loader:1197:32)
+      at Module._load (node:internal/modules/cjs/loader:1013:12)
+      at Module.require (node:internal/modules/cjs/loader:1225:19)
+      at require (node:internal/modules/helpers:177:18)
+      at Object.<anonymous> (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\builder.js:8:15)
+      at Module._compile (node:internal/modules/cjs/loader:1356:14)
+      at Module._extensions..js (node:internal/modules/cjs/loader:1414:10)
+      at Module.load (node:internal/modules/cjs/loader:1197:32)
+      at Module._load (node:internal/modules/cjs/loader:1013:12)
+      at Module.require (node:internal/modules/cjs/loader:1225:19)
+      at require (node:internal/modules/helpers:177:18)
+      at Object.<anonymous> (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\template\lib\index.js:8:16)
+      at Module._compile (node:internal/modules/cjs/loader:1356:14)
+      at Module._extensions..js (node:internal/modules/cjs/loader:1414:10)
+      at Module.load (node:internal/modules/cjs/loader:1197:32)
+      at Module._load (node:internal/modules/cjs/loader:1013:12)
+      at Module.require (node:internal/modules/cjs/loader:1225:19)
+      at require (node:internal/modules/helpers:177:18)
+      at _template (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\core\lib\index.js:203:16)
+      at Object.get [as template] (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\core\lib\index.js:101:12)
+      at Function.assign (<anonymous>)
+      at C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\core\lib\config\full.js:178:24
+      at Generator.next (<anonymous>)
+      at Function.<anonymous> (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\core\lib\gensync-utils\async.js:21:3)
+      at Generator.next (<anonymous>)
+      at step (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\gensync\index.js:261:32)
+      at evaluateAsync (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\gensync\index.js:291:5)
+      at Function.errback (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\gensync\index.js:113:7)
+      at errback (C:\Users\123\Desktop\Deadline-Disco\forum-project\node_modules\@babel\core\lib\gensync-utils\async.js:65:18)
+
+C:\Users\123\Desktop\Deadline-Disco\forum-project>

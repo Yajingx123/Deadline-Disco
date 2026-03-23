@@ -1,5 +1,9 @@
 (function () {
   const data = window.PracticeData;
+  const LISTENING_RECORD_API = "./api/save-record.php";
+  const INTEGRATED_RECORD_API = "./api/save-integrated-record.php";
+  const FORUM_COMPOSE_URL = "http://127.0.0.1:5173/?compose=1";
+  const FORUM_PREFILL_WINDOW_NAME_KEY = "__acadbeat_forum_prefill__";
   if (!data) {
     return;
   }
@@ -20,6 +24,21 @@
   function getParam(name, fallback) {
     const params = new URLSearchParams(window.location.search);
     return params.get(name) || fallback;
+  }
+
+  function buildAbsoluteProjectUrl(pathWithQuery) {
+    return new URL(pathWithQuery, window.location.origin + "/").toString();
+  }
+
+  function openForumWithDraft(draft) {
+    try {
+      const bridgePayload = {};
+      bridgePayload[FORUM_PREFILL_WINDOW_NAME_KEY] = draft || {};
+      window.name = JSON.stringify(bridgePayload);
+    } catch (_err) {
+      window.name = "";
+    }
+    window.location.href = FORUM_COMPOSE_URL;
   }
 
   function goBack(target) {
@@ -921,20 +940,26 @@
     const noteMainContentEl = qs("#noteMainContent");
     const noteKeyWordEl = qs("#noteKeyWord");
     const notePersonalViewEl = qs("#notePersonalView");
+    const noteMainContentDisplayEl = qs("#noteMainContentDisplay");
+    const noteKeyWordDisplayEl = qs("#noteKeyWordDisplay");
+    const notePersonalViewDisplayEl = qs("#notePersonalViewDisplay");
+    const recordAnswerBtn = qs("#recordAnswerBtn");
+    const recordAnswerError = qs("#recordAnswerError");
+    const recordAnswerFeedback = qs("#recordAnswerFeedback");
 
     if (!titleEl || !detailPersonMetaEl || !metaEl || !videoEl || !studyWorkspaceEl || !noteShareBtn || !noteDockToggleBtn || !noteMainContentEl || !noteKeyWordEl || !notePersonalViewEl) {
       return;
     }
 
     titleEl.textContent = video.title;
-    detailPersonMetaEl.textContent = getPersonMetaText(video);
+    detailPersonMetaEl.innerHTML = getPersonMetaHtml(video);
     metaEl.innerHTML =
       "<span class='detail-meta-pill'>" + modeInfo.label + "</span>" +
       "<span class='detail-meta-pill'>" + video.type + "</span>" +
       "<span class='detail-meta-pill'>" + video.difficulty + "</span>" +
       "<span class='detail-meta-pill'>" + (video.duration || "N/A") + "</span>" +
       "<span class='detail-meta-pill'>" + (video.source || "N/A") + "</span>" +
-      "<span class='detail-meta-pill'>" + getCountryFlag(video.country) + " " + video.country + "</span>";
+      "<span class='detail-meta-pill detail-meta-pill--country'>" + getCountryInlineHtml(video.country) + "</span>";
     videoEl.src = getVideoSource(video);
     applySubtitleTrack(videoEl, video);
     initDetailResourceTabs(transcriptToggleBtn, sampleNotesToggleBtn, transcriptPanelEl, detailResourceTitleEl, transcriptContentEl, video);
@@ -958,12 +983,70 @@
     noteKeyWordEl.value = noteDraft.keyWord || "";
     notePersonalViewEl.value = noteDraft.personalView || "";
 
-    function persistNoteDraft() {
-      localStorage.setItem(noteStorageKey, JSON.stringify({
+    function noteValues() {
+      return {
         mainContent: noteMainContentEl.value.trim(),
         keyWord: noteKeyWordEl.value.trim(),
         personalView: notePersonalViewEl.value.trim()
-      }));
+      };
+    }
+
+    function persistNoteDraft() {
+      localStorage.setItem(noteStorageKey, JSON.stringify(noteValues()));
+    }
+
+    function buildSharedAnswerText(values) {
+      const sections = [];
+      if (values.mainContent) {
+        sections.push("Main Content: " + values.mainContent);
+      }
+      if (values.keyWord) {
+        sections.push("Key Word: " + values.keyWord);
+      }
+      if (values.personalView) {
+        sections.push("Personal View: " + values.personalView);
+      }
+      return sections.join("\n");
+    }
+
+    function setEditingMode() {
+      noteMainContentEl.value = "";
+      noteKeyWordEl.value = "";
+      notePersonalViewEl.value = "";
+      noteMainContentEl.classList.remove("hidden");
+      noteKeyWordEl.classList.remove("hidden");
+      notePersonalViewEl.classList.remove("hidden");
+      if (noteMainContentDisplayEl) noteMainContentDisplayEl.classList.add("hidden");
+      if (noteKeyWordDisplayEl) noteKeyWordDisplayEl.classList.add("hidden");
+      if (notePersonalViewDisplayEl) notePersonalViewDisplayEl.classList.add("hidden");
+      if (recordAnswerError) recordAnswerError.classList.add("hidden");
+      if (recordAnswerFeedback) recordAnswerFeedback.classList.add("hidden");
+      recordAnswerBtn.textContent = "Record your answer";
+      persistNoteDraft();
+    }
+
+    function setSavedMode(values) {
+      noteMainContentEl.classList.add("hidden");
+      noteKeyWordEl.classList.add("hidden");
+      notePersonalViewEl.classList.add("hidden");
+      if (noteMainContentDisplayEl) {
+        noteMainContentDisplayEl.textContent = values.mainContent;
+        noteMainContentDisplayEl.classList.remove("hidden");
+      }
+      if (noteKeyWordDisplayEl) {
+        noteKeyWordDisplayEl.textContent = values.keyWord;
+        noteKeyWordDisplayEl.classList.remove("hidden");
+      }
+      if (notePersonalViewDisplayEl) {
+        notePersonalViewDisplayEl.textContent = values.personalView;
+        notePersonalViewDisplayEl.classList.remove("hidden");
+      }
+      if (recordAnswerError) recordAnswerError.classList.add("hidden");
+      if (recordAnswerFeedback) {
+        recordAnswerFeedback.innerHTML = "<strong>Saved to your study record</strong><span>You can still make multiple attempts and save</span>";
+        recordAnswerFeedback.classList.remove("hidden");
+      }
+      recordAnswerBtn.textContent = "Saved. Start second attempt";
     }
 
     noteMainContentEl.addEventListener("input", persistNoteDraft);
@@ -972,8 +1055,84 @@
 
     noteShareBtn.addEventListener("click", function () {
       persistNoteDraft();
-      // Placeholder for future route/jump behavior.
+      const values = noteValues();
+      if (!values.mainContent && !values.keyWord && !values.personalView) {
+        if (recordAnswerFeedback) recordAnswerFeedback.classList.add("hidden");
+        if (recordAnswerError) recordAnswerError.classList.remove("hidden");
+        return;
+      }
+
+      if (recordAnswerError) recordAnswerError.classList.add("hidden");
+
+      const trainingPath = "Academic-Practice/note_training.html?mode=" + encodeURIComponent(mode) + "&videoId=" + encodeURIComponent(video.id);
+      const trainingUrl = buildAbsoluteProjectUrl(trainingPath);
+      const answerText = buildSharedAnswerText(values);
+      const prefillContent = [
+        "Related training: [" + (video.title || "Open training") + "](" + trainingUrl + ")",
+        "",
+        "My answer: ",
+        answerText
+      ].join("\n");
+
+      openForumWithDraft({
+        title: "",
+        content: prefillContent
+      });
     });
+
+    if (recordAnswerBtn && recordAnswerFeedback) {
+      recordAnswerBtn.addEventListener("click", async function () {
+        if (recordAnswerBtn.textContent === "Saved. Start second attempt") {
+          setEditingMode();
+          return;
+        }
+
+        persistNoteDraft();
+        const values = noteValues();
+        if (!values.mainContent && !values.keyWord && !values.personalView) {
+          if (recordAnswerError) recordAnswerError.classList.remove("hidden");
+          if (recordAnswerFeedback) recordAnswerFeedback.classList.add("hidden");
+          return;
+        }
+        if (recordAnswerError) recordAnswerError.classList.add("hidden");
+        recordAnswerBtn.disabled = true;
+        recordAnswerBtn.textContent = "Saving...";
+        try {
+          const response = await fetch(LISTENING_RECORD_API, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({
+              videoId: video.id,
+              mode: mode,
+              title: video.title,
+              personMeta: getPersonMetaText(video),
+              difficulty: video.difficulty || "",
+              duration: video.duration || "",
+              source: video.source || "",
+              country: video.country || "",
+              mainContent: values.mainContent,
+              keyWord: values.keyWord,
+              personalView: values.personalView
+            })
+          });
+          const payload = await response.json().catch(function () {
+            return { ok: false, message: "Invalid response." };
+          });
+          if (!response.ok || !payload.ok) {
+            throw new Error(payload.message || "Unable to save this record.");
+          }
+
+          setSavedMode(values);
+        } catch (error) {
+          recordAnswerFeedback.innerHTML = "<strong>" + escapeHtml((error && error.message) || "Unable to save this record.") + "</strong><span>Please log in first, then try again.</span>";
+          recordAnswerFeedback.classList.remove("hidden");
+          recordAnswerBtn.textContent = "Try Again";
+        } finally {
+          recordAnswerBtn.disabled = false;
+        }
+      });
+    }
 
     function refreshNoteDockBtnText() {
       const isCollapsed = studyWorkspaceEl.classList.contains("note-dock-collapsed");
@@ -1036,28 +1195,42 @@
     const recordBtn = qs("#respondRecordBtn");
     const recordStatus = qs("#respondRecordStatus");
     const playbackEl = qs("#respondPlayback");
+    const respondSaveBtn = qs("#respondSaveBtn");
+    const respondShareBtn = qs("#respondShareBtn");
+    const respondSaveError = qs("#respondSaveError");
+    const respondSaveFeedback = qs("#respondSaveFeedback");
 
     if (!titleEl || !personMetaEl || !metaEl || !transcriptToggleBtn || !transcriptPanelEl || !transcriptContentEl || !videoEl || !recordBtn || !recordStatus || !playbackEl) {
       return;
     }
 
     titleEl.textContent = video.title;
-    personMetaEl.textContent = getPersonMetaText(video);
+    personMetaEl.innerHTML = getPersonMetaHtml(video);
     metaEl.innerHTML =
       "<span class='detail-meta-pill'>" + modeInfo.label + "</span>" +
       "<span class='detail-meta-pill'>" + video.type + "</span>" +
       "<span class='detail-meta-pill'>" + video.difficulty + "</span>" +
       "<span class='detail-meta-pill'>" + (video.duration || "N/A") + "</span>" +
       "<span class='detail-meta-pill'>" + (video.source || "N/A") + "</span>" +
-      "<span class='detail-meta-pill'>" + getCountryFlag(video.country) + " " + video.country + "</span>";
+      "<span class='detail-meta-pill detail-meta-pill--country'>" + getCountryInlineHtml(video.country) + "</span>";
     videoEl.src = getVideoSource(video);
     applySubtitleTrack(videoEl, video);
     initDetailResourceTabs(transcriptToggleBtn, null, transcriptPanelEl, respondResourceTitleEl, transcriptContentEl, video);
 
-    const responseStorageKey = "practice-response-audio-" + video.id;
     let recorder = null;
     let chunks = [];
     let currentStream = null;
+    let currentAudioData = "";
+    let currentAudioMime = "audio/webm";
+
+    function getAudioExtensionFromMime(mimeType) {
+      const normalized = String(mimeType || "").toLowerCase();
+      if (normalized.indexOf("ogg") !== -1) return "ogg";
+      if (normalized.indexOf("wav") !== -1) return "wav";
+      if (normalized.indexOf("mp4") !== -1 || normalized.indexOf("m4a") !== -1) return "m4a";
+      if (normalized.indexOf("mpeg") !== -1 || normalized.indexOf("mp3") !== -1) return "mp3";
+      return "webm";
+    }
 
     function setPlaybackSource(src) {
       playbackEl.src = src || "";
@@ -1067,10 +1240,116 @@
       }
     }
 
-    const savedAudio = localStorage.getItem(responseStorageKey);
-    if (savedAudio) {
-      setPlaybackSource(savedAudio);
-      recordStatus.textContent = "Loaded your last recording.";
+    function setRespondIdleState() {
+      recordBtn.classList.remove("is-recording");
+      recordBtn.textContent = currentAudioData ? "Re-record" : "SPEAKING";
+    }
+
+    function buildRespondShareContent() {
+      const trainingPath = "Academic-Practice/respond_training.html?mode=" + encodeURIComponent(mode) + "&videoId=" + encodeURIComponent(video.id);
+      const trainingUrl = buildAbsoluteProjectUrl(trainingPath);
+      const audioFileName = "response-" + video.id + "." + getAudioExtensionFromMime(currentAudioMime);
+      return [
+        "Related training: [" + (video.title || "Open training") + "](" + trainingUrl + ")",
+        "",
+        "My answer: ",
+        "![audio:" + audioFileName + "](" + currentAudioData + ")"
+      ].join("\n");
+    }
+
+    function resetRespondAttempt() {
+      currentAudioData = "";
+      currentAudioMime = "audio/webm";
+      chunks = [];
+      if (recorder && recorder.state === "recording") {
+        try {
+          recorder.stop();
+        } catch (_err) {}
+      }
+      recorder = null;
+      if (currentStream) {
+        currentStream.getTracks().forEach(function (track) { track.stop(); });
+        currentStream = null;
+      }
+      setPlaybackSource("");
+      recordStatus.textContent = "Ready to record.";
+      if (respondSaveError) respondSaveError.classList.add("hidden");
+      if (respondSaveFeedback) respondSaveFeedback.classList.add("hidden");
+      if (respondSaveBtn) {
+        respondSaveBtn.disabled = false;
+        respondSaveBtn.textContent = "Save your answer";
+      }
+      setRespondIdleState();
+    }
+
+    setRespondIdleState();
+
+    if (respondSaveBtn && respondSaveFeedback && respondSaveError) {
+      respondSaveBtn.addEventListener("click", async function () {
+        if (respondSaveBtn.textContent === "Saved. Start second attempt") {
+          resetRespondAttempt();
+          return;
+        }
+        if (!currentAudioData) {
+          respondSaveError.classList.remove("hidden");
+          respondSaveFeedback.classList.add("hidden");
+          return;
+        }
+        respondSaveError.classList.add("hidden");
+        respondSaveBtn.disabled = true;
+        respondSaveBtn.textContent = "Saving...";
+        try {
+          const response = await fetch(INTEGRATED_RECORD_API, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({
+              videoId: video.id,
+              mode: mode,
+              title: video.title,
+              personMeta: getPersonMetaText(video),
+              difficulty: video.difficulty || "",
+              duration: video.duration || "",
+              source: video.source || "",
+              country: video.country || "",
+              audioData: currentAudioData,
+              audioMime: currentAudioMime
+            })
+          });
+          const payload = await response.json().catch(function () {
+            return { ok: false, message: "Invalid response." };
+          });
+          if (!response.ok || !payload.ok) {
+            throw new Error(payload.message || "Unable to save this record.");
+          }
+          respondSaveFeedback.innerHTML = "<strong>Saved to your study record</strong><span>You can still make multiple attempts and save</span>";
+          respondSaveFeedback.classList.remove("hidden");
+          respondSaveBtn.textContent = "Saved. Start second attempt";
+        } catch (error) {
+          respondSaveFeedback.innerHTML = "<strong>" + escapeHtml((error && error.message) || "Unable to save this record.") + "</strong><span>Please log in first, then try again.</span>";
+          respondSaveFeedback.classList.remove("hidden");
+          respondSaveBtn.textContent = "Try Again";
+        } finally {
+          respondSaveBtn.disabled = false;
+        }
+      });
+    }
+
+    if (respondShareBtn && respondSaveError && respondSaveFeedback) {
+      respondShareBtn.addEventListener("click", function () {
+        if (!currentAudioData) {
+          respondSaveError.textContent = "no recording yet";
+          respondSaveError.classList.remove("hidden");
+          respondSaveFeedback.classList.add("hidden");
+          return;
+        }
+
+        respondSaveError.classList.add("hidden");
+        openForumWithDraft({
+          title: "",
+          content: buildRespondShareContent()
+        });
+      });
     }
 
     recordBtn.addEventListener("click", async function () {
@@ -1085,9 +1364,11 @@
       }
 
       try {
+        if (respondSaveError) respondSaveError.classList.add("hidden");
         currentStream = await navigator.mediaDevices.getUserMedia({ audio: true });
         chunks = [];
         recorder = new MediaRecorder(currentStream);
+        currentAudioMime = recorder.mimeType || "audio/webm";
 
         recorder.ondataavailable = function (event) {
           if (event.data.size > 0) {
@@ -1096,17 +1377,17 @@
         };
 
         recorder.onstop = function () {
-          const blob = new Blob(chunks, { type: "audio/webm" });
+          const blob = new Blob(chunks, { type: currentAudioMime });
           const reader = new FileReader();
           reader.onloadend = function () {
-            const base64Audio = String(reader.result || "");
-            localStorage.setItem(responseStorageKey, base64Audio);
-            setPlaybackSource(base64Audio);
-            recordStatus.textContent = "Recorded. You can now replay.";
+            currentAudioData = String(reader.result || "");
+            setPlaybackSource(currentAudioData);
+            recordStatus.textContent = "Recorded. You can replay or save your answer.";
+            if (respondSaveFeedback) respondSaveFeedback.classList.add("hidden");
           };
           reader.readAsDataURL(blob);
 
-          recordBtn.textContent = "Start Recording";
+          setRespondIdleState();
           if (currentStream) {
             currentStream.getTracks().forEach(function (track) { track.stop(); });
             currentStream = null;
@@ -1114,10 +1395,12 @@
         };
 
         recorder.start();
-        recordBtn.textContent = "Stop Recording";
+        recordBtn.classList.add("is-recording");
+        recordBtn.textContent = "RECORDING";
         recordStatus.textContent = "Recording...";
       } catch (_err) {
         recordStatus.textContent = "Microphone permission denied or unavailable.";
+        setRespondIdleState();
       }
     });
   }

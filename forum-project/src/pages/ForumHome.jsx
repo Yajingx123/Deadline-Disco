@@ -8,6 +8,8 @@ import PostModal from '../components/PostModal';
 import { getSummary } from '../utils/formatText';
 import { fetchLabels, fetchPosts, createPost, fetchPostDetail, incrementPostViews, createComment, deletePost, deleteComment } from '../api/forumApi';
 
+const FORUM_PREFILL_WINDOW_NAME_KEY = '__acadbeat_forum_prefill__';
+
 function normalizeComment(comment = {}) {
   return {
     ...comment,
@@ -29,6 +31,7 @@ export default function ForumHome() {
   const [sortOrder, setSortOrder] = useState('latest_reply');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [prefillDraft, setPrefillDraft] = useState(null);
 
   const loadForumData = async () => {
     setLoading(true);
@@ -63,6 +66,39 @@ export default function ForumHome() {
     loadForumData();
   }, [searchQuery, selectedTags, sortOrder]);
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const shouldCompose = params.get('compose') === '1';
+    let prefillTitle = params.get('prefillTitle') || '';
+    let prefillContent = params.get('prefillContent') || '';
+
+    if (!prefillTitle && !prefillContent) {
+      try {
+        const bridgePayload = JSON.parse(window.name || '{}');
+        const storedDraft = bridgePayload?.[FORUM_PREFILL_WINDOW_NAME_KEY] || null;
+        prefillTitle = storedDraft?.title || '';
+        prefillContent = storedDraft?.content || '';
+      } catch (_err) {
+        prefillTitle = '';
+        prefillContent = '';
+      }
+    }
+
+    if (!shouldCompose || (!prefillTitle && !prefillContent)) {
+      return;
+    }
+
+    setPrefillDraft({
+      title: prefillTitle,
+      content: prefillContent,
+    });
+    setIsModalOpen(true);
+    window.name = '';
+
+    const cleanUrl = `${window.location.pathname}${window.location.hash || ''}`;
+    window.history.replaceState({}, document.title, cleanUrl);
+  }, []);
+
   const handleCreatePost = async (newData) => {
     const data = await createPost({
       title: newData.title,
@@ -77,6 +113,7 @@ export default function ForumHome() {
   };
 
   const handleOpenPostModal = () => {
+    setPrefillDraft(null);
     setIsModalOpen(true);
   };
 
@@ -177,13 +214,17 @@ export default function ForumHome() {
       {isModalOpen && (
         <PostModal 
           isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
+          onClose={() => {
+            setIsModalOpen(false);
+            setPrefillDraft(null);
+          }}
           onSubmit={handleCreatePost}
           isReplyMode={false}
           quoteText=""
           parentTitle=""
           labelOptions={labels}
           currentUser={currentUser}
+          prefillDraft={prefillDraft}
         />
       )}
     </div>

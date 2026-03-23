@@ -12,12 +12,11 @@
 </head>
 <body data-page="video-detail">
   <main class="module-content page-shell">
-    <button class="back-btn back-fab" data-back-target="listening.html" aria-label="Go back" title="Back" type="button">&#8592;</button>
-
     <div id="studyWorkspace" class="study-workspace">
       <section class="detail-layout">
         <div class="video-panel">
           <div class="workspace-top-actions">
+            <button class="back-btn back-fab" data-back-target="listening.html" aria-label="Go back" title="Back" type="button">&#8592;</button>
             <h2 id="detailTitle">Video title</h2>
           </div>
           <p id="detailPersonMeta" class="person-meta-line"></p>
@@ -49,14 +48,27 @@
             <div class="note-field">
               <label for="noteMainContent">Main Content</label>
               <textarea id="noteMainContent" rows="6" placeholder="Summarize the main content of the video"></textarea>
+              <div class="note-field-display hidden" id="noteMainContentDisplay"></div>
             </div>
             <div class="note-field">
               <label for="noteKeyWord">Key Word</label>
               <textarea id="noteKeyWord" rows="6" placeholder="Record keywords and terms"></textarea>
+              <div class="note-field-display hidden" id="noteKeyWordDisplay"></div>
             </div>
             <div class="note-field">
               <label for="notePersonalView">Personal View</label>
               <textarea id="notePersonalView" rows="6" placeholder="Write your thoughts and opinions"></textarea>
+              <div class="note-field-display hidden" id="notePersonalViewDisplay"></div>
+            </div>
+          </div>
+          <div class="note-record-action">
+            <div class="note-record-action-row">
+              <button class="btn-small btn-primary-small" id="recordAnswerBtn" type="button">Record your answer</button>
+              <span class="note-record-error hidden" id="recordAnswerError">notes are blank</span>
+            </div>
+            <div class="note-record-feedback hidden" id="recordAnswerFeedback">
+              <strong>Saved to your study record</strong>
+              <span>You can still make multiple attempts and save</span>
             </div>
           </div>
         </aside>
