@@ -1,0 +1,437 @@
+/* PostModal.css - Ultra Compact Version */
+
+:root {
+  --pm-bg: #E4DFD8;
+  --pm-primary: #9BB7D4;
+  --pm-secondary: #3A4E6B;
+  --pm-text: #3A4E6B;
+  --pm-text-light: rgba(58, 78, 107, 0.6);
+  --pm-avatar: #9BB7D4;
+  --pm-border: rgba(58, 78, 107, 0.15);
+  --pm-card-bg: rgba(255, 255, 255, 0.4);
+  --pm-white-bg: rgba(255, 255, 255, 0.3);
+}
+
+/* 遮罩层 */
+.post-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(58, 78, 107, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: 1040;
+  animation: pm-fade-in 0.3s ease forwards;
+}
+
+/* 弹窗主体容器 —— 高度更小，宽度略宽以容纳紧凑内容 */
+.post-modal-container {
+  position: fixed;
+  bottom: 0;
+  left: 20%;   
+  right: 20%;  
+  height: 45vh;       /* 稍微增加高度比例以适应紧凑排版，但实际内容更密 */
+  max-height: 450px;  /* 最大高度限制 */
+  background-color: var(--pm-bg);
+  border-top-left-radius: 12px;  
+  border-top-right-radius: 12px;
+  box-shadow: 0 -4px 20px rgba(58, 78, 107, 0.15);
+  z-index: 1050;
+  display: flex;
+  flex-direction: column;
+  transform: translateY(100%);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: pm-slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* 顶部导航栏 —— 极简 */
+.post-modal-header {
+  padding: 8px 16px;  /* 👈 大幅减小 padding */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--pm-border);
+  flex-shrink: 0;
+  background-color: var(--pm-bg);
+}
+
+.post-modal-title-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;  /* 👈 间隙减小 */
+}
+
+.post-modal-cancel-btn {
+  background: none;
+  border: none;
+  color: var(--pm-secondary);
+  font-size: 12px;  /* 👈 统一小字体 */
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+  padding: 4px; /* 增加点击区域 */
+}
+
+.post-modal-cancel-btn:hover {
+  opacity: 1;
+}
+
+.post-modal-title {
+  font-size: 12px;  /* 👈 标题与正文同大 */
+  font-weight: 700;
+  margin: 0;
+  color: var(--pm-text);
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+
+/* 内容滚动区 */
+.post-modal-content-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px 16px;  /* 👈 上下左右都减小 */
+  display: flex;
+  flex-direction: column;
+}
+
+.post-modal-card {
+  background-color: var(--pm-card-bg);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--pm-border);
+  border-radius: 8px;  /* 👈 圆角更小 */
+  padding: 10px;        /* 👈 内部极紧凑 */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
+}
+
+.post-modal-input-group {
+  display: flex;
+  gap: 8px;  /* 👈 头像和输入框紧贴 */
+  margin-bottom: 8px;  /* 👈 下边距减小 */
+  align-items: center; /* 垂直居中 */
+}
+
+.post-modal-avatar {
+  width: 24px;   /* 👈 头像更小 */
+  height: 24px;
+  border-radius: 50%;
+  background-color: var(--pm-avatar);
+  color: var(--pm-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;  /* 👈 头像文字更小 */
+  font-weight: 700;
+  flex-shrink: 0;
+  font-family: 'Playfair Display', serif;
+}
+
+.post-modal-input-wrapper {
+  flex: 1;
+  min-width: 0; /* 防止溢出 */
+}
+
+.post-modal-title-input {
+  border: none;
+  border-bottom: 1px solid var(--pm-border);
+  outline: none;
+  font-size: 12px;  /* 👈 标题输入统一小字体 */
+  font-weight: 600;
+  color: var(--pm-text);
+  width: 100%;
+  background-color: transparent;
+  padding: 4px 0;   /* 👈 上下 padding 极小 */
+  margin-bottom: 4px;
+  font-family: 'Playfair Display', serif;
+  transition: border-color 0.3s;
+}
+
+.post-modal-title-input:focus {
+  border-bottom-color: var(--pm-primary);
+}
+
+.post-modal-title-input::placeholder {
+  color: var(--pm-text-light);
+  font-weight: 400;
+}
+
+/* 编辑器区域 */
+.post-modal-editor-container {
+  flex: 1;
+  border: 1px solid var(--pm-border);
+  border-radius: 4px;  /* 👈 圆角极小 */
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--pm-white-bg);
+}
+
+.post-modal-textarea {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 12px;  /* 👈 正文字体统一 */
+  resize: none;
+  color: var(--pm-text);
+  padding: 8px;     /* 👈 内部 padding 减小 */
+  background-color: transparent;
+  line-height: 1.5; /* 行高稍紧 */
+  font-family: inherit;
+  min-height: 80px; 
+}
+
+.post-modal-textarea::placeholder {
+  color: var(--pm-text-light);
+}
+
+/* 底部工具栏 */
+.post-modal-footer {
+  display: flex;
+  align-items: center;
+  padding: 6px 16px;  /* 👈 上下极窄 */
+  gap: 8px;           
+  background-color: var(--pm-bg);
+  border-top: 1px solid var(--pm-border);
+  flex-shrink: 0;
+}
+
+.post-modal-format-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;            
+  padding: 2px;        
+  border-radius: 20px;
+  background-color: var(--pm-white-bg);
+}
+
+.post-modal-format-btn {
+  background: none;
+  border: none;
+  font-size: 11px;     /* 👈 按钮字体更小 */
+  color: var(--pm-secondary);
+  cursor: pointer;
+  padding: 4px;        
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  font-weight: normal;
+  font-style: normal;
+  text-decoration: none;
+  width: 26px;         /* 👈 按钮尺寸更小 */
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.post-modal-format-btn.bold {
+  font-weight: 700;
+}
+
+.post-modal-format-btn.italic {
+  font-style: italic;
+}
+
+.post-modal-format-btn.underline {
+  text-decoration: underline;
+}
+
+.post-modal-format-btn:hover {
+  color: var(--pm-bg);
+  background-color: var(--pm-primary);
+  transform: translateY(-1px);
+}
+
+.post-modal-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 6px;           
+}
+
+.post-modal-submit-btn {
+  padding: 6px 16px;   /* 👈 发布按钮更扁 */
+  background-color: var(--pm-primary);
+  color: var(--pm-secondary);
+  border: 1px solid var(--pm-primary);
+  border-radius: 20px; 
+  font-size: 10px;     /* 👈 字体极小 */
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(155, 183, 212, 0.3);
+  white-space: nowrap;
+}
+
+.post-modal-submit-btn:hover {
+  background-color: var(--pm-secondary);
+  border-color: var(--pm-secondary);
+  color: var(--pm-bg);
+  transform: translateY(-1px);
+}
+
+/* 动画关键帧 */
+@keyframes pm-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes pm-slide-up {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+/* 防止背景滚动 */
+body.pm-modal-open {
+  overflow: hidden;
+}
+
+/* 预览内容样式 */
+.post-modal-preview-content {
+  flex: 1;
+  padding: 8px;
+  text-align: left; 
+  margin: 0;
+  font-size: 12px;    /* 👈 预览字体统一 */
+  line-height: 1.5;
+  color: var(--pm-text);
+  overflow-y: auto;
+  background-color: transparent;
+  font-family: inherit;
+  display: block; 
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.post-modal-preview-content p,
+.post-modal-preview-content div,
+.post-modal-preview-content span {
+  text-align: left;
+  margin: 0 0 6px 0; /* 段落间距更紧 */
+}
+
+.post-modal-preview-content strong {
+  font-weight: 700;
+  color: var(--pm-secondary);
+}
+
+.post-modal-preview-content em {
+  font-style: italic;
+  color: var(--pm-text-light);
+}
+
+.post-modal-preview-content u {
+  text-decoration: underline;
+  text-decoration-color: var(--pm-primary);
+  text-underline-offset: 2px;
+}
+
+/* 回复信息横幅 - 紧凑版 */
+.reply-info-banner {
+  background-color: rgba(240, 247, 255, 0.6);
+  border: 1px solid rgba(208, 227, 247, 0.5);
+  border-radius: 4px;
+  padding: 6px 8px;
+  margin: 0 0 8px 0; 
+  font-size: 11px;
+  color: #3A4E6B;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.reply-target {
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: 0.5px;
+}
+
+.reply-quote-preview {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.quote-label {
+  font-weight: 600;
+  color: #555;
+  flex-shrink: 0;
+  font-size: 10px;
+}
+
+.quote-text-short {
+  color: #666;
+  background: #fff;
+  padding: 2px 6px;
+  border-radius: 3px;
+  border: 1px solid #eee;
+  max-width: 90%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 11px;
+}
+/* src/components/PostModal.css */
+
+/* ... 原有的样式 ... */
+
+/* 👇 新增：标签选择器样式 */
+.post-modal-tags-section {
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 10px;
+}
+
+.tags-label {
+  font-size: 12px;
+  color: #666;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.tags-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag-chip {
+  padding: 4px 12px;
+  border-radius: 16px;
+  border: 1px solid #ddd;
+  background-color: #f9f9f9;
+  color: #555;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.tag-chip:hover {
+  border-color: #aaa;
+  background-color: #eee;
+}
+
+.tag-chip.active {
+  background-color: #3A4E6B; /* 使用你的主题色 */
+  color: white;
+  border-color: #3A4E6B;
+  font-weight: 500;
+}
+
+.selected-tags-summary {
+  margin-top: 8px;
+  font-size: 11px;
+  color: #3A4E6B;
+}

@@ -1,0 +1,185 @@
+/* ============================================================
+   继承 AcadBeat 统一视觉风格系统配色
+   ============================================================ */
+:root {
+  --bg-color: #E4DFD8;
+  --primary-color: #9BB7D4;
+  --secondary-color: #3A4E6B;
+  --white: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background-color: var(--bg-color); /* 替换为代码库中的背景色 */
+  color: var(--secondary-color);
+}
+
+/* 顶部导航与搜索 */
+.forum-header {
+  display: flex;
+  justify-content: space-between; /* 左右两端对齐 */
+  align-items: center;
+  padding: 15px 5%;
+  background-color: var(--white);
+  border-bottom: 1px solid rgba(58, 78, 107, 0.1);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 30px; /* 控制标题和搜索框的间距，使搜索框紧靠左侧 */
+}
+
+.header-left h2 {
+  margin: 0;
+  color: var(--secondary-color);
+  font-weight: 800;
+}
+
+.search-bar {
+  padding: 10px 18px;
+  width: 350px;
+  border: 1px solid rgba(58, 78, 107, 0.2);
+  border-radius: 25px; /* 搜索框增加强弧线 */
+  outline: none;
+  background-color: #fafafa;
+  transition: all 0.3s ease;
+}
+
+.search-bar:focus {
+  border-color: var(--primary-color);
+  background-color: var(--white);
+}
+
+.post-btn {
+  padding: 10px 24px;
+  background-color: var(--secondary-color);
+  color: var(--white);
+  border: none;
+  border-radius: 25px; /* 按钮增加弧线 */
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.post-btn:hover {
+  background-color: var(--primary-color);
+  transform: translateY(-2px);
+}
+
+/* 主体布局 */
+.forum-layout {
+  display: flex;
+  max-width: 1200px;
+  margin: 30px auto;
+  gap: 25px;
+  padding: 0 20px;
+}
+
+/* 侧边栏与圆角 */
+.sidebar {
+  width: 260px;
+  background: var(--white);
+  padding: 25px;
+  border-radius: 16px; /* 侧边栏设置大弧线 */
+  box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+  height: fit-content;
+}
+
+.tag-label {
+  display: block;
+  margin-bottom: 12px;
+  cursor: pointer;
+  color: var(--secondary-color);
+}
+
+/* 调整 tag 和 浏览量的间距 */
+.filter-section-divider {
+  margin: 40px 0; /* 调大间距 */
+  border: 0;
+  border-top: 1px dashed rgba(58, 78, 107, 0.2);
+}
+
+.sidebar input[type="number"] {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px; /* 浏览量输入框弧线 */
+  border: 1px solid rgba(58, 78, 107, 0.2);
+  outline: none;
+}
+
+.error-text {
+  color: #d9534f;
+  font-size: 12px;
+  margin-top: 8px;
+  font-weight: bold;
+}
+
+.main-content {
+  flex: 1;
+}
+
+/* 帖子卡片与圆角 */
+.post-item {
+  background: var(--white);
+  padding: 22px 28px;
+  border-radius: 18px; /* 帖子边框设置弧线，取消直角长方形 */
+  margin-bottom: 20px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.post-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+}
+
+.post-main { flex: 1; }
+
+.post-title {
+  margin: 0 0 12px 0;
+  color: var(--secondary-color);
+  font-size: 16px; /* 设置适当的字体大小 */
+  font-weight: 600; /* 调整字体粗细 */
+}
+
+.post-tags {
+  display: flex;
+  gap: 8px;
+}
+
+.tag-badge {
+  background-color: rgba(155, 183, 212, 0.2); /* 使用 primary-color 的透明色 */
+  color: var(--secondary-color);
+  padding: 5px 10px;
+  border-radius: 12px; /* 标签弧线 */
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.post-meta {
+  min-width: 160px;
+  border-left: 2px dashed rgba(58, 78, 107, 0.15);
+  padding-left: 20px;
+  margin-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--secondary-color);
+}
+
+.meta-row {
+  display: flex;
+  justify-content: space-between;
+}
+.meta-row strong { opacity: 0.8; }
