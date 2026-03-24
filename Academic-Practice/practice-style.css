@@ -244,6 +244,7 @@ body.route-pending button {
 
 .training-clean {
   padding: 40px;
+  margin-top: 40px;
 }
 
 .training-clean-header {
@@ -308,7 +309,7 @@ body.route-pending button {
 
 .training-clean-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 22px;
   align-items: stretch;
 }
@@ -338,6 +339,12 @@ body.route-pending button {
     linear-gradient(180deg, rgba(244, 248, 252, 0.92) 0%, rgba(233, 239, 247, 0.68) 100%);
 }
 
+.training-clean-card--vocab {
+  background:
+    radial-gradient(circle at 22% 18%, rgba(155, 183, 212, 0.2), transparent 26%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.82) 0%, rgba(244, 241, 235, 0.72) 100%);
+}
+
 .training-clean-kicker {
   color: var(--text-faint);
   font-size: 0.78rem;
@@ -361,6 +368,12 @@ body.route-pending button {
   max-width: 30ch;
 }
 
+@media (max-width: 1280px) {
+  .training-clean-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
 .training-visual {
   margin-top: 12px;
   width: 100%;
@@ -375,6 +388,34 @@ body.route-pending button {
   display: grid;
   gap: 10px;
   align-content: center;
+}
+
+.visual-vocab-flow {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  gap: 10px;
+}
+
+.vocab-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(58, 78, 107, 0.12);
+  background: rgba(255, 255, 255, 0.88);
+  color: var(--secondary-color);
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.vocab-chip-main {
+  background: rgba(155, 183, 212, 0.22);
+  border-color: rgba(155, 183, 212, 0.42);
 }
 
 .qa-row {
@@ -1283,8 +1324,6 @@ body[data-page="video-list"] .video-results {
     height: 42px;
     font-size: 1.1rem;
   }
-}
-  padding: 9px;
 }
 
 body[data-page="video-list"] .video-cover-box {

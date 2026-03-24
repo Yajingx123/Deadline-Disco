@@ -7,11 +7,16 @@ $pidFiles = [
     __DIR__ . '/.run/forum_5173.pid',
 ];
 
-// Windows 下杀死进程
 function killProcess(int $pid): void {
     if ($pid <= 0) return;
-    // 先尝试优雅终止，失败则强制杀死
-    shell_exec(sprintf('taskkill /PID %d /T /F 2>NUL', $pid));
+    if (PHP_OS_FAMILY === 'Windows') {
+        shell_exec(sprintf('taskkill /PID %d /T /F 2>NUL', $pid));
+        return;
+    }
+
+    shell_exec(sprintf('kill %d 2>/dev/null', $pid));
+    usleep(200000);
+    shell_exec(sprintf('kill -9 %d 2>/dev/null', $pid));
 }
 
 foreach ($pidFiles as $pidFile) {

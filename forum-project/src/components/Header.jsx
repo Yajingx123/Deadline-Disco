@@ -7,7 +7,6 @@ export default function Header({ searchQuery, setSearchQuery, onOpenModal, curre
       <header className="forum-topnav">
         <a className="forum-topnav__logo" href="http://127.0.0.1:8001/home.html">Acad<span>Beat</span></a>
         <nav className="forum-topnav__menu" aria-label="Main">
-          <a className="forum-topnav__item" href="http://127.0.0.1:8001/home.html?module=Lexis">Vocabulary</a>
           <a className="forum-topnav__item" href="http://127.0.0.1:8001/home.html?module=Insight">Academic</a>
           <a className="forum-topnav__item is-active" href="http://127.0.0.1:8001/home.html?module=Dialogue">Forum</a>
           <a className="forum-topnav__item" href="http://127.0.0.1:8001/home.html?module=Method">Technology</a>
