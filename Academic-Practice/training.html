@@ -14,7 +14,6 @@
   <nav>
     <a class="logo" href="../home.html">Acad<span>Beat</span></a>
     <div class="nav-menu">
-      <a class="nav-item" href="../home.html?module=Lexis">Vocabulary</a>
       <a class="nav-item active" href="../home.html?module=Insight">Academic</a>
       <a class="nav-item" href="../home.html?module=Dialogue">Forum</a>
       <a class="nav-item" href="../home.html?module=Method">Technology</a>
@@ -31,12 +30,35 @@
   <main class="module-content page-shell">
     <section class="section-block training-clean">
       <header class="training-clean-header">
-        <h2>Training</h2>
+        <div class="training-clean-copy">
+          <span class="training-clean-eyebrow">Academic Practice</span>
+          <h2>Training</h2>
+          <p>Move from listening and response into live pair speaking, then branch into vocabulary reinforcement without leaving the same academic learning flow.</p>
+        </div>
+        <div class="training-clean-summary" aria-hidden="true">
+          <span>Vocabulary</span>
+          <span>Listen</span>
+          <span>Respond</span>
+          <span>Pair Speak</span>
+        </div>
       </header>
 
       <div class="training-clean-grid">
-        <article class="training-clean-card">
+        <article class="training-clean-card training-clean-card--vocab" onclick="window.location.href='../vocba_prac/'" role="link" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.location.href='../vocba_prac/';}">
           <span class="training-clean-kicker">Mode 01</span>
+          <div class="training-visual visual-vocab-flow" aria-hidden="true">
+            <span class="vocab-chip vocab-chip-main">TERM</span>
+            <span class="vocab-chip">Meaning</span>
+            <span class="vocab-chip">Context</span>
+            <span class="vocab-chip">Recall</span>
+          </div>
+          <h3>Vocabulary</h3>
+          <p>Return to the original vocabulary practice space for word banks, book study, and review around the same topics.</p>
+          <a class="training-go-btn" href="../vocba_prac/">GO</a>
+        </article>
+
+        <article class="training-clean-card" onclick="window.location.href='listening.html?mode=understand'" role="link" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.location.href='listening.html?mode=understand';}">
+          <span class="training-clean-kicker">Mode 02</span>
           <div class="training-visual visual-quiz" aria-hidden="true">
             <span class="qa-row"><i></i><b></b></span>
             <span class="qa-row"><i></i><b></b></span>
@@ -47,8 +69,8 @@
           <a class="training-go-btn" href="listening.html?mode=understand">GO</a>
         </article>
 
-        <article class="training-clean-card">
-          <span class="training-clean-kicker">Mode 02</span>
+        <article class="training-clean-card" onclick="window.location.href='listening.html?mode=respond'" role="link" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.location.href='listening.html?mode=respond';}">
+          <span class="training-clean-kicker">Mode 03</span>
           <div class="training-visual visual-record" aria-hidden="true">
             <span class="mic-core"></span>
             <span class="mic-wave"></span>
@@ -57,6 +79,20 @@
           <h3>Listening and Respond</h3>
           <p>Try to speak with confidence</p>
           <a class="training-go-btn" href="listening.html?mode=respond">GO</a>
+        </article>
+
+        <article class="training-clean-card training-clean-card--accent" onclick="window.location.href='voice_room.html'" role="link" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.location.href='voice_room.html';}">
+          <span class="training-clean-kicker">Mode 04</span>
+          <div class="training-visual visual-pair-room" aria-hidden="true">
+            <span class="pair-node pair-node-left"></span>
+            <span class="pair-link"></span>
+            <span class="pair-node pair-node-right"></span>
+            <span class="pair-ripple pair-ripple-left"></span>
+            <span class="pair-ripple pair-ripple-right"></span>
+          </div>
+          <h3>Pair Speaking Room</h3>
+          <p>Join a shared room for guided two-person speaking practice on academic tasks.</p>
+          <a class="training-go-btn training-go-btn--soft" href="voice_room.html">GO</a>
         </article>
       </div>
     </section>

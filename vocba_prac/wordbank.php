@@ -3,6 +3,7 @@ require_once __DIR__ . '/config.php';
 vocab_require_auth();
 $pageTitle = 'Word Books';
 $activeNav = 'wordbank';
+$hideGlobalHomeNav = true;
 require_once __DIR__ . '/includes/header.php';
 
 $booksTable = vocab_table('books');
@@ -33,8 +34,12 @@ foreach ($books as $b) {
 }
 ?>
 
-        <h1 class="hero__title" style="margin-top:0">Choose word books</h1>
-        <p class="hero__subtitle" style="margin-bottom:24px">Pick the books you want in practice. Selected books are highlighted with a stronger card state so you can tell at a glance what is active.</p>
+        <section class="vocabSubpageHeader">
+          <div class="vocabSubpageHeader__copy">
+            <h1 class="hero__title" style="margin-top:0">Choose word books</h1>
+            <p class="hero__subtitle" style="margin-bottom:24px">Pick the books you want in practice. Selected books are highlighted with a stronger card state so you can tell at a glance what is active.</p>
+          </div>
+        </section>
 
         <section class="card" style="margin-bottom:24px" aria-label="Selected for practice">
           <div class="card__head">

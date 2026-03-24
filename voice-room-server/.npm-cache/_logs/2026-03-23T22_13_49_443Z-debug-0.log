@@ -1,0 +1,304 @@
+0 verbose cli D:\Programs\nodejs\node.exe D:\Programs\nodejs\node_modules\npm\bin\npm-cli.js
+1 info using npm@10.2.3
+2 info using node@v18.19.0
+3 timing npm:load:whichnode Completed in 2ms
+4 timing config:load:defaults Completed in 2ms
+5 timing config:load:file:D:\Programs\nodejs\node_modules\npm\npmrc Completed in 7ms
+6 timing config:load:builtin Completed in 7ms
+7 timing config:load:cli Completed in 2ms
+8 timing config:load:env Completed in 2ms
+9 timing config:load:file:C:\Users\123\Desktop\Deadline-Disco\voice-room-server\.npmrc Completed in 1ms
+10 timing config:load:project Completed in 2ms
+11 timing config:load:file:C:\Users\123\.npmrc Completed in 1ms
+12 timing config:load:user Completed in 1ms
+13 timing config:load:file:D:\Programs\nodejs\node_global\etc\npmrc Completed in 0ms
+14 timing config:load:global Completed in 0ms
+15 timing config:load:setEnvs Completed in 1ms
+16 timing config:load Completed in 17ms
+17 timing npm:load:configload Completed in 17ms
+18 timing config:load:flatten Completed in 2ms
+19 timing npm:load:mkdirpcache Completed in 1ms
+20 timing npm:load:mkdirplogs Completed in 0ms
+21 verbose title npm install
+22 verbose argv "install"
+23 timing npm:load:setTitle Completed in 2ms
+24 timing npm:load:display Completed in 0ms
+25 verbose logfile logs-max:10 dir:C:\Users\123\Desktop\Deadline-Disco\voice-room-server\.npm-cache\_logs\2026-03-23T22_13_49_443Z-
+26 verbose logfile C:\Users\123\Desktop\Deadline-Disco\voice-room-server\.npm-cache\_logs\2026-03-23T22_13_49_443Z-debug-0.log
+27 timing npm:load:logFile Completed in 12ms
+28 timing npm:load:timers Completed in 0ms
+29 timing npm:load:configScope Completed in 0ms
+30 timing npm:load Completed in 67ms
+31 timing arborist:ctor Completed in 1ms
+32 silly logfile done cleaning log files
+33 timing arborist:ctor Completed in 0ms
+34 timing idealTree:init Completed in 10ms
+35 timing idealTree:userRequests Completed in 0ms
+36 silly idealTree buildDeps
+37 silly fetch manifest socket.io@^4.8.1
+38 http fetch GET 200 https://registry.npmmirror.com/socket.io 546ms (cache miss)
+39 silly placeDep ROOT socket.io@4.8.3 OK for: acadbeat-voice-room-server@1.0.0 want: ^4.8.1
+40 silly fetch manifest accepts@~1.3.4
+41 silly fetch manifest base64id@~2.0.0
+42 silly fetch manifest cors@~2.8.5
+43 silly fetch manifest debug@~4.4.1
+44 silly fetch manifest engine.io@~6.6.0
+45 silly fetch manifest socket.io-adapter@~2.5.2
+46 silly fetch manifest socket.io-parser@~4.2.4
+47 http fetch GET 200 https://registry.npmmirror.com/accepts 90ms (cache miss)
+48 http fetch GET 200 https://registry.npmmirror.com/debug 115ms (cache miss)
+49 http fetch GET 200 https://registry.npmmirror.com/cors 117ms (cache miss)
+50 http fetch GET 200 https://registry.npmmirror.com/engine.io 167ms (cache miss)
+51 http fetch GET 200 https://registry.npmmirror.com/npm 827ms (cache miss)
+52 http fetch GET 200 https://registry.npmmirror.com/socket.io-adapter 283ms (cache miss)
+53 http fetch GET 200 https://registry.npmmirror.com/base64id 296ms (cache miss)
+54 http fetch GET 200 https://registry.npmmirror.com/socket.io-parser 311ms (cache miss)
+55 timing idealTree:#root Completed in 872ms
+56 silly placeDep ROOT accepts@1.3.8 OK for: socket.io@4.8.3 want: ~1.3.4
+57 silly fetch manifest mime-types@~2.1.34
+58 silly fetch manifest negotiator@0.6.3
+59 silly placeDep ROOT base64id@2.0.0 OK for: socket.io@4.8.3 want: ~2.0.0
+60 silly placeDep ROOT cors@2.8.6 OK for: socket.io@4.8.3 want: ~2.8.5
+61 silly fetch manifest object-assign@^4
+62 silly fetch manifest vary@^1
+63 silly placeDep ROOT debug@4.4.3 OK for: socket.io@4.8.3 want: ~4.4.1
+64 silly fetch manifest ms@^2.1.3
+65 silly placeDep ROOT engine.io@6.6.6 OK for: socket.io@4.8.3 want: ~6.6.0
+66 silly fetch manifest @types/cors@^2.8.12
+67 silly fetch manifest @types/node@>=10.0.0
+68 silly fetch manifest @types/ws@^8.5.12
+69 silly fetch manifest cookie@~0.7.2
+70 silly fetch manifest engine.io-parser@~5.2.1
+71 silly fetch manifest ws@~8.18.3
+72 silly placeDep ROOT socket.io-adapter@2.5.6 OK for: socket.io@4.8.3 want: ~2.5.2
+73 silly placeDep ROOT socket.io-parser@4.2.6 OK for: socket.io@4.8.3 want: ~4.2.4
+74 silly fetch manifest @socket.io/component-emitter@~3.1.0
+75 http fetch GET 200 https://registry.npmmirror.com/ms 255ms (cache miss)
+76 http fetch GET 200 https://registry.npmmirror.com/object-assign 258ms (cache miss)
+77 http fetch GET 200 https://registry.npmmirror.com/negotiator 261ms (cache miss)
+78 http fetch GET 200 https://registry.npmmirror.com/vary 269ms (cache miss)
+79 http fetch GET 200 https://registry.npmmirror.com/@types%2fcors 327ms (cache miss)
+80 http fetch GET 200 https://registry.npmmirror.com/@types%2fws 356ms (cache miss)
+81 http fetch GET 200 https://registry.npmmirror.com/cookie 427ms (cache miss)
+82 http fetch GET 200 https://registry.npmmirror.com/mime-types 439ms (cache miss)
+83 http fetch GET 200 https://registry.npmmirror.com/@types%2fnode 458ms (cache miss)
+84 http fetch GET 200 https://registry.npmmirror.com/ws 472ms (cache miss)
+85 http fetch GET 200 https://registry.npmmirror.com/@socket.io%2fcomponent-emitter 594ms (cache miss)
+86 http fetch GET 200 https://registry.npmmirror.com/engine.io-parser 597ms (cache miss)
+87 timing idealTree:node_modules/socket.io Completed in 610ms
+88 silly placeDep ROOT mime-types@2.1.35 OK for: accepts@1.3.8 want: ~2.1.34
+89 silly fetch manifest mime-db@1.52.0
+90 silly placeDep ROOT negotiator@0.6.3 OK for: accepts@1.3.8 want: 0.6.3
+91 http fetch GET 200 https://registry.npmmirror.com/mime-db 123ms (cache miss)
+92 timing idealTree:node_modules/accepts Completed in 126ms
+93 timing idealTree:node_modules/base64id Completed in 1ms
+94 silly placeDep ROOT object-assign@4.1.1 OK for: cors@2.8.6 want: ^4
+95 silly placeDep ROOT vary@1.1.2 OK for: cors@2.8.6 want: ^1
+96 timing idealTree:node_modules/cors Completed in 3ms
+97 silly placeDep ROOT ms@2.1.3 OK for: debug@4.4.3 want: ^2.1.3
+98 timing idealTree:node_modules/debug Completed in 1ms
+99 silly fetch manifest bufferutil@^4.0.1
+100 http fetch GET 200 https://registry.npmmirror.com/bufferutil 295ms (cache miss)
+101 silly fetch manifest utf-8-validate@>=5.0.2
+102 http fetch GET 200 https://registry.npmmirror.com/utf-8-validate 260ms (cache miss)
+103 silly placeDep ROOT @types/cors@2.8.19 OK for: engine.io@6.6.6 want: ^2.8.12
+104 silly fetch manifest @types/node@*
+105 silly placeDep ROOT @types/node@25.5.0 OK for: engine.io@6.6.6 want: >=10.0.0
+106 silly fetch manifest undici-types@~7.18.0
+107 silly placeDep ROOT @types/ws@8.18.1 OK for: engine.io@6.6.6 want: ^8.5.12
+108 silly placeDep ROOT cookie@0.7.2 OK for: engine.io@6.6.6 want: ~0.7.2
+109 silly placeDep ROOT engine.io-parser@5.2.3 OK for: engine.io@6.6.6 want: ~5.2.1
+110 silly placeDep ROOT ws@8.18.3 OK for: engine.io@6.6.6 want: ~8.18.3
+111 http fetch GET 200 https://registry.npmmirror.com/undici-types 173ms (cache miss)
+112 timing idealTree:node_modules/engine.io Completed in 741ms
+113 timing idealTree:node_modules/@types/cors Completed in 0ms
+114 silly placeDep ROOT undici-types@7.18.2 OK for: @types/node@25.5.0 want: ~7.18.0
+115 timing idealTree:node_modules/@types/node Completed in 1ms
+116 timing idealTree:node_modules/@types/ws Completed in 0ms
+117 timing idealTree:node_modules/cookie Completed in 0ms
+118 timing idealTree:node_modules/engine.io-parser Completed in 0ms
+119 silly placeDep ROOT mime-db@1.52.0 OK for: mime-types@2.1.35 want: 1.52.0
+120 timing idealTree:node_modules/mime-types Completed in 0ms
+121 timing idealTree:node_modules/mime-db Completed in 0ms
+122 timing idealTree:node_modules/ms Completed in 0ms
+123 timing idealTree:node_modules/negotiator Completed in 0ms
+124 timing idealTree:node_modules/object-assign Completed in 0ms
+125 timing idealTree:node_modules/socket.io-adapter Completed in 0ms
+126 silly placeDep ROOT @socket.io/component-emitter@3.1.2 OK for: socket.io-parser@4.2.6 want: ~3.1.0
+127 timing idealTree:node_modules/socket.io-parser Completed in 1ms
+128 timing idealTree:node_modules/@socket.io/component-emitter Completed in 0ms
+129 timing idealTree:node_modules/undici-types Completed in 0ms
+130 timing idealTree:node_modules/vary Completed in 0ms
+131 timing idealTree:node_modules/ws Completed in 0ms
+132 timing idealTree:buildDeps Completed in 2360ms
+133 timing idealTree:fixDepFlags Completed in 1ms
+134 timing idealTree Completed in 2374ms
+135 timing reify:loadTrees Completed in 2374ms
+136 timing reify:diffTrees Completed in 1ms
+137 silly reify moves {}
+138 timing reify:retireShallow Completed in 0ms
+139 timing reify:createSparse Completed in 15ms
+140 timing reify:loadBundles Completed in 0ms
+141 silly audit bulk request {
+141 silly audit   'socket.io': [ '4.8.3' ],
+141 silly audit   accepts: [ '1.3.8' ],
+141 silly audit   base64id: [ '2.0.0' ],
+141 silly audit   cors: [ '2.8.6' ],
+141 silly audit   debug: [ '4.4.3' ],
+141 silly audit   'engine.io': [ '6.6.6' ],
+141 silly audit   'socket.io-adapter': [ '2.5.6' ],
+141 silly audit   'socket.io-parser': [ '4.2.6' ],
+141 silly audit   'mime-types': [ '2.1.35' ],
+141 silly audit   negotiator: [ '0.6.3' ],
+141 silly audit   'object-assign': [ '4.1.1' ],
+141 silly audit   vary: [ '1.1.2' ],
+141 silly audit   ms: [ '2.1.3' ],
+141 silly audit   '@types/cors': [ '2.8.19' ],
+141 silly audit   '@types/node': [ '25.5.0' ],
+141 silly audit   '@types/ws': [ '8.18.1' ],
+141 silly audit   cookie: [ '0.7.2' ],
+141 silly audit   'engine.io-parser': [ '5.2.3' ],
+141 silly audit   ws: [ '8.18.3' ],
+141 silly audit   'undici-types': [ '7.18.2' ],
+141 silly audit   'mime-db': [ '1.52.0' ],
+141 silly audit   '@socket.io/component-emitter': [ '3.1.2' ]
+141 silly audit }
+142 silly tarball no local data for @socket.io/component-emitter@https://registry.npmmirror.com/@socket.io/component-emitter/-/component-emitter-3.1.2.tgz. Extracting by manifest.
+143 silly tarball no local data for mime-db@https://registry.npmmirror.com/mime-db/-/mime-db-1.52.0.tgz. Extracting by manifest.
+144 silly tarball no local data for undici-types@https://registry.npmmirror.com/undici-types/-/undici-types-7.18.2.tgz. Extracting by manifest.
+145 silly tarball no local data for cookie@https://registry.npmmirror.com/cookie/-/cookie-0.7.2.tgz. Extracting by manifest.
+146 silly tarball no local data for ms@https://registry.npmmirror.com/ms/-/ms-2.1.3.tgz. Extracting by manifest.
+147 silly tarball no local data for @types/cors@https://registry.npmmirror.com/@types/cors/-/cors-2.8.19.tgz. Extracting by manifest.
+148 silly tarball no local data for ws@https://registry.npmmirror.com/ws/-/ws-8.18.3.tgz. Extracting by manifest.
+149 silly tarball no local data for @types/ws@https://registry.npmmirror.com/@types/ws/-/ws-8.18.1.tgz. Extracting by manifest.
+150 silly tarball no local data for engine.io-parser@https://registry.npmmirror.com/engine.io-parser/-/engine.io-parser-5.2.3.tgz. Extracting by manifest.
+151 silly tarball no local data for vary@https://registry.npmmirror.com/vary/-/vary-1.1.2.tgz. Extracting by manifest.
+152 silly tarball no local data for negotiator@https://registry.npmmirror.com/negotiator/-/negotiator-0.6.3.tgz. Extracting by manifest.
+153 silly tarball no local data for mime-types@https://registry.npmmirror.com/mime-types/-/mime-types-2.1.35.tgz. Extracting by manifest.
+154 silly tarball no local data for @types/node@https://registry.npmmirror.com/@types/node/-/node-25.5.0.tgz. Extracting by manifest.
+155 silly tarball no local data for engine.io@https://registry.npmmirror.com/engine.io/-/engine.io-6.6.6.tgz. Extracting by manifest.
+156 silly tarball no local data for object-assign@https://registry.npmmirror.com/object-assign/-/object-assign-4.1.1.tgz. Extracting by manifest.
+157 silly tarball no local data for socket.io-adapter@https://registry.npmmirror.com/socket.io-adapter/-/socket.io-adapter-2.5.6.tgz. Extracting by manifest.
+158 silly tarball no local data for debug@https://registry.npmmirror.com/debug/-/debug-4.4.3.tgz. Extracting by manifest.
+159 silly tarball no local data for socket.io-parser@https://registry.npmmirror.com/socket.io-parser/-/socket.io-parser-4.2.6.tgz. Extracting by manifest.
+160 silly tarball no local data for cors@https://registry.npmmirror.com/cors/-/cors-2.8.6.tgz. Extracting by manifest.
+161 silly tarball no local data for base64id@https://registry.npmmirror.com/base64id/-/base64id-2.0.0.tgz. Extracting by manifest.
+162 silly tarball no local data for accepts@https://registry.npmmirror.com/accepts/-/accepts-1.3.8.tgz. Extracting by manifest.
+163 silly tarball no local data for socket.io@https://registry.npmmirror.com/socket.io/-/socket.io-4.8.3.tgz. Extracting by manifest.
+164 http fetch POST 404 https://registry.npmmirror.com/-/npm/v1/security/advisories/bulk 58ms
+165 silly audit bulk request failed [object Object]
+166 http fetch POST 404 https://registry.npmmirror.com/-/npm/v1/security/audits/quick 124ms
+167 verbose audit error HttpErrorGeneral: 404 Not Found - POST https://registry.npmmirror.com/-/npm/v1/security/audits/quick - [NOT_IMPLEMENTED] /-/npm/v1/security/* not implemented yet
+167 verbose audit error     at D:\Programs\nodejs\node_modules\npm\node_modules\npm-registry-fetch\lib\check-response.js:95:15
+167 verbose audit error     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+167 verbose audit error     at async [getReport] (D:\Programs\nodejs\node_modules\npm\node_modules\@npmcli\arborist\lib\audit-report.js:335:21)
+167 verbose audit error     at async AuditReport.run (D:\Programs\nodejs\node_modules\npm\node_modules\@npmcli\arborist\lib\audit-report.js:106:19) {
+167 verbose audit error   headers: [Object: null prototype] {
+167 verbose audit error     server: [ 'Tengine' ],
+167 verbose audit error     date: [ 'Mon, 23 Mar 2026 22:13:52 GMT' ],
+167 verbose audit error     'content-type': [ 'application/json' ],
+167 verbose audit error     'transfer-encoding': [ 'chunked' ],
+167 verbose audit error     connection: [ 'keep-alive' ],
+167 verbose audit error     'strict-transport-security': [ 'max-age=5184000' ],
+167 verbose audit error     via: [ 'kunlun1.cn1182[,404666]' ],
+167 verbose audit error     'timing-allow-origin': [ '*' ],
+167 verbose audit error     eagleid: [ '77274a9617743040324674243e' ],
+167 verbose audit error     'x-fetch-attempts': [ '1' ]
+167 verbose audit error   },
+167 verbose audit error   statusCode: 404,
+167 verbose audit error   code: 'E404',
+167 verbose audit error   method: 'POST',
+167 verbose audit error   uri: 'https://registry.npmmirror.com/-/npm/v1/security/audits/quick',
+167 verbose audit error   body: {
+167 verbose audit error     error: '[NOT_IMPLEMENTED] /-/npm/v1/security/* not implemented yet'
+167 verbose audit error   },
+167 verbose audit error   pkgid: undefined
+167 verbose audit error }
+168 silly audit error [object Object]
+169 timing auditReport:getReport Completed in 194ms
+170 silly audit report null
+171 timing reify:audit Completed in 194ms
+172 http fetch GET 200 https://cdn.npmmirror.com/packages/ms/2.1.3/ms-2.1.3.tgz 815ms (cache miss)
+173 timing reifyNode:node_modules/ms Completed in 832ms
+174 http fetch GET 200 https://cdn.npmmirror.com/packages/%40socket.io/component-emitter/3.1.2/component-emitter-3.1.2.tgz 823ms (cache miss)
+175 http fetch GET 200 https://cdn.npmmirror.com/packages/object-assign/4.1.1/object-assign-4.1.1.tgz 818ms (cache miss)
+176 timing reifyNode:node_modules/object-assign Completed in 842ms
+177 http fetch GET 200 https://cdn.npmmirror.com/packages/%40types/ws/8.18.1/ws-8.18.1.tgz 824ms (cache miss)
+178 http fetch GET 200 https://cdn.npmmirror.com/packages/cors/2.8.6/cors-2.8.6.tgz 818ms (cache miss)
+179 timing reifyNode:node_modules/cors Completed in 844ms
+180 http fetch GET 200 https://cdn.npmmirror.com/packages/vary/1.1.2/vary-1.1.2.tgz 824ms (cache miss)
+181 http fetch GET 200 https://cdn.npmmirror.com/packages/cookie/0.7.2/cookie-0.7.2.tgz 830ms (cache miss)
+182 http fetch GET 200 https://cdn.npmmirror.com/packages/accepts/1.3.8/accepts-1.3.8.tgz 817ms (cache miss)
+183 http fetch GET 200 https://cdn.npmmirror.com/packages/socket.io-parser/4.2.6/socket.io-parser-4.2.6.tgz 822ms (cache miss)
+184 http fetch GET 200 https://cdn.npmmirror.com/packages/mime-types/2.1.35/mime-types-2.1.35.tgz 827ms (cache miss)
+185 http fetch GET 200 https://cdn.npmmirror.com/packages/base64id/2.0.0/base64id-2.0.0.tgz 820ms (cache miss)
+186 timing reifyNode:node_modules/vary Completed in 849ms
+187 http fetch GET 200 https://cdn.npmmirror.com/packages/%40types/cors/2.8.19/cors-2.8.19.tgz 833ms (cache miss)
+188 timing reifyNode:node_modules/@types/cors Completed in 850ms
+189 timing reifyNode:node_modules/@types/ws Completed in 850ms
+190 timing reifyNode:node_modules/accepts Completed in 851ms
+191 timing reifyNode:node_modules/base64id Completed in 852ms
+192 timing reifyNode:node_modules/cookie Completed in 853ms
+193 timing reifyNode:node_modules/mime-types Completed in 853ms
+194 http fetch GET 200 https://cdn.npmmirror.com/packages/debug/4.4.3/debug-4.4.3.tgz 839ms (cache miss)
+195 timing reifyNode:node_modules/debug Completed in 866ms
+196 http fetch GET 200 https://cdn.npmmirror.com/packages/negotiator/0.6.3/negotiator-0.6.3.tgz 846ms (cache miss)
+197 http fetch GET 200 https://cdn.npmmirror.com/packages/mime-db/1.52.0/mime-db-1.52.0.tgz 855ms (cache miss)
+198 timing reifyNode:node_modules/negotiator Completed in 870ms
+199 timing reifyNode:node_modules/mime-db Completed in 870ms
+200 timing reifyNode:node_modules/@socket.io/component-emitter Completed in 875ms
+201 http fetch GET 200 https://cdn.npmmirror.com/packages/socket.io-adapter/2.5.6/socket.io-adapter-2.5.6.tgz 856ms (cache miss)
+202 timing reifyNode:node_modules/socket.io-adapter Completed in 882ms
+203 http fetch GET 200 https://cdn.npmmirror.com/packages/ws/8.18.3/ws-8.18.3.tgz 894ms (cache miss)
+204 timing reifyNode:node_modules/ws Completed in 914ms
+205 timing reifyNode:node_modules/socket.io-parser Completed in 929ms
+206 http fetch GET 200 https://cdn.npmmirror.com/packages/engine.io-parser/5.2.3/engine.io-parser-5.2.3.tgz 933ms (cache miss)
+207 timing reifyNode:node_modules/engine.io-parser Completed in 954ms
+208 http fetch GET 200 https://cdn.npmmirror.com/packages/engine.io/6.6.6/engine.io-6.6.6.tgz 942ms (cache miss)
+209 timing reifyNode:node_modules/engine.io Completed in 966ms
+210 http fetch GET 200 https://cdn.npmmirror.com/packages/undici-types/7.18.2/undici-types-7.18.2.tgz 965ms (cache miss)
+211 timing reifyNode:node_modules/undici-types Completed in 980ms
+212 http fetch GET 200 https://cdn.npmmirror.com/packages/socket.io/4.8.3/socket.io-4.8.3.tgz 981ms (cache miss)
+213 timing reifyNode:node_modules/socket.io Completed in 1012ms
+214 http fetch GET 200 https://cdn.npmmirror.com/packages/%40types/node/25.5.0/node-25.5.0.tgz 1183ms (cache miss)
+215 timing reifyNode:node_modules/@types/node Completed in 1207ms
+216 timing reify:unpack Completed in 1208ms
+217 timing reify:unretire Completed in 0ms
+218 timing build:queue Completed in 2ms
+219 timing build:deps Completed in 2ms
+220 timing build Completed in 3ms
+221 timing reify:build Completed in 3ms
+222 timing reify:trash Completed in 0ms
+223 timing reify:save Completed in 19ms
+224 timing reify Completed in 3698ms
+225 silly ADD node_modules/@socket.io/component-emitter
+226 silly ADD node_modules/mime-db
+227 silly ADD node_modules/undici-types
+228 silly ADD node_modules/ws
+229 silly ADD node_modules/engine.io-parser
+230 silly ADD node_modules/cookie
+231 silly ADD node_modules/@types/ws
+232 silly ADD node_modules/@types/node
+233 silly ADD node_modules/@types/cors
+234 silly ADD node_modules/ms
+235 silly ADD node_modules/vary
+236 silly ADD node_modules/object-assign
+237 silly ADD node_modules/negotiator
+238 silly ADD node_modules/mime-types
+239 silly ADD node_modules/socket.io-parser
+240 silly ADD node_modules/socket.io-adapter
+241 silly ADD node_modules/engine.io
+242 silly ADD node_modules/debug
+243 silly ADD node_modules/cors
+244 silly ADD node_modules/base64id
+245 silly ADD node_modules/accepts
+246 silly ADD node_modules/socket.io
+247 timing command:install Completed in 3713ms
+248 notice
+248 notice New major version of npm available! 10.2.3 -> 11.12.0
+248 notice Changelog: <https://github.com/npm/cli/releases/tag/v11.12.0>
+248 notice Run `npm install -g npm@11.12.0` to update!
+248 notice
+249 verbose exit 0
+250 timing npm Completed in 4180ms
+251 info ok

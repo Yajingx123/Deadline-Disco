@@ -293,6 +293,114 @@ body{
   width: 100%;
 }
 
+.vocabEntryHero{
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 14px;
+  width: min(calc(100% - 92px), 1180px);
+  margin: 68px auto 28px;
+  padding-top: 10px;
+}
+
+.modeBackBtn{
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(58,78,107,.18);
+  border-radius: 999px;
+  background: rgba(255,255,255,.78);
+  color: var(--brand2);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+  flex-shrink: 0;
+  box-shadow: 0 10px 24px rgba(58,78,107,.08);
+  transition: transform .18s ease, background .18s ease, border-color .18s ease;
+}
+
+.vocabEntryBackBtn{
+  position: absolute;
+  left: 0;
+  top: 60px;
+}
+
+.modeBackBtn:hover{
+  transform: translateY(-1px);
+  background: rgba(255,255,255,.96);
+  border-color: rgba(58,78,107,.3);
+}
+
+.modeBackBtn:focus-visible{
+  outline: 3px solid rgba(147,197,253,.7);
+  outline-offset: 3px;
+}
+
+.vocabEntryHero h1{
+  margin: 0;
+  font-family: "Playfair Display", serif;
+  font-size: clamp(2.2rem, 3vw, 3.2rem);
+  line-height: 1.05;
+  color: #000;
+  font-weight: 700;
+  font-style: normal;
+}
+
+.vocabEntryHero p{
+  margin: 0;
+  max-width: 760px;
+  color: rgba(58,78,107,.68);
+  font-size: 1.06rem;
+  line-height: 1.8;
+}
+
+.vocabPageStack{
+  width: min(calc(100% - 92px), 1180px);
+  margin: 0 auto 48px;
+}
+
+.vocabSubpageHeader{
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  width: min(calc(100% - 92px), var(--max));
+  margin: 44px auto 24px;
+}
+
+.vocabSubpageHeader__copy{
+  min-width: 0;
+}
+
+.vocabSubpageHeader .hero__title{
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: clamp(2rem, 3vw, 2.8rem);
+  line-height: 1.04;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.vocabSubpageHeader .hero__subtitle{
+  max-width: 760px;
+  color: rgba(58,78,107,.68);
+  font-size: 1rem;
+  line-height: 1.75;
+}
+
+.vocabModeSection .card__head{
+  margin-bottom: 18px;
+}
+
+.vocabSectionTitle{
+  font-size: clamp(1.5rem, 2vw, 1.9rem);
+  line-height: 1.08;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
 /* Pill toggles (Listening Drill / Exam Mode style) */
 .pillToggles{ display: inline-flex; gap: 8px; }
 .pillToggle{
@@ -724,7 +832,7 @@ body{
 .modeGrid{
   display:grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
+  gap: 18px;
 }
 .modeCard{
   width: 100%;
@@ -732,7 +840,8 @@ body{
   border-radius: var(--radius);
   border: 1px solid var(--stroke);
   background: var(--panel);
-  padding: 16px;
+  padding: 22px;
+  min-height: 220px;
   cursor: pointer;
   color: var(--text);
   transition: box-shadow .12s ease, background .12s ease, border-color .12s ease;
@@ -754,18 +863,19 @@ body{
   gap: 10px;
 }
 .modeCard__title{
-  font-size: var(--fs-card-title);
-  font-weight: 700;
+  font-size: 1.85rem;
+  font-weight: 800;
   letter-spacing: -.02em;
 }
 .modeCard__desc{
-  margin-top: 8px;
+  margin-top: 12px;
   color: var(--muted);
   font-weight: 400;
-  font-size: var(--fs-card-meta);
+  font-size: 1rem;
+  line-height: 1.65;
 }
 .modeCard__meta{
-  margin-top: 10px;
+  margin-top: 16px;
   display:flex;
   flex-wrap: wrap;
   gap: 8px;
@@ -1729,7 +1839,26 @@ body{
     flex-wrap: wrap;
   }
   .page__main{ padding: 16px; }
-  .hero__title{ font-size: 20px; }
+  .vocabEntryHero,
+  .vocabPageStack,
+  .vocabSubpageHeader{
+    width: min(calc(100% - 12px), 1180px);
+  }
+  .vocabEntryHero{
+    margin-top: 54px;
+  }
+  .vocabEntryBackBtn{
+    position: static;
+  }
+  .vocabEntryHero{
+    align-items: flex-start;
+    text-align: left;
+  }
+  .vocabEntryHero h1{ font-size: 2.1rem; }
+  .vocabSubpageHeader{
+    gap: 12px;
+    margin-top: 24px;
+  }
   .dialog__grid{ grid-template-columns: 1fr; }
   .progressCard__actions{ flex-direction: column; }
   .wordCard__meaning, .wordCard__example{ grid-template-columns: 58px 1fr; }
