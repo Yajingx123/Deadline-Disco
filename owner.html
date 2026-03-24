@@ -558,31 +558,31 @@
                     <div class="peer-info-wrap" id="peer-init">
                         <h3 style="font-family:'Playfair Display'; font-size:1.5rem; margin-bottom:0.5rem;">Peer
                             Resonance</h3>
-                        <p style="font-size:0.8rem; opacity:0.5; margin-bottom:2rem;">Enter a User ID to form a bond.
-                            Shared consistency fuels the resonance.</p>
-                        <input type="text" class="peer-input-alt" id="peer-id-in" placeholder="Resonate with ID...">
+                        <p style="font-size:0.8rem; opacity:0.5; margin-bottom:1.2rem;">Invite another user by
+                            username to form a resonance team. The bond becomes active after they accept.</p>
+                        <input type="text" class="peer-input-alt" id="peer-id-in" placeholder="Resonate with username...">
+                        <p id="peer-pending-note" style="font-size:0.72rem; opacity:0.58; margin:0 0 1.2rem;"></p>
                         <div style="display:flex; gap:20px;">
-                            <button class="btn-small" onclick="startResonance()">Form Bond</button>
+                            <button class="btn-small" onclick="invitePeer()">Form Bond</button>
                             <button class="btn-small" style="border-style:dashed; opacity:0.6;"
                                 onclick="toggleRequests(true)">
-                                View Requests (1)
-                                <div class="notification-dot"></div>
+                                <span id="peer-request-btn-label">View Requests (0)</span>
+                                <div class="notification-dot hidden" id="peer-request-dot"></div>
                             </button>
                         </div>
                     </div>
 
                     <div class="peer-info-wrap hidden" id="peer-bound">
-                        <h3 style="font-family:'Playfair Display'; font-size:1.5rem; margin-bottom:0.5rem;">Julian Du
+                        <h3 id="peer-bound-name" style="font-family:'Playfair Display'; font-size:1.5rem; margin-bottom:0.5rem;">Peer
                         </h3>
-                        <p
+                        <p id="peer-bound-status"
                             style="font-size:0.75rem; letter-spacing:2px; color:var(--primary-color); font-weight:700; margin-bottom:1.5rem;">
-                            STATUS: 42 DAYS OF RESONANCE</p>
-                        <div style="display:flex; gap:10px;">
-                            <div style="flex:1; height:3px; background:var(--primary-color);"></div>
-                            <div style="flex:1; height:3px; background:rgba(58,78,107,0.1);"></div>
+                            STATUS: 0 DAYS OF RESONANCE</p>
+                        <div style="display:flex; gap:10px;" id="peer-progress-bars">
+                            <div id="peer-progress-self" style="flex:1; height:3px; background:rgba(58,78,107,0.1);"></div>
+                            <div id="peer-progress-partner" style="flex:1; height:3px; background:rgba(58,78,107,0.1);"></div>
                         </div>
-                        <p style="font-size:0.7rem; opacity:0.5; margin-top:12px;">Julian has not committed today.
-                            Awaiting synchronicity.</p>
+                        <p id="peer-bound-note" style="font-size:0.7rem; opacity:0.5; margin-top:12px;">Awaiting synchronicity.</p>
                     </div>
 
                     <div id="request-panel" class="request-panel hidden">
@@ -591,19 +591,7 @@
                             <span class="module-label" style="margin:0;">Connection Requests</span>
                             <span style="cursor:pointer; font-weight:800;" onclick="toggleRequests(false)">✕</span>
                         </div>
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <div>
-                                <p style="font-weight:700; font-size:0.9rem;">Elena Vance</p>
-                                <p style="font-size:0.7rem; opacity:0.5;">Active since Feb 2026</p>
-                            </div>
-                            <div style="display:flex; gap:15px;">
-                                <button class="btn-small"
-                                    style="padding:8px 20px; border-color:var(--primary-color); color:var(--primary-color);"
-                                    onclick="openSiteModal('Request accepted', 'This request has been accepted in the UI.')">Accept</button>
-                                <button class="btn-small" style="padding:8px 20px; opacity:0.4;"
-                                    onclick="toggleRequests(false)">Decline</button>
-                            </div>
-                        </div>
+                        <div id="request-panel-list"></div>
                     </div>
                 </div>
             </div>
@@ -637,11 +625,18 @@
     <script>
         const AUTH_API_BASE = './Auth/backend/api';
         const OWNER_VOCAB_API = './vocba_prac/api/owner-vocabulary.php';
+        const OWNER_LISTENING_API = './Academic-Practice/api/records.php';
+        const OWNER_INTEGRATED_API = './Academic-Practice/api/integrated-records.php';
+        const PEER_API_BASE = './peer-resonance/api';
         let viewDate = new Date();
         const today = new Date();
         let checkedDays = ["2026-3-1", "2026-3-2", "2026-3-5", "2026-3-10", "2026-3-18"];
         let ownerListMode = 'records';
         let ownerVocabularyData = { records: [], favorites: [] };
+        let ownerListeningRecords = [];
+        let ownerIntegratedRecords = [];
+        let ownerAuthUser = null;
+        let peerResonanceState = { activeTeam: null, incomingInvites: [], outgoingInvites: [], myCheckinDates: [] };
 
         function initialsOf(name) {
             const trimmed = String(name || '').trim();
@@ -670,7 +665,22 @@
             return data;
         }
 
+        async function peerFetch(path, options = {}) {
+            const response = await fetch(`${PEER_API_BASE}/${path}`, {
+                method: options.method || 'GET',
+                headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+                credentials: 'include',
+                body: options.body || undefined
+            });
+            const data = await response.json().catch(() => ({ ok: false, message: 'Invalid response' }));
+            if (!response.ok || data.ok === false) {
+                throw new Error(data.message || 'Peer Resonance request failed.');
+            }
+            return data;
+        }
+
         function applyOwnerUser(user) {
+            ownerAuthUser = user;
             const display = document.getElementById('ownerNameDisplay');
             const avatar = document.getElementById('ownerAvatarNode');
             if (display) {
@@ -681,14 +691,18 @@
             }
         }
 
-        function openSiteModal(title, message, onConfirm) {
+        function openSiteModal(title, message, onConfirm, allowHtml = false) {
             const modal = document.getElementById('siteModal');
             const titleEl = document.getElementById('siteModalTitle');
             const bodyEl = document.getElementById('siteModalBody');
             const confirmBtn = document.getElementById('siteModalConfirm');
             if (!modal || !titleEl || !bodyEl || !confirmBtn) return;
             titleEl.textContent = title || 'Notice';
-            bodyEl.textContent = message || '';
+            if (allowHtml) {
+                bodyEl.innerHTML = message || '';
+            } else {
+                bodyEl.textContent = message || '';
+            }
             confirmBtn.onclick = function () {
                 modal.classList.remove('is-open');
                 modal.setAttribute('aria-hidden', 'true');
@@ -710,6 +724,145 @@
             return true;
         }
 
+        function setPeerRequestCount(count) {
+            const label = document.getElementById('peer-request-btn-label');
+            const dot = document.getElementById('peer-request-dot');
+            if (label) label.textContent = `View Requests (${count})`;
+            if (dot) dot.classList.toggle('hidden', count <= 0);
+        }
+
+        function renderPeerRequests(incomingInvites) {
+            const container = document.getElementById('request-panel-list');
+            if (!container) return;
+
+            if (!incomingInvites.length) {
+                container.innerHTML = `
+                    <p style="font-size:0.78rem; opacity:0.52;">No incoming requests right now. When another user invites you, it will appear here.</p>
+                `;
+                return;
+            }
+
+            container.innerHTML = incomingInvites.map((invite) => `
+                <div style="display:flex; justify-content:space-between; align-items:center; gap:18px; padding:14px 0; border-top:1px solid rgba(58,78,107,0.08);">
+                    <div>
+                        <p style="font-weight:700; font-size:0.9rem;">${escapeHtml(invite.fromDisplayName)}</p>
+                        <p style="font-size:0.72rem; opacity:0.5;">@${escapeHtml(invite.fromUsername)} wants to form a resonance team.</p>
+                    </div>
+                    <div style="display:flex; gap:15px; flex-wrap:wrap;">
+                        <button class="btn-small" style="padding:8px 20px; border-color:var(--primary-color); color:var(--primary-color);" onclick="respondToPeerInvite(${invite.inviteId}, 'accept')">Accept</button>
+                        <button class="btn-small" style="padding:8px 20px; opacity:0.55;" onclick="respondToPeerInvite(${invite.inviteId}, 'decline')">Decline</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderPeerState(state) {
+            peerResonanceState = state || { activeTeam: null, incomingInvites: [], outgoingInvites: [], myCheckinDates: [] };
+            const activeTeam = peerResonanceState.activeTeam;
+            const incomingInvites = peerResonanceState.incomingInvites || [];
+            const outgoingInvites = peerResonanceState.outgoingInvites || [];
+
+            setPeerRequestCount(incomingInvites.length);
+            renderPeerRequests(incomingInvites);
+
+            const initWrap = document.getElementById('peer-init');
+            const boundWrap = document.getElementById('peer-bound');
+            const peerAvatar = document.getElementById('peer-avat');
+            const pendingNote = document.getElementById('peer-pending-note');
+
+            if (activeTeam) {
+                initWrap.classList.add('hidden');
+                boundWrap.classList.remove('hidden');
+                const partner = activeTeam.partner || {};
+                document.getElementById('peer-bound-name').textContent = partner.displayName || 'Peer';
+                document.getElementById('peer-bound-status').textContent = `STATUS: ${activeTeam.currentStreakDays} DAYS OF RESONANCE`;
+                document.getElementById('peer-bound-note').textContent = activeTeam.partnerCommittedToday
+                    ? `${partner.displayName || 'Your peer'} has committed today. The resonance is aligned.`
+                    : `${partner.displayName || 'Your peer'} has not committed today yet. Awaiting synchronicity.`;
+                document.getElementById('peer-progress-self').style.background = activeTeam.currentUserCommittedToday ? 'var(--primary-color)' : 'rgba(58,78,107,0.1)';
+                document.getElementById('peer-progress-partner').style.background = activeTeam.partnerCommittedToday ? 'var(--primary-color)' : 'rgba(58,78,107,0.1)';
+                peerAvatar.innerText = partner.initials || '?';
+                peerAvatar.style.backgroundColor = 'var(--primary-color)';
+                peerAvatar.style.color = 'white';
+                document.querySelector('.ring-outer').style.animation = 'rotateCW 5s linear infinite';
+                if (pendingNote) pendingNote.textContent = '';
+            } else {
+                initWrap.classList.remove('hidden');
+                boundWrap.classList.add('hidden');
+                peerAvatar.innerText = '?';
+                peerAvatar.style.backgroundColor = 'transparent';
+                peerAvatar.style.color = 'var(--secondary-color)';
+                document.querySelector('.ring-outer').style.animation = '';
+                if (pendingNote) {
+                    if (outgoingInvites.length) {
+                        const invite = outgoingInvites[0];
+                        pendingNote.innerHTML = `Pending invite sent to <strong>@${escapeHtml(invite.toUsername)}</strong>. <button class="btn-small" style="padding:8px 16px; margin-left:10px;" onclick="cancelPeerInvite(${invite.inviteId})">Cancel</button>`;
+                    } else {
+                        pendingNote.textContent = 'No active bond yet. Invite another user to start.';
+                    }
+                }
+            }
+
+            if (Array.isArray(peerResonanceState.myCheckinDates) && peerResonanceState.myCheckinDates.length) {
+                checkedDays = peerResonanceState.myCheckinDates.map((value) => {
+                    const [year, month, day] = String(value).split('-');
+                    return `${Number(year)}-${Number(month)}-${Number(day)}`;
+                });
+                renderCalendar();
+            }
+        }
+
+        async function loadPeerResonanceState() {
+            const data = await peerFetch('status.php');
+            renderPeerState(data.state || {});
+        }
+
+        async function invitePeer() {
+            const input = document.getElementById('peer-id-in');
+            const username = String(input?.value || '').trim();
+            if (!username) {
+                openSiteModal('Username required', 'Enter another user\'s username first.');
+                return;
+            }
+
+            try {
+                const data = await peerFetch('invite.php', {
+                    method: 'POST',
+                    body: JSON.stringify({ username })
+                });
+                if (input) input.value = '';
+                renderPeerState(data.state || {});
+                openSiteModal('Invite sent', `Your resonance invite to @${username} is now pending.`);
+            } catch (error) {
+                openSiteModal('Unable to send invite', error.message || 'Please try again.');
+            }
+        }
+
+        async function respondToPeerInvite(inviteId, action) {
+            try {
+                const data = await peerFetch('respond.php', {
+                    method: 'POST',
+                    body: JSON.stringify({ inviteId, action })
+                });
+                renderPeerState(data.state || {});
+                toggleRequests(false);
+            } catch (error) {
+                openSiteModal('Request failed', error.message || 'Please try again.');
+            }
+        }
+
+        async function cancelPeerInvite(inviteId) {
+            try {
+                const data = await peerFetch('cancel.php', {
+                    method: 'POST',
+                    body: JSON.stringify({ inviteId })
+                });
+                renderPeerState(data.state || {});
+            } catch (error) {
+                openSiteModal('Cancel failed', error.message || 'Please try again.');
+            }
+        }
+
         async function loadOwnerVocabularyData() {
             const response = await fetch(OWNER_VOCAB_API, { credentials: 'include' });
             const data = await response.json().catch(() => ({ ok: false }));
@@ -721,6 +874,18 @@
                 records: Array.isArray(data.records) ? data.records : [],
                 favorites: Array.isArray(data.favorites) ? data.favorites : []
             };
+        }
+
+        async function loadOwnerListeningData() {
+            const response = await fetch(OWNER_LISTENING_API, { credentials: 'include' });
+            const data = await response.json().catch(() => ({ ok: false }));
+            ownerListeningRecords = data.ok && Array.isArray(data.records) ? data.records : [];
+        }
+
+        async function loadOwnerIntegratedData() {
+            const response = await fetch(OWNER_INTEGRATED_API, { credentials: 'include' });
+            const data = await response.json().catch(() => ({ ok: false }));
+            ownerIntegratedRecords = data.ok && Array.isArray(data.records) ? data.records : [];
         }
 
         function formatShortDate(value) {
@@ -811,6 +976,141 @@
             `).join('');
         }
 
+        function renderListeningRecords() {
+            const container = document.getElementById('items-container');
+            const records = ownerListeningRecords || [];
+            if (!records.length) {
+                container.innerHTML = `
+                <div class="daily-focus-card list-item">
+                    <div>
+                        <h4 style="font-size:0.78rem; opacity:0.45;">LISTENING • NO RECORDS YET</h4>
+                        <p style="font-family:'Playfair Display'; font-size:1.35rem;">No listening records saved yet</p>
+                        <p style="font-size:0.86rem; opacity:0.62; margin-top:10px;">Save an answer from the note page in Academic Practice and it will appear here automatically.</p>
+                    </div>
+                </div>`;
+                return;
+            }
+            container.innerHTML = records.map((record, index) => `
+                <button class="daily-focus-card list-item" type="button" onclick="openListeningRecord(${record.recordId})" style="display:block; width:100%; text-align:left; border:none; cursor:pointer;">
+                    <div style="display:flex; justify-content:space-between; gap:18px; align-items:flex-start;">
+                        <div style="flex:1;">
+                            <h4 style="font-size:0.78rem; opacity:0.45;">LISTENING • ${escapeHtml(formatShortDate(record.createdAt))}</h4>
+                            <p style="font-family:'Playfair Display'; font-size:1.35rem;">${escapeHtml(record.title)}</p>
+                            <p style="font-size:0.84rem; opacity:0.62; margin-top:8px;">${escapeHtml(record.personMeta || 'Academic Practice')}</p>
+                            <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:12px;">
+                                ${record.mode ? `<span style="padding:8px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.82rem;">${escapeHtml(record.mode)}</span>` : ''}
+                                ${record.difficulty ? `<span style="padding:8px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.82rem;">${escapeHtml(record.difficulty)}</span>` : ''}
+                                ${record.duration ? `<span style="padding:8px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.82rem;">${escapeHtml(record.duration)}</span>` : ''}
+                            </div>
+                        </div>
+                        <div style="font-family:'Playfair Display'; font-size:2.5rem; opacity:0.18; font-style:italic;">${String(index + 1).padStart(2, '0')}</div>
+                    </div>
+                    <p style="font-size:0.82rem; opacity:0.64; margin-top:14px;">Tap to view the saved answer details.</p>
+                </button>
+            `).join('');
+        }
+
+        async function openListeningRecord(recordId) {
+            const response = await fetch(`${OWNER_LISTENING_API}?id=${encodeURIComponent(recordId)}`, { credentials: 'include' });
+            const data = await response.json().catch(() => ({ ok: false }));
+            if (!data.ok || !data.record) {
+                openSiteModal('Unable to open record', 'This listening record could not be loaded right now.');
+                return;
+            }
+            const record = data.record;
+            openSiteModal(
+                record.title || 'Listening Record',
+                `
+                <div style="display:grid; gap:14px; text-align:left;">
+                    <div style="font-size:0.86rem; opacity:0.68;">${escapeHtml(formatShortDate(record.createdAt))}</div>
+                    <div style="display:flex; flex-wrap:wrap; gap:8px;">
+                        ${record.mode ? `<span style="padding:7px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.8rem;">${escapeHtml(record.mode)}</span>` : ''}
+                        ${record.difficulty ? `<span style="padding:7px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.8rem;">${escapeHtml(record.difficulty)}</span>` : ''}
+                        ${record.duration ? `<span style="padding:7px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.8rem;">${escapeHtml(record.duration)}</span>` : ''}
+                        ${record.source ? `<span style="padding:7px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.8rem;">${escapeHtml(record.source)}</span>` : ''}
+                    </div>
+                    <div>
+                        <h4 style="font-size:0.76rem; opacity:0.5; letter-spacing:0.12em; text-transform:uppercase; margin-bottom:6px;">Main Content</h4>
+                        <p style="line-height:1.8; white-space:pre-wrap;">${escapeHtml(record.mainContent || 'No main content recorded.')}</p>
+                    </div>
+                    <div>
+                        <h4 style="font-size:0.76rem; opacity:0.5; letter-spacing:0.12em; text-transform:uppercase; margin-bottom:6px;">Key Word</h4>
+                        <p style="line-height:1.8; white-space:pre-wrap;">${escapeHtml(record.keyWord || 'No keywords recorded.')}</p>
+                    </div>
+                    <div>
+                        <h4 style="font-size:0.76rem; opacity:0.5; letter-spacing:0.12em; text-transform:uppercase; margin-bottom:6px;">Personal View</h4>
+                        <p style="line-height:1.8; white-space:pre-wrap;">${escapeHtml(record.personalView || 'No personal view recorded.')}</p>
+                    </div>
+                </div>
+                `,
+                null,
+                true
+            );
+        }
+
+        function renderIntegratedRecords() {
+            const container = document.getElementById('items-container');
+            const records = ownerIntegratedRecords || [];
+            if (!records.length) {
+                container.innerHTML = `
+                <div class="daily-focus-card list-item">
+                    <div>
+                        <h4 style="font-size:0.78rem; opacity:0.45;">INTEGRATED • NO RECORDS YET</h4>
+                        <p style="font-family:'Playfair Display'; font-size:1.35rem;">No integrated speaking records saved yet</p>
+                        <p style="font-size:0.86rem; opacity:0.62; margin-top:10px;">Use Response Practice and save your audio answer to create an integrated record here.</p>
+                    </div>
+                </div>`;
+                return;
+            }
+            container.innerHTML = records.map((record, index) => `
+                <button class="daily-focus-card list-item" type="button" onclick="openIntegratedRecord(${record.recordId})" style="display:block; width:100%; text-align:left; border:none; cursor:pointer;">
+                    <div style="display:flex; justify-content:space-between; gap:18px; align-items:flex-start;">
+                        <div style="flex:1;">
+                            <h4 style="font-size:0.78rem; opacity:0.45;">INTEGRATED • ${escapeHtml(formatShortDate(record.createdAt))}</h4>
+                            <p style="font-family:'Playfair Display'; font-size:1.35rem;">${escapeHtml(record.title)}</p>
+                            <p style="font-size:0.84rem; opacity:0.62; margin-top:8px;">${escapeHtml(record.personMeta || 'Response Practice')}</p>
+                            <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:12px;">
+                                ${record.mode ? `<span style="padding:8px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.82rem;">${escapeHtml(record.mode)}</span>` : ''}
+                                ${record.difficulty ? `<span style="padding:8px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.82rem;">${escapeHtml(record.difficulty)}</span>` : ''}
+                                ${record.duration ? `<span style="padding:8px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.82rem;">${escapeHtml(record.duration)}</span>` : ''}
+                            </div>
+                        </div>
+                        <div style="font-family:'Playfair Display'; font-size:2.5rem; opacity:0.18; font-style:italic;">${String(index + 1).padStart(2, '0')}</div>
+                    </div>
+                    <p style="font-size:0.82rem; opacity:0.64; margin-top:14px;">Tap to play your saved response.</p>
+                </button>
+            `).join('');
+        }
+
+        async function openIntegratedRecord(recordId) {
+            const response = await fetch(`${OWNER_INTEGRATED_API}?id=${encodeURIComponent(recordId)}`, { credentials: 'include' });
+            const data = await response.json().catch(() => ({ ok: false }));
+            if (!data.ok || !data.record) {
+                openSiteModal('Unable to open record', 'This integrated record could not be loaded right now.');
+                return;
+            }
+            const record = data.record;
+            openSiteModal(
+                record.title || 'Integrated Record',
+                `
+                <div style="display:grid; gap:14px; text-align:left;">
+                    <div style="font-size:0.86rem; opacity:0.68;">${escapeHtml(formatShortDate(record.createdAt))}</div>
+                    <div style="display:flex; flex-wrap:wrap; gap:8px;">
+                        ${record.mode ? `<span style="padding:7px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.8rem;">${escapeHtml(record.mode)}</span>` : ''}
+                        ${record.difficulty ? `<span style="padding:7px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.8rem;">${escapeHtml(record.difficulty)}</span>` : ''}
+                        ${record.duration ? `<span style="padding:7px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.8rem;">${escapeHtml(record.duration)}</span>` : ''}
+                        ${record.source ? `<span style="padding:7px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.8rem;">${escapeHtml(record.source)}</span>` : ''}
+                    </div>
+                    <audio controls style="width:100%;">
+                        <source src="${record.audioData}" type="${escapeHtml(record.audioMime || 'audio/webm')}">
+                    </audio>
+                </div>
+                `,
+                null,
+                true
+            );
+        }
+
         function renderPlaceholderList(cat) {
             document.getElementById('items-container').innerHTML = `
             <div class="daily-focus-card list-item" style="display:flex; justify-content:space-between; align-items:center;">
@@ -847,7 +1147,7 @@
 
         function changeMonth(step) { viewDate.setMonth(viewDate.getMonth() + step); renderCalendar(); }
 
-        function doCheckIn() {
+        async function doCheckIn() {
             const dateStr = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
             if (!checkedDays.includes(dateStr)) {
                 checkedDays.push(dateStr); renderCalendar();
@@ -855,18 +1155,21 @@
                 btn.innerText = "Committed"; btn.style.opacity = "0.5"; btn.disabled = true;
                 document.getElementById('streak-txt').innerText = "Current Streak: 13 Days";
             }
+
+            if (peerResonanceState.activeTeam) {
+                try {
+                    const data = await peerFetch('commit.php', {
+                        method: 'POST',
+                        body: JSON.stringify({})
+                    });
+                    renderPeerState(data.state || {});
+                } catch (error) {
+                    openSiteModal('Commit sync failed', error.message || 'Your personal check-in was marked, but the peer sync failed.');
+                }
+            }
         }
 
         function toggleRequests(show) { document.getElementById('request-panel').classList.toggle('hidden', !show); }
-
-        function startResonance() {
-            document.getElementById('peer-init').classList.add('hidden');
-            document.getElementById('peer-bound').classList.remove('hidden');
-            document.getElementById('peer-avat').innerText = "JD";
-            document.getElementById('peer-avat').style.backgroundColor = "var(--primary-color)";
-            document.getElementById('peer-avat').style.color = "white";
-            document.querySelector('.ring-outer').style.animation = "rotateCW 5s linear infinite";
-        }
 
         function showSection(type) {
             document.querySelectorAll('.side-item').forEach(el => el.classList.remove('active'));
@@ -886,6 +1189,14 @@
             document.querySelectorAll('.sub-tab-item').forEach(el => el.classList.remove('active'));
             const tabs = document.querySelectorAll('.sub-tab-item');
             tabs.forEach(t => { if (t.innerText.toLowerCase() === cat) t.classList.add('active'); });
+            if (cat === 'listening' && ownerListMode === 'records') {
+                renderListeningRecords();
+                return;
+            }
+            if (cat === 'integrated' && ownerListMode === 'records') {
+                renderIntegratedRecords();
+                return;
+            }
             if (cat !== 'vocabulary') {
                 renderPlaceholderList(cat);
                 return;
@@ -901,6 +1212,9 @@
             const ok = await ensureAuthenticated();
             if (!ok) return;
             await loadOwnerVocabularyData();
+            await loadOwnerListeningData();
+            await loadOwnerIntegratedData();
+            await loadPeerResonanceState();
             renderCalendar();
         };
     </script>

@@ -1,0 +1,61 @@
+[Tue Mar 24 01:45:49 2026] PHP 8.4.14 Development Server (http://127.0.0.1:8002) started
+[Tue Mar 24 01:46:09 2026] 127.0.0.1:47889 Accepted
+[Tue Mar 24 01:46:09 2026] 127.0.0.1:47889 [302]: GET /
+[Tue Mar 24 01:46:09 2026] 127.0.0.1:47889 Closing
+[Tue Mar 24 01:46:22 2026] 127.0.0.1:20973 Accepted
+[Tue Mar 24 01:46:22 2026] 127.0.0.1:20973 [500]: GET /test-db.php
+[Tue Mar 24 01:46:22 2026] 127.0.0.1:20973 Closing
+[Tue Mar 24 01:47:21 2026] 127.0.0.1:48913 Accepted
+[Tue Mar 24 01:47:21 2026] 127.0.0.1:48913 [200]: GET /test-db.php
+[Tue Mar 24 01:47:21 2026] 127.0.0.1:48913 Closing
+[Tue Mar 24 01:47:59 2026] 127.0.0.1:44194 Accepted
+[Tue Mar 24 01:47:59 2026] 127.0.0.1:44194 [302]: GET /
+[Tue Mar 24 01:47:59 2026] 127.0.0.1:44194 Closing
+[Tue Mar 24 01:47:59 2026] 127.0.0.1:45768 Accepted
+[Tue Mar 24 01:47:59 2026] 127.0.0.1:45768 [200]: GET /practice.php
+[Tue Mar 24 01:47:59 2026] 127.0.0.1:45768 Closing
+[Tue Mar 24 01:47:59 2026] 127.0.0.1:2927 Accepted
+[Tue Mar 24 01:47:59 2026] 127.0.0.1:2927 [200]: GET /frontend/styles.css
+[Tue Mar 24 01:47:59 2026] 127.0.0.1:2927 Closing
+[Tue Mar 24 01:47:59 2026] 127.0.0.1:11709 Accepted
+[Tue Mar 24 01:47:59 2026] 127.0.0.1:11709 [200]: GET /styles.css
+[Tue Mar 24 01:47:59 2026] 127.0.0.1:11709 Closing
+[Tue Mar 24 01:47:59 2026] 127.0.0.1:1799 Accepted
+[Tue Mar 24 01:47:59 2026] 127.0.0.1:1799 [302]: GET /favicon.ico
+[Tue Mar 24 01:47:59 2026] 127.0.0.1:1799 Closing
+[Tue Mar 24 01:47:59 2026] 127.0.0.1:44877 Accepted
+[Tue Mar 24 01:47:59 2026] 127.0.0.1:44877 [200]: GET /practice.php
+[Tue Mar 24 01:47:59 2026] 127.0.0.1:44877 Closing
+[Tue Mar 24 01:48:01 2026] 127.0.0.1:33568 Accepted
+[Tue Mar 24 01:48:01 2026] 127.0.0.1:57398 Accepted
+[Tue Mar 24 01:48:01 2026] 127.0.0.1:33568 [200]: GET /wordbank.php
+[Tue Mar 24 01:48:01 2026] 127.0.0.1:33568 Closing
+[Tue Mar 24 01:48:01 2026] 127.0.0.1:57398 [200]: GET /frontend/styles.css
+[Tue Mar 24 01:48:01 2026] 127.0.0.1:57398 Closing
+[Tue Mar 24 01:48:01 2026] 127.0.0.1:14191 Accepted
+[Tue Mar 24 01:48:01 2026] 127.0.0.1:14191 [200]: GET /styles.css
+[Tue Mar 24 01:48:01 2026] 127.0.0.1:14191 Closing
+[Tue Mar 24 01:48:01 2026] 127.0.0.1:54260 Accepted
+[Tue Mar 24 01:48:01 2026] 127.0.0.1:3387 Accepted
+[Tue Mar 24 01:48:01 2026] 127.0.0.1:54260 [200]: GET /book-cover.php?slug=daily
+[Tue Mar 24 01:48:01 2026] 127.0.0.1:54260 Closing
+[Tue Mar 24 01:48:01 2026] 127.0.0.1:52386 Accepted
+[Tue Mar 24 01:48:01 2026] 127.0.0.1:3387 [200]: GET /book-cover.php?slug=cs
+[Tue Mar 24 01:48:01 2026] 127.0.0.1:3387 Closing
+[Tue Mar 24 01:48:01 2026] 127.0.0.1:32019 Accepted
+[Tue Mar 24 01:48:01 2026] 127.0.0.1:52386 [200]: GET /book-cover.php?slug=mech
+[Tue Mar 24 01:48:01 2026] 127.0.0.1:52386 Closing
+[Tue Mar 24 01:48:01 2026] 127.0.0.1:4213 Accepted
+[Tue Mar 24 01:48:01 2026] 127.0.0.1:32019 [200]: GET /book-cover.php?slug=civil
+[Tue Mar 24 01:48:01 2026] 127.0.0.1:32019 Closing
+[Tue Mar 24 01:48:01 2026] 127.0.0.1:44156 Accepted
+[Tue Mar 24 01:48:01 2026] 127.0.0.1:4213 [200]: GET /book-cover.php?slug=traffic
+[Tue Mar 24 01:48:01 2026] 127.0.0.1:4213 Closing
+[Tue Mar 24 01:48:01 2026] 127.0.0.1:44156 [200]: GET /book-cover.php?slug=math
+[Tue Mar 24 01:48:01 2026] 127.0.0.1:44156 Closing
+[Tue Mar 24 01:48:01 2026] 127.0.0.1:21198 Accepted
+[Tue Mar 24 01:48:01 2026] 127.0.0.1:21198 [302]: GET /favicon.ico
+[Tue Mar 24 01:48:01 2026] 127.0.0.1:21198 Closing
+[Tue Mar 24 01:48:01 2026] 127.0.0.1:52467 Accepted
+[Tue Mar 24 01:48:01 2026] 127.0.0.1:52467 [200]: GET /practice.php
+[Tue Mar 24 01:48:01 2026] 127.0.0.1:52467 Closing

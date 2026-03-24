@@ -1,5 +1,6 @@
 -- Academic English Practice Platform Seed Data
 -- Run this AFTER 101_acadbeat_all_tables.sql
+SET SQL_SAFE_UPDATES = 0;
 USE acadbeat;
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
@@ -37,6 +38,36 @@ ALTER TABLE vocab_user_wordbook_selections AUTO_INCREMENT = 1;
 ALTER TABLE vocab_sessions AUTO_INCREMENT = 1;
 ALTER TABLE vocab_session_items AUTO_INCREMENT = 1;
 ALTER TABLE vocab_session_responses AUTO_INCREMENT = 1;
+
+INSERT INTO forum_labels (label_id, name, created_at) VALUES
+(1, 'Current news', '2026-03-23 09:00:00'),
+(2, 'Seek help', '2026-03-23 09:00:00'),
+(3, 'Viewpoint topic', '2026-03-23 09:00:00'),
+(4, 'Study tips', '2026-03-23 09:00:00'),
+(5, 'Course guide', '2026-03-23 09:00:00'),
+(6, 'Campus life', '2026-03-23 09:00:00');
+
+INSERT INTO forum_posts (post_id, user_id, title, content_text, view_count, comment_count, last_commented_at, status, created_at, updated_at) VALUES
+(1, 1, 'How should we balance AI tools and original writing in class?', 'Our seminar keeps debating where AI support becomes too much. I am curious how other students define a fair boundary between drafting support and actual authorship.\n\n**What counts as acceptable help** in your course right now?', 184, 2, '2026-03-23 12:40:00', 'active', '2026-03-22 19:10:00', '2026-03-23 12:40:00'),
+(2, 2, 'Need help choosing between database systems and web development electives', 'I can only keep one elective this term. The database course looks practical, but the web development studio might help my portfolio faster.\n\nIf you took either one, what was the workload really like?', 96, 1, '2026-03-23 11:20:00', 'active', '2026-03-22 21:00:00', '2026-03-23 11:20:00'),
+(3, 1, 'Current campus wifi slowdown near the library?', 'Has anyone else noticed the campus wifi dropping near the library this week? It gets unstable right when I upload project files, and I am trying to figure out whether it is my laptop or the network itself.', 58, 0, NULL, 'active', '2026-03-23 08:15:00', '2026-03-23 08:15:00'),
+(4, 3, 'What makes a forum thread genuinely useful to future students?', 'I think the best threads are not the loudest ones. The useful ones usually include context, final outcomes, and the exact steps that solved the problem.\n\nWhat should every high-quality help thread include?', 121, 1, '2026-03-23 13:05:00', 'active', '2026-03-23 09:30:00', '2026-03-23 13:05:00');
+
+INSERT INTO forum_post_labels (post_label_id, post_id, label_id) VALUES
+(1, 1, 1),
+(2, 1, 3),
+(3, 2, 2),
+(4, 2, 5),
+(5, 3, 1),
+(6, 3, 6),
+(7, 4, 2),
+(8, 4, 3);
+
+INSERT INTO forum_comments (comment_id, post_id, user_id, parent_comment_id, content_text, status, created_at, updated_at) VALUES
+(1, 1, 2, NULL, 'In my writing class, outlining ideas with AI is allowed, but paragraph-level drafting is not. The teacher said the key test is whether you can still explain and defend every sentence yourself.', 'active', '2026-03-23 10:05:00', '2026-03-23 10:05:00'),
+(2, 1, 1, 1, 'That explanation actually sounds reasonable. The line is still blurry, but the “can you defend every sentence” test is stronger than just banning tools entirely.', 'active', '2026-03-23 12:40:00', '2026-03-23 12:40:00'),
+(3, 2, 1, NULL, 'I took the database systems course last term. The workload was steady rather than explosive, and the SQL practice paid off immediately in projects. If you want practical backend value, I would lean database first.', 'active', '2026-03-23 11:20:00', '2026-03-23 11:20:00'),
+(4, 4, 2, NULL, 'A useful thread should always include the final fix, not just the original question. Otherwise future students read five paragraphs of confusion and still leave empty-handed.', 'active', '2026-03-23 13:05:00', '2026-03-23 13:05:00');
 
 INSERT INTO users (user_id, username, email, password_hash, avatar_url) VALUES
 (1, 'demo_student', 'demo@acadbeat.local', '$2y$10$abcdefghijklmnopqrstuvabcdefghijklmnopqrstuvabcd', NULL);

@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Practice Detail | AcadBeat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="acadbeat-global.css">
+  <link rel="stylesheet" href="practice-style.css">
+</head>
+<body data-page="video-detail">
+  <main class="module-content page-shell">
+    <div id="studyWorkspace" class="study-workspace">
+      <section class="detail-layout">
+        <div class="video-panel">
+          <div class="workspace-top-actions">
+            <button class="back-btn back-fab" data-back-target="listening.html" aria-label="Go back" title="Back" type="button">&#8592;</button>
+            <h2 id="detailTitle">Video title</h2>
+          </div>
+          <p id="detailPersonMeta" class="person-meta-line"></p>
+          <div id="detailMeta" class="detail-meta-row"></div>
+          <video id="practiceVideo" controls preload="metadata"></video>
+          <div class="detail-resource-tabs">
+            <button class="btn-small transcript-toggle-btn detail-resource-tab" id="transcriptToggleBtn" type="button">Transcript</button>
+            <button class="btn-small transcript-toggle-btn detail-resource-tab hidden" id="sampleNotesToggleBtn" type="button">Sample Notes</button>
+          </div>
+          <aside class="transcript-panel hidden" id="transcriptPanel">
+            <div class="detail-resource-head">
+              <strong id="detailResourceTitle">Transcript</strong>
+            </div>
+            <div class="transcript-content" id="transcriptContent"></div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="detail-note-layout">
+        <aside class="note-panel detail-note-panel">
+          <div class="note-panel-head">
+            <h3>Note</h3>
+            <div class="note-panel-head-actions">
+              <button class="btn-small note-share-btn" id="noteShareBtn" type="button">Share</button>
+              <button class="btn-small note-dock-toggle-btn" id="noteDockToggleBtn" type="button">Fold</button>
+            </div>
+          </div>
+          <div class="note-grid three-col-note-grid">
+            <div class="note-field">
+              <label for="noteMainContent">Main Content</label>
+              <textarea id="noteMainContent" rows="6" placeholder="Summarize the main content of the video"></textarea>
+              <div class="note-field-display hidden" id="noteMainContentDisplay"></div>
+            </div>
+            <div class="note-field">
+              <label for="noteKeyWord">Key Word</label>
+              <textarea id="noteKeyWord" rows="6" placeholder="Record keywords and terms"></textarea>
+              <div class="note-field-display hidden" id="noteKeyWordDisplay"></div>
+            </div>
+            <div class="note-field">
+              <label for="notePersonalView">Personal View</label>
+              <textarea id="notePersonalView" rows="6" placeholder="Write your thoughts and opinions"></textarea>
+              <div class="note-field-display hidden" id="notePersonalViewDisplay"></div>
+            </div>
+          </div>
+          <div class="note-record-action">
+            <div class="note-record-action-row">
+              <button class="btn-small btn-primary-small" id="recordAnswerBtn" type="button">Record your answer</button>
+              <span class="note-record-error hidden" id="recordAnswerError">notes are blank</span>
+            </div>
+            <div class="note-record-feedback hidden" id="recordAnswerFeedback">
+              <strong>Saved to your study record</strong>
+              <span>You can still make multiple attempts and save</span>
+            </div>
+          </div>
+        </aside>
+      </section>
+    </div>
+  </main>
+
+  <script src="practice-data.js"></script>
+  <script src="practice-app.js"></script>
+</body>
+</html>

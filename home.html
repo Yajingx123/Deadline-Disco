@@ -793,6 +793,9 @@
 
     <script>
         const VOCABULARY_URL = 'http://127.0.0.1:8002/';
+        const FORUM_URL = 'http://127.0.0.1:5173/';
+        const TECHNOLOGY_URL = './technology.html';
+        const ACADEMIC_PRACTICE_URL = './Academic-Practice/training.html';
         const AUTH_API_BASE = './Auth/backend/api';
         const authState = { user: null, mode: 'login' };
 
@@ -962,6 +965,18 @@
             }
             if (name === 'Lexis') {
                 window.location.href = VOCABULARY_URL;
+                return;
+            }
+            if (name === 'Dialogue') {
+                window.location.href = FORUM_URL;
+                return;
+            }
+            if (name === 'Insight') {
+                window.location.href = ACADEMIC_PRACTICE_URL;
+                return;
+            }
+            if (name === 'Method') {
+                window.location.href = TECHNOLOGY_URL;
                 return;
             }
             openSiteModal('Not connected yet', 'This module action has not been connected yet.');
