@@ -3,6 +3,7 @@ require_once __DIR__ . '/config.php';
 vocab_require_auth();
 $pageTitle = 'Practice';
 $activeNav = 'practice';
+$hideGlobalHomeNav = true;
 
 $booksTable = vocab_table('books');
 $bookWordsTable = vocab_table('book_words');
@@ -41,13 +42,17 @@ foreach ($books as $b) {
 require_once __DIR__ . '/includes/header.php';
 ?>
 
-        <h1 class="hero__title" style="margin-top:0">Vocabulary practice</h1>
-        <p class="hero__subtitle" style="margin-bottom:12px">Choose a short session first, then practise with the books you already picked. Study time decides whether you review 5, 10, or 15 words, and words are taken in the exact order of your selected books.</p>
+        <section class="vocabEntryHero">
+          <button class="modeBackBtn vocabEntryBackBtn" type="button" onclick="window.location.href='../Academic-Practice/training.html'" aria-label="Go back to training" title="Back">&#8592;</button>
+          <h1>Vocabulary Practice</h1>
+          <p>Choose a short session first, then practise with the books you already picked. Study time decides whether you review 5, 10, or 15 words, and words are taken in the exact order of your selected books.</p>
+        </section>
 
-        <section class="card" style="margin-bottom:18px">
+        <div class="vocabPageStack">
+        <section class="card vocabModeSection" style="margin-bottom:18px">
           <div class="card__head">
             <div>
-              <div class="card__title">Study time</div>
+              <div class="card__title vocabSectionTitle">Session mode</div>
               <div class="card__sub">1 minute, 3-5 minutes, or 10 minutes.</div>
             </div>
           </div>
@@ -98,12 +103,13 @@ require_once __DIR__ . '/includes/header.php';
         <div class="card dailyPlan" style="margin-bottom:18px" id="practiceSelectionBar" aria-label="Word books used for this practice">
           <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
             <div>
-              <div style="font-weight:700;margin-bottom:4px">Your study books</div>
+              <div class="vocabSectionTitle" style="font-size:1.5rem;font-weight:800;margin-bottom:4px">Your study books</div>
               <div style="color:var(--muted);font-size:13px">These are the actual word books that will feed your practice session.</div>
             </div>
             <a href="./wordbank.php" class="secondary" style="display:inline-flex;align-items:center;text-decoration:none">Choose word books</a>
           </div>
           <div class="selectedBooksGrid" id="practiceBookList" style="margin-top:16px">—</div>
+        </div>
         </div>
 
         <script>

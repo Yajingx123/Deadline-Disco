@@ -114,7 +114,7 @@
             font-size: 3.2rem;
             font-weight: 300;
             letter-spacing: -1px;
-            text-transform: uppercase;
+            text-transform: none;
             line-height: 1;
             display: inline-block;
             position: relative;
@@ -169,6 +169,19 @@
             top: 0;
             width: 100%;
             z-index: 1000;
+        }
+
+        .nav-left-cluster {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .nav-title {
+            font-size: 1rem;
+            letter-spacing: 0.14em;
+            font-weight: 700;
+            opacity: 0.6;
         }
 
         .logo {
@@ -452,6 +465,21 @@
             border-bottom: 2px solid var(--secondary-color);
         }
 
+        #list-sec .quote-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-style: italic;
+            font-weight: 500;
+            letter-spacing: 0;
+        }
+
+        #list-sec .sub-greeting {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-style: italic;
+            opacity: 0.5;
+        }
+
         @keyframes rotateCW {
             from {
                 transform: rotate(0);
@@ -495,7 +523,7 @@
 
     <nav>
         <div class="logo">Acad<span>Beat</span></div>
-        <div style="font-size: 1rem; letter-spacing: 2px; font-weight: 700; opacity: 0.6;">THE SANCTUARY</div>
+        <div class="nav-title">THE SANCTUARY</div>
         <button class="btn-small" onclick="window.location.href='home.html'">Return Home</button>
     </nav>
 
@@ -684,7 +712,7 @@
             const display = document.getElementById('ownerNameDisplay');
             const avatar = document.getElementById('ownerAvatarNode');
             if (display) {
-                display.innerHTML = `${formatDisplayName(user.username)} <b>Owner</b>`;
+                display.innerHTML = `${escapeHtml(String(user.username || 'User'))} <b>Owner</b>`;
             }
             if (avatar) {
                 avatar.textContent = initialsOf(user.username);

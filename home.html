@@ -719,8 +719,7 @@
     <nav>
         <div class="logo">Acad<span>Beat</span></div>
         <div class="nav-menu">
-            <div class="nav-item active" onclick="openVocabulary(this)">Vocabulary</div>
-            <div class="nav-item" onclick="loadModule('Insight', this)">Academic</div>
+            <div class="nav-item active" onclick="loadModule('Insight', this)">Academic</div>
             <div class="nav-item" onclick="loadModule('Dialogue', this)">Forum</div>
             <div class="nav-item" onclick="loadModule('Method', this)">Technology</div>
         </div>
@@ -792,7 +791,7 @@
     </div>
 
     <script>
-        const VOCABULARY_URL = 'http://127.0.0.1:8002/';
+        const VOCABULARY_URL = './vocba_prac/';
         const FORUM_URL = 'http://127.0.0.1:5173/';
         const TECHNOLOGY_URL = './technology.html';
         const ACADEMIC_PRACTICE_URL = './Academic-Practice/training.html';
@@ -810,11 +809,11 @@
         function navElementFor(name) {
             const map = {
                 Lexis: '.nav-item:nth-child(1)',
-                Insight: '.nav-item:nth-child(2)',
-                Dialogue: '.nav-item:nth-child(3)',
-                Method: '.nav-item:nth-child(4)'
+                Insight: '.nav-item:nth-child(1)',
+                Dialogue: '.nav-item:nth-child(2)',
+                Method: '.nav-item:nth-child(3)'
             };
-            return document.querySelector(map[name] || map.Lexis);
+            return document.querySelector(map[name] || map.Insight);
         }
 
         function initialsOf(name) {
@@ -954,7 +953,7 @@
             authState.user = null;
             renderAuthUI();
             closeAuthModal();
-            loadModule('Lexis', navElementFor('Lexis'));
+            loadModule('Insight', navElementFor('Insight'));
             return false;
         }
 
@@ -980,12 +979,6 @@
                 return;
             }
             openSiteModal('Not connected yet', 'This module action has not been connected yet.');
-        }
-
-        function openVocabulary(el) {
-            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-            if (el) el.classList.add('active');
-            loadModule('Lexis', el);
         }
 
         function loadModule(name, el) {
@@ -1062,7 +1055,9 @@
         window.onload = async () => {
             const params = new URLSearchParams(window.location.search);
             const requestedModule = params.get('module');
-            const moduleName = data[requestedModule] ? requestedModule : 'Lexis';
+            const moduleName = requestedModule === 'Lexis'
+                ? 'Insight'
+                : (data[requestedModule] ? requestedModule : 'Insight');
             loadModule(moduleName, navElementFor(moduleName));
             await loadAuthUser();
             if (params.get('login') === '1') {

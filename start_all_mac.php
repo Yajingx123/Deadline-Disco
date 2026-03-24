@@ -36,7 +36,7 @@ $services = [
 
 function startMacProcess(string $command, string $workdir, string $stdoutLog, string $stderrLog): int {
     $shellCommand = sprintf(
-        'cd %s && nohup %s > %s 2> %s & echo $!',
+        'cd %s && nohup %s > %s 2> %s < /dev/null & echo $!',
         escapeshellarg($workdir),
         $command,
         escapeshellarg($stdoutLog),
