@@ -95,6 +95,11 @@ try {
 
 $unusedMediaUrls = forum_collect_unused_media_urls($pdo, $mediaUrls);
 forum_delete_uploaded_files($unusedMediaUrls);
+forum_realtime_publish('forum.comment.deleted', [
+    'postId' => (int)$row['post_id'],
+    'commentId' => $commentId,
+    'deletedCommentIds' => $deletedIds,
+]);
 
 forum_json([
     'ok' => true,

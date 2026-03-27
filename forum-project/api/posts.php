@@ -142,6 +142,10 @@ try {
     $stmt->execute([$postId]);
     $post = $stmt->fetch();
 
+    forum_realtime_publish('forum.post.created', [
+        'postId' => $postId,
+    ]);
+
     forum_json([
         'ok' => true,
         'post' => $post ? forum_post_row_to_payload($post) : null,

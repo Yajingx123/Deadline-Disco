@@ -27,6 +27,13 @@ body {
   padding-bottom: 48px;
 }
 
+.forum-container--personal {
+  height: 100vh;
+  min-height: 100vh;
+  padding-bottom: 0;
+  overflow: hidden;
+}
+
 .forum-topnav {
   display: flex;
   align-items: center;
