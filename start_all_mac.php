@@ -32,6 +32,13 @@ $services = [
         'workdir' => $root . '/forum-project',
         'command' => escapeshellarg($npm) . ' run dev -- --host 127.0.0.1 --port 5173',
     ],
+    [
+        'name' => 'realtime',
+        'host' => '127.0.0.1',
+        'port' => 3001,
+        'workdir' => $root . '/voice-room-server',
+        'command' => escapeshellarg($npm) . ' start',
+    ],
 ];
 
 function startMacProcess(string $command, string $workdir, string $stdoutLog, string $stderrLog): int {

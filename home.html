@@ -722,6 +722,7 @@
             <div class="nav-item active" onclick="loadModule('Insight', this)">Academic</div>
             <div class="nav-item" onclick="loadModule('Dialogue', this)">Forum</div>
             <div class="nav-item" onclick="loadModule('Method', this)">Technology</div>
+            <div class="nav-item" onclick="loadModule('Studio', this)">Studio</div>
         </div>
         <div class="user-group">
             <div class="user-section" id="userSection" onclick="handleUserAction()">
@@ -792,9 +793,10 @@
 
     <script>
         const VOCABULARY_URL = './vocba_prac/';
-        const FORUM_URL = 'http://127.0.0.1:5173/';
+        const FORUM_URL = 'http://127.0.0.1:5173/?view=chooser';
         const TECHNOLOGY_URL = './technology.html';
         const ACADEMIC_PRACTICE_URL = './Academic-Practice/training.html';
+        const STUDIO_URL = './Studio/studio.html';
         const AUTH_API_BASE = './Auth/backend/api';
         const authState = { user: null, mode: 'login' };
 
@@ -803,7 +805,8 @@
             Lexis: { label: "Section I — Lexical Depth", btn: "Start Study" },
             Insight: { label: "Section II — Visual Intelligence", id: "02", topic: "Visual Anthropology: A Cinematic Study", btn: "View Stream" },
             Dialogue: { label: "Section III — Collective Intellect", id: "03", topic: "Current Thread: Linguistic Relativity in AI", btn: "Enter Forum" },
-            Method: { label: "Section IV — Technical Support", id: "04", topic: "Workflow Optimization: Academic Toolkit", btn: "Get Support" }
+            Method: { label: "Section IV — Technical Support", id: "04", topic: "Workflow Optimization: Academic Toolkit", btn: "Get Support" },
+            Studio: { label: "Section V — Game Studio", id: "05", topic: "Play interactive English mini-games to train vocabulary and strategy.", btn: "Enter Studio" }
         };
 
         function navElementFor(name) {
@@ -811,7 +814,8 @@
                 Lexis: '.nav-item:nth-child(1)',
                 Insight: '.nav-item:nth-child(1)',
                 Dialogue: '.nav-item:nth-child(2)',
-                Method: '.nav-item:nth-child(3)'
+                Method: '.nav-item:nth-child(3)',
+                Studio: '.nav-item:nth-child(4)'
             };
             return document.querySelector(map[name] || map.Insight);
         }
@@ -978,6 +982,10 @@
                 window.location.href = TECHNOLOGY_URL;
                 return;
             }
+            if (name === 'Studio') {
+                window.location.href = STUDIO_URL;
+                return;
+            }
             openSiteModal('Not connected yet', 'This module action has not been connected yet.');
         }
 
@@ -1026,6 +1034,20 @@
                             </div>
                             <div class="iso-card" style="left: 200px; top: 40px; animation-delay: -2s; border-color: var(--primary-color);">
                                 <div class="iso-ui-header" style="background:var(--primary-color);"></div>
+                                <div class="iso-ui-element"></div>
+                                <div class="iso-ui-element"></div>
+                            </div>
+                        </div>`;
+            }
+            else if (name === 'Studio') {
+                html += `<div class="method-isometric">
+                            <div class="iso-card" style="left: 72px; top: 28px; border-color: var(--primary-color);">
+                                <div class="iso-ui-header" style="background:var(--primary-color); opacity:0.35;"></div>
+                                <div class="iso-ui-element"></div>
+                                <div class="iso-ui-element" style="width: 78%;"></div>
+                            </div>
+                            <div class="iso-card" style="left: 218px; top: 48px; animation-delay: -1.6s;">
+                                <div class="iso-ui-header"></div>
                                 <div class="iso-ui-element"></div>
                                 <div class="iso-ui-element"></div>
                             </div>

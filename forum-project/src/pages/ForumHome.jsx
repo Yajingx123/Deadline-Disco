@@ -6,7 +6,7 @@ import PostList from '../components/PostList';
 import PostDetail from './PostDetail'; 
 import PostModal from '../components/PostModal'; 
 import { getSummary } from '../utils/formatText';
-import { fetchLabels, fetchPosts, createPost, fetchPostDetail, incrementPostViews, createComment, deletePost, deleteComment } from '../api/forumApi';
+import { connectRealtime, fetchLabels, fetchPosts, createPost, fetchPostDetail, incrementPostViews, createComment, deletePost, deleteComment } from '../api/forumApi';
 
 const FORUM_PREFILL_WINDOW_NAME_KEY = '__acadbeat_forum_prefill__';
 
@@ -65,6 +65,46 @@ export default function ForumHome() {
   useEffect(() => {
     loadForumData();
   }, [searchQuery, selectedTags, sortOrder]);
+
+  useEffect(() => {
+    return connectRealtime(async (event) => {
+      const eventType = String(event?.type || '');
+      const eventPostId = Number(event?.data?.postId || 0);
+
+      if (!eventType.startsWith('forum.')) {
+        return;
+      }
+
+      if (selectedPost?.id) {
+        if (eventType === 'forum.post.deleted' && eventPostId === Number(selectedPost.id)) {
+          setSelectedPost(null);
+          await loadForumData();
+          return;
+        }
+
+        if (
+          eventPostId === Number(selectedPost.id)
+          && (eventType === 'forum.comment.created' || eventType === 'forum.comment.deleted' || eventType === 'forum.post.created')
+        ) {
+          try {
+            const detail = await fetchPostDetail(selectedPost.id);
+            setSelectedPost(detail.post);
+          } catch (_err) {
+            // Ignore transient realtime detail refresh failures.
+          }
+        }
+      }
+
+      if (
+        eventType === 'forum.post.created'
+        || eventType === 'forum.post.deleted'
+        || eventType === 'forum.comment.created'
+        || eventType === 'forum.comment.deleted'
+      ) {
+        await loadForumData();
+      }
+    });
+  }, [selectedPost, searchQuery, selectedTags, sortOrder]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
