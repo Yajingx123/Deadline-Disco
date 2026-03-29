@@ -1,0 +1,80 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --bg-color: #E4DFD8;
+  --primary-color: #9BB7D4;
+  --secondary-color: #3A4E6B;
+  --white: #ffffff;
+  --panel: rgba(255, 255, 255, 0.72);
+  --panel-strong: rgba(255, 255, 255, 0.88);
+  --border: rgba(58, 78, 107, 0.12);
+  --shadow-soft: 0 18px 50px rgba(58, 78, 107, 0.08);
+  
+  --text: var(--secondary-color);
+  --text-h: var(--secondary-color);
+  --bg: var(--bg-color);
+  --accent: var(--primary-color);
+  --accent-bg: rgba(155, 183, 212, 0.2);
+  --accent-border: rgba(155, 183, 212, 0.5);
+  
+  --sans: 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
+  --heading: 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
+  
+  font-family: var(--sans);
+  color-scheme: light;
+  color: var(--text);
+  background: var(--bg);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--sans);
+  background:
+    radial-gradient(circle at top, rgba(155, 183, 212, 0.16), transparent 28%),
+    var(--bg-color);
+  color: var(--secondary-color);
+  min-height: 100vh;
+}
+
+#root {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  text-align: left;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+h1, h2, h3 {
+  font-family: var(--heading);
+  font-weight: 700;
+  color: var(--text-h);
+  margin: 0;
+}
+
+h1 {
+  font-size: 2.9rem;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+h2 {
+  font-size: 1.5rem;
+  line-height: 1.2;
+}
+
+p {
+  margin: 0;
+}
+
+button {
+  font-family: var(--sans);
+}

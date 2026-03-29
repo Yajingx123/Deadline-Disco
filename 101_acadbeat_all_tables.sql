@@ -205,6 +205,8 @@ CREATE TABLE forum_posts (
     content_text MEDIUMTEXT NULL,
     view_count INT NOT NULL DEFAULT 0,
     comment_count INT NOT NULL DEFAULT 0,
+    like_count INT NOT NULL DEFAULT 0,
+    favorite_count INT NOT NULL DEFAULT 0,
     last_commented_at DATETIME NULL,
     status VARCHAR(20) NOT NULL DEFAULT 'active',
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -217,13 +219,19 @@ CREATE TABLE forum_posts (
         ON UPDATE CASCADE,
 
     CONSTRAINT chk_forum_posts_status
-        CHECK (status IN ('active', 'hidden', 'deleted')),
+        CHECK (status IN ('active', 'hidden', 'deleted', 'Under review', 'Rejected')),
 
     CONSTRAINT chk_forum_posts_view_count
         CHECK (view_count >= 0),
 
     CONSTRAINT chk_forum_posts_comment_count
-        CHECK (comment_count >= 0)
+        CHECK (comment_count >= 0),
+
+    CONSTRAINT chk_forum_posts_like_count
+        CHECK (like_count >= 0),
+
+    CONSTRAINT chk_forum_posts_favorite_count
+        CHECK (favorite_count >= 0)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 

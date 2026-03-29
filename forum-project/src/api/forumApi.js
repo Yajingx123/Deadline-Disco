@@ -12,12 +12,24 @@ async function forumFetch(path, options = {}) {
     body: options.body || undefined,
   });
 
-  const data = await response.json().catch(() => ({
-    ok: false,
-    message: 'Invalid server response.',
-  }));
+  let data;
+  try {
+    data = await response.json();
+  } catch (e) {
+    data = {
+      ok: false,
+      message: 'Invalid server response.',
+    };
+  }
 
-  if (!response.ok || data.ok === false) {
+  if (!response.ok) {
+    if (response.status === 401) {
+      throw new Error('Login required.');
+    }
+    throw new Error(data.message || 'Request failed.');
+  }
+
+  if (data.ok === false) {
     throw new Error(data.message || 'Request failed.');
   }
 
@@ -74,6 +86,32 @@ export async function deleteComment(commentId) {
     method: 'POST',
     body: JSON.stringify({ commentId }),
   });
+}
+
+export async function likePost(postId) {
+  return forumFetch('/like-post.php', {
+    method: 'POST',
+    body: JSON.stringify({ postId }),
+  });
+}
+
+export async function favoritePost(postId) {
+  return forumFetch('/favorite-post.php', {
+    method: 'POST',
+    body: JSON.stringify({ postId }),
+  });
+}
+
+export async function fetchUserLikes() {
+  return forumFetch('/user-likes.php');
+}
+
+export async function fetchUserFavorites() {
+  return forumFetch('/user-favorites.php');
+}
+
+export async function fetchUserPosts() {
+  return forumFetch('/user-posts.php');
 }
 
 export async function uploadForumAsset(file, kind = 'image') {

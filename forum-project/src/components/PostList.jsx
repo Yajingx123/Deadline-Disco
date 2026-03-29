@@ -1,6 +1,6 @@
 import PostItem from './PostItem';
 
-export default function PostList({ posts, onPostClick }) {
+export default function PostList({ posts, onPostClick, showStatus, onDelete }) {
   if (posts.length === 0) {
     return <div className="main-content"><p>No posts found.</p></div>;
   }
@@ -8,7 +8,7 @@ export default function PostList({ posts, onPostClick }) {
   return (
     <div className="main-content">
       {posts.map(post => (
-        <PostItem key={post.id} post={post} onPostClick={onPostClick} />
+        <PostItem key={post.id} post={post} onPostClick={onPostClick} showStatus={showStatus} onDelete={onDelete} />
       ))}
     </div>
   );

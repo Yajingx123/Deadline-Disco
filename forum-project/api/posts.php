@@ -48,6 +48,8 @@ if ($method === 'GET') {
             fp.content_text,
             fp.view_count,
             fp.comment_count,
+            fp.like_count,
+            fp.favorite_count,
             fp.created_at,
             u.username AS author_name,
             COALESCE(MIN(fpm.media_type), 'text') AS media_type,
@@ -58,7 +60,7 @@ if ($method === 'GET') {
         LEFT JOIN forum_post_labels fpl ON fpl.post_id = fp.post_id
         LEFT JOIN forum_labels fl ON fl.label_id = fpl.label_id
         WHERE " . implode(' AND ', $conditions) . "
-        GROUP BY fp.post_id, fp.user_id, fp.title, fp.content_text, fp.view_count, fp.comment_count, fp.created_at, u.username
+        GROUP BY fp.post_id, fp.user_id, fp.title, fp.content_text, fp.view_count, fp.comment_count, fp.like_count, fp.favorite_count, fp.created_at, u.username
         ORDER BY {$orderBy}
     ";
 
@@ -89,8 +91,8 @@ if ($title === '' || $content === '') {
 $pdo->beginTransaction();
 try {
     $insertPost = $pdo->prepare("
-        INSERT INTO forum_posts (user_id, title, content_text, view_count, comment_count, status, created_at, updated_at)
-        VALUES (?, ?, ?, 0, 0, 'active', NOW(), NOW())
+        INSERT INTO forum_posts (user_id, title, content_text, view_count, comment_count, like_count, favorite_count, status, created_at, updated_at)
+        VALUES (?, ?, ?, 0, 0, 0, 0, 'Under review', NOW(), NOW())
     ");
     $insertPost->execute([(int)$user['user_id'], $title, $content]);
     $postId = (int)$pdo->lastInsertId();
@@ -127,6 +129,9 @@ try {
             fp.content_text,
             fp.view_count,
             fp.comment_count,
+            fp.like_count,
+            fp.favorite_count,
+            fp.status,
             fp.created_at,
             u.username AS author_name,
             COALESCE(MIN(fpm.media_type), 'text') AS media_type,
@@ -137,7 +142,7 @@ try {
         LEFT JOIN forum_post_labels fpl ON fpl.post_id = fp.post_id
         LEFT JOIN forum_labels fl ON fl.label_id = fpl.label_id
         WHERE fp.post_id = ?
-        GROUP BY fp.post_id, fp.user_id, fp.title, fp.content_text, fp.view_count, fp.comment_count, fp.created_at, u.username
+        GROUP BY fp.post_id, fp.user_id, fp.title, fp.content_text, fp.view_count, fp.comment_count, fp.like_count, fp.favorite_count, fp.status, fp.created_at, u.username
     ");
     $stmt->execute([$postId]);
     $post = $stmt->fetch();
@@ -146,9 +151,14 @@ try {
         'postId' => $postId,
     ]);
 
+    $payload = $post ? forum_post_row_to_payload($post) : null;
+    if ($payload && isset($post['status'])) {
+        $payload['status'] = $post['status'];
+    }
+
     forum_json([
         'ok' => true,
-        'post' => $post ? forum_post_row_to_payload($post) : null,
+        'post' => $payload,
     ], 201);
 } catch (Throwable $e) {
     if ($pdo->inTransaction()) {

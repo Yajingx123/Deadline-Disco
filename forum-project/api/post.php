@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 require __DIR__ . '/bootstrap.php';
-forum_require_user();
+$user = forum_require_user();
 
 $postId = (int)($_GET['id'] ?? 0);
 if ($postId <= 0) {
@@ -19,6 +19,9 @@ $postStmt = $pdo->prepare("
         fp.content_text,
         fp.view_count,
         fp.comment_count,
+        fp.like_count,
+        fp.favorite_count,
+        fp.status,
         fp.created_at,
         u.username AS author_name,
         COALESCE(MIN(fpm.media_type), 'text') AS media_type,
@@ -28,15 +31,23 @@ $postStmt = $pdo->prepare("
     LEFT JOIN forum_post_media fpm ON fpm.post_id = fp.post_id
     LEFT JOIN forum_post_labels fpl ON fpl.post_id = fp.post_id
     LEFT JOIN forum_labels fl ON fl.label_id = fpl.label_id
-    WHERE fp.post_id = ? AND fp.status = 'active'
-    GROUP BY fp.post_id, fp.user_id, fp.title, fp.content_text, fp.view_count, fp.comment_count, fp.created_at, u.username
+    WHERE fp.post_id = ? AND (fp.status = 'active' OR fp.user_id = ?)
+    GROUP BY fp.post_id, fp.user_id, fp.title, fp.content_text, fp.view_count, fp.comment_count, fp.like_count, fp.favorite_count, fp.status, fp.created_at, u.username
     LIMIT 1
 ");
-$postStmt->execute([$postId]);
+$postStmt->execute([$postId, $user['user_id']]);
 $postRow = $postStmt->fetch();
 if (!$postRow) {
     forum_json(['ok' => false, 'message' => 'Post not found.'], 404);
 }
+
+$likeStmt = $pdo->prepare("SELECT like_id FROM forum_post_likes WHERE post_id = ? AND user_id = ?");
+$likeStmt->execute([$postId, $user['user_id']]);
+$isLiked = $likeStmt->fetch() !== false;
+
+$favoriteStmt = $pdo->prepare("SELECT favorite_id FROM forum_post_favorites WHERE post_id = ? AND user_id = ?");
+$favoriteStmt->execute([$postId, $user['user_id']]);
+$isFavorited = $favoriteStmt->fetch() !== false;
 
 $commentStmt = $pdo->prepare("
     SELECT
@@ -74,6 +85,8 @@ $comments = array_map(static function(array $row): array {
 
 $post = forum_post_row_to_payload($postRow);
 $post['comments'] = $comments;
+$post['isLiked'] = $isLiked;
+$post['isFavorited'] = $isFavorited;
 
 forum_json([
     'ok' => true,
