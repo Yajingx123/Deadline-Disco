@@ -1,27 +1,10 @@
-function Navbar({ currentPage, currentUser, isReady, onLogout, setCurrentPage }) {
+function Navbar({ currentUser, isReady, onLogout }) {
   return (
     <nav style={styles.navbar}>
       <div style={styles.container}>
         <div style={styles.logo}>Admin Panel</div>
         <div style={styles.navLinks}>
-          <button
-            style={{
-              ...styles.navLink,
-              ...(currentPage === 'home' ? styles.activeLink : {})
-            }}
-            onClick={() => setCurrentPage('home')}
-            disabled={!isReady}
-          >
-            Home
-          </button>
-          <button
-            style={{
-              ...styles.navLink,
-              ...(currentPage === 'forum' ? styles.activeLink : {})
-            }}
-            onClick={() => setCurrentPage('forum')}
-            disabled={!isReady}
-          >
+          <button style={{ ...styles.navLink, ...styles.activeLink }} disabled={!isReady}>
             Forum Management
           </button>
         </div>

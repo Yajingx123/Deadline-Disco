@@ -5,7 +5,7 @@ import ForumPostReview from './components/ForumPostReview'
 import { adminFetch, redirectToHome, redirectToLogin } from './api'
 
 function App() {
-  const [currentPage, setCurrentPage] = useState('home')
+  const [currentPage, setCurrentPage] = useState('forum')
   const [currentUser, setCurrentUser] = useState(null)
   const [bootStatus, setBootStatus] = useState('loading')
   const [bootMessage, setBootMessage] = useState('')
@@ -101,14 +101,7 @@ function App() {
       return <ForumPostReview />
     }
 
-    return (
-      <div style={styles.homeContainer}>
-        <h1 style={styles.welcomeTitle}>Welcome to Admin Panel</h1>
-        <p style={styles.welcomeText}>
-          {currentUser ? `Signed in as ${currentUser.username}.` : 'Select a module from the navigation menu to get started.'}
-        </p>
-      </div>
-    )
+    return <ForumPostReview />
   }
 
   return (
