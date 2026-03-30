@@ -14,9 +14,17 @@ DROP TABLE IF EXISTS vocab_word_book_words;
 DROP TABLE IF EXISTS vocab_words;
 DROP TABLE IF EXISTS vocab_word_books;
 
+DROP TABLE IF EXISTS peer_resonance_daily_logs;
+DROP TABLE IF EXISTS peer_resonance_teams;
+DROP TABLE IF EXISTS peer_space_invites;
+DROP TABLE IF EXISTS peer_space_members;
+DROP TABLE IF EXISTS peer_spaces;
+
 DROP TABLE IF EXISTS checkin_records;
 DROP TABLE IF EXISTS checkin_partnerships;
 
+DROP TABLE IF EXISTS forum_post_favorites;
+DROP TABLE IF EXISTS forum_post_likes;
 DROP TABLE IF EXISTS chat_message_media;
 DROP TABLE IF EXISTS chat_messages;
 DROP TABLE IF EXISTS chat_conversation_members;
@@ -48,11 +56,13 @@ CREATE TABLE users (
     email VARCHAR(100) NOT NULL,
     password_hash VARCHAR(255) NOT NULL,
     avatar_url VARCHAR(500) NULL,
+    role VARCHAR(20) NOT NULL DEFAULT 'user',
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
     CONSTRAINT uq_users_username UNIQUE (username),
-    CONSTRAINT uq_users_email UNIQUE (email)
+    CONSTRAINT uq_users_email UNIQUE (email),
+    CONSTRAINT chk_users_role CHECK (role IN ('user', 'admin'))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 
@@ -746,6 +756,240 @@ CREATE TABLE vocab_user_word_progress (
 
 
 -- =========================================
+-- 20. forum_post_likes
+-- =========================================
+CREATE TABLE forum_post_likes (
+    like_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    post_id BIGINT NOT NULL,
+    user_id BIGINT NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT uq_forum_post_likes UNIQUE (post_id, user_id),
+
+    CONSTRAINT fk_forum_post_likes_post
+        FOREIGN KEY (post_id)
+        REFERENCES forum_posts(post_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+
+    CONSTRAINT fk_forum_post_likes_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(user_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+-- =========================================
+-- 21. forum_post_favorites
+-- =========================================
+CREATE TABLE forum_post_favorites (
+    favorite_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    post_id BIGINT NOT NULL,
+    user_id BIGINT NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT uq_forum_post_favorites UNIQUE (post_id, user_id),
+
+    CONSTRAINT fk_forum_post_favorites_post
+        FOREIGN KEY (post_id)
+        REFERENCES forum_posts(post_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+
+    CONSTRAINT fk_forum_post_favorites_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(user_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+-- =========================================
+-- 22. peer_spaces
+-- =========================================
+CREATE TABLE peer_spaces (
+    space_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    space_type VARCHAR(30) NOT NULL,
+    created_by_user_id BIGINT NOT NULL,
+    title VARCHAR(120) NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'pending',
+    max_members INT NOT NULL DEFAULT 2,
+    activated_at DATETIME NULL,
+    ended_at DATETIME NULL,
+    metadata_json JSON NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_peer_spaces_creator
+        FOREIGN KEY (created_by_user_id)
+        REFERENCES users(user_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+
+    CONSTRAINT chk_peer_spaces_type
+        CHECK (space_type IN ('resonance', 'voice_room', 'study_room')),
+
+    CONSTRAINT chk_peer_spaces_status
+        CHECK (status IN ('pending', 'active', 'declined', 'cancelled', 'completed', 'expired')),
+
+    CONSTRAINT chk_peer_spaces_max_members
+        CHECK (max_members >= 2)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+-- =========================================
+-- 23. peer_space_members
+-- =========================================
+CREATE TABLE peer_space_members (
+    membership_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    space_id BIGINT NOT NULL,
+    user_id BIGINT NOT NULL,
+    member_role VARCHAR(20) NOT NULL DEFAULT 'member',
+    membership_status VARCHAR(20) NOT NULL DEFAULT 'pending',
+    invited_by_user_id BIGINT NULL,
+    responded_at DATETIME NULL,
+    joined_at DATETIME NULL,
+    left_at DATETIME NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_peer_space_members_space
+        FOREIGN KEY (space_id)
+        REFERENCES peer_spaces(space_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+
+    CONSTRAINT fk_peer_space_members_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(user_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+
+    CONSTRAINT fk_peer_space_members_inviter
+        FOREIGN KEY (invited_by_user_id)
+        REFERENCES users(user_id)
+        ON DELETE SET NULL
+        ON UPDATE CASCADE,
+
+    CONSTRAINT uq_peer_space_member_unique
+        UNIQUE (space_id, user_id),
+
+    CONSTRAINT chk_peer_space_members_role
+        CHECK (member_role IN ('owner', 'member', 'guest')),
+
+    CONSTRAINT chk_peer_space_members_status
+        CHECK (membership_status IN ('pending', 'accepted', 'declined', 'left', 'removed'))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+-- =========================================
+-- 24. peer_space_invites
+-- =========================================
+CREATE TABLE peer_space_invites (
+    invite_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    space_id BIGINT NOT NULL,
+    inviter_user_id BIGINT NOT NULL,
+    invitee_user_id BIGINT NOT NULL,
+    invite_type VARCHAR(30) NOT NULL DEFAULT 'resonance',
+    status VARCHAR(20) NOT NULL DEFAULT 'pending',
+    invite_message VARCHAR(255) NULL,
+    expires_at DATETIME NULL,
+    responded_at DATETIME NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_peer_space_invites_space
+        FOREIGN KEY (space_id)
+        REFERENCES peer_spaces(space_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+
+    CONSTRAINT fk_peer_space_invites_inviter
+        FOREIGN KEY (inviter_user_id)
+        REFERENCES users(user_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+
+    CONSTRAINT fk_peer_space_invites_invitee
+        FOREIGN KEY (invitee_user_id)
+        REFERENCES users(user_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+
+    CONSTRAINT uq_peer_space_invites_target
+        UNIQUE (space_id, invitee_user_id),
+
+    CONSTRAINT chk_peer_space_invites_type
+        CHECK (invite_type IN ('resonance', 'voice_room', 'study_room')),
+
+    CONSTRAINT chk_peer_space_invites_status
+        CHECK (status IN ('pending', 'accepted', 'declined', 'cancelled', 'expired'))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+-- =========================================
+-- 25. peer_resonance_teams
+-- =========================================
+CREATE TABLE peer_resonance_teams (
+    team_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    space_id BIGINT NOT NULL,
+    team_name VARCHAR(120) NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'active',
+    started_on DATE NOT NULL,
+    last_mutual_checkin_on DATE NULL,
+    current_streak_days INT NOT NULL DEFAULT 0,
+    longest_streak_days INT NOT NULL DEFAULT 0,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_peer_resonance_teams_space
+        FOREIGN KEY (space_id)
+        REFERENCES peer_spaces(space_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+
+    CONSTRAINT uq_peer_resonance_teams_space
+        UNIQUE (space_id),
+
+    CONSTRAINT chk_peer_resonance_teams_status
+        CHECK (status IN ('active', 'paused', 'completed'))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+-- =========================================
+-- 26. peer_resonance_daily_logs
+-- =========================================
+CREATE TABLE peer_resonance_daily_logs (
+    log_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    team_id BIGINT NOT NULL,
+    user_id BIGINT NOT NULL,
+    checkin_date DATE NOT NULL,
+    log_status VARCHAR(20) NOT NULL DEFAULT 'committed',
+    source VARCHAR(20) NOT NULL DEFAULT 'owner',
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_peer_resonance_daily_logs_team
+        FOREIGN KEY (team_id)
+        REFERENCES peer_resonance_teams(team_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+
+    CONSTRAINT fk_peer_resonance_daily_logs_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(user_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+
+    CONSTRAINT uq_peer_resonance_daily_unique
+        UNIQUE (team_id, user_id, checkin_date),
+
+    CONSTRAINT chk_peer_resonance_daily_status
+        CHECK (log_status IN ('committed', 'missed', 'excused'))
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+-- =========================================
 -- Indexes
 -- =========================================
 
@@ -793,6 +1037,18 @@ CREATE INDEX idx_forum_post_labels_post_id
 
 CREATE INDEX idx_forum_post_labels_label_id
     ON forum_post_labels(label_id);
+
+CREATE INDEX idx_forum_post_likes_post_id
+    ON forum_post_likes(post_id);
+
+CREATE INDEX idx_forum_post_likes_user_id
+    ON forum_post_likes(user_id);
+
+CREATE INDEX idx_forum_post_favorites_post_id
+    ON forum_post_favorites(post_id);
+
+CREATE INDEX idx_forum_post_favorites_user_id
+    ON forum_post_favorites(user_id);
 
 CREATE INDEX idx_checkin_partnerships_user_one_id
     ON checkin_partnerships(user_one_id);
@@ -859,3 +1115,18 @@ CREATE INDEX idx_vocab_session_responses_item_id
 
 CREATE INDEX idx_vocab_user_word_progress_last_session_id
     ON vocab_user_word_progress(last_session_id);
+
+CREATE INDEX idx_peer_spaces_status
+    ON peer_spaces(space_type, status);
+
+CREATE INDEX idx_peer_space_members_user
+    ON peer_space_members(user_id, membership_status);
+
+CREATE INDEX idx_peer_space_invites_invitee
+    ON peer_space_invites(invitee_user_id, status);
+
+CREATE INDEX idx_peer_space_invites_inviter
+    ON peer_space_invites(inviter_user_id, status);
+
+CREATE INDEX idx_peer_resonance_daily_logs_team_date
+    ON peer_resonance_daily_logs(team_id, checkin_date);

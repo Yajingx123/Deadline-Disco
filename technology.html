@@ -300,6 +300,8 @@
         </div>
     </div>
     <script>
+        const USER_PORTAL_URL = './owner.html';
+        const ADMIN_PORTAL_URL = 'http://127.0.0.1:5174/';
         const AUTH_API_BASE = './Auth/backend/api';
         const authState = { user: null };
 
@@ -307,6 +309,10 @@
             const trimmed = String(name || '').trim();
             if (!trimmed) return 'IN';
             return trimmed.slice(0, 2).toUpperCase();
+        }
+
+        function getPortalUrl(user) {
+            return user && user.role === 'admin' ? ADMIN_PORTAL_URL : USER_PORTAL_URL;
         }
 
         function renderAuthUI() {
@@ -344,7 +350,7 @@
 
         function handleUserAction() {
             if (authState.user) {
-                window.location.href = 'owner.html';
+                window.location.href = getPortalUrl(authState.user);
                 return;
             }
             window.location.href = 'home.html?login=1';

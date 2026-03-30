@@ -1,83 +1,86 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { adminFetch } from '../api'
 
 function ForumPostReview() {
   const [filterStatus, setFilterStatus] = useState('pending')
+  const [posts, setPosts] = useState([])
+  const [counts, setCounts] = useState({ pending: 0, approved: 0, rejected: 0, all: 0 })
+  const [isLoading, setIsLoading] = useState(true)
+  const [errorMessage, setErrorMessage] = useState('')
+  const [actingPostId, setActingPostId] = useState(null)
 
-  const mockPosts = [
-    {
-      id: 1,
-      title: 'How should we balance AI tools and original writing in class?',
-      content: 'Our seminar keeps debating where AI support becomes too much. I am curious how other students define a fair boundary between drafting support and actual authorship.\n\nWhat counts as acceptable help in your course right now?',
-      author: 'student1',
-      authorInitial: 'S',
-      publishTime: '2025-03-28 21:30',
-      status: 'Under review',
-      labels: ['Current news', 'Viewpoint topic'],
-      viewCount: 15,
-      likeCount: 3,
-      commentCount: 0
-    },
-    {
-      id: 2,
-      title: 'Need help choosing between database systems and web development electives',
-      content: 'I can only keep one elective this term. The database course looks practical, but the web development studio might help my portfolio faster.\n\nIf you took either one, what was the workload really like?',
-      author: 'student2',
-      authorInitial: 'S',
-      publishTime: '2025-03-28 18:15',
-      status: 'Under review',
-      labels: ['Seek help'],
-      viewCount: 28,
-      likeCount: 5,
-      commentCount: 2
-    },
-    {
-      id: 3,
-      title: 'Study tips for final exams',
-      content: 'Share your best study strategies for the upcoming finals. I am particularly interested in time management techniques and effective note-taking methods.',
-      author: 'student3',
-      authorInitial: 'S',
-      publishTime: '2025-03-27 14:20',
-      status: 'Rejected',
-      labels: ['Study tips'],
-      viewCount: 45,
-      likeCount: 8,
-      commentCount: 5
-    },
-    {
-      id: 4,
-      title: 'Campus events this weekend',
-      content: 'Looking for recommendations on what to do on campus this weekend. Any concerts, exhibitions, or other events worth attending?',
-      author: 'student4',
-      authorInitial: 'S',
-      publishTime: '2025-03-26 09:45',
-      status: 'active',
-      labels: ['Campus life'],
-      viewCount: 67,
-      likeCount: 12,
-      commentCount: 8
+  useEffect(() => {
+    let active = true
+
+    async function loadPosts() {
+      setIsLoading(true)
+      setErrorMessage('')
+      try {
+        const data = await adminFetch(`/forum-project/api/admin-posts.php?status=${encodeURIComponent(filterStatus)}`)
+        if (!active) {
+          return
+        }
+        setPosts(Array.isArray(data.posts) ? data.posts : [])
+        setCounts(data.counts || { pending: 0, approved: 0, rejected: 0, all: 0 })
+      } catch (error) {
+        if (!active) {
+          return
+        }
+        setErrorMessage(error.message || 'Failed to load forum posts.')
+      } finally {
+        if (active) {
+          setIsLoading(false)
+        }
+      }
     }
-  ]
 
-  const filteredPosts = mockPosts.filter(post => {
-    if (filterStatus === 'pending') return post.status === 'Under review'
-    if (filterStatus === 'approved') return post.status === 'active'
-    if (filterStatus === 'rejected') return post.status === 'Rejected'
-    return true
-  })
+    loadPosts()
 
-  const handleApprove = (postId) => {
-    console.log('Approve post:', postId)
+    return () => {
+      active = false
+    }
+  }, [filterStatus])
+
+  async function updatePostStatus(postId, action) {
+    setActingPostId(postId)
+    setErrorMessage('')
+
+    try {
+      const data = await adminFetch('/forum-project/api/admin-posts.php', {
+        method: 'POST',
+        body: JSON.stringify({ postId, action })
+      })
+
+      setCounts(data.counts || counts)
+      setPosts((currentPosts) => currentPosts.filter((post) => post.id !== postId))
+    } catch (error) {
+      setErrorMessage(error.message || 'Failed to update post status.')
+    } finally {
+      setActingPostId(null)
+    }
   }
 
-  const handleReject = (postId) => {
-    console.log('Reject post:', postId)
+  function handleApprove(postId) {
+    return updatePostStatus(postId, 'approve')
   }
 
-  const getStatusBadge = (status) => {
+  function handleReject(postId) {
+    return updatePostStatus(postId, 'reject')
+  }
+
+  function handleDelete(postId) {
+    const confirmed = window.confirm('Delete this published post? It will be removed from the public forum.')
+    if (!confirmed) {
+      return
+    }
+    return updatePostStatus(postId, 'delete')
+  }
+
+  function getStatusBadge(status) {
     const statusMap = {
       'Under review': { label: 'Under review', style: styles.statusPending },
-      'active': { label: 'Active', style: styles.statusActive },
-      'Rejected': { label: 'Rejected', style: styles.statusRejected }
+      active: { label: 'Active', style: styles.statusActive },
+      Rejected: { label: 'Rejected', style: styles.statusRejected }
     }
     const info = statusMap[status] || statusMap['Under review']
     return <span style={{ ...styles.statusBadge, ...info.style }}>{info.label}</span>
@@ -87,9 +90,9 @@ function ForumPostReview() {
     <div style={styles.container}>
       <header style={styles.header}>
         <div style={styles.hero}>
-          <div style={styles.eyebrow}>Admin — Content Moderation</div>
+          <div style={styles.eyebrow}>Admin Content Moderation</div>
           <h1 style={styles.title}>Forum Review</h1>
-          <p style={styles.subtitle}>Review and moderate forum posts. Approve quality content and reject inappropriate submissions.</p>
+          <p style={styles.subtitle}>Review forum posts stored in the live database and update their moderation status.</p>
         </div>
         <div style={styles.filterWrap}>
           <div style={styles.filterContainer}>
@@ -100,7 +103,7 @@ function ForumPostReview() {
               }}
               onClick={() => setFilterStatus('pending')}
             >
-              Pending ({mockPosts.filter(p => p.status === 'Under review').length})
+              Pending ({counts.pending || 0})
             </button>
             <button
               style={{
@@ -109,7 +112,7 @@ function ForumPostReview() {
               }}
               onClick={() => setFilterStatus('approved')}
             >
-              Approved ({mockPosts.filter(p => p.status === 'active').length})
+              Approved ({counts.approved || 0})
             </button>
             <button
               style={{
@@ -118,71 +121,102 @@ function ForumPostReview() {
               }}
               onClick={() => setFilterStatus('rejected')}
             >
-              Rejected ({mockPosts.filter(p => p.status === 'Rejected').length})
+              Rejected ({counts.rejected || 0})
             </button>
           </div>
         </div>
       </header>
 
       <div style={styles.content}>
+        <div style={styles.summaryBar}>
+          <div style={styles.summaryChip}>Total tracked posts: {counts.all || 0}</div>
+          <div style={styles.summaryChip}>Current filter: {filterStatus}</div>
+        </div>
+
+        {errorMessage ? <div style={styles.errorBanner}>{errorMessage}</div> : null}
+
         <div style={styles.mainContent}>
-          {filteredPosts.length === 0 ? (
+          {isLoading ? (
             <div style={styles.emptyState}>
-              <p style={styles.emptyText}>No posts found</p>
+              <p style={styles.emptyText}>Loading posts...</p>
+            </div>
+          ) : posts.length === 0 ? (
+            <div style={styles.emptyState}>
+              <p style={styles.emptyText}>No posts found for this filter.</p>
             </div>
           ) : (
-            filteredPosts.map(post => (
-              <article key={post.id} style={styles.postItem}>
-                <div style={styles.postAvatarRail}>
-                  <div style={styles.postAvatarCircle}>{post.authorInitial}</div>
-                </div>
+            posts.map((post) => {
+              const isActing = actingPostId === post.id
+              return (
+                <article key={post.id} style={styles.postItem}>
+                  <div style={styles.postAvatarRail}>
+                    <div style={styles.postAvatarCircle}>{post.authorInitial}</div>
+                  </div>
 
-                <div style={styles.postMain}>
-                  <div style={styles.postAuthorRow}>
-                    <span style={styles.postAuthorName}>{post.author}</span>
-                    <span style={styles.postAuthorTime}>posted on {post.publishTime}</span>
-                    {getStatusBadge(post.status)}
+                  <div style={styles.postMain}>
+                    <div style={styles.postAuthorRow}>
+                      <span style={styles.postAuthorName}>{post.author}</span>
+                      <span style={styles.postAuthorTime}>posted on {post.publishTime}</span>
+                      {getStatusBadge(post.status)}
+                    </div>
+                    <h3 style={styles.postTitle}>{post.title}</h3>
+                    <p style={styles.postSummary}>{post.content}</p>
                   </div>
-                  <h3 style={styles.postTitle}>{post.title}</h3>
-                  <p style={styles.postSummary}>{post.content}</p>
-                </div>
 
-                <div style={styles.postSide}>
-                  <div style={styles.postTags}>
-                    {post.labels.map(label => (
-                      <span key={label} style={styles.tagBadge}>{label}</span>
-                    ))}
-                    <span style={styles.typeBadge}>text</span>
+                  <div style={styles.postSide}>
+                    <div style={styles.postTags}>
+                      {post.labels.map((label) => (
+                        <span key={label} style={styles.tagBadge}>{label}</span>
+                      ))}
+                      <span style={styles.typeBadge}>{post.mediaType || 'text'}</span>
+                    </div>
+                    <div style={styles.postStats}>
+                      <div style={styles.statLine}>
+                        <span style={styles.statLabel}>Comments</span>
+                        <span>{post.commentCount}</span>
+                      </div>
+                      <div style={styles.statLine}>
+                        <span style={styles.statLabel}>Views</span>
+                        <span>{post.views}</span>
+                      </div>
+                      <div style={styles.statLine}>
+                        <span style={styles.statLabel}>Likes</span>
+                        <span>{post.likeCount}</span>
+                      </div>
+                    </div>
+                    {post.status === 'Under review' ? (
+                      <div style={styles.actionButtons}>
+                        <button
+                          style={styles.approveButton}
+                          onClick={() => handleApprove(post.id)}
+                          disabled={isActing}
+                        >
+                          {isActing ? 'Saving...' : 'Approve'}
+                        </button>
+                        <button
+                          style={styles.rejectButton}
+                          onClick={() => handleReject(post.id)}
+                          disabled={isActing}
+                        >
+                          {isActing ? 'Saving...' : 'Reject'}
+                        </button>
+                      </div>
+                    ) : null}
+                    {post.status === 'active' ? (
+                      <div style={styles.actionButtons}>
+                        <button
+                          style={styles.deleteButton}
+                          onClick={() => handleDelete(post.id)}
+                          disabled={isActing}
+                        >
+                          {isActing ? 'Deleting...' : 'Delete'}
+                        </button>
+                      </div>
+                    ) : null}
                   </div>
-                  <div style={styles.postStats}>
-                    <div style={styles.statLine}>
-                      <span style={styles.statIcon}>💬</span>
-                      <span>{post.commentCount}</span>
-                    </div>
-                    <div style={styles.statLine}>
-                      <span style={styles.statIcon}>👁</span>
-                      <span>{post.viewCount}</span>
-                    </div>
-                  </div>
-                  {post.status === 'Under review' && (
-                    <div style={styles.actionButtons}>
-                      <button
-                        style={styles.approveButton}
-                        onClick={() => handleApprove(post.id)}
-                      >
-                        ✓ Approve
-                      </button>
-                      <button
-                        style={styles.rejectButton}
-                        onClick={() => handleReject(post.id)}
-                      >
-                        ✕ Reject
-                      </button>
-                    </div>
-                  )}
-                </div>
-              </article>
-            ))
+                </article>
+              )
+            })
           )}
         </div>
       </div>
@@ -262,6 +296,29 @@ const styles = {
     margin: '0 auto',
     padding: '0 20px'
   },
+  summaryBar: {
+    display: 'flex',
+    gap: '12px',
+    marginBottom: '16px',
+    flexWrap: 'wrap'
+  },
+  summaryChip: {
+    padding: '10px 14px',
+    borderRadius: '999px',
+    background: 'rgba(255, 255, 255, 0.82)',
+    border: '1px solid rgba(58, 78, 107, 0.08)',
+    color: 'rgba(58, 78, 107, 0.72)',
+    fontSize: '0.82rem',
+    fontWeight: 700
+  },
+  errorBanner: {
+    marginBottom: '16px',
+    padding: '14px 16px',
+    borderRadius: '18px',
+    backgroundColor: 'rgba(239, 68, 68, 0.12)',
+    color: '#b42318',
+    fontWeight: 700
+  },
   mainContent: {
     minWidth: 0,
     background: 'rgba(255, 255, 255, 0.88)',
@@ -290,8 +347,7 @@ const styles = {
     alignItems: 'flex-start',
     gap: '18px',
     transition: 'background 0.2s ease',
-    backdropFilter: 'none',
-    cursor: 'pointer'
+    backdropFilter: 'none'
   },
   postAvatarRail: {
     flexShrink: 0,
@@ -364,7 +420,7 @@ const styles = {
     lineHeight: 1.55,
     margin: 0,
     display: '-webkit-box',
-    WebkitLineClamp: 2,
+    WebkitLineClamp: 3,
     WebkitBoxOrient: 'vertical',
     overflow: 'hidden'
   },
@@ -373,7 +429,7 @@ const styles = {
     flexDirection: 'column',
     alignItems: 'flex-end',
     gap: '10px',
-    minWidth: '120px'
+    minWidth: '180px'
   },
   postTags: {
     display: 'flex',
@@ -399,19 +455,21 @@ const styles = {
     textTransform: 'lowercase'
   },
   postStats: {
-    display: 'flex',
-    gap: '16px'
+    display: 'grid',
+    gap: '6px'
   },
   statLine: {
     display: 'flex',
     alignItems: 'center',
-    gap: '4px',
+    justifyContent: 'space-between',
+    gap: '10px',
     fontSize: '0.85rem',
     color: 'rgba(58, 78, 107, 0.7)',
-    fontWeight: 600
+    fontWeight: 600,
+    minWidth: '120px'
   },
-  statIcon: {
-    fontSize: '0.9rem'
+  statLabel: {
+    color: 'rgba(58, 78, 107, 0.55)'
   },
   actionButtons: {
     display: 'flex',
@@ -435,6 +493,18 @@ const styles = {
     borderRadius: '999px',
     border: 'none',
     backgroundColor: 'rgba(239, 68, 68, 0.9)',
+    color: 'white',
+    fontSize: '0.78rem',
+    fontWeight: 700,
+    cursor: 'pointer',
+    transition: 'all 0.25s ease',
+    fontFamily: 'Inter, sans-serif'
+  },
+  deleteButton: {
+    padding: '8px 16px',
+    borderRadius: '999px',
+    border: 'none',
+    backgroundColor: 'rgba(127, 29, 29, 0.92)',
     color: 'white',
     fontSize: '0.78rem',
     fontWeight: 700,
