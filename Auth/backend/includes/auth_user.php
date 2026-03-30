@@ -50,7 +50,7 @@ function auth_bootstrap_roles(PDO $pdo): void {
         $insertAdminStmt->execute([
             ':username' => 'admin',
             ':email' => 'admin@acadbeat.local',
-            ':password_hash' => password_hash('admin123', PASSWORD_DEFAULT),
+            ':password_hash' => password_hash('123456', PASSWORD_DEFAULT),
         ]);
     }
 

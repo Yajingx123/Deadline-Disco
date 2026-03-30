@@ -14,12 +14,20 @@ DELETE FROM vocab_word_book_words;
 DELETE FROM vocab_words;
 DELETE FROM vocab_word_books;
 
+DELETE FROM peer_resonance_daily_logs;
+DELETE FROM peer_resonance_teams;
+DELETE FROM peer_space_invites;
+DELETE FROM peer_space_members;
+DELETE FROM peer_spaces;
+
 DELETE FROM training_responses;
 DELETE FROM training_attempts;
 DELETE FROM training_item_configs;
 DELETE FROM training_items;
 DELETE FROM training_modules;
 
+DELETE FROM forum_post_favorites;
+DELETE FROM forum_post_likes;
 DELETE FROM forum_post_labels;
 DELETE FROM forum_labels;
 DELETE FROM forum_comment_media;
@@ -42,10 +50,17 @@ ALTER TABLE vocab_user_wordbook_selections AUTO_INCREMENT = 1;
 ALTER TABLE vocab_sessions AUTO_INCREMENT = 1;
 ALTER TABLE vocab_session_items AUTO_INCREMENT = 1;
 ALTER TABLE vocab_session_responses AUTO_INCREMENT = 1;
+ALTER TABLE forum_post_likes AUTO_INCREMENT = 1;
+ALTER TABLE forum_post_favorites AUTO_INCREMENT = 1;
 ALTER TABLE chat_conversations AUTO_INCREMENT = 1;
 ALTER TABLE chat_conversation_members AUTO_INCREMENT = 1;
 ALTER TABLE chat_messages AUTO_INCREMENT = 1;
 ALTER TABLE chat_message_media AUTO_INCREMENT = 1;
+ALTER TABLE peer_spaces AUTO_INCREMENT = 1;
+ALTER TABLE peer_space_members AUTO_INCREMENT = 1;
+ALTER TABLE peer_space_invites AUTO_INCREMENT = 1;
+ALTER TABLE peer_resonance_teams AUTO_INCREMENT = 1;
+ALTER TABLE peer_resonance_daily_logs AUTO_INCREMENT = 1;
 
 INSERT INTO forum_labels (label_id, name, created_at) VALUES
 (1, 'Current news', '2026-03-23 09:00:00'),
@@ -85,7 +100,7 @@ INSERT INTO users (user_id, username, email, password_hash, avatar_url, role) VA
 (5, 'benjamin', 'benjamin@acadbeat.local', '$2y$12$uumz1aB0iv66KGi.uLGqhunV4/MqdzYVAKLKOvI14zJqeSaOjdRNy', NULL, 'user'),
 (6, 'karen', 'karen@acadbeat.local', '$2y$12$uumz1aB0iv66KGi.uLGqhunV4/MqdzYVAKLKOvI14zJqeSaOjdRNy', NULL, 'user'),
 (7, 'shu', 'shu@acadbeat.local', '$2y$12$uumz1aB0iv66KGi.uLGqhunV4/MqdzYVAKLKOvI14zJqeSaOjdRNy', NULL, 'user'),
-(8, 'admin', 'admin@acadbeat.local', '$2y$10$m9ZwHKhrmiHMLwzhW98M5eizotJbNAnaJi2Ur7oOW/Rrbf44PhIvS', NULL, 'admin');
+(8, 'admin', 'admin@acadbeat.local', '$2y$12$XhbLl3R3gxfC/TD8.gECzugA8voSjXrHp11yHZXoH7Pm74Bno7boi', NULL, 'admin');
 
 INSERT INTO chat_conversations (conversation_id, conversation_type, title, created_by_user_id, last_message_at, status, created_at, updated_at) VALUES
 (1, 'direct', NULL, 1, '2026-03-24 09:18:00', 'active', '2026-03-24 09:00:00', '2026-03-24 09:18:00'),
