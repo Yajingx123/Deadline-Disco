@@ -15,6 +15,7 @@ $config = require __DIR__ . '/../../Auth/backend/config/config.php';
 
 $allowedOrigins = [
     'http://127.0.0.1:5173',
+    'http://127.0.0.1:5174',
     'http://127.0.0.1:8001',
 ];
 
@@ -82,6 +83,21 @@ function forum_require_user(): array {
             'ok' => false,
             'message' => 'Login required.',
         ], 401);
+    }
+    return $user;
+}
+
+function forum_is_admin(?array $user): bool {
+    return is_array($user) && (string)($user['role'] ?? 'user') === 'admin';
+}
+
+function forum_require_admin(): array {
+    $user = forum_require_user();
+    if (!forum_is_admin($user)) {
+        forum_json([
+            'ok' => false,
+            'message' => 'Admin access required.',
+        ], 403);
     }
     return $user;
 }

@@ -1,34 +1,125 @@
-/*
- * @Author: yzp 488361078@qq.com
- * @Date: 2026-03-28 22:06:59
- * @LastEditors: yzp 488361078@qq.com
- * @LastEditTime: 2026-03-28 23:07:49
- * @FilePath: \Deadline-Disco-dev\admin_page\src\App.jsx
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
- */
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
 import Navbar from './components/Navbar'
 import ForumPostReview from './components/ForumPostReview'
+import { adminFetch, redirectToHome, redirectToLogin } from './api'
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home')
+  const [currentUser, setCurrentUser] = useState(null)
+  const [bootStatus, setBootStatus] = useState('loading')
+  const [bootMessage, setBootMessage] = useState('')
 
-  const renderContent = () => {
+  useEffect(() => {
+    let active = true
+
+    async function bootstrap() {
+      try {
+        const data = await adminFetch('/Auth/backend/api/me.php')
+        if (!active) {
+          return
+        }
+
+        const user = data.user || null
+        if (!user) {
+          setBootStatus('error')
+          setBootMessage('Session expired. Returning to login...')
+          window.setTimeout(redirectToLogin, 600)
+          return
+        }
+
+        if (user.role !== 'admin') {
+          setBootStatus('error')
+          setBootMessage('Admin access required. Returning to home...')
+          window.setTimeout(redirectToHome, 800)
+          return
+        }
+
+        setCurrentUser(user)
+        setBootStatus('ready')
+      } catch (error) {
+        if (!active) {
+          return
+        }
+
+        if (error.status === 401) {
+          setBootStatus('error')
+          setBootMessage('Login required. Returning to login...')
+          window.setTimeout(redirectToLogin, 600)
+          return
+        }
+
+        if (error.status === 403) {
+          setBootStatus('error')
+          setBootMessage('Admin access required. Returning to home...')
+          window.setTimeout(redirectToHome, 800)
+          return
+        }
+
+        setBootStatus('error')
+        setBootMessage(error.message || 'Failed to load admin session.')
+      }
+    }
+
+    bootstrap()
+
+    return () => {
+      active = false
+    }
+  }, [])
+
+  async function handleLogout() {
+    try {
+      await adminFetch('/Auth/backend/api/logout.php', {
+        method: 'POST'
+      })
+    } finally {
+      redirectToHome()
+    }
+  }
+
+  function renderContent() {
+    if (bootStatus === 'loading') {
+      return (
+        <div style={styles.centerPanel}>
+          <h1 style={styles.welcomeTitle}>Loading admin session</h1>
+          <p style={styles.welcomeText}>Checking permissions and preparing moderation tools.</p>
+        </div>
+      )
+    }
+
+    if (bootStatus === 'error') {
+      return (
+        <div style={styles.centerPanel}>
+          <h1 style={styles.welcomeTitle}>Access unavailable</h1>
+          <p style={styles.welcomeText}>{bootMessage}</p>
+        </div>
+      )
+    }
+
     if (currentPage === 'forum') {
       return <ForumPostReview />
     }
+
     return (
       <div style={styles.homeContainer}>
         <h1 style={styles.welcomeTitle}>Welcome to Admin Panel</h1>
-        <p style={styles.welcomeText}>Select a module from the navigation menu to get started.</p>
+        <p style={styles.welcomeText}>
+          {currentUser ? `Signed in as ${currentUser.username}.` : 'Select a module from the navigation menu to get started.'}
+        </p>
       </div>
     )
   }
 
   return (
     <>
-      <Navbar currentPage={currentPage} setCurrentPage={setCurrentPage} />
+      <Navbar
+        currentPage={currentPage}
+        currentUser={currentUser}
+        isReady={bootStatus === 'ready'}
+        onLogout={handleLogout}
+        setCurrentPage={setCurrentPage}
+      />
       {renderContent()}
     </>
   )
@@ -36,6 +127,15 @@ function App() {
 
 const styles = {
   homeContainer: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 'calc(100vh - 73px)',
+    padding: '48px 24px',
+    textAlign: 'center'
+  },
+  centerPanel: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',

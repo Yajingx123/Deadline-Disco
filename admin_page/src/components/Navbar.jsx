@@ -1,14 +1,4 @@
-/*
- * @Author: yzp 488361078@qq.com
- * @Date: 2026-03-28 23:03:52
- * @LastEditors: yzp 488361078@qq.com
- * @LastEditTime: 2026-03-28 23:03:57
- * @FilePath: \Deadline-Disco-dev\admin_page\src\components\Navbar.jsx
- * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
- */
-import { useState } from 'react'
-
-function Navbar({ currentPage, setCurrentPage }) {
+function Navbar({ currentPage, currentUser, isReady, onLogout, setCurrentPage }) {
   return (
     <nav style={styles.navbar}>
       <div style={styles.container}>
@@ -20,6 +10,7 @@ function Navbar({ currentPage, setCurrentPage }) {
               ...(currentPage === 'home' ? styles.activeLink : {})
             }}
             onClick={() => setCurrentPage('home')}
+            disabled={!isReady}
           >
             Home
           </button>
@@ -29,8 +20,18 @@ function Navbar({ currentPage, setCurrentPage }) {
               ...(currentPage === 'forum' ? styles.activeLink : {})
             }}
             onClick={() => setCurrentPage('forum')}
+            disabled={!isReady}
           >
             Forum Management
+          </button>
+        </div>
+        <div style={styles.userPanel}>
+          <div style={styles.userMeta}>
+            <span style={styles.userLabel}>{currentUser?.username || 'Checking session'}</span>
+            <span style={styles.userRole}>{currentUser?.role || '...'}</span>
+          </div>
+          <button style={styles.logoutButton} onClick={onLogout} disabled={!isReady}>
+            Logout
           </button>
         </div>
       </div>
@@ -53,7 +54,8 @@ const styles = {
     padding: '0 24px',
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'center'
+    alignItems: 'center',
+    gap: '16px'
   },
   logo: {
     fontSize: '24px',
@@ -63,11 +65,13 @@ const styles = {
   },
   navLinks: {
     display: 'flex',
-    gap: '8px'
+    gap: '8px',
+    flex: 1,
+    justifyContent: 'center'
   },
   navLink: {
     padding: '8px 16px',
-    borderRadius: '6px',
+    borderRadius: '999px',
     border: 'none',
     backgroundColor: 'transparent',
     color: 'var(--text)',
@@ -79,6 +83,38 @@ const styles = {
   activeLink: {
     backgroundColor: 'var(--accent-bg)',
     color: 'var(--accent)'
+  },
+  userPanel: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px'
+  },
+  userMeta: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-end',
+    gap: '2px'
+  },
+  userLabel: {
+    fontSize: '0.88rem',
+    fontWeight: 700,
+    color: 'var(--text-h)'
+  },
+  userRole: {
+    fontSize: '0.72rem',
+    textTransform: 'uppercase',
+    letterSpacing: '0.12rem',
+    color: 'rgba(58, 78, 107, 0.55)'
+  },
+  logoutButton: {
+    padding: '8px 14px',
+    borderRadius: '999px',
+    border: '1px solid rgba(58, 78, 107, 0.14)',
+    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    color: 'var(--text)',
+    fontSize: '0.85rem',
+    fontWeight: 700,
+    cursor: 'pointer'
   }
 }
 

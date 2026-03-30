@@ -5,6 +5,7 @@ $pidFiles = [
     __DIR__ . '/.run/main_8001.pid',
     __DIR__ . '/.run/vocab_8002.pid',
     __DIR__ . '/.run/forum_5173.pid',
+    __DIR__ . '/.run/admin_5174.pid',
     __DIR__ . '/.run/realtime_3001.pid',
 ];
 

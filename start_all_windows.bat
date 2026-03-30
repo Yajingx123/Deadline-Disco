@@ -38,6 +38,16 @@ set LOG_ERR=%cd%\service_logs\%NAME%_%PORT%.err.log
 start /min "forum" cmd /c "cd /d "%WORKDIR%" && npm run dev -- --host 127.0.0.1 --port 5173 > "%LOG_OUT%" 2> "%LOG_ERR%""
 echo [started] forum http://127.0.0.1:5173
 
+:: ====================== 4. admin (npm run dev 5174) ======================
+set NAME=admin
+set PORT=5174
+set WORKDIR=%cd%\admin_page
+set LOG_OUT=%cd%\service_logs\%NAME%_%PORT%.out.log
+set LOG_ERR=%cd%\service_logs\%NAME%_%PORT%.err.log
+
+start /min "admin" cmd /c "cd /d "%WORKDIR%" && npm run dev -- --host 127.0.0.1 --port 5174 > "%LOG_OUT%" 2> "%LOG_ERR%""
+echo [started] admin http://127.0.0.1:5174
+
 echo.
 echo Logs are in service_logs
 echo All services started successfully!
