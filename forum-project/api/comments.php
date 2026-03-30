@@ -88,6 +88,10 @@ try {
     $stmt->execute([$commentId]);
     $row = $stmt->fetch();
     if (!$row) {
+        forum_realtime_publish('forum.comment.created', [
+            'postId' => $postId,
+            'commentId' => $commentId,
+        ]);
         forum_json([
             'ok' => true,
             'comment' => [
@@ -101,6 +105,11 @@ try {
             ],
         ], 201);
     }
+
+    forum_realtime_publish('forum.comment.created', [
+        'postId' => $postId,
+        'commentId' => $commentId,
+    ]);
 
     forum_json([
         'ok' => true,

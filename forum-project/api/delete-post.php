@@ -62,6 +62,9 @@ try {
 
 $unusedMediaUrls = forum_collect_unused_media_urls($pdo, $mediaUrls);
 forum_delete_uploaded_files($unusedMediaUrls);
+forum_realtime_publish('forum.post.deleted', [
+    'postId' => $postId,
+]);
 
 forum_json([
     'ok' => true,

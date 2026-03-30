@@ -1,49 +1,42 @@
-export default function Header({ searchQuery, setSearchQuery, onOpenModal, currentUser }) {
-  const userName = currentUser?.username || 'LOGIN';
-  const userInitial = userName.slice(0, 2).toUpperCase();
+import AppTopNav from './AppTopNav'
 
+export default function Header({ searchQuery, setSearchQuery, onOpenModal, currentUser, onShowFavorites, onShowMyPosts, viewMode, onBackToForum }) {
   return (
     <>
-      <header className="forum-topnav">
-        <a className="forum-topnav__logo" href="http://127.0.0.1:8001/home.html">Acad<span>Beat</span></a>
-        <nav className="forum-topnav__menu" aria-label="Main">
-          <a className="forum-topnav__item" href="http://127.0.0.1:8001/home.html?module=Insight">Academic</a>
-          <a className="forum-topnav__item is-active" href="http://127.0.0.1:8001/home.html?module=Dialogue">Forum</a>
-          <a className="forum-topnav__item" href="http://127.0.0.1:8001/home.html?module=Method">Technology</a>
-        </nav>
-        <div className="forum-topnav__actions">
-          <div className="forum-topnav__userGroup">
-            <a className="forum-topnav__user" href="http://127.0.0.1:8001/owner.html">
-              <span className="forum-topnav__userLabel">{userName}</span>
-              <span className="forum-topnav__avatar" aria-hidden="true">{userInitial}</span>
-            </a>
-            {currentUser && (
-              <a className="forum-topnav__logout" href="http://127.0.0.1:8001/vocba_prac/logout.php">
-                Log out
-              </a>
-            )}
-          </div>
-        </div>
-      </header>
+      <AppTopNav currentUser={currentUser} activeMode="forum" />
 
       <header className="forum-header">
         <div className="forum-hero">
           <div className="forum-hero__eyebrow">Section III — Collective Intellect</div>
-          <h1 className="forum-hero__title">Forum</h1>
-          <p className="forum-hero__sub">Discuss ideas, ask for help, and archive useful threads in one place.</p>
+          <h1 className="forum-hero__title">{viewMode === 'favorites' ? 'My Favorites' : 'Forum'}</h1>
+          <p className="forum-hero__sub">
+            {viewMode === 'favorites' 
+              ? 'Your saved, liked, and posted content' 
+              : 'Discuss ideas, ask for help, and archive useful threads in one place.'}
+          </p>
           <div className="forum-hero__actions">
-            <button className="post-btn post-btn--hero" onClick={onOpenModal}>Publish Post</button>
+            {viewMode === 'favorites' ? (
+              <button className="post-btn post-btn--hero" onClick={onBackToForum}>Back to Forum</button>
+            ) : (
+              <>
+                <button className="post-btn post-btn--hero" onClick={onOpenModal}>Publish Post</button>
+                <button className="post-btn post-btn--secondary" onClick={onShowFavorites}>My Favorites</button>
+                <button className="post-btn post-btn--secondary" onClick={onShowMyPosts}>My Posts</button>
+              </>
+            )}
           </div>
         </div>
-        <div className="forum-header__searchWrap">
-          <input 
-            type="text" 
-            className="search-bar"
-            placeholder="Search title, author, content" 
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
+        {viewMode !== 'favorites' && (
+          <div className="forum-header__searchWrap">
+            <input 
+              type="text" 
+              className="search-bar"
+              placeholder="Search title, author, content" 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+        )}
       </header>
     </>
   );

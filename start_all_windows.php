@@ -35,6 +35,14 @@ $services = [
         'exe' => $npm,
         'args' => ['run', 'dev', '--', '--host', '127.0.0.1', '--port', '5173'],
     ],
+    [
+        'name' => 'admin',
+        'host' => '127.0.0.1',
+        'port' => 5174,
+        'workdir' => $root . '/admin_page',
+        'exe' => $npm,
+        'args' => ['run', 'dev', '--', '--host', '127.0.0.1', '--port', '5174'],
+    ],
 ];
 
 function pwshQuote(string $value): string {

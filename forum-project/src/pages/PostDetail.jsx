@@ -1,17 +1,22 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { enhanceRenderedAudioPlayers, getReplyPreview, renderFormattedText } from '../utils/formatText';
 import PostModal from '../components/PostModal';
+import { likePost, favoritePost } from '../api/forumApi';
 import './PostDetail.css';
 
 function getCommentId(comment = {}) {
   return Number(comment.id ?? comment.commentId ?? comment.comment_id ?? 0);
 }
 
-const PostDetail = ({ post, onBack, onAddComment, onDeletePost, onDeleteComment, labelOptions, currentUser }) => {
+const PostDetail = ({ post, onBack, onAddComment, onDeletePost, onDeleteComment, labelOptions, currentUser, onLikeChange, onFavoriteChange }) => {
   if (!post) return null;
 
   const [isReplyModalOpen, setIsReplyModalOpen] = useState(false);
   const [replyTarget, setReplyTarget] = useState(null);
+  const [isLiked, setIsLiked] = useState(post.isLiked || false);
+  const [isFavorited, setIsFavorited] = useState(post.isFavorited || false);
+  const [likeCount, setLikeCount] = useState(post.likeCount || 0);
+  const [favoriteCount, setFavoriteCount] = useState(post.favoriteCount || 0);
   const comments = post.comments || [];
   const contentRootRef = useRef(null);
 
@@ -43,6 +48,28 @@ const PostDetail = ({ post, onBack, onAddComment, onDeletePost, onDeleteComment,
   };
 
   const canDeletePost = Number(currentUser?.user_id || 0) === Number(post.authorUserId || 0);
+
+  const handleLike = async () => {
+    try {
+      const data = await likePost(post.id);
+      setIsLiked(data.liked);
+      setLikeCount(data.likeCount);
+      onLikeChange?.(post.id, data.liked, data.likeCount);
+    } catch (err) {
+      console.error('Failed to like post:', err);
+    }
+  };
+
+  const handleFavorite = async () => {
+    try {
+      const data = await favoritePost(post.id);
+      setIsFavorited(data.favorited);
+      setFavoriteCount(data.favoriteCount);
+      onFavoriteChange?.(post.id, data.favorited, data.favoriteCount);
+    } catch (err) {
+      console.error('Failed to favorite post:', err);
+    }
+  };
 
   return (
     <div className="detail-page-wrapper" ref={contentRootRef}>
@@ -90,6 +117,23 @@ const PostDetail = ({ post, onBack, onAddComment, onDeletePost, onDeleteComment,
           className="post-body"
           dangerouslySetInnerHTML={{ __html: renderFormattedText(post.content) }}
         />
+
+        <div className="post-actions-bar">
+          <button 
+            onClick={handleLike}
+            className={`btn-action ${isLiked ? 'btn-action--liked' : ''}`}
+          >
+            <span className="icon">{isLiked ? '❤️' : '🤍'}</span>
+            <span>{likeCount}</span>
+          </button>
+          <button 
+            onClick={handleFavorite}
+            className={`btn-action ${isFavorited ? 'btn-action--favorited' : ''}`}
+          >
+            <span className="icon">{isFavorited ? '⭐' : '☆'}</span>
+            <span>{favoriteCount}</span>
+          </button>
+        </div>
       </div>
 
       {/* Comments Section */}

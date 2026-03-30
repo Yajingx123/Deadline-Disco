@@ -15,6 +15,7 @@ $config = require __DIR__ . '/../../Auth/backend/config/config.php';
 
 $allowedOrigins = [
     'http://127.0.0.1:5173',
+    'http://127.0.0.1:5174',
     'http://127.0.0.1:8001',
 ];
 
@@ -86,12 +87,41 @@ function forum_require_user(): array {
     return $user;
 }
 
+function forum_is_admin(?array $user): bool {
+    return is_array($user) && (string)($user['role'] ?? 'user') === 'admin';
+}
+
+function forum_require_admin(): array {
+    $user = forum_require_user();
+    if (!forum_is_admin($user)) {
+        forum_json([
+            'ok' => false,
+            'message' => 'Admin access required.',
+        ], 403);
+    }
+    return $user;
+}
+
 function forum_format_datetime(?string $value): string {
     if (!$value) {
         return '';
     }
     $ts = strtotime($value);
     return $ts ? date('Y-m-d H:i', $ts) : $value;
+}
+
+function forum_avatar_letters(string $value): string {
+    $trimmed = trim($value);
+    if ($trimmed === '') {
+        return 'U';
+    }
+    $parts = preg_split('/\s+/', $trimmed) ?: [];
+    if (count($parts) >= 2) {
+        $first = strtoupper(substr((string)$parts[0], 0, 1));
+        $second = strtoupper(substr((string)$parts[1], 0, 1));
+        return trim($first . $second) ?: 'U';
+    }
+    return strtoupper(substr($trimmed, 0, min(strlen($trimmed), 2)));
 }
 
 function forum_extract_media_rows(string $content): array {
@@ -122,6 +152,27 @@ function forum_extract_media_rows(string $content): array {
     return $rows;
 }
 
+function forum_plain_text_preview(?string $content, int $maxLength = 120): string {
+    $text = trim((string)$content);
+    if ($text === '') {
+        return '';
+    }
+
+    $text = preg_replace('/!\[audio:(.*?)\]\((.*?)\)/', '[Audio]', $text) ?? $text;
+    $text = preg_replace('/!\[(.*?)\]\((.*?)\)/', '[Image]', $text) ?? $text;
+    $text = preg_replace('/\[(.*?)\]\((https?:\/\/[^\s)]+)\)/', '$1', $text) ?? $text;
+    $text = preg_replace('/\*\*(.+?)\*\*/', '$1', $text) ?? $text;
+    $text = preg_replace('/\*(.+?)\*/', '$1', $text) ?? $text;
+    $text = preg_replace('/<u>(.*?)<\/u>/', '$1', $text) ?? $text;
+    $text = preg_replace('/\s+/', ' ', html_entity_decode($text, ENT_QUOTES | ENT_HTML5, 'UTF-8')) ?? $text;
+    $text = trim($text);
+
+    if (mb_strlen($text) > $maxLength) {
+        return rtrim(mb_substr($text, 0, $maxLength - 1)) . '…';
+    }
+    return $text;
+}
+
 function forum_post_row_to_payload(array $row): array {
     $labels = array_values(array_filter(array_map('trim', explode('||', (string)($row['labels'] ?? '')))));
     return [
@@ -133,9 +184,90 @@ function forum_post_row_to_payload(array $row): array {
         'authorInitial' => strtoupper(substr((string)($row['author_name'] ?? 'U'), 0, 1)),
         'views' => (int)($row['view_count'] ?? 0),
         'commentCount' => (int)($row['comment_count'] ?? 0),
+        'likeCount' => (int)($row['like_count'] ?? 0),
+        'favoriteCount' => (int)($row['favorite_count'] ?? 0),
+        'status' => (string)($row['status'] ?? 'Under review'),
         'publishTime' => forum_format_datetime((string)($row['created_at'] ?? '')),
         'mediaType' => (string)($row['media_type'] ?? 'text'),
         'labels' => $labels,
+    ];
+}
+
+function forum_user_payload(array $row): array {
+    $username = (string)($row['username'] ?? 'Unknown');
+    return [
+        'id' => (int)($row['user_id'] ?? 0),
+        'username' => $username,
+        'email' => (string)($row['email'] ?? ''),
+        'avatar' => forum_avatar_letters($username),
+    ];
+}
+
+function forum_chat_member_payload(array $row, int $currentUserId): array {
+    $payload = forum_user_payload($row);
+    $payload['role'] = (string)($row['member_role'] ?? 'member');
+    $payload['isSelf'] = $payload['id'] === $currentUserId;
+    return $payload;
+}
+
+function forum_chat_title(array $conversation, array $members, int $currentUserId): string {
+    $conversationType = (string)($conversation['conversation_type'] ?? 'direct');
+    $explicitTitle = trim((string)($conversation['title'] ?? ''));
+    if ($conversationType === 'group') {
+        if ($explicitTitle !== '') {
+            return $explicitTitle;
+        }
+        $names = array_values(array_filter(array_map(
+            static fn(array $member): string => trim((string)($member['username'] ?? '')),
+            $members
+        )));
+        return $names ? implode(' ', array_slice($names, 0, 9)) : 'Group chat';
+    }
+
+    foreach ($members as $member) {
+        if ((int)($member['id'] ?? 0) !== $currentUserId) {
+            return (string)($member['username'] ?? 'Direct message');
+        }
+    }
+    return 'Direct message';
+}
+
+function forum_chat_conversation_payload(array $conversation, array $members, int $currentUserId): array {
+    $title = forum_chat_title($conversation, $members, $currentUserId);
+    $otherMembers = array_values(array_filter($members, static fn(array $member): bool => !(bool)($member['isSelf'] ?? false)));
+    $cover = $otherMembers[0] ?? ($members[0] ?? ['avatar' => 'U']);
+
+    return [
+        'id' => (int)($conversation['conversation_id'] ?? 0),
+        'type' => (string)($conversation['conversation_type'] ?? 'direct'),
+        'title' => $title,
+        'customTitle' => trim((string)($conversation['title'] ?? '')),
+        'avatar' => (string)($cover['avatar'] ?? 'U'),
+        'memberCount' => count($members),
+        'members' => $members,
+        'lastMessageAt' => (string)($conversation['last_message_at'] ?? ''),
+        'lastMessagePreview' => forum_plain_text_preview((string)($conversation['last_message_text'] ?? '')),
+        'lastMessageAuthor' => (string)($conversation['last_message_author'] ?? ''),
+        'unreadCount' => max(0, (int)($conversation['unread_count'] ?? 0)),
+    ];
+}
+
+function forum_chat_message_payload(array $row, int $currentUserId): array {
+    $username = (string)($row['author_name'] ?? $row['username'] ?? 'Unknown');
+    $userId = (int)($row['user_id'] ?? $row['author_user_id'] ?? 0);
+    return [
+        'id' => (int)($row['message_id'] ?? 0),
+        'conversationId' => (int)($row['conversation_id'] ?? 0),
+        'content' => (string)($row['content_text'] ?? ''),
+        'createdAt' => (string)($row['created_at'] ?? ''),
+        'displayTime' => forum_format_datetime((string)($row['created_at'] ?? '')),
+        'author' => [
+            'id' => $userId,
+            'username' => $username,
+            'email' => (string)($row['email'] ?? ''),
+            'avatar' => forum_avatar_letters($username),
+            'isSelf' => $userId === $currentUserId,
+        ],
     ];
 }
 
@@ -205,5 +337,32 @@ function forum_delete_uploaded_files(array $urls): void {
         if (is_file($path)) {
             @unlink($path);
         }
+    }
+}
+
+function forum_realtime_publish(string $type, array $data = []): void {
+    $payload = json_encode([
+        'type' => $type,
+        'data' => $data,
+    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+
+    if ($payload === false) {
+        return;
+    }
+
+    $context = stream_context_create([
+        'http' => [
+            'method' => 'POST',
+            'header' => "Content-Type: application/json\r\nConnection: close\r\n",
+            'content' => $payload,
+            'timeout' => 0.6,
+            'ignore_errors' => true,
+        ],
+    ]);
+
+    try {
+        @file_get_contents('http://127.0.0.1:3001/publish', false, $context);
+    } catch (Throwable $_e) {
+        // Ignore realtime relay failures. Primary requests must still succeed.
     }
 }

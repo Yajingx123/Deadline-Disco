@@ -145,6 +145,51 @@
   border: 1px solid rgba(58, 78, 107, 0.1);
 }
 
+.post-actions-bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(58, 78, 107, 0.1);
+}
+
+.btn-action {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid rgba(58, 78, 107, 0.18);
+  background: rgba(255, 255, 255, 0.72);
+  border-radius: 999px;
+  padding: 10px 18px;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #3A4E6B;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-action:hover {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(58, 78, 107, 0.28);
+  transform: translateY(-1px);
+}
+
+.btn-action .icon {
+  font-size: 1.1rem;
+}
+
+.btn-action--liked {
+  background: rgba(182, 79, 96, 0.12);
+  border-color: rgba(182, 79, 96, 0.3);
+  color: #b64f60;
+}
+
+.btn-action--favorited {
+  background: rgba(255, 193, 7, 0.12);
+  border-color: rgba(255, 193, 7, 0.3);
+  color: #f5a623;
+}
+
 .comments-section {
   padding: 30px 34px;
 }
