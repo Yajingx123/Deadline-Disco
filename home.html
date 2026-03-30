@@ -1123,8 +1123,11 @@
     </div>
 
     <script>
+        const HOME_URL = './home.html';
+        const OWNER_URL = './owner.html';
+        const ADMIN_URL = 'http://127.0.0.1:5174/';
         const VOCABULARY_URL = './vocba_prac/';
-        const FORUM_URL = 'http://127.0.0.1:5173/';
+        const FORUM_URL = 'http://127.0.0.1:5173/?view=chooser';
         const TECHNOLOGY_URL = './technology.html';
         const ACADEMIC_PRACTICE_URL = './Academic-Practice/training.html';
         const AUTH_API_BASE = './Auth/backend/api';
@@ -1146,6 +1149,21 @@
                 Method: '.nav-item:nth-child(3)'
             };
             return document.querySelector(map[name] || map.Insight);
+        }
+
+        function resolveModuleName(rawName) {
+            const key = String(rawName || '').trim().toLowerCase();
+            const map = {
+                lexis: 'Lexis',
+                vocabulary: 'Lexis',
+                insight: 'Insight',
+                academic: 'Insight',
+                dialogue: 'Dialogue',
+                forum: 'Dialogue',
+                method: 'Method',
+                technology: 'Method'
+            };
+            return map[key] || 'Insight';
         }
 
         function initialsOf(name) {
@@ -1268,11 +1286,14 @@
             authState.user = data.user || null;
             renderAuthUI();
             closeAuthModal();
+            if (authState.user && String(authState.user.role || '').toLowerCase() === 'admin') {
+                window.location.href = ADMIN_URL;
+            }
         }
 
         function handleUserAction() {
             if (authState.user) {
-                window.location.href = 'owner.html';
+                window.location.href = portalUrlForCurrentUser();
                 return;
             }
             openAuthModal('login');
@@ -1536,10 +1557,7 @@
         // 初始化加载
         window.onload = async () => {
             const params = new URLSearchParams(window.location.search);
-            const requestedModule = params.get('module');
-            const moduleName = requestedModule === 'Lexis'
-                ? 'Insight'
-                : (data[requestedModule] ? requestedModule : 'Insight');
+            const moduleName = resolveModuleName(params.get('module'));
             loadModule(moduleName, navElementFor(moduleName));
             await loadAuthUser();
             if (params.get('login') === '1') {
@@ -1550,3 +1568,9 @@
 </body>
 
 </html>
+        function portalUrlForCurrentUser() {
+            if (authState.user && String(authState.user.role || '').toLowerCase() === 'admin') {
+                return ADMIN_URL;
+            }
+            return OWNER_URL;
+        }

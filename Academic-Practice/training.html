@@ -114,7 +114,7 @@
     }
 
     function getPortalUrl(user) {
-      return user && user.role === 'admin' ? ADMIN_PORTAL_URL : USER_PORTAL_URL;
+      return user && String(user.role || '').toLowerCase() === 'admin' ? ADMIN_PORTAL_URL : USER_PORTAL_URL;
     }
 
     function renderAuthUI() {

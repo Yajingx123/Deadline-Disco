@@ -14,12 +14,6 @@ DELETE FROM vocab_word_book_words;
 DELETE FROM vocab_words;
 DELETE FROM vocab_word_books;
 
-DELETE FROM peer_resonance_daily_logs;
-DELETE FROM peer_resonance_teams;
-DELETE FROM peer_space_invites;
-DELETE FROM peer_space_members;
-DELETE FROM peer_spaces;
-
 DELETE FROM training_responses;
 DELETE FROM training_attempts;
 DELETE FROM training_item_configs;
@@ -56,11 +50,6 @@ ALTER TABLE chat_conversations AUTO_INCREMENT = 1;
 ALTER TABLE chat_conversation_members AUTO_INCREMENT = 1;
 ALTER TABLE chat_messages AUTO_INCREMENT = 1;
 ALTER TABLE chat_message_media AUTO_INCREMENT = 1;
-ALTER TABLE peer_spaces AUTO_INCREMENT = 1;
-ALTER TABLE peer_space_members AUTO_INCREMENT = 1;
-ALTER TABLE peer_space_invites AUTO_INCREMENT = 1;
-ALTER TABLE peer_resonance_teams AUTO_INCREMENT = 1;
-ALTER TABLE peer_resonance_daily_logs AUTO_INCREMENT = 1;
 
 INSERT INTO forum_labels (label_id, name, created_at) VALUES
 (1, 'Current news', '2026-03-23 09:00:00'),
