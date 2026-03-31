@@ -88,8 +88,14 @@ $chatUnreadStmt = $pdo->prepare("
       AND cm.user_id <> ?
       AND cm.status = 'active'
       AND (
-        ccm.last_read_at IS NULL
-        OR cm.created_at > ccm.last_read_at
+        (ccm.last_read_message_id IS NOT NULL AND cm.message_id > ccm.last_read_message_id)
+        OR (
+            ccm.last_read_message_id IS NULL
+            AND (
+                ccm.last_read_at IS NULL
+                OR cm.created_at > ccm.last_read_at
+            )
+        )
       )
 ");
 $chatUnreadStmt->execute([$userId, $userId]);

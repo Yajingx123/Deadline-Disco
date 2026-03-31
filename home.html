@@ -421,19 +421,21 @@
 
         .message-badge {
             position: absolute;
-            top: -6px;
-            right: -6px;
-            min-width: 18px;
-            height: 18px;
-            padding: 0 5px;
+            top: -3px;
+            right: -3px;
+            width: 10px;
+            min-width: 10px;
+            height: 10px;
+            padding: 0;
             border-radius: 999px;
             background: #ef4444;
-            color: #fff;
-            font-size: 0.64rem;
-            font-weight: 700;
             display: inline-flex;
             align-items: center;
             justify-content: center;
+            border: 2px solid #f7f3eb;
+            box-shadow: 0 0 0 1px rgba(58, 78, 107, 0.08);
+            color: transparent;
+            font-size: 0;
         }
 
         .user-section {
@@ -1074,7 +1076,7 @@
                 <div class="challenge-hero">
                     <div>
                         <h2 class="quote-text" id="challengeTitle">Create your fellowship</h2>
-                        <p class="challenge-copy" id="challengeCopy">Build a team of up to four members. Every Monday the system resets teams and sends a reminder to regular users so everyone can regroup for the new week.</p>
+                        <p class="challenge-copy" id="challengeCopy">Sign up first, then either create your own 4-person team or join one from the square. Teams that fail to fill in time dissolve automatically.</p>
                     </div>
                     <button type="button" class="challenge-secondary-btn" id="openInviteInboxBtn" onclick="openInviteInbox()">
                         Invitations
@@ -1082,33 +1084,87 @@
                     </button>
                 </div>
 
-                <div class="challenge-name-row">
-                    <div class="challenge-name-field">
-                        <label for="teamNameInput">Team Name</label>
-                        <input id="teamNameInput" class="challenge-name-input" type="text" placeholder="Name your team...">
-                    </div>
-                    <button type="button" class="challenge-secondary-btn" id="saveTeamNameBtn" onclick="saveChallengeTeamName()">Save Name</button>
-                </div>
-
                 <div class="challenge-status-row">
                     <div class="challenge-status-chip" id="challengeWeekChip">Teams reset every Monday at 00:00.</div>
                     <div class="challenge-status-chip" id="challengeRoleChip">Role: Open</div>
                 </div>
 
-                <div class="team-float-actions">
-                    <button class="btn-publish" id="openPublicBtn" onclick="openPublicHub()">Public</button>
-                    <button class="btn-publish btn-publish--secondary" id="openRequestBtn" onclick="openRequestHub()">
-                        Request
-                        <span class="btn-publish__count" id="requestPendingCount" hidden>0</span>
-                    </button>
+                <div class="challenge-stage" id="challengeSignupPanel" hidden>
+                    <div class="challenge-card challenge-card--center">
+                        <p class="challenge-stage__eyebrow">Step 1</p>
+                        <h3>Sign up for this week&apos;s challenge</h3>
+                        <p>After signing up, you can create your own 4-person team or go to the square and join another open team.</p>
+                        <button type="button" class="challenge-btn" onclick="signUpForChallenge()">Sign Up</button>
+                    </div>
                 </div>
 
-                <div class="slots-grid" id="slotsGrid"></div>
-
-                <div class="challenge-pending" id="pendingInvitesSection" hidden>
-                    <label>Pending Sent Invites</label>
-                    <div class="challenge-pending__list" id="sentInvitesList"></div>
+                <div class="challenge-stage" id="challengeChooserPanel" hidden>
+                    <div class="challenge-card challenge-card--center">
+                        <p class="challenge-stage__eyebrow">Step 2</p>
+                        <h3>Choose your route</h3>
+                        <p>You can create your own 4-person team or go to the square and join a team.</p>
+                        <div class="team-float-actions team-float-actions--wide">
+                            <button class="btn-publish" onclick="createChallengeTeam()">Create My Team</button>
+                            <button class="btn-publish btn-publish--secondary" onclick="openPublicHub()">Go To Square</button>
+                        </div>
+                    </div>
                 </div>
+
+                <div class="challenge-stage" id="challengeFormingPanel" hidden>
+                    <div class="challenge-forming-head">
+                        <div>
+                            <p class="challenge-stage__eyebrow">Forming Team</p>
+                            <h3 id="formingTeamHeading">Your team is forming</h3>
+                            <p id="formingTeamSubcopy">Fill all 4 seats before the countdown ends, or the team will dissolve and everyone returns to the signup chooser.</p>
+                        </div>
+                        <div class="challenge-countdown-card">
+                            <span>Team Countdown</span>
+                            <div class="challenge-countdown" id="formingCountdown" aria-label="Team countdown">
+                                <div class="challenge-countdown__unit">
+                                    <strong id="formingCountdownHours">01</strong>
+                                </div>
+                                <div class="challenge-countdown__divider">:</div>
+                                <div class="challenge-countdown__unit">
+                                    <strong id="formingCountdownMinutes">00</strong>
+                                </div>
+                                <div class="challenge-countdown__divider">:</div>
+                                <div class="challenge-countdown__unit">
+                                    <strong id="formingCountdownSeconds">00</strong>
+                                </div>
+                            </div>
+                            <small id="formingMissingCopy">Still missing 3 members</small>
+                        </div>
+                    </div>
+
+                    <div class="slots-grid" id="slotsGrid"></div>
+
+                    <div class="team-float-actions">
+                        <button class="btn-publish btn-publish--secondary" id="publishPublicBtn" onclick="toggleChallengePublicListing()">Post To Public</button>
+                        <button class="btn-publish" onclick="openInviteComposer()">Invite Friend</button>
+                    </div>
+
+                    <div class="challenge-pending" id="pendingInvitesSection" hidden>
+                        <label>Pending Sent Invites</label>
+                        <div class="challenge-pending__list" id="sentInvitesList"></div>
+                    </div>
+                </div>
+
+                <div class="challenge-stage" id="challengeLockedPanel" hidden>
+                    <div class="challenge-card challenge-card--stacked">
+                        <p class="challenge-stage__eyebrow">Team Ready</p>
+                        <h3 id="lockedTeamHeading">Your 4-person team is locked</h3>
+                        <p id="lockedTeamSubcopy">Now the captain confirms the official team name, and the team begins to accumulate points for the weekly rank.</p>
+                        <div class="challenge-name-row">
+                            <div class="challenge-name-field">
+                                <label for="teamNameInput">Official Team Name</label>
+                                <input id="teamNameInput" class="challenge-name-input" type="text" placeholder="Confirm the team name...">
+                            </div>
+                            <button type="button" class="challenge-secondary-btn" id="saveTeamNameBtn" onclick="saveChallengeTeamName()">Confirm Name</button>
+                        </div>
+                        <div class="slots-grid" id="lockedSlotsGrid"></div>
+                    </div>
+                </div>
+
                 <p class="challenge-admin-note" id="challengeAdminNote" hidden>Admin accounts do not join challenge teams.</p>
             </div>
 
@@ -1138,26 +1194,11 @@
 
             <div class="search-layer" id="publicHubLayer">
                 <div class="search-layer__card search-layer__card--wide">
-                    <p class="module-label">Public Lobby</p>
-                    <h3 class="challenge-panel-title">Public</h3>
-                    <div class="challenge-tabbar">
-                        <button type="button" class="challenge-tab is-active" id="publicBrowseTab" onclick="setChallengeHubTab('public', 'browse')">Browse</button>
-                        <button type="button" class="challenge-tab" id="publicMineTab" onclick="setChallengeHubTab('public', 'mine')">My Listing</button>
-                    </div>
-                    <div class="challenge-hub-pane is-active" id="publicBrowsePane">
-                        <p class="search-layer__copy">Request to join a public team. The captain must approve before you can enter.</p>
-                        <div class="challenge-empty" id="publicLobbyEmpty">No public teams are open right now.</div>
-                        <div class="challenge-invite-list" id="publicLobbyList"></div>
-                    </div>
-                    <div class="challenge-hub-pane" id="publicMinePane">
-                        <p class="search-layer__copy">Post your own team to the public lobby or take it down when you no longer need applicants.</p>
-                        <div class="challenge-mylisting-card">
-                            <div class="challenge-mylisting-card__copy" id="publicMineStatus">Your team is currently private.</div>
-                            <div class="search-layer__actions">
-                                <button type="button" class="challenge-btn" id="publishPublicBtn" onclick="toggleChallengePublicListing()">Post to Public</button>
-                            </div>
-                        </div>
-                    </div>
+                    <p class="module-label">Team Square</p>
+                    <h3 class="challenge-panel-title">Open Teams</h3>
+                    <p class="search-layer__copy">These teams are still forming. Joining from the square is direct, and the team will lock automatically as soon as it reaches 4 members.</p>
+                    <div class="challenge-empty" id="publicLobbyEmpty">No public teams are open right now.</div>
+                    <div class="challenge-invite-list" id="publicLobbyList"></div>
                     <div class="challenge-panel-error" id="publicLobbyError" hidden></div>
                     <div class="search-layer__actions">
                         <button type="button" class="challenge-ghost-btn" onclick="closePublicHub()">Close</button>
@@ -1165,28 +1206,16 @@
                 </div>
             </div>
 
-            <div class="search-layer" id="requestHubLayer">
+            <div class="search-layer" id="inviteHubLayer">
                 <div class="search-layer__card">
-                    <p class="module-label">Request Center</p>
-                    <h3 class="challenge-panel-title">Request</h3>
-                    <div class="challenge-tabbar">
-                        <button type="button" class="challenge-tab is-active" id="requestInvitedTab" onclick="setChallengeHubTab('request', 'invited')">Invited</button>
-                        <button type="button" class="challenge-tab" id="requestReviewTab" onclick="setChallengeHubTab('request', 'review')">Join Requests</button>
-                    </div>
-                    <div class="challenge-hub-pane is-active" id="requestInvitedPane">
-                        <p class="search-layer__copy">Accept one team for the current week, or decline invites you do not want to join.</p>
-                        <div class="challenge-empty" id="inviteInboxEmpty">No pending invites right now.</div>
-                        <div class="challenge-invite-list" id="inviteInboxList"></div>
-                    </div>
-                    <div class="challenge-hub-pane" id="requestReviewPane">
-                        <p class="search-layer__copy">Approve or decline players who applied through the public lobby.</p>
-                        <div class="challenge-empty" id="captainRequestEmpty">No public join requests right now.</div>
-                        <div class="challenge-invite-list" id="captainRequestList"></div>
-                    </div>
+                    <p class="module-label">Invite Inbox</p>
+                    <h3 class="challenge-panel-title">Invitations</h3>
+                    <p class="search-layer__copy">Accept an invite to move into that forming team, or decline it and stay in your current state.</p>
+                    <div class="challenge-empty" id="inviteInboxEmpty">No invite records right now.</div>
+                    <div class="challenge-invite-list" id="inviteInboxList"></div>
                     <div class="challenge-panel-error" id="inviteInboxError" hidden></div>
-                    <div class="challenge-panel-error" id="captainRequestError" hidden></div>
                     <div class="search-layer__actions">
-                        <button type="button" class="challenge-ghost-btn" onclick="closeRequestHub()">Close</button>
+                        <button type="button" class="challenge-ghost-btn" onclick="closeInviteInbox()">Close</button>
                     </div>
                 </div>
             </div>
@@ -1205,7 +1234,9 @@
         const ACADEMIC_PRACTICE_URL = './Academic-Practice/training.html';
         const AUTH_API_BASE = './Auth/backend/api';
         const MESSAGE_CENTER_API_URL = 'http://127.0.0.1:8001/forum-project/api/message-center.php?summaryOnly=1';
+        const REALTIME_WS_URL = 'ws://127.0.0.1:3001/ws';
         const authState = { user: null, mode: 'login' };
+        const homeRealtimeState = { socket: null, reconnectTimer: null, refreshTimer: null, summaryPollTimer: null, closedManually: false };
 
         function portalUrlForCurrentUser() {
             if (authState.user && String(authState.user.role || '').toLowerCase() === 'admin') {
@@ -1271,7 +1302,7 @@
                 logoutLink.style.display = 'none';
                 messageLink.hidden = true;
                 messageBadge.hidden = true;
-                messageBadge.textContent = '0';
+                messageBadge.textContent = '';
             }
             if (window.challengeHome && typeof window.challengeHome.syncAccess === 'function') {
                 window.challengeHome.syncAccess(authState.user);
@@ -1283,7 +1314,7 @@
             if (!messageBadge || !authState.user) {
                 if (messageBadge) {
                     messageBadge.hidden = true;
-                    messageBadge.textContent = '0';
+                    messageBadge.textContent = '';
                 }
                 return;
             }
@@ -1291,20 +1322,87 @@
             try {
                 const response = await fetch(MESSAGE_CENTER_API_URL, { credentials: 'include' });
                 const data = await response.json().catch(() => ({ ok: false }));
-                const totalUnread = Number(data?.summary?.totalUnread || 0);
-                if (totalUnread > 0) {
+                const chatsUnread = Number(data?.summary?.chatsUnread || 0);
+                if (chatsUnread > 0) {
                     messageBadge.hidden = false;
-                    messageBadge.textContent = totalUnread > 99 ? '99+' : String(totalUnread);
+                    messageBadge.textContent = '';
                     messageBadge.style.display = 'inline-flex';
                 } else {
                     messageBadge.hidden = true;
-                    messageBadge.textContent = '0';
+                    messageBadge.textContent = '';
                     messageBadge.style.display = 'none';
                 }
             } catch (_err) {
                 messageBadge.hidden = true;
-                messageBadge.textContent = '0';
+                messageBadge.textContent = '';
                 messageBadge.style.display = 'none';
+            }
+        }
+
+        function scheduleMessageSummaryRefresh() {
+            if (homeRealtimeState.refreshTimer) {
+                window.clearTimeout(homeRealtimeState.refreshTimer);
+            }
+            homeRealtimeState.refreshTimer = window.setTimeout(() => {
+                homeRealtimeState.refreshTimer = null;
+                loadMessageSummary().catch(() => {});
+            }, 120);
+        }
+
+        function restartMessageSummaryPolling() {
+            if (homeRealtimeState.summaryPollTimer) {
+                window.clearInterval(homeRealtimeState.summaryPollTimer);
+                homeRealtimeState.summaryPollTimer = null;
+            }
+            if (!authState.user) {
+                return;
+            }
+            homeRealtimeState.summaryPollTimer = window.setInterval(() => {
+                if (document.hidden) {
+                    return;
+                }
+                loadMessageSummary().catch(() => {});
+            }, 3000);
+        }
+
+        function connectHomeRealtime() {
+            if (homeRealtimeState.socket || homeRealtimeState.closedManually) {
+                return;
+            }
+
+            try {
+                const socket = new WebSocket(REALTIME_WS_URL);
+                homeRealtimeState.socket = socket;
+
+                socket.addEventListener('message', (event) => {
+                    try {
+                        const payload = JSON.parse(event.data);
+                        const type = String(payload?.type || '');
+                        if (!type.startsWith('chat.') && !type.startsWith('message-center.') && !type.startsWith('forum.')) {
+                            return;
+                        }
+                        if (!authState.user) {
+                            return;
+                        }
+                        scheduleMessageSummaryRefresh();
+                    } catch (_err) {}
+                });
+
+                socket.addEventListener('close', () => {
+                    homeRealtimeState.socket = null;
+                    if (homeRealtimeState.closedManually) {
+                        return;
+                    }
+                    homeRealtimeState.reconnectTimer = window.setTimeout(connectHomeRealtime, 1500);
+                });
+
+                socket.addEventListener('error', () => {
+                    try {
+                        socket.close();
+                    } catch (_err) {}
+                });
+            } catch (_err) {
+                homeRealtimeState.socket = null;
             }
         }
 
@@ -1324,6 +1422,7 @@
             authState.user = data.status === 'success' ? data.user : null;
             renderAuthUI();
             await loadMessageSummary();
+            restartMessageSummaryPolling();
         }
 
         function openAuthModal(mode = 'login', message = '') {
@@ -1407,6 +1506,7 @@
             authState.user = data.user || null;
             renderAuthUI();
             await loadMessageSummary();
+            restartMessageSummaryPolling();
             closeAuthModal();
             if (authState.user && String(authState.user.role || '').toLowerCase() === 'admin') {
                 window.location.href = ADMIN_URL;
@@ -1428,6 +1528,7 @@
             authState.user = null;
             renderAuthUI();
             await loadMessageSummary();
+            restartMessageSummaryPolling();
             closeAuthModal();
             loadModule('Insight', navElementFor('Insight'));
             return false;
@@ -1531,6 +1632,7 @@
             const params = new URLSearchParams(window.location.search);
             const moduleName = resolveModuleName(params.get('module'));
             loadModule(moduleName, navElementFor(moduleName));
+            connectHomeRealtime();
             await loadAuthUser();
             if (params.get('login') === '1') {
                 openAuthModal('login', 'Please log in first.');

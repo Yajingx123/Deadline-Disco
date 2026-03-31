@@ -20,36 +20,36 @@
   }
 
   async function loadMessageSummary(messageApiUrl, user, badgeEl) {
-    if (!badgeEl || !user) {
-      if (badgeEl) {
-        badgeEl.hidden = true;
-        badgeEl.style.display = 'none';
-        badgeEl.classList.remove('is-visible');
-        badgeEl.textContent = '0';
+      if (!badgeEl || !user) {
+        if (badgeEl) {
+          badgeEl.hidden = true;
+          badgeEl.style.display = 'none';
+          badgeEl.classList.remove('is-visible');
+          badgeEl.textContent = '';
+        }
+        return;
       }
-      return;
-    }
 
     try {
       const response = await fetch(messageApiUrl, { credentials: 'include' });
       const data = await response.json().catch(() => ({ ok: false }));
-      const totalUnread = Number(data?.summary?.totalUnread || 0);
-      if (totalUnread >= 1) {
+      const chatsUnread = Number(data?.summary?.chatsUnread || 0);
+      if (chatsUnread >= 1) {
         badgeEl.hidden = false;
         badgeEl.style.display = 'inline-flex';
         badgeEl.classList.add('is-visible');
-        badgeEl.textContent = totalUnread > 99 ? '99+' : String(totalUnread);
+        badgeEl.textContent = '';
       } else {
         badgeEl.hidden = true;
         badgeEl.style.display = 'none';
         badgeEl.classList.remove('is-visible');
-        badgeEl.textContent = '0';
+        badgeEl.textContent = '';
       }
     } catch (_err) {
       badgeEl.hidden = true;
       badgeEl.style.display = 'none';
       badgeEl.classList.remove('is-visible');
-      badgeEl.textContent = '0';
+      badgeEl.textContent = '';
     }
   }
 
@@ -119,7 +119,7 @@
         messageBadge.hidden = true;
         messageBadge.style.display = 'none';
         messageBadge.classList.remove('is-visible');
-        messageBadge.textContent = '0';
+        messageBadge.textContent = '';
       }
     }
 
@@ -149,18 +149,18 @@
     await loadMessageSummary(messageApiUrl, authUser, messageBadge);
 
     window.addEventListener('acadbeat:message-summary', (event) => {
-      const totalUnread = Number(event?.detail?.totalUnread || 0);
+      const chatsUnread = Number(event?.detail?.summary?.chatsUnread ?? event?.detail?.chatsUnread ?? 0);
       if (!messageBadge || !authUser) return;
-      if (totalUnread >= 1) {
+      if (chatsUnread >= 1) {
         messageBadge.hidden = false;
         messageBadge.style.display = 'inline-flex';
         messageBadge.classList.add('is-visible');
-        messageBadge.textContent = totalUnread > 99 ? '99+' : String(totalUnread);
+        messageBadge.textContent = '';
       } else {
         messageBadge.hidden = true;
         messageBadge.style.display = 'none';
         messageBadge.classList.remove('is-visible');
-        messageBadge.textContent = '0';
+        messageBadge.textContent = '';
       }
     });
 

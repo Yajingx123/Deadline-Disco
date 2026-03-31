@@ -4,16 +4,12 @@
   const state = {
     data: null,
     pendingOpenAfterLogin: false,
-    previousMemberCount: 0,
-    draftTeamName: '',
     realtimeSocket: null,
     realtimeReconnectTimer: null,
-    realtimeClosedManually: false,
     realtimeRefreshTimer: null,
-    hubTabs: {
-      public: 'browse',
-      request: 'invited',
-    },
+    realtimeClosedManually: false,
+    countdownTimer: null,
+    fallbackPollTimer: null,
   };
 
   function getEl(id) {
@@ -24,100 +20,31 @@
     return !!getEl('teamModalOverlay')?.classList.contains('is-open');
   }
 
-  function scheduleRealtimeRefresh() {
-    if (state.realtimeRefreshTimer) {
-      window.clearTimeout(state.realtimeRefreshTimer);
-    }
-    state.realtimeRefreshTimer = window.setTimeout(() => {
-      state.realtimeRefreshTimer = null;
-      if (typeof authState === 'undefined' || !authState.user) return;
-      if (String(authState.user.role || '').toLowerCase() === 'admin') return;
-      if (!isChallengeOpen() && !state.data) return;
-      loadState().catch(() => {});
-    }, 120);
+  function closePanels() {
+    ['searchLayer', 'publicHubLayer', 'inviteHubLayer'].forEach((id) => {
+      const el = getEl(id);
+      if (el) el.style.display = 'none';
+    });
+    ['challengeComposerError', 'publicLobbyError', 'inviteInboxError'].forEach((id) => {
+      const el = getEl(id);
+      if (el) {
+        el.hidden = true;
+        el.textContent = '';
+      }
+    });
   }
 
-  function handleRealtimeEvent(payload) {
-    if (!payload || payload.type !== 'challenge.updated') return;
-    if (typeof authState === 'undefined' || !authState.user) return;
-    const currentUserId = Number(authState.user.user_id || 0);
-    const eventUserIds = Array.isArray(payload.data?.userIds)
-      ? payload.data.userIds.map((value) => Number(value || 0)).filter((value) => value > 0)
-      : [];
-    const currentTeamId = Number(state.data?.team?.id || 0);
-    const eventTeamId = Number(payload.data?.teamId || 0);
-    const isGlobal = String(payload.data?.scope || 'global') === 'global';
-    const isRelevant = isGlobal || eventUserIds.includes(currentUserId) || (currentTeamId > 0 && eventTeamId === currentTeamId);
-    if (!isRelevant) return;
-    scheduleRealtimeRefresh();
-  }
-
-  function connectChallengeRealtime() {
-    if (state.realtimeSocket || state.realtimeClosedManually) return;
-    try {
-      const socket = new WebSocket(REALTIME_WS_URL);
-      state.realtimeSocket = socket;
-
-      socket.addEventListener('message', (event) => {
-        try {
-          handleRealtimeEvent(JSON.parse(event.data));
-        } catch (_err) {
-          // Ignore malformed realtime events.
-        }
-      });
-
-      socket.addEventListener('close', () => {
-        state.realtimeSocket = null;
-        if (state.realtimeClosedManually) return;
-        state.realtimeReconnectTimer = window.setTimeout(() => {
-          state.realtimeReconnectTimer = null;
-          connectChallengeRealtime();
-        }, 1500);
-      });
-
-      socket.addEventListener('error', () => {
-        try {
-          socket.close();
-        } catch (_err) {
-          // Ignore close errors.
-        }
-      });
-    } catch (_err) {
-      state.realtimeSocket = null;
-    }
+  function openPanel(id) {
+    closePanels();
+    const panel = getEl(id);
+    if (panel) panel.style.display = 'flex';
   }
 
   function setPanelError(id, message = '') {
     const el = getEl(id);
     if (!el) return;
-    if (!message) {
-      el.hidden = true;
-      el.textContent = '';
-      return;
-    }
-    el.hidden = false;
-    el.textContent = message;
-  }
-
-  function clearAllPanelErrors() {
-    ['challengeComposerError', 'inviteInboxError', 'publicLobbyError', 'captainRequestError'].forEach((id) => {
-      setPanelError(id, '');
-    });
-  }
-
-  function setHubTab(kind, tab) {
-    state.hubTabs[kind] = tab;
-    if (kind === 'public') {
-      getEl('publicBrowseTab')?.classList.toggle('is-active', tab === 'browse');
-      getEl('publicMineTab')?.classList.toggle('is-active', tab === 'mine');
-      getEl('publicBrowsePane')?.classList.toggle('is-active', tab === 'browse');
-      getEl('publicMinePane')?.classList.toggle('is-active', tab === 'mine');
-      return;
-    }
-    getEl('requestInvitedTab')?.classList.toggle('is-active', tab === 'invited');
-    getEl('requestReviewTab')?.classList.toggle('is-active', tab === 'review');
-    getEl('requestInvitedPane')?.classList.toggle('is-active', tab === 'invited');
-    getEl('requestReviewPane')?.classList.toggle('is-active', tab === 'review');
+    el.hidden = !message;
+    el.textContent = message || '';
   }
 
   async function challengeFetch(options = {}) {
@@ -132,95 +59,104 @@
     });
     const data = await response.json().catch(() => ({ ok: false, message: 'Invalid server response.' }));
     if (!response.ok || data.ok === false) {
-      const error = new Error(data.message || 'Challenge request failed.');
-      error.payload = data;
-      throw error;
+      throw new Error(data.message || 'Challenge request failed.');
     }
     return data;
   }
 
-  function syncChallengeEntry(user) {
-    const btn = getEl('challengeEntryBtn');
-    if (btn) btn.hidden = !!(user && String(user.role || '').toLowerCase() === 'admin');
+  function formatCountdown(seconds) {
+    const value = Math.max(0, Number(seconds || 0));
+    const hours = String(Math.floor(value / 3600)).padStart(2, '0');
+    const minutes = String(Math.floor((value % 3600) / 60)).padStart(2, '0');
+    const secs = String(value % 60).padStart(2, '0');
+    return `${hours}:${minutes}:${secs}`;
   }
 
-  function closePanels() {
-    ['searchLayer', 'publicHubLayer', 'requestHubLayer'].forEach((id) => {
-      const el = getEl(id);
-      if (el) el.style.display = 'none';
-    });
-    clearAllPanelErrors();
-  }
-
-  function fakeCaptainTeam() {
-    if (typeof authState === 'undefined' || !authState.user) return null;
-    const username = String(authState.user.username || 'User');
+  function getCountdownParts(seconds) {
+    const value = Math.max(0, Number(seconds || 0));
     return {
-      id: 0,
-      name: state.draftTeamName || `${username}'s Squad`,
-      score: 0,
-      dailyRank: null,
-      memberCount: 1,
-      maxMembers: 4,
-      isCaptain: true,
-      members: [{
-        id: Number(authState.user.user_id || 0),
-        username,
-        email: String(authState.user.email || ''),
-        role: 'captain',
-        avatar: username.slice(0, 1).toUpperCase(),
-      }],
+      hours: String(Math.floor(value / 3600)).padStart(2, '0'),
+      minutes: String(Math.floor((value % 3600) / 60)).padStart(2, '0'),
+      seconds: String(value % 60).padStart(2, '0'),
     };
   }
 
-  function challengeDisplayTeam() {
-    return state.data?.team || fakeCaptainTeam();
+  function renderCountdown(seconds) {
+    const parts = getCountdownParts(seconds);
+    const hoursEl = getEl('formingCountdownHours');
+    const minutesEl = getEl('formingCountdownMinutes');
+    const secondsEl = getEl('formingCountdownSeconds');
+    const container = getEl('formingCountdown');
+    if (hoursEl) hoursEl.textContent = parts.hours;
+    if (minutesEl) minutesEl.textContent = parts.minutes;
+    if (secondsEl) secondsEl.textContent = parts.seconds;
+    if (container) {
+      container.setAttribute('aria-label', `Time remaining ${parts.hours} hours ${parts.minutes} minutes ${parts.seconds} seconds`);
+    }
   }
 
-  function showFullTeamOverlay(team) {
-    const overlay = getEl('successOverlay');
-    if (!overlay || !team) return;
-    const title = getEl('successTeamTitle');
-    const copy = getEl('successTeamCopy');
-    if (title) title.textContent = team.name || 'Ready to Sprint';
-    if (copy) copy.textContent = `Your squad is full for ${state.data?.cycle?.label || 'this week'}.`;
-    overlay.style.display = 'flex';
-    getEl('teamModal')?.classList.add('is-ready');
+  function formatRemainingLabel(seconds) {
+    const value = Math.max(0, Number(seconds || 0));
+    const hours = Math.floor(value / 3600);
+    const minutes = Math.floor((value % 3600) / 60);
+    if (hours > 0) {
+      return `${hours}h ${String(minutes).padStart(2, '0')}m left`;
+    }
+    if (minutes > 0) {
+      return `${minutes}m left`;
+    }
+    return `${Math.max(0, value % 60)}s left`;
   }
 
-  function hideFullTeamOverlay() {
-    const overlay = getEl('successOverlay');
-    if (overlay) overlay.style.display = 'none';
-    getEl('teamModal')?.classList.remove('is-ready');
+  function stopCountdownTicker() {
+    if (state.countdownTimer) {
+      window.clearTimeout(state.countdownTimer);
+      state.countdownTimer = null;
+    }
   }
 
-  function renderSlots(team, rules) {
-    const grid = getEl('slotsGrid');
+  function startCountdownTicker(secondsRemaining) {
+    stopCountdownTicker();
+    let remaining = Math.max(0, Number(secondsRemaining || 0));
+
+    const tick = () => {
+      if (!getEl('formingCountdown')) return;
+      renderCountdown(remaining);
+      if (remaining <= 0) {
+        stopCountdownTicker();
+        loadState().catch(() => {});
+        return;
+      }
+      remaining -= 1;
+      const nextDelay = Math.min(1000, Math.max(120, 1000 - (Date.now() % 1000) + 8));
+      state.countdownTimer = window.setTimeout(tick, nextDelay);
+    };
+
+    tick();
+  }
+
+  function renderSlots(gridId, team, canInvite) {
+    const grid = getEl(gridId);
     if (!grid) return;
     const members = team?.members || [];
-    const maxMembers = Number(rules?.maxMembers || 4);
-    const canInvite = !!team?.isCaptain;
-    const cards = [];
-
-    members.forEach((member) => {
-      cards.push(`
-        <div class="slot-card slot-card--filled">
-          <div class="slot-card__avatar">${member.avatar}</div>
-          <div class="slot-card__badge ${member.role === 'captain' ? 'slot-card__badge--captain' : ''}">
-            ${member.role === 'captain' ? 'Captain' : 'Member'}
-          </div>
-          <p class="slot-card__name">${member.username}</p>
-          <p class="slot-card__meta">${member.email || 'AcadBeat member'}</p>
+    const cards = members.map((member) => `
+      <div class="slot-card slot-card--filled">
+        <div class="slot-card__avatar">${member.avatar}</div>
+        <div class="slot-card__badge ${member.role === 'captain' ? 'slot-card__badge--captain' : ''}">
+          ${member.role === 'captain' ? 'Captain' : 'Member'}
         </div>
-      `);
-    });
+        <p class="slot-card__name">${member.username}</p>
+        <p class="slot-card__meta">${member.email || 'AcadBeat member'}</p>
+      </div>
+    `);
 
-    for (let index = members.length; index < maxMembers; index += 1) {
+    const missing = Math.max(0, Number(team?.maxMembers || 4) - members.length);
+    for (let index = 0; index < missing; index += 1) {
       cards.push(`
         <button type="button" class="slot-card slot-empty" ${canInvite ? 'onclick="openInviteComposer()"' : 'disabled'}>
           <span style="font-size:2rem; font-weight:200;">+</span>
-          <p class="module-label" style="margin:8px 0 0;">Invite</p>
-          <p class="slot-card__emptyLabel">${canInvite ? 'Send an invite by username' : 'Only the captain can invite'}</p>
+          <p class="module-label" style="margin:8px 0 0;">Seat</p>
+          <p class="slot-card__emptyLabel">${canInvite ? 'Invite by username' : 'Waiting to fill'}</p>
         </button>
       `);
     }
@@ -229,9 +165,9 @@
   }
 
   function renderSentInvites(sentInvites) {
-    const list = getEl('sentInvitesList');
     const section = getEl('pendingInvitesSection');
-    if (!list || !section) return;
+    const list = getEl('sentInvitesList');
+    if (!section || !list) return;
     if (!sentInvites.length) {
       section.hidden = true;
       list.innerHTML = '';
@@ -243,19 +179,31 @@
         <div class="challenge-pending__avatar">${invite.invitee.avatar}</div>
         <div class="challenge-pending__content">
           <strong>${invite.invitee.username}</strong>
-          <span>Pending invite sent.</span>
+          <span>Invite pending.</span>
         </div>
         <div class="challenge-status-chip">Pending</div>
       </div>
     `).join('');
   }
 
+  function inviteStatusLabel(status) {
+    return status === 'accepted'
+      ? 'Accepted'
+      : status === 'declined'
+        ? 'Declined'
+        : status === 'cancelled'
+          ? 'Cancelled'
+          : status === 'expired'
+            ? 'Expired'
+            : 'Pending';
+  }
+
   function renderInviteInbox(invites) {
     const count = getEl('inviteInboxCount');
     const list = getEl('inviteInboxList');
     const empty = getEl('inviteInboxEmpty');
-    const pendingCount = (invites || []).filter((invite) => invite.status === 'pending').length;
-    if (count) count.textContent = String(pendingCount || 0);
+    const pending = (invites || []).filter((item) => item.status === 'pending').length;
+    if (count) count.textContent = String(pending);
     if (!list || !empty) return;
     if (!invites.length) {
       empty.hidden = false;
@@ -268,21 +216,19 @@
         <div class="challenge-invite-card__avatar">${invite.inviter.avatar}</div>
         <div class="challenge-invite-card__content">
           <strong>${invite.teamName}</strong>
-          <span>${invite.inviter.username} invited you to join this week&apos;s team.</span>
+          <span>${invite.inviter.username} invited you into this forming team.</span>
           ${invite.status === 'pending' ? `
             <div class="challenge-invite-card__actions">
               <button type="button" class="challenge-inline-btn" onclick="respondToChallengeInvite(${invite.id}, 'accept')">Accept</button>
               <button type="button" class="challenge-inline-btn challenge-inline-btn--ghost" onclick="respondToChallengeInvite(${invite.id}, 'decline')">Decline</button>
             </div>
-          ` : `
-            <div class="challenge-status-chip">${invite.status === 'accepted' ? 'Accepted' : invite.status === 'declined' ? 'Declined' : invite.status === 'cancelled' ? 'Cancelled' : 'Expired'}</div>
-          `}
+          ` : `<div class="challenge-status-chip">${inviteStatusLabel(invite.status)}</div>`}
         </div>
       </div>
     `).join('');
   }
 
-  function renderPublicLobby(listings, currentTeam, teamLocked) {
+  function renderPublicLobby(listings, currentTeam, signedUp) {
     const list = getEl('publicLobbyList');
     const empty = getEl('publicLobbyEmpty');
     if (!list || !empty) return;
@@ -298,44 +244,15 @@
         <div class="challenge-invite-card__avatar">${String(item.captain || 'C').slice(0, 1).toUpperCase()}</div>
         <div class="challenge-invite-card__content">
           <strong>${item.teamName}</strong>
-          <span>Captain: ${item.captain} · Members: ${item.memberCount}/4${item.description ? ` · ${item.description}` : ''}</span>
+          <span>Captain: ${item.captain} · Members: ${item.memberCount}/4 · ${formatRemainingLabel(item.secondsRemaining)}</span>
           <div class="challenge-invite-card__actions">
             <button
               type="button"
               class="challenge-inline-btn"
-              onclick="requestJoinPublicTeam(${item.teamId})"
-              ${item.isFull || item.hasPendingRequest || teamLocked ? 'disabled' : ''}
-            >${item.isFull ? 'Full' : item.hasPendingRequest ? 'Requested' : teamLocked ? 'Locked Team' : 'Request to Join'}</button>
+              onclick="joinChallengePublicTeam(${item.teamId}, '${String(item.teamName).replace(/'/g, "\\'")}')"
+              ${item.isFull || !signedUp || (currentTeam && currentTeam.status === 'locked') ? 'disabled' : ''}
+            >${!signedUp ? 'Sign up first' : item.isFull ? 'Full' : 'Join Team'}</button>
           </div>
-        </div>
-      </div>
-    `).join('');
-  }
-
-  function renderCaptainRequests(requests) {
-    const list = getEl('captainRequestList');
-    const empty = getEl('captainRequestEmpty');
-    if (!list || !empty) return;
-    if (!requests.length) {
-      empty.hidden = false;
-      list.innerHTML = '';
-      return;
-    }
-    empty.hidden = true;
-    list.innerHTML = requests.map((item) => `
-      <div class="challenge-invite-card">
-        <div class="challenge-invite-card__avatar">${item.requester.avatar}</div>
-        <div class="challenge-invite-card__content">
-          <strong>${item.requester.username}</strong>
-          <span>${item.requester.email || 'AcadBeat user'}${item.message ? ` · ${item.message}` : ''}</span>
-          ${item.status === 'pending' ? `
-            <div class="challenge-invite-card__actions">
-              <button type="button" class="challenge-inline-btn" onclick="respondToCaptainJoinRequest(${item.id}, 'accept')">Approve</button>
-              <button type="button" class="challenge-inline-btn challenge-inline-btn--ghost" onclick="respondToCaptainJoinRequest(${item.id}, 'decline')">Decline</button>
-            </div>
-          ` : `
-            <div class="challenge-status-chip">${item.status === 'accepted' ? 'Accepted' : item.status === 'declined' ? 'Declined' : item.status === 'cancelled' ? 'Cancelled' : 'Expired'}</div>
-          `}
         </div>
       </div>
     `).join('');
@@ -364,90 +281,160 @@
     }
 
     if (!team) {
-      status.textContent = 'No team yet.';
+      status.textContent = 'No team yet. Sign up and form a 4-person team.';
+    } else if (team.status === 'forming') {
+      status.textContent = `${team.name} is still forming with ${team.memberCount}/4 members.`;
     } else if (!team.score) {
-      status.textContent = `${team.name} is live with 0 pts.`;
+      status.textContent = `${team.name} is locked with 0 pts.`;
     } else if (team.dailyRank) {
       status.textContent = `${team.name} is ranked #${team.dailyRank} with ${team.score} pts.`;
     } else {
-      status.textContent = `${team.name} is active with ${team.score} pts.`;
+      status.textContent = `${team.name} is live with ${team.score} pts.`;
     }
   }
 
   function renderState(nextState) {
     state.data = nextState || null;
-    const rules = nextState?.rules || { maxMembers: 4 };
-    const realTeam = nextState?.team || null;
-    const displayTeam = challengeDisplayTeam();
-    const isCaptain = !!displayTeam?.isCaptain;
-    const teamLocked = !!nextState?.teamLocked;
-    const pendingInviteCount = (nextState?.receivedInvites || []).filter((item) => item.status === 'pending').length;
-    const pendingCaptainReviewCount = (nextState?.captainJoinRequests || []).filter((item) => item.status === 'pending').length;
-    const requestPendingTotal = pendingInviteCount + pendingCaptainReviewCount;
+    const team = nextState?.team || null;
+    const phase = String(nextState?.phase || 'signup');
+    const signedUp = !!nextState?.signup?.isSignedUp;
+    const isCaptain = !!team?.isCaptain;
+    const canConfirmName = !!(team && team.status === 'locked' && isCaptain);
 
     getEl('challengeCycleLabel').textContent = `Weekly Challenge — ${nextState?.cycle?.label || ''}`;
-    getEl('challengeWeekChip').textContent = nextState?.cycle?.resetRule || 'Teams reset every Monday at 00:00.';
-    getEl('challengeRoleChip').textContent = `Role: ${isCaptain ? 'Captain' : 'Member'}`;
-    getEl('challengeTitle').textContent = displayTeam?.name || 'Create your fellowship';
-    getEl('challengeCopy').textContent = 'Teams are capped at four members. Only captains can invite, and every Monday the system clears weekly teams and notifies members.';
+    getEl('challengeWeekChip').textContent = nextState?.cycle?.resetRule || 'Challenge teams reset every Monday at 00:00.';
+    getEl('challengeRoleChip').textContent = `Role: ${team ? (isCaptain ? 'Captain' : 'Member') : signedUp ? 'Signed Up' : 'Open'}`;
+    getEl('challengeTitle').textContent =
+      phase === 'signup' ? 'Sign up for the team challenge'
+        : phase === 'chooser' ? 'Choose how you want to form'
+          : phase === 'forming' ? (team?.name || 'Your team is forming')
+            : (team?.name || 'Your team is locked');
+    getEl('challengeCopy').textContent =
+      phase === 'signup'
+        ? 'The challenge only runs in 4-person teams. Sign up first, then create your own team or join one from the square.'
+        : phase === 'chooser'
+          ? 'You are signed up. Either create your own 4-person team or join a team from the public square.'
+          : phase === 'forming'
+            ? 'Your forming team has a 1-hour countdown. If it does not reach 4 members in time, it dissolves and everyone returns to the chooser state.'
+            : 'Your team is full and locked. The captain now confirms the official team name and the team starts accumulating points.';
 
-    const teamNameInput = getEl('teamNameInput');
-    if (teamNameInput) {
-      const fallbackName = realTeam?.name || state.draftTeamName || displayTeam?.name || '';
-      teamNameInput.value = fallbackName;
-      teamNameInput.disabled = !!(realTeam && !realTeam.isCaptain);
-      state.draftTeamName = fallbackName;
+    getEl('challengeSignupPanel').hidden = phase !== 'signup';
+    getEl('challengeChooserPanel').hidden = phase !== 'chooser';
+    getEl('challengeFormingPanel').hidden = phase !== 'forming';
+    getEl('challengeLockedPanel').hidden = phase !== 'locked';
+    getEl('openInviteInboxBtn').hidden = !signedUp;
+
+    if (phase === 'forming' && team) {
+      getEl('formingTeamHeading').textContent = team.name || 'Your team is forming';
+      renderCountdown(team.secondsRemaining);
+      getEl('formingMissingCopy').textContent = team.remainingSlots > 0
+        ? `Still missing ${team.remainingSlots} member${team.remainingSlots > 1 ? 's' : ''}`
+        : 'Full team reached';
+      renderSlots('slotsGrid', team, isCaptain);
+      renderSentInvites(nextState?.sentInvites || []);
+      const publishBtn = getEl('publishPublicBtn');
+      if (publishBtn) {
+        publishBtn.textContent = nextState?.publicListing ? 'Remove From Public' : 'Post To Public';
+        publishBtn.disabled = !isCaptain;
+      }
+      startCountdownTicker(team.secondsRemaining);
+    } else {
+      stopCountdownTicker();
+      renderSentInvites([]);
+      renderSlots('slotsGrid', { members: [], maxMembers: 0 }, false);
     }
 
-    getEl('saveTeamNameBtn').hidden = !!(realTeam && !realTeam.isCaptain);
-    getEl('publishPublicBtn').disabled = !isCaptain;
-    getEl('publishPublicBtn').hidden = !isCaptain;
-    getEl('challengeAdminNote').hidden = !(nextState?.access?.isAdmin);
-    const requestCountEl = getEl('requestPendingCount');
-    if (requestCountEl) {
-      requestCountEl.hidden = requestPendingTotal <= 0;
-      requestCountEl.textContent = String(requestPendingTotal);
+    if (phase === 'locked' && team) {
+      const input = getEl('teamNameInput');
+      if (input) {
+        input.value = team.name || '';
+        input.disabled = !canConfirmName;
+      }
+      getEl('saveTeamNameBtn').hidden = !canConfirmName;
+      getEl('lockedTeamHeading').textContent = `${team.name || 'Your team'} is locked`;
+      renderSlots('lockedSlotsGrid', team, false);
+    } else {
+      const input = getEl('teamNameInput');
+      if (input) {
+        input.value = '';
+        input.disabled = true;
+      }
+      getEl('saveTeamNameBtn').hidden = true;
+      renderSlots('lockedSlotsGrid', { members: [], maxMembers: 0 }, false);
     }
 
-    if (getEl('publishPublicBtn')) {
-      const isPublic = !!nextState?.publicListing;
-      getEl('publishPublicBtn').textContent = isPublic ? 'Remove Public' : 'Post to Public';
-    }
-    if (getEl('publicMineStatus')) {
-      getEl('publicMineStatus').textContent = nextState?.publicListing
-        ? 'Your team is currently visible in the public lobby. Remove it when you no longer want applicants.'
-        : 'Your team is currently private. Publish it when you want others to request entry.';
-    }
-
-    const publicMineTab = getEl('publicMineTab');
-    if (publicMineTab) publicMineTab.hidden = !isCaptain;
-    const requestReviewTab = getEl('requestReviewTab');
-    if (requestReviewTab) requestReviewTab.hidden = !isCaptain;
-    if (!isCaptain) {
-      state.hubTabs.public = 'browse';
-      state.hubTabs.request = 'invited';
-    }
-
-    renderSlots(displayTeam, rules);
-    renderSentInvites(nextState?.sentInvites || []);
     renderInviteInbox(nextState?.receivedInvites || []);
-    renderPublicLobby(nextState?.publicListings || [], realTeam, teamLocked);
-    renderCaptainRequests(nextState?.captainJoinRequests || []);
-    renderLeaderboard(nextState?.leaderboard || [], realTeam);
-    setHubTab('public', state.hubTabs.public);
-    setHubTab('request', state.hubTabs.request);
-
-    const currentMemberCount = Number(realTeam?.memberCount || displayTeam?.memberCount || 0);
-    if (currentMemberCount >= Number(realTeam?.maxMembers || displayTeam?.maxMembers || 4) && state.previousMemberCount < Number(realTeam?.maxMembers || displayTeam?.maxMembers || 4)) {
-      showFullTeamOverlay(realTeam || displayTeam);
-    }
-    state.previousMemberCount = currentMemberCount;
+    renderPublicLobby(nextState?.publicListings || [], team, signedUp);
+    renderLeaderboard(nextState?.leaderboard || [], team);
   }
 
   async function loadState() {
     const data = await challengeFetch();
     renderState(data.state || null);
     return data.state || null;
+  }
+
+  function scheduleRealtimeRefresh() {
+    if (state.realtimeRefreshTimer) window.clearTimeout(state.realtimeRefreshTimer);
+    state.realtimeRefreshTimer = window.setTimeout(() => {
+      state.realtimeRefreshTimer = null;
+      if (!isChallengeOpen()) return;
+      loadState().catch(() => {});
+    }, 120);
+  }
+
+  function startFallbackPolling() {
+    if (state.fallbackPollTimer) return;
+    state.fallbackPollTimer = window.setInterval(() => {
+      if (!isChallengeOpen()) return;
+      loadState().catch(() => {});
+    }, 5000);
+  }
+
+  function stopFallbackPolling() {
+    if (state.fallbackPollTimer) {
+      window.clearInterval(state.fallbackPollTimer);
+      state.fallbackPollTimer = null;
+    }
+  }
+
+  function handleRealtimeEvent(payload) {
+    if (!payload || payload.type !== 'challenge.updated') return;
+    if (typeof authState === 'undefined' || !authState.user) return;
+    if (String(authState.user.role || '').toLowerCase() === 'admin') return;
+    scheduleRealtimeRefresh();
+  }
+
+  function connectChallengeRealtime() {
+    if (state.realtimeSocket || state.realtimeClosedManually) return;
+    try {
+      const socket = new WebSocket(REALTIME_WS_URL);
+      state.realtimeSocket = socket;
+      socket.addEventListener('message', (event) => {
+        try {
+          handleRealtimeEvent(JSON.parse(event.data));
+        } catch (_err) {
+          // Ignore malformed payloads.
+        }
+      });
+      socket.addEventListener('close', () => {
+        state.realtimeSocket = null;
+        startFallbackPolling();
+        if (state.realtimeClosedManually) return;
+        state.realtimeReconnectTimer = window.setTimeout(connectChallengeRealtime, 1500);
+      });
+      socket.addEventListener('open', () => {
+        stopFallbackPolling();
+      });
+      socket.addEventListener('error', () => {
+        try {
+          socket.close();
+        } catch (_err) {}
+      });
+    } catch (_err) {
+      state.realtimeSocket = null;
+      startFallbackPolling();
+    }
   }
 
   async function openChallengeModal() {
@@ -460,39 +447,53 @@
       openSiteModal('Challenge Disabled', 'Admin accounts do not join weekly challenge teams.');
       return;
     }
-    const overlay = getEl('teamModalOverlay');
-    if (overlay) overlay.classList.add('is-open');
+    getEl('teamModalOverlay')?.classList.add('is-open');
+    startFallbackPolling();
     await loadState();
   }
 
   function closeChallengeModal() {
     getEl('teamModalOverlay')?.classList.remove('is-open');
+    stopCountdownTicker();
+    stopFallbackPolling();
     closePanels();
-    hideFullTeamOverlay();
+  }
+
+  async function signUp() {
+    const response = await challengeFetch({
+      method: 'POST',
+      body: JSON.stringify({ action: 'signup' }),
+    });
+    renderState(response.state || null);
+    openSiteModal('Challenge Signup', response.message || 'Signed up.');
+  }
+
+  async function createTeam() {
+    const response = await challengeFetch({
+      method: 'POST',
+      body: JSON.stringify({ action: 'create_team' }),
+    });
+    renderState(response.state || null);
+    openSiteModal('Team Created', response.message || 'Team created.');
   }
 
   async function saveTeamName() {
-    const input = getEl('teamNameInput');
-    if (!input) return;
-    state.draftTeamName = input.value.trim();
-    if (!state.data?.team) {
-      renderState(state.data);
-      openSiteModal('Draft Saved', 'The team name draft will be used when you invite someone or post to public.');
+    const teamName = getEl('teamNameInput')?.value.trim() || '';
+    if (!teamName) {
+      openSiteModal('Team Name', 'Enter the official team name first.');
       return;
     }
     const response = await challengeFetch({
       method: 'POST',
-      body: JSON.stringify({ action: 'rename_team', teamName: state.draftTeamName }),
+      body: JSON.stringify({ action: 'confirm_team_name', teamName }),
     });
     renderState(response.state || null);
-    openSiteModal('Team Updated', response.message || 'Team name updated.');
+    openSiteModal('Team Name Confirmed', response.message || 'Team name confirmed.');
   }
 
   async function sendInvite() {
     setPanelError('challengeComposerError', '');
-    const input = getEl('searchInput');
-    const teamName = getEl('teamNameInput')?.value.trim() || state.draftTeamName;
-    const inviteeUsername = input?.value.trim() || '';
+    const inviteeUsername = getEl('searchInput')?.value.trim() || '';
     if (!inviteeUsername) {
       setPanelError('challengeComposerError', 'Enter the teammate username first.');
       return;
@@ -500,9 +501,9 @@
     try {
       const response = await challengeFetch({
         method: 'POST',
-        body: JSON.stringify({ action: 'send_invite', inviteeUsername, teamName }),
+        body: JSON.stringify({ action: 'send_invite', inviteeUsername }),
       });
-      if (input) input.value = '';
+      if (getEl('searchInput')) getEl('searchInput').value = '';
       renderState(response.state || null);
       closePanels();
       openSiteModal('Invite Sent', response.message || 'Invite sent.');
@@ -519,7 +520,7 @@
         body: JSON.stringify({ action: 'respond_invite', inviteId, decision }),
       });
       renderState(response.state || null);
-      openSiteModal('Challenge Updated', response.message || 'Invite updated.');
+      openSiteModal('Invitation Updated', response.message || 'Invite updated.');
     } catch (error) {
       setPanelError('inviteInboxError', error.message || 'Failed to update invite.');
     }
@@ -532,48 +533,30 @@
         body: JSON.stringify({
           action: 'toggle_public_listing',
           mode: state.data?.publicListing ? 'close' : 'publish',
-          teamName: getEl('teamNameInput')?.value.trim() || state.draftTeamName,
         }),
       });
       renderState(response.state || null);
-      openSiteModal('Public Lobby', response.message || 'Public listing updated.');
+      openSiteModal('Team Square', response.message || 'Public status updated.');
     } catch (error) {
-      openSiteModal('Public Lobby', error.message || 'Failed to update public listing.');
+      openSiteModal('Team Square', error.message || 'Failed to update public status.');
     }
   }
 
-  async function requestJoinPublicTeam(teamId) {
+  async function joinPublicTeam(teamId, teamName) {
+    const proceed = window.confirm(`Join "${teamName}" now? You will enter this forming team directly.`);
+    if (!proceed) return;
     setPanelError('publicLobbyError', '');
     try {
       const response = await challengeFetch({
         method: 'POST',
-        body: JSON.stringify({ action: 'request_join_public', teamId }),
+        body: JSON.stringify({ action: 'join_public_team', teamId }),
       });
       renderState(response.state || null);
-      openSiteModal('Request Sent', response.message || 'Join request sent.');
+      closePanels();
+      openSiteModal('Joined Team', response.message || 'Team joined.');
     } catch (error) {
-      setPanelError('publicLobbyError', error.message || 'Failed to send join request.');
+      setPanelError('publicLobbyError', error.message || 'Failed to join team.');
     }
-  }
-
-  async function respondToCaptainJoinRequest(requestId, decision) {
-    setPanelError('captainRequestError', '');
-    try {
-      const response = await challengeFetch({
-        method: 'POST',
-        body: JSON.stringify({ action: 'respond_join_request', requestId, decision }),
-      });
-      renderState(response.state || null);
-      openSiteModal('Join Request Updated', response.message || 'Join request updated.');
-    } catch (error) {
-      setPanelError('captainRequestError', error.message || 'Failed to update join request.');
-    }
-  }
-
-  function openPanel(id) {
-    closePanels();
-    const panel = getEl(id);
-    if (panel) panel.style.display = 'flex';
   }
 
   function attachListeners() {
@@ -581,17 +564,6 @@
     if (overlay) {
       overlay.addEventListener('click', (event) => {
         if (event.target === overlay) closeChallengeModal();
-      });
-    }
-
-    const teamNameInput = getEl('teamNameInput');
-    if (teamNameInput) {
-      teamNameInput.addEventListener('input', (event) => {
-        state.draftTeamName = event.target.value.trim();
-        const title = getEl('challengeTitle');
-        if (title && !state.data?.team) {
-          title.textContent = state.draftTeamName || fakeCaptainTeam()?.name || 'Create your fellowship';
-        }
       });
     }
   }
@@ -606,33 +578,27 @@
   window.openInviteComposer = function () { openPanel('searchLayer'); };
   window.closeSearch = function () { closePanels(); };
   window.challengeSendInvite = function () { sendInvite(); };
-  window.respondToChallengeInvite = function (inviteId, decision) { respondToInvite(inviteId, decision); };
-  window.openPublicHub = function () {
-    openPanel('publicHubLayer');
-    setHubTab('public', 'browse');
-  };
+  window.openPublicHub = function () { openPanel('publicHubLayer'); };
   window.closePublicHub = function () { closePanels(); };
-  window.requestJoinPublicTeam = function (teamId) { requestJoinPublicTeam(teamId); };
-  window.openRequestHub = function () {
-    openPanel('requestHubLayer');
-    setHubTab('request', 'invited');
-  };
-  window.closeRequestHub = function () { closePanels(); };
-  window.respondToCaptainJoinRequest = function (requestId, decision) { respondToCaptainJoinRequest(requestId, decision); };
+  window.openInviteInbox = function () { openPanel('inviteHubLayer'); };
+  window.closeInviteInbox = function () { closePanels(); };
+  window.respondToChallengeInvite = function (inviteId, decision) { respondToInvite(inviteId, decision); };
   window.toggleChallengePublicListing = function () { togglePublicListing(); };
-  window.closeChallengeCelebration = hideFullTeamOverlay;
-  window.saveChallengeTeamName = function () { saveTeamName(); };
-  window.setChallengeHubTab = function (kind, tab) { setHubTab(kind, tab); };
+  window.joinChallengePublicTeam = function (teamId, teamName) { joinPublicTeam(teamId, teamName); };
+  window.signUpForChallenge = function () { signUp().catch((error) => openSiteModal('Challenge Error', error.message || 'Signup failed.')); };
+  window.createChallengeTeam = function () { createTeam().catch((error) => openSiteModal('Challenge Error', error.message || 'Failed to create team.')); };
+  window.saveChallengeTeamName = function () { saveTeamName().catch((error) => openSiteModal('Challenge Error', error.message || 'Failed to confirm team name.')); };
 
   window.challengeHome = {
     syncAccess(user) {
-      syncChallengeEntry(user);
+      const btn = getEl('challengeEntryBtn');
+      if (btn) btn.hidden = !!(user && String(user.role || '').toLowerCase() === 'admin');
       if (user && String(user.role || '').toLowerCase() !== 'admin') {
         connectChallengeRealtime();
       }
       if (state.pendingOpenAfterLogin && user && String(user.role || '').toLowerCase() !== 'admin') {
         state.pendingOpenAfterLogin = false;
-        openChallengeModal().catch((error) => openSiteModal('Challenge Error', error.message || 'Failed to load challenge.'));
+        openChallengeModal().catch((error) => openSiteModal('Challenge Error', error.message || 'Failed to open challenge.'));
       }
     },
     handleInitialRoute(params) {

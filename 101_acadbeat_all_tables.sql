@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS challenge_team_invites;
 DROP TABLE IF EXISTS challenge_team_members;
 DROP TABLE IF EXISTS challenge_teams;
 DROP TABLE IF EXISTS challenge_meta;
-DROP TABLE IF EXISTS challenge_team_join_requests;
+DROP TABLE IF EXISTS challenge_signups;
 DROP TABLE IF EXISTS challenge_team_public_listings;
 DROP TABLE IF EXISTS message_center_notice_reads;
 DROP TABLE IF EXISTS message_center_notifications;
@@ -461,6 +461,7 @@ CREATE TABLE chat_conversation_members (
     user_id BIGINT NOT NULL,
     member_role VARCHAR(20) NOT NULL DEFAULT 'member',
     last_read_at DATETIME NULL,
+    last_read_message_id BIGINT NULL,
     joined_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -863,7 +864,28 @@ CREATE TABLE challenge_meta (
 
 
 -- =========================================
--- 24. challenge_teams
+-- 24. challenge_signups
+-- =========================================
+CREATE TABLE challenge_signups (
+    signup_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    week_start_date DATE NOT NULL,
+    user_id BIGINT NOT NULL,
+    signup_status ENUM('active', 'withdrawn') NOT NULL DEFAULT 'active',
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT uq_challenge_signup_week_user UNIQUE (week_start_date, user_id),
+
+    CONSTRAINT fk_challenge_signups_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(user_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+-- =========================================
+-- 25. challenge_teams
 -- =========================================
 CREATE TABLE challenge_teams (
     team_id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -874,7 +896,10 @@ CREATE TABLE challenge_teams (
     score INT NOT NULL DEFAULT 0,
     daily_rank INT NULL,
     rank_updated_on DATE NULL,
-    status ENUM('active', 'archived') NOT NULL DEFAULT 'active',
+    status ENUM('forming', 'locked', 'expired', 'archived') NOT NULL DEFAULT 'forming',
+    expires_at DATETIME NOT NULL,
+    locked_at DATETIME NULL,
+    team_name_confirmed_at DATETIME NULL,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     archived_at DATETIME NULL,
@@ -890,7 +915,7 @@ CREATE TABLE challenge_teams (
 
 
 -- =========================================
--- 25. challenge_team_members
+-- 26. challenge_team_members
 -- =========================================
 CREATE TABLE challenge_team_members (
     team_member_id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -920,7 +945,7 @@ CREATE TABLE challenge_team_members (
 
 
 -- =========================================
--- 26. challenge_team_invites
+-- 27. challenge_team_invites
 -- =========================================
 CREATE TABLE challenge_team_invites (
     invite_id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -955,9 +980,7 @@ CREATE TABLE challenge_team_invites (
 
 
 -- =========================================
--- 27. message_center_system_notices
--- =========================================
--- 27. challenge_team_public_listings
+-- 28. challenge_team_public_listings
 -- =========================================
 CREATE TABLE challenge_team_public_listings (
     listing_id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -973,41 +996,6 @@ CREATE TABLE challenge_team_public_listings (
     CONSTRAINT fk_challenge_team_public_listings_team
         FOREIGN KEY (team_id)
         REFERENCES challenge_teams(team_id)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-
--- =========================================
--- 28. challenge_team_join_requests
--- =========================================
-CREATE TABLE challenge_team_join_requests (
-    join_request_id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    team_id BIGINT NOT NULL,
-    week_start_date DATE NOT NULL,
-    requester_user_id BIGINT NOT NULL,
-    captain_user_id BIGINT NOT NULL,
-    status ENUM('pending', 'accepted', 'declined', 'cancelled', 'expired') NOT NULL DEFAULT 'pending',
-    message_text VARCHAR(255) NULL,
-    responded_at DATETIME NULL,
-    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-
-    CONSTRAINT fk_challenge_team_join_requests_team
-        FOREIGN KEY (team_id)
-        REFERENCES challenge_teams(team_id)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE,
-
-    CONSTRAINT fk_challenge_team_join_requests_requester
-        FOREIGN KEY (requester_user_id)
-        REFERENCES users(user_id)
-        ON DELETE CASCADE
-        ON UPDATE CASCADE,
-
-    CONSTRAINT fk_challenge_team_join_requests_captain
-        FOREIGN KEY (captain_user_id)
-        REFERENCES users(user_id)
         ON DELETE CASCADE
         ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -1132,6 +1120,9 @@ CREATE INDEX idx_challenge_teams_week_status
 CREATE INDEX idx_challenge_teams_score_rank
     ON challenge_teams(week_start_date, status, score, daily_rank);
 
+CREATE INDEX idx_challenge_signups_week_status
+    ON challenge_signups(week_start_date, signup_status);
+
 CREATE INDEX idx_challenge_team_members_team_status
     ON challenge_team_members(team_id, membership_status);
 
@@ -1146,12 +1137,6 @@ CREATE INDEX idx_challenge_team_invites_team_status
 
 CREATE INDEX idx_challenge_team_public_listings_week_status
     ON challenge_team_public_listings(week_start_date, status);
-
-CREATE INDEX idx_challenge_team_join_requests_captain_status
-    ON challenge_team_join_requests(captain_user_id, week_start_date, status);
-
-CREATE INDEX idx_challenge_team_join_requests_requester_status
-    ON challenge_team_join_requests(requester_user_id, week_start_date, status);
 
 CREATE INDEX idx_message_center_system_notices_status
     ON message_center_system_notices(status);

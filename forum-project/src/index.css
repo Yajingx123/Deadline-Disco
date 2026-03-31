@@ -126,19 +126,21 @@ body {
 
 .forum-topnav__messageBadge {
   position: absolute;
-  top: -6px;
-  right: -6px;
-  min-width: 18px;
-  height: 18px;
-  padding: 0 5px;
+  top: -3px;
+  right: -3px;
+  width: 10px;
+  min-width: 10px;
+  height: 10px;
+  padding: 0;
   border-radius: 999px;
   background: #ef4444;
-  color: #fff;
-  font-size: 0.65rem;
-  font-weight: 700;
+  color: transparent;
+  font-size: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  border: 2px solid #f7f3eb;
+  box-shadow: 0 0 0 1px rgba(58, 78, 107, 0.08);
 }
 
 .forum-topnav__userGroup {

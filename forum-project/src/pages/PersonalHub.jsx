@@ -7,6 +7,7 @@ import {
   createGroupConversation,
   deleteChatConversation,
   fetchChatConversations,
+  fetchMessageCenter,
   fetchChatMessages,
   fetchSessionUser,
   renameChatConversation,
@@ -23,6 +24,41 @@ function upsertConversation(conversations, nextConversation) {
   }
   const filtered = conversations.filter((item) => Number(item.id) !== nextId)
   return [nextConversation, ...filtered]
+}
+
+function upsertMessage(messages, nextMessage) {
+  const nextId = Number(nextMessage?.id || 0)
+  if (!nextId) {
+    return messages
+  }
+  if (messages.some((item) => Number(item.id) === nextId)) {
+    return messages
+  }
+  return [...messages, nextMessage]
+}
+
+function normalizeRealtimeMessage(message, currentUser) {
+  if (!message) {
+    return null
+  }
+  const currentUserId = Number(currentUser?.user_id || currentUser?.id || 0)
+  const authorId = Number(message?.author?.id || 0)
+  return {
+    ...message,
+    author: {
+      ...(message.author || {}),
+      isSelf: currentUserId > 0 && authorId === currentUserId,
+    },
+  }
+}
+
+function broadcastMessageSummary(summary = {}) {
+  window.dispatchEvent(new CustomEvent('acadbeat:message-summary', {
+    detail: {
+      summary,
+      totalUnread: Number(summary.totalUnread || 0),
+    },
+  }))
 }
 
 function isCurrentMember(member, currentUser) {
@@ -97,6 +133,15 @@ export default function PersonalHub({ onBackToChooser, embedded = false }) {
 
   const messageRootRef = useRef(null)
   const messageListRef = useRef(null)
+
+  const syncMessageSummary = async () => {
+    try {
+      const data = await fetchMessageCenter(true)
+      broadcastMessageSummary(data?.summary || {})
+    } catch (_err) {
+      // Ignore transient summary refresh failures.
+    }
+  }
 
   const refreshConversations = async () => {
     const [conversationData, sessionData] = await Promise.all([
@@ -239,6 +284,7 @@ export default function PersonalHub({ onBackToChooser, embedded = false }) {
         if (syncConversations) {
           refreshConversations().catch(() => {})
         }
+        syncMessageSummary().catch(() => {})
       } catch (err) {
         if (!cancelled) {
           setError(err?.message || 'Failed to load messages.')
@@ -257,6 +303,36 @@ export default function PersonalHub({ onBackToChooser, embedded = false }) {
   }, [activeConversationId])
 
   useEffect(() => {
+    if (!activeConversationId) {
+      return undefined
+    }
+
+    const pollTimer = window.setInterval(() => {
+      if (document.hidden) {
+        return
+      }
+      fetchChatMessages(activeConversationId)
+        .then((data) => {
+          setActiveConversation(data.conversation || null)
+          setMessages((prev) => {
+            const nextMessages = data.messages || []
+            if (prev.length === nextMessages.length) {
+              const sameIds = prev.every((message, index) => Number(message.id) === Number(nextMessages[index]?.id))
+              if (sameIds) {
+                return prev
+              }
+            }
+            return nextMessages
+          })
+          syncMessageSummary().catch(() => {})
+        })
+        .catch(() => {})
+    }, 2500)
+
+    return () => window.clearInterval(pollTimer)
+  }, [activeConversationId])
+
+  useEffect(() => {
     if (loading) {
       return undefined
     }
@@ -264,9 +340,14 @@ export default function PersonalHub({ onBackToChooser, embedded = false }) {
     return connectRealtime(async (event) => {
       const eventType = String(event?.type || '')
       const eventConversationId = Number(event?.data?.conversationId || 0)
+      const eventMessage = normalizeRealtimeMessage(event?.data?.message || null, currentUser)
 
       if (eventType.startsWith('chat.')) {
         await refreshConversations().catch(() => {})
+      }
+
+      if (eventType === 'chat.message.created' || eventType === 'message-center.updated') {
+        syncMessageSummary().catch(() => {})
       }
 
       if (
@@ -275,6 +356,19 @@ export default function PersonalHub({ onBackToChooser, embedded = false }) {
         && Number(activeConversationId) === eventConversationId
         && (eventType === 'chat.message.created' || eventType === 'chat.conversation.created')
       ) {
+        if (eventType === 'chat.message.created' && eventMessage) {
+          setMessages((prev) => upsertMessage(prev, eventMessage))
+          setConversations((prev) => prev.map((conversation) => (
+            Number(conversation.id) === Number(eventConversationId)
+              ? {
+                  ...conversation,
+                  lastMessagePreview: getSummary(eventMessage.content || '', 80),
+                  lastMessageAuthor: eventMessage.author?.username || conversation.lastMessageAuthor,
+                  lastMessageAt: eventMessage.createdAt || new Date().toISOString(),
+                }
+              : conversation
+          )))
+        }
         try {
           const data = await fetchChatMessages(activeConversationId)
           setActiveConversation(data.conversation || null)
@@ -293,7 +387,7 @@ export default function PersonalHub({ onBackToChooser, embedded = false }) {
         }
       }
     })
-  }, [loading, activeConversationId])
+  }, [loading, activeConversationId, currentUser])
 
   useEffect(() => enhanceRenderedAudioPlayers(messageRootRef.current), [messages])
 
@@ -362,6 +456,7 @@ export default function PersonalHub({ onBackToChooser, embedded = false }) {
     )))
 
     await refreshConversations()
+    await syncMessageSummary()
   }
 
   const openGroupModal = async () => {

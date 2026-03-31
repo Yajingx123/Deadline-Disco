@@ -131,6 +131,107 @@
     text-transform: uppercase;
 }
 
+.challenge-stage {
+    margin-top: 1.2rem;
+}
+
+.challenge-card {
+    border-radius: 28px;
+    background: rgba(255, 255, 255, 0.56);
+    border: 1px solid rgba(58, 78, 107, 0.08);
+    padding: 28px;
+}
+
+.challenge-card--center {
+    text-align: center;
+}
+
+.challenge-card--center h3,
+.challenge-card--stacked h3,
+.challenge-forming-head h3 {
+    margin: 0;
+    font-size: 1.7rem;
+    line-height: 1.1;
+    color: var(--secondary-color);
+}
+
+.challenge-card--center p,
+.challenge-card--stacked p,
+.challenge-forming-head p {
+    margin: 12px 0 0;
+    color: rgba(58, 78, 107, 0.72);
+    line-height: 1.6;
+}
+
+.challenge-stage__eyebrow {
+    margin: 0 0 10px;
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: rgba(58, 78, 107, 0.46);
+}
+
+.challenge-forming-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 220px;
+    gap: 16px;
+    align-items: stretch;
+    margin-bottom: 16px;
+}
+
+.challenge-countdown-card {
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.78);
+    border: 1px solid rgba(58, 78, 107, 0.08);
+    padding: 18px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+}
+
+.challenge-countdown-card span,
+.challenge-countdown-card small {
+    color: rgba(58, 78, 107, 0.54);
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+.challenge-countdown {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+    gap: 8px;
+}
+
+.challenge-countdown__unit {
+    min-width: 0;
+    padding: 14px 8px;
+    border-radius: 18px;
+    background: linear-gradient(180deg, rgba(255, 245, 236, 0.98), rgba(255, 238, 225, 0.9));
+    border: 1px solid rgba(255, 125, 33, 0.12);
+    text-align: center;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+.challenge-countdown__unit strong {
+    display: block;
+    font-size: 1.72rem;
+    line-height: 1;
+    color: #ff7d21;
+    letter-spacing: 0.04em;
+    font-variant-numeric: tabular-nums;
+}
+
+.challenge-countdown__divider {
+    color: rgba(255, 125, 33, 0.7);
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+    transform: translateY(-6px);
+}
+
 .slots-grid {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -293,6 +394,14 @@
     gap: 12px;
     margin-top: 1.4rem;
     margin-bottom: 1.15rem;
+}
+
+.team-float-actions--wide {
+    justify-content: center;
+}
+
+.team-float-actions--wide .btn-publish {
+    min-width: 180px;
 }
 
 .btn-publish {
@@ -527,6 +636,10 @@
 
     .challenge-hero,
     .challenge-name-row {
+        grid-template-columns: 1fr;
+    }
+
+    .challenge-forming-head {
         grid-template-columns: 1fr;
     }
 

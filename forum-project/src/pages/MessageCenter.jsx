@@ -7,6 +7,7 @@ import './MessageCenter.css'
 function broadcastSummary(summary = {}) {
   window.dispatchEvent(new CustomEvent('acadbeat:message-summary', {
     detail: {
+      summary,
       totalUnread: Number(summary.totalUnread || 0),
     },
   }))
@@ -118,6 +119,25 @@ export default function MessageCenter() {
     }).catch(() => {})
   }, [activeTab])
 
+  useEffect(() => {
+    const handleSummaryUpdate = (event) => {
+      const nextSummary = event?.detail?.summary
+      if (!nextSummary || typeof nextSummary !== 'object') {
+        return
+      }
+      setData((prev) => ({
+        ...prev,
+        summary: {
+          ...prev.summary,
+          ...nextSummary,
+        },
+      }))
+    }
+
+    window.addEventListener('acadbeat:message-summary', handleSummaryUpdate)
+    return () => window.removeEventListener('acadbeat:message-summary', handleSummaryUpdate)
+  }, [])
+
   const handleReadNotice = async (noticeId, noticeKind = 'system') => {
     await markMessageCenterNoticeRead(noticeId, noticeKind)
     setData((prev) => {
@@ -147,7 +167,7 @@ export default function MessageCenter() {
     if (loading) {
       return undefined
     }
-    return connectRealtime(async (event) => {
+    const disconnect = connectRealtime(async (event) => {
       const type = String(event?.type || '')
       if (!type.startsWith('chat.') && !type.startsWith('message-center.') && !type.startsWith('forum.')) {
         return
@@ -158,6 +178,18 @@ export default function MessageCenter() {
         // keep current state on transient realtime refresh failures
       }
     })
+
+    const pollTimer = window.setInterval(() => {
+      if (document.hidden) {
+        return
+      }
+      loadCenter().catch(() => {})
+    }, 3000)
+
+    return () => {
+      window.clearInterval(pollTimer)
+      disconnect?.()
+    }
   }, [loading])
 
   const tabs = useMemo(() => ([
