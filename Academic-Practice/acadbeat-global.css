@@ -179,6 +179,48 @@ nav {
   gap: 12px;
 }
 
+.message-link {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(58, 78, 107, 0.16);
+  background: rgba(255, 255, 255, 0.74);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--secondary-color);
+  text-decoration: none;
+  box-shadow: 0 8px 20px rgba(58, 78, 107, 0.08);
+  transition: 0.25s ease;
+}
+
+.message-link:hover {
+  background: rgba(155, 183, 212, 0.22);
+  transform: translateY(-1px);
+}
+
+.message-link[hidden] {
+  display: none !important;
+}
+
+.message-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: #ef4444;
+  color: #fff;
+  font-size: 0.64rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .user-section {
   display: flex;
   align-items: center;
@@ -259,4 +301,3 @@ main {
 .module-content {
   animation: none;
 }
-

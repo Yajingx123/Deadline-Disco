@@ -222,6 +222,48 @@
             gap: 12px;
         }
 
+        .message-link {
+            position: relative;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid rgba(58, 78, 107, 0.16);
+            background: rgba(255, 255, 255, 0.74);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--secondary-color);
+            text-decoration: none;
+            box-shadow: 0 8px 20px rgba(58, 78, 107, 0.08);
+            transition: 0.25s ease;
+        }
+
+        .message-link:hover {
+            background: rgba(155, 183, 212, 0.22);
+            transform: translateY(-1px);
+        }
+
+        .message-link[hidden] {
+            display: none !important;
+        }
+
+        .message-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            min-width: 18px;
+            height: 18px;
+            padding: 0 5px;
+            border-radius: 999px;
+            background: #ef4444;
+            color: #fff;
+            font-size: 0.64rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
         .user-section {
             display: flex;
             align-items: center;
@@ -275,8 +317,38 @@
             grid-template-columns: 280px 1fr;
             gap: 60px;
             max-width: 1400px;
-            margin: 140px auto 50px;
+            margin: 56px auto 50px;
             padding: 0 5%;
+        }
+
+        .owner-return {
+            width: min(1400px, 100%);
+            margin: 26px auto 0;
+            padding: 0 5%;
+        }
+
+        .owner-return__btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 38px;
+            padding: 0 16px;
+            border-radius: 999px;
+            border: 1px solid rgba(58, 78, 107, 0.18);
+            background: rgba(255, 255, 255, 0.72);
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            transition: var(--transition-fast);
+        }
+
+        .owner-return__btn:hover {
+            transform: translateY(-1px);
+            background: rgba(255, 255, 255, 0.94);
+            border-color: rgba(58, 78, 107, 0.28);
         }
 
         .sidebar {
@@ -483,21 +555,9 @@
 
 <body>
 
-    <nav>
-        <a class="logo" href="./home.html">Acad<span>Beat</span></a>
-        <div class="nav-menu">
-            <a class="nav-item" href="./home.html?module=Insight">Academic</a>
-            <a class="nav-item" href="http://127.0.0.1:5173/?view=chooser">Forum</a>
-            <a class="nav-item" href="./technology.html">Technology</a>
-        </div>
-        <div class="user-group">
-            <div class="user-section" id="userSection" onclick="handleUserAction()">
-                <span id="userLabel" style="font-size: 0.75rem; font-weight: 700;">LOGIN</span>
-                <div class="avatar" id="userAvatar">IN</div>
-            </div>
-            <a href="#" class="logout-link" id="logoutLink" onclick="return handleLogout(event)" style="display:none;">Log out</a>
-        </div>
-    </nav>
+    <div class="owner-return">
+        <a class="owner-return__btn" href="./home.html">Return</a>
+    </div>
 
     <div class="dashboard-container">
         <aside class="sidebar">
@@ -576,6 +636,7 @@
         const AUTH_API_BASE = './Auth/backend/api';
         const OWNER_URL = './owner.html';
         const ADMIN_URL = 'http://127.0.0.1:5174/';
+        const MESSAGE_CENTER_API_URL = 'http://127.0.0.1:8001/forum-project/api/message-center.php?summaryOnly=1';
         const OWNER_VOCAB_API = './vocba_prac/api/owner-vocabulary.php';
         const OWNER_LISTENING_API = './Academic-Practice/api/records.php';
         const OWNER_INTEGRATED_API = './Academic-Practice/api/integrated-records.php';
@@ -621,6 +682,8 @@
             const label = document.getElementById('userLabel');
             const avatar = document.getElementById('userAvatar');
             const logoutLink = document.getElementById('logoutLink');
+            const messageLink = document.getElementById('messageCenterLink');
+            const messageBadge = document.getElementById('messageBadge');
             if (display) {
                 display.innerHTML = `${escapeHtml(String(user.username || 'User'))} <b>Owner</b>`;
             }
@@ -632,6 +695,43 @@
             }
             if (logoutLink) {
                 logoutLink.style.display = user ? 'inline-flex' : 'none';
+            }
+            if (messageLink) {
+                messageLink.hidden = !user;
+            }
+            if (!user && messageBadge) {
+                messageBadge.hidden = true;
+                messageBadge.textContent = '0';
+            }
+        }
+
+        async function loadMessageSummary() {
+            const messageBadge = document.getElementById('messageBadge');
+            if (!messageBadge || !ownerAuthUser) {
+                if (messageBadge) {
+                    messageBadge.hidden = true;
+                    messageBadge.textContent = '0';
+                }
+                return;
+            }
+
+            try {
+                const response = await fetch(MESSAGE_CENTER_API_URL, { credentials: 'include' });
+                const data = await response.json().catch(() => ({ ok: false }));
+                const totalUnread = Number(data?.summary?.totalUnread || 0);
+                if (totalUnread > 0) {
+                    messageBadge.hidden = false;
+                    messageBadge.textContent = totalUnread > 99 ? '99+' : String(totalUnread);
+                    messageBadge.style.display = 'inline-flex';
+                } else {
+                    messageBadge.hidden = true;
+                    messageBadge.textContent = '0';
+                    messageBadge.style.display = 'none';
+                }
+            } catch (_err) {
+                messageBadge.hidden = true;
+                messageBadge.textContent = '0';
+                messageBadge.style.display = 'none';
             }
         }
 
@@ -686,6 +786,7 @@
                 return false;
             }
             applyOwnerUser(data.user);
+            await loadMessageSummary();
             return true;
         }
 

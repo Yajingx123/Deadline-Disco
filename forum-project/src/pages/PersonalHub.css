@@ -88,6 +88,27 @@
   overflow: hidden;
 }
 
+.forum-container--embedded {
+  min-height: 0;
+  height: 100%;
+  padding-bottom: 0;
+  overflow: hidden;
+}
+
+.personal-shell--embedded {
+  max-width: none;
+  height: 100%;
+  padding: 0;
+  overflow: hidden;
+}
+
+.personal-shell--embedded .personal-layout {
+  height: 100%;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
 .personal-layout {
   display: grid;
   grid-template-columns: minmax(280px, 25%) minmax(0, 75%);

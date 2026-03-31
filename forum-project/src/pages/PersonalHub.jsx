@@ -74,7 +74,7 @@ function renderConversationAvatar(conversation, currentUser, extraClass = '') {
   )
 }
 
-export default function PersonalHub({ onBackToChooser }) {
+export default function PersonalHub({ onBackToChooser, embedded = false }) {
   const [currentUser, setCurrentUser] = useState(null)
   const [conversations, setConversations] = useState([])
   const [activeConversationId, setActiveConversationId] = useState(null)
@@ -455,11 +455,8 @@ export default function PersonalHub({ onBackToChooser }) {
     }
   }
 
-  return (
-    <div className="forum-container forum-container--personal">
-      <AppTopNav currentUser={currentUser} activeMode="personal" />
-
-      <section className="personal-shell">
+  const workspace = (
+      <section className={`personal-shell ${embedded ? 'personal-shell--embedded' : ''}`}>
         {loading ? (
           <div className="personal-state">Loading your workspace…</div>
         ) : error ? (
@@ -473,9 +470,11 @@ export default function PersonalHub({ onBackToChooser }) {
                       <div className="chat-sidebar__eyebrow">Private Space</div>
                       <h2 className="chat-sidebar__title">Chats</h2>
                     </div>
-                    <button type="button" className="personal-shell__back" onClick={onBackToChooser}>
-                      Back
-                    </button>
+                    {!embedded && (
+                      <button type="button" className="personal-shell__back" onClick={onBackToChooser}>
+                        Back
+                      </button>
+                    )}
                   </div>
 
                   <div className="chat-sidebar__searchShell">
@@ -614,6 +613,12 @@ export default function PersonalHub({ onBackToChooser }) {
           </div>
         )}
       </section>
+  )
+
+  return (
+    <div className={`forum-container forum-container--personal ${embedded ? 'forum-container--embedded' : ''}`}>
+      {!embedded && <AppTopNav currentUser={currentUser} activeMode="messages" />}
+      {workspace}
 
       {groupModalOpen && (
         <div className="personal-modal">

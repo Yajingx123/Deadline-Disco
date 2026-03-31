@@ -271,6 +271,200 @@ function forum_chat_message_payload(array $row, int $currentUserId): array {
     ];
 }
 
+function forum_sync_message_center_notifications(PDO $pdo, int $recipientUserId): void {
+    if ($recipientUserId <= 0) {
+        return;
+    }
+
+    $replyPostStmt = $pdo->prepare("
+        INSERT INTO message_center_notifications (
+            recipient_user_id,
+            actor_user_id,
+            notification_type,
+            post_id,
+            comment_id,
+            title,
+            body_text,
+            cta_label,
+            cta_url,
+            is_read,
+            created_at,
+            updated_at
+        )
+        SELECT
+            ? AS recipient_user_id,
+            fc.user_id AS actor_user_id,
+            'reply' AS notification_type,
+            fc.post_id,
+            fc.comment_id,
+            CONCAT(u.username, ' replied to your post') AS title,
+            LEFT(TRIM(fc.content_text), 180) AS body_text,
+            'Reply' AS cta_label,
+            CONCAT('http://127.0.0.1:5173/?view=forum&postId=', fc.post_id) AS cta_url,
+            0 AS is_read,
+            fc.created_at,
+            fc.updated_at
+        FROM forum_comments fc
+        JOIN forum_posts fp ON fp.post_id = fc.post_id
+        JOIN users u ON u.user_id = fc.user_id
+        LEFT JOIN message_center_notifications n
+          ON n.recipient_user_id = ?
+         AND n.notification_type = 'reply'
+         AND n.comment_id = fc.comment_id
+        WHERE fp.user_id = ?
+          AND fc.user_id <> ?
+          AND fc.status = 'active'
+          AND n.notification_id IS NULL
+    ");
+    $replyPostStmt->execute([$recipientUserId, $recipientUserId, $recipientUserId, $recipientUserId]);
+
+    $replyCommentStmt = $pdo->prepare("
+        INSERT INTO message_center_notifications (
+            recipient_user_id,
+            actor_user_id,
+            notification_type,
+            post_id,
+            comment_id,
+            title,
+            body_text,
+            cta_label,
+            cta_url,
+            is_read,
+            created_at,
+            updated_at
+        )
+        SELECT
+            ? AS recipient_user_id,
+            child.user_id AS actor_user_id,
+            'reply' AS notification_type,
+            child.post_id,
+            child.comment_id,
+            CONCAT(u.username, ' replied to your comment') AS title,
+            LEFT(TRIM(child.content_text), 180) AS body_text,
+            'Reply' AS cta_label,
+            CONCAT('http://127.0.0.1:5173/?view=forum&postId=', child.post_id) AS cta_url,
+            0 AS is_read,
+            child.created_at,
+            child.updated_at
+        FROM forum_comments child
+        JOIN forum_comments parent ON parent.comment_id = child.parent_comment_id
+        JOIN users u ON u.user_id = child.user_id
+        LEFT JOIN message_center_notifications n
+          ON n.recipient_user_id = ?
+         AND n.notification_type = 'reply'
+         AND n.comment_id = child.comment_id
+        WHERE parent.user_id = ?
+          AND child.user_id <> ?
+          AND child.status = 'active'
+          AND n.notification_id IS NULL
+    ");
+    $replyCommentStmt->execute([$recipientUserId, $recipientUserId, $recipientUserId, $recipientUserId]);
+
+    $likeStmt = $pdo->prepare("
+        INSERT INTO message_center_notifications (
+            recipient_user_id,
+            actor_user_id,
+            notification_type,
+            post_id,
+            title,
+            body_text,
+            cta_label,
+            cta_url,
+            is_read,
+            created_at,
+            updated_at
+        )
+        SELECT
+            ? AS recipient_user_id,
+            l.user_id AS actor_user_id,
+            'like' AS notification_type,
+            l.post_id,
+            CONCAT(u.username, ' liked your post') AS title,
+            fp.title AS body_text,
+            'View post' AS cta_label,
+            CONCAT('http://127.0.0.1:5173/?view=forum&postId=', l.post_id) AS cta_url,
+            0 AS is_read,
+            l.created_at,
+            l.created_at
+        FROM forum_post_likes l
+        JOIN forum_posts fp ON fp.post_id = l.post_id
+        JOIN users u ON u.user_id = l.user_id
+        LEFT JOIN message_center_notifications n
+          ON n.recipient_user_id = ?
+         AND n.notification_type = 'like'
+         AND n.post_id = l.post_id
+         AND n.actor_user_id = l.user_id
+        WHERE fp.user_id = ?
+          AND l.user_id <> ?
+          AND n.notification_id IS NULL
+    ");
+    $likeStmt->execute([$recipientUserId, $recipientUserId, $recipientUserId, $recipientUserId]);
+
+    $favoriteStmt = $pdo->prepare("
+        INSERT INTO message_center_notifications (
+            recipient_user_id,
+            actor_user_id,
+            notification_type,
+            post_id,
+            title,
+            body_text,
+            cta_label,
+            cta_url,
+            is_read,
+            created_at,
+            updated_at
+        )
+        SELECT
+            ? AS recipient_user_id,
+            f.user_id AS actor_user_id,
+            'favorite' AS notification_type,
+            f.post_id,
+            CONCAT(u.username, ' favorited your post') AS title,
+            fp.title AS body_text,
+            'View post' AS cta_label,
+            CONCAT('http://127.0.0.1:5173/?view=forum&postId=', f.post_id) AS cta_url,
+            0 AS is_read,
+            f.created_at,
+            f.created_at
+        FROM forum_post_favorites f
+        JOIN forum_posts fp ON fp.post_id = f.post_id
+        JOIN users u ON u.user_id = f.user_id
+        LEFT JOIN message_center_notifications n
+          ON n.recipient_user_id = ?
+         AND n.notification_type = 'favorite'
+         AND n.post_id = f.post_id
+         AND n.actor_user_id = f.user_id
+        WHERE fp.user_id = ?
+          AND f.user_id <> ?
+          AND n.notification_id IS NULL
+    ");
+    $favoriteStmt->execute([$recipientUserId, $recipientUserId, $recipientUserId, $recipientUserId]);
+
+    $deleteStaleLikes = $pdo->prepare("
+        DELETE n
+        FROM message_center_notifications n
+        LEFT JOIN forum_post_likes l
+          ON l.post_id = n.post_id
+         AND l.user_id = n.actor_user_id
+        WHERE n.recipient_user_id = ?
+          AND n.notification_type = 'like'
+          AND l.like_id IS NULL
+    ");
+    $deleteStaleLikes->execute([$recipientUserId]);
+
+    $deleteStaleFavorites = $pdo->prepare("
+        DELETE n
+        FROM message_center_notifications n
+        LEFT JOIN forum_post_favorites f
+          ON f.post_id = n.post_id
+         AND f.user_id = n.actor_user_id
+        WHERE n.recipient_user_id = ?
+          AND n.notification_type = 'favorite'
+          AND f.favorite_id IS NULL
+    ");
+    $deleteStaleFavorites->execute([$recipientUserId]);
+}
+
 function forum_public_base_url(): string {
     return 'http://127.0.0.1:8001';
 }

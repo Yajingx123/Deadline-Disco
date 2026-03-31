@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AcadBeat | Technology Toolkits</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;1,700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./shared-nav.css">
     <style>
         :root {
             --bg-color: #E4DFD8;
@@ -94,6 +95,48 @@
             display: flex;
             align-items: center;
             gap: 12px;
+        }
+
+        .message-link {
+            position: relative;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid rgba(58, 78, 107, 0.16);
+            background: rgba(255, 255, 255, 0.74);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--secondary-color);
+            text-decoration: none;
+            box-shadow: 0 8px 20px rgba(58, 78, 107, 0.08);
+            transition: 0.25s ease;
+        }
+
+        .message-link:hover {
+            background: rgba(155, 183, 212, 0.22);
+            transform: translateY(-1px);
+        }
+
+        .message-link[hidden] {
+            display: none !important;
+        }
+
+        .message-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            min-width: 18px;
+            height: 18px;
+            padding: 0 5px;
+            border-radius: 999px;
+            background: #ef4444;
+            color: #fff;
+            font-size: 0.64rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .user-section {
@@ -237,21 +280,7 @@
     </style>
 </head>
 <body>
-    <nav>
-        <div class="logo">Acad<span>Beat</span></div>
-        <div class="nav-menu">
-            <div class="nav-item" onclick="window.location.href='home.html?module=Insight'">Academic</div>
-            <div class="nav-item" onclick="window.location.href='home.html?module=Dialogue'">Forum</div>
-            <div class="nav-item active" onclick="window.location.href='home.html?module=Method'">Technology</div>
-        </div>
-        <div class="user-group">
-            <div class="user-section" id="userSection" onclick="handleUserAction()">
-                <span id="userLabel" style="font-size: 0.75rem; font-weight: 700;">LOGIN</span>
-                <div class="avatar" id="userAvatar">IN</div>
-            </div>
-            <a href="#" class="logout-link" id="logoutLink" onclick="return handleLogout(event)" style="display:none;">Log out</a>
-        </div>
-    </nav>
+    <div id="acadbeatNav"></div>
 
     <div class="tools-grid">
         <div class="tool-card" onclick="window.open('https://support.microsoft.com/en-us/teams', '_blank')">
@@ -300,73 +329,18 @@
         </div>
     </div>
     <script>
-        const USER_PORTAL_URL = './owner.html';
-        const ADMIN_PORTAL_URL = 'http://127.0.0.1:5174/';
-        const AUTH_API_BASE = './Auth/backend/api';
-        const authState = { user: null };
-
-        function initialsOf(name) {
-            const trimmed = String(name || '').trim();
-            if (!trimmed) return 'IN';
-            return trimmed.slice(0, 2).toUpperCase();
-        }
-
-        function getPortalUrl(user) {
-            return user && String(user.role || '').toLowerCase() === 'admin' ? ADMIN_PORTAL_URL : USER_PORTAL_URL;
-        }
-
-        function renderAuthUI() {
-            const label = document.getElementById('userLabel');
-            const avatar = document.getElementById('userAvatar');
-            const logoutLink = document.getElementById('logoutLink');
-            if (!label || !avatar || !logoutLink) return;
-
-            if (authState.user) {
-                label.textContent = authState.user.username;
-                avatar.textContent = initialsOf(authState.user.username);
-                logoutLink.style.display = 'inline-flex';
-            } else {
-                label.textContent = 'LOGIN';
-                avatar.textContent = 'IN';
-                logoutLink.style.display = 'none';
-            }
-        }
-
-        async function authFetch(path, options = {}) {
-            const response = await fetch(`${AUTH_API_BASE}/${path}`, {
-                method: options.method || 'GET',
-                headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
-                credentials: 'include',
-                body: options.body || undefined
+        window.addEventListener('load', () => {
+            window.initializeAcadBeatNav({
+                mountId: 'acadbeatNav',
+                basePath: './',
+                active: 'technology',
+                authApiBase: './Auth/backend/api',
+                homeUrl: './home.html',
+                ownerUrl: './owner.html',
+                adminUrl: 'http://127.0.0.1:5174/'
             });
-            return response.json().catch(() => ({ status: 'error', message: 'Invalid response' }));
-        }
-
-        async function loadAuthUser() {
-            const data = await authFetch('me.php');
-            authState.user = data.status === 'success' ? data.user : null;
-            renderAuthUI();
-        }
-
-        function handleUserAction() {
-            if (authState.user) {
-                window.location.href = getPortalUrl(authState.user);
-                return;
-            }
-            window.location.href = 'home.html?login=1';
-        }
-
-        async function handleLogout(event) {
-            if (event) event.preventDefault();
-            if (!authState.user) return false;
-            await authFetch('logout.php');
-            authState.user = null;
-            renderAuthUI();
-            window.location.href = 'home.html';
-            return false;
-        }
-
-        window.addEventListener('load', loadAuthUser);
+        });
     </script>
+    <script src="./shared-nav.js"></script>
 </body>
 </html>
