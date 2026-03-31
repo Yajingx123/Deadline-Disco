@@ -99,6 +99,50 @@ body {
   gap: 12px;
 }
 
+.forum-topnav__messageLink {
+  position: relative;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 1px solid rgba(58, 78, 107, 0.16);
+  background: rgba(255, 255, 255, 0.76);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--secondary-color);
+  text-decoration: none;
+  box-shadow: 0 8px 20px rgba(58, 78, 107, 0.08);
+}
+
+.forum-topnav__messageLink.is-active,
+.forum-topnav__messageLink:hover {
+  background: rgba(155, 183, 212, 0.26);
+}
+
+.forum-topnav__messageIcon {
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.forum-topnav__messageBadge {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  width: 10px;
+  min-width: 10px;
+  height: 10px;
+  padding: 0;
+  border-radius: 999px;
+  background: #ef4444;
+  color: transparent;
+  font-size: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #f7f3eb;
+  box-shadow: 0 0 0 1px rgba(58, 78, 107, 0.08);
+}
+
 .forum-topnav__userGroup {
   display: flex;
   align-items: center;

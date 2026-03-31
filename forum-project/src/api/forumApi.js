@@ -219,6 +219,24 @@ export async function fetchSessionUser() {
   return data;
 }
 
+export async function fetchMessageCenter(summaryOnly = false) {
+  return forumFetch(`/message-center.php${summaryOnly ? '?summaryOnly=1' : ''}`)
+}
+
+export async function markMessageCenterCategoryRead(category) {
+  return forumFetch('/message-center.php', {
+    method: 'POST',
+    body: JSON.stringify({ category }),
+  })
+}
+
+export async function markMessageCenterNoticeRead(noticeId, noticeKind = 'system') {
+  return forumFetch('/message-center.php', {
+    method: 'POST',
+    body: JSON.stringify({ category: 'notice', noticeId, noticeKind }),
+  })
+}
+
 export function connectRealtime(onEvent, onStatusChange) {
   let socket = null
   let reconnectTimer = null

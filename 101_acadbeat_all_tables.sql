@@ -19,6 +19,15 @@ DROP TABLE IF EXISTS checkin_partnerships;
 
 DROP TABLE IF EXISTS forum_post_favorites;
 DROP TABLE IF EXISTS forum_post_likes;
+DROP TABLE IF EXISTS challenge_team_invites;
+DROP TABLE IF EXISTS challenge_team_members;
+DROP TABLE IF EXISTS challenge_teams;
+DROP TABLE IF EXISTS challenge_meta;
+DROP TABLE IF EXISTS challenge_signups;
+DROP TABLE IF EXISTS challenge_team_public_listings;
+DROP TABLE IF EXISTS message_center_notice_reads;
+DROP TABLE IF EXISTS message_center_notifications;
+DROP TABLE IF EXISTS message_center_system_notices;
 DROP TABLE IF EXISTS chat_message_media;
 DROP TABLE IF EXISTS chat_messages;
 DROP TABLE IF EXISTS chat_conversation_members;
@@ -452,6 +461,7 @@ CREATE TABLE chat_conversation_members (
     user_id BIGINT NOT NULL,
     member_role VARCHAR(20) NOT NULL DEFAULT 'member',
     last_read_at DATETIME NULL,
+    last_read_message_id BIGINT NULL,
     joined_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -800,6 +810,238 @@ CREATE TABLE forum_post_favorites (
 
 
 -- =========================================
+-- 22. message_center_notifications
+-- =========================================
+CREATE TABLE message_center_notifications (
+    notification_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    recipient_user_id BIGINT NOT NULL,
+    actor_user_id BIGINT NULL,
+    notification_type ENUM('reply', 'like', 'favorite', 'challenge_reset') NOT NULL,
+    post_id BIGINT NULL,
+    comment_id BIGINT NULL,
+    title VARCHAR(255) NOT NULL DEFAULT '',
+    body_text TEXT NULL,
+    cta_label VARCHAR(80) NULL,
+    cta_url VARCHAR(255) NULL,
+    is_read TINYINT(1) NOT NULL DEFAULT 0,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_message_center_notifications_recipient
+        FOREIGN KEY (recipient_user_id)
+        REFERENCES users(user_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+
+    CONSTRAINT fk_message_center_notifications_actor
+        FOREIGN KEY (actor_user_id)
+        REFERENCES users(user_id)
+        ON DELETE SET NULL
+        ON UPDATE CASCADE,
+
+    CONSTRAINT fk_message_center_notifications_post
+        FOREIGN KEY (post_id)
+        REFERENCES forum_posts(post_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+
+    CONSTRAINT fk_message_center_notifications_comment
+        FOREIGN KEY (comment_id)
+        REFERENCES forum_comments(comment_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+-- =========================================
+-- 23. challenge_meta
+-- =========================================
+CREATE TABLE challenge_meta (
+    meta_key VARCHAR(100) PRIMARY KEY,
+    meta_value VARCHAR(255) NOT NULL DEFAULT '',
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+-- =========================================
+-- 24. challenge_signups
+-- =========================================
+CREATE TABLE challenge_signups (
+    signup_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    week_start_date DATE NOT NULL,
+    user_id BIGINT NOT NULL,
+    signup_status ENUM('active', 'withdrawn') NOT NULL DEFAULT 'active',
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT uq_challenge_signup_week_user UNIQUE (week_start_date, user_id),
+
+    CONSTRAINT fk_challenge_signups_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(user_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+-- =========================================
+-- 25. challenge_teams
+-- =========================================
+CREATE TABLE challenge_teams (
+    team_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    week_start_date DATE NOT NULL,
+    week_end_date DATE NOT NULL,
+    team_name VARCHAR(120) NOT NULL,
+    captain_user_id BIGINT NOT NULL,
+    score INT NOT NULL DEFAULT 0,
+    daily_rank INT NULL,
+    rank_updated_on DATE NULL,
+    status ENUM('forming', 'locked', 'expired', 'archived') NOT NULL DEFAULT 'forming',
+    expires_at DATETIME NOT NULL,
+    locked_at DATETIME NULL,
+    team_name_confirmed_at DATETIME NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    archived_at DATETIME NULL,
+
+    CONSTRAINT chk_challenge_teams_score CHECK (score >= 0),
+
+    CONSTRAINT fk_challenge_teams_captain
+        FOREIGN KEY (captain_user_id)
+        REFERENCES users(user_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+-- =========================================
+-- 26. challenge_team_members
+-- =========================================
+CREATE TABLE challenge_team_members (
+    team_member_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    team_id BIGINT NOT NULL,
+    user_id BIGINT NOT NULL,
+    member_role ENUM('captain', 'member') NOT NULL DEFAULT 'member',
+    membership_status ENUM('active', 'removed') NOT NULL DEFAULT 'active',
+    joined_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    left_at DATETIME NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT uq_challenge_team_member UNIQUE (team_id, user_id),
+
+    CONSTRAINT fk_challenge_team_members_team
+        FOREIGN KEY (team_id)
+        REFERENCES challenge_teams(team_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+
+    CONSTRAINT fk_challenge_team_members_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(user_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+-- =========================================
+-- 27. challenge_team_invites
+-- =========================================
+CREATE TABLE challenge_team_invites (
+    invite_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    team_id BIGINT NOT NULL,
+    week_start_date DATE NOT NULL,
+    inviter_user_id BIGINT NOT NULL,
+    invitee_user_id BIGINT NOT NULL,
+    invitee_username VARCHAR(50) NOT NULL,
+    status ENUM('pending', 'accepted', 'declined', 'cancelled', 'expired') NOT NULL DEFAULT 'pending',
+    responded_at DATETIME NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_challenge_team_invites_team
+        FOREIGN KEY (team_id)
+        REFERENCES challenge_teams(team_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+
+    CONSTRAINT fk_challenge_team_invites_inviter
+        FOREIGN KEY (inviter_user_id)
+        REFERENCES users(user_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+
+    CONSTRAINT fk_challenge_team_invites_invitee
+        FOREIGN KEY (invitee_user_id)
+        REFERENCES users(user_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+-- =========================================
+-- 28. challenge_team_public_listings
+-- =========================================
+CREATE TABLE challenge_team_public_listings (
+    listing_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    team_id BIGINT NOT NULL,
+    week_start_date DATE NOT NULL,
+    status ENUM('active', 'closed') NOT NULL DEFAULT 'active',
+    description_text VARCHAR(255) NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT uq_challenge_team_public_listing UNIQUE (team_id, week_start_date),
+
+    CONSTRAINT fk_challenge_team_public_listings_team
+        FOREIGN KEY (team_id)
+        REFERENCES challenge_teams(team_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+-- =========================================
+-- 29. message_center_system_notices
+-- =========================================
+CREATE TABLE message_center_system_notices (
+    notice_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(255) NOT NULL,
+    body_text TEXT NOT NULL,
+    cta_label VARCHAR(80) NULL,
+    cta_url VARCHAR(255) NULL,
+    status ENUM('active', 'archived') NOT NULL DEFAULT 'active',
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+-- =========================================
+-- 30. message_center_notice_reads
+-- =========================================
+CREATE TABLE message_center_notice_reads (
+    notice_read_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    notice_id BIGINT NOT NULL,
+    user_id BIGINT NOT NULL,
+    read_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT uq_message_center_notice_reads UNIQUE (notice_id, user_id),
+
+    CONSTRAINT fk_message_center_notice_reads_notice
+        FOREIGN KEY (notice_id)
+        REFERENCES message_center_system_notices(notice_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE,
+
+    CONSTRAINT fk_message_center_notice_reads_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(user_id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+-- =========================================
 -- Indexes
 -- =========================================
 
@@ -859,6 +1101,48 @@ CREATE INDEX idx_forum_post_favorites_post_id
 
 CREATE INDEX idx_forum_post_favorites_user_id
     ON forum_post_favorites(user_id);
+
+CREATE INDEX idx_message_center_notifications_recipient
+    ON message_center_notifications(recipient_user_id);
+
+CREATE INDEX idx_message_center_notifications_type
+    ON message_center_notifications(notification_type);
+
+CREATE INDEX idx_message_center_notifications_is_read
+    ON message_center_notifications(is_read);
+
+CREATE INDEX idx_message_center_notifications_created_at
+    ON message_center_notifications(created_at);
+
+CREATE INDEX idx_challenge_teams_week_status
+    ON challenge_teams(week_start_date, status);
+
+CREATE INDEX idx_challenge_teams_score_rank
+    ON challenge_teams(week_start_date, status, score, daily_rank);
+
+CREATE INDEX idx_challenge_signups_week_status
+    ON challenge_signups(week_start_date, signup_status);
+
+CREATE INDEX idx_challenge_team_members_team_status
+    ON challenge_team_members(team_id, membership_status);
+
+CREATE INDEX idx_challenge_team_members_user_status
+    ON challenge_team_members(user_id, membership_status);
+
+CREATE INDEX idx_challenge_team_invites_invitee_status
+    ON challenge_team_invites(invitee_user_id, week_start_date, status);
+
+CREATE INDEX idx_challenge_team_invites_team_status
+    ON challenge_team_invites(team_id, week_start_date, status);
+
+CREATE INDEX idx_challenge_team_public_listings_week_status
+    ON challenge_team_public_listings(week_start_date, status);
+
+CREATE INDEX idx_message_center_system_notices_status
+    ON message_center_system_notices(status);
+
+CREATE INDEX idx_message_center_notice_reads_user_id
+    ON message_center_notice_reads(user_id);
 
 CREATE INDEX idx_checkin_partnerships_user_one_id
     ON checkin_partnerships(user_one_id);

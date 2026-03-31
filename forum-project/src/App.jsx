@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import ForumHome from './pages/ForumHome'
+import MessageCenter from './pages/MessageCenter'
 import PersonalHub from './pages/PersonalHub'
 import PortalChoice from './pages/PortalChoice'
 
@@ -9,30 +10,27 @@ function resolveInitialView() {
     return 'forum'
   }
   const view = params.get('view')
-  if (view === 'forum' || view === 'personal' || view === 'chooser' || view === 'announcements') {
-    return view
-  }
-  return 'chooser'
+if (view === 'forum' || view === 'messages' || view === 'personal' || view === 'chooser' || view === 'announcements') {
+  return view
+}
+
+  return 'forum'
 }
 
 function App() {
   const [view, setView] = useState(resolveInitialView)
 
   const normalizedView = useMemo(() => {
-    if (view === 'forum' || view === 'personal' || view === 'chooser') {
+    if (view === 'forum' || view === 'messages' || view === 'personal') {
       return view
     }
-    return 'chooser'
+    return 'forum'
   }, [view])
 
   const handleNavigate = (nextView) => {
     const params = new URLSearchParams(window.location.search)
     params.delete('compose')
-    if (nextView === 'chooser') {
-      params.set('view', 'chooser')
-    } else {
-      params.set('view', nextView)
-    }
+    params.set('view', nextView)
     const nextUrl = `${window.location.pathname}?${params.toString()}${window.location.hash || ''}`
     window.history.pushState({}, '', nextUrl)
     setView(nextView)
@@ -49,8 +47,10 @@ function App() {
   let content = null
   if (normalizedView === 'forum') {
     content = <ForumHome />
+  } else if (normalizedView === 'messages') {
+    content = <MessageCenter />
   } else if (normalizedView === 'personal') {
-    content = <PersonalHub onBackToChooser={() => handleNavigate('chooser')} />
+    content = <PersonalHub onBackToChooser={() => handleNavigate('messages')} />
   } else {
     content = <PortalChoice onChoose={handleNavigate} />
   }

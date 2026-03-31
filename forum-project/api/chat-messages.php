@@ -38,7 +38,7 @@ if ($method === 'GET') {
     }
 
     $accessStmt = $pdo->prepare("
-        SELECT c.conversation_id, c.conversation_type, c.title, c.last_message_at
+        SELECT c.conversation_id, c.conversation_type, c.title, c.last_message_at, cm.last_read_message_id
         FROM chat_conversation_members cm
         JOIN chat_conversations c
             ON c.conversation_id = cm.conversation_id
@@ -52,14 +52,30 @@ if ($method === 'GET') {
     if (!$conversationRow) {
         forum_json(['ok' => false, 'message' => 'Conversation not found.'], 404);
     }
+    $previousReadMessageId = (int)($conversationRow['last_read_message_id'] ?? 0);
+
+    $latestMessageIdStmt = $pdo->prepare("
+        SELECT COALESCE(MAX(message_id), 0)
+        FROM chat_messages
+        WHERE conversation_id = ?
+          AND status = 'active'
+    ");
+    $latestMessageIdStmt->execute([$conversationId]);
+    $latestMessageId = (int)($latestMessageIdStmt->fetchColumn() ?: 0);
 
     $markReadStmt = $pdo->prepare("
         UPDATE chat_conversation_members
-        SET last_read_at = NOW(), updated_at = NOW()
+        SET last_read_at = NOW(), last_read_message_id = ?, updated_at = NOW()
         WHERE conversation_id = ?
           AND user_id = ?
     ");
-    $markReadStmt->execute([$conversationId, $currentUserId]);
+    $markReadStmt->execute([$latestMessageId > 0 ? $latestMessageId : null, $conversationId, $currentUserId]);
+    if ($latestMessageId > $previousReadMessageId) {
+        forum_realtime_publish('message-center.updated', [
+            'conversationId' => $conversationId,
+            'read' => true,
+        ]);
+    }
 
     $conversationRefreshStmt = $pdo->prepare("
         SELECT
@@ -163,11 +179,11 @@ try {
 
     $updateRead = $pdo->prepare("
         UPDATE chat_conversation_members
-        SET last_read_at = NOW(), updated_at = NOW()
+        SET last_read_at = NOW(), last_read_message_id = ?, updated_at = NOW()
         WHERE conversation_id = ?
           AND user_id = ?
     ");
-    $updateRead->execute([$conversationId, $currentUserId]);
+    $updateRead->execute([$messageId, $conversationId, $currentUserId]);
 
     $pdo->commit();
 } catch (Throwable $e) {
@@ -197,6 +213,11 @@ $row = $messageStmt->fetch();
 forum_realtime_publish('chat.message.created', [
     'conversationId' => $conversationId,
     'messageId' => $messageId,
+    'message' => $row ? forum_chat_message_payload($row, $currentUserId) : null,
+]);
+
+forum_realtime_publish('message-center.updated', [
+    'conversationId' => $conversationId,
 ]);
 
 forum_json([

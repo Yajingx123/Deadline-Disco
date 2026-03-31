@@ -49,8 +49,14 @@ function chat_load_conversation(PDO $pdo, int $conversationId, int $currentUserI
                   AND um.status = 'active'
                   AND um.user_id <> ?
                   AND (
-                    mine.last_read_at IS NULL
-                    OR um.created_at > mine.last_read_at
+                    (mine.last_read_message_id IS NOT NULL AND um.message_id > mine.last_read_message_id)
+                    OR (
+                        mine.last_read_message_id IS NULL
+                        AND (
+                            mine.last_read_at IS NULL
+                            OR um.created_at > mine.last_read_at
+                        )
+                    )
                   )
             ) AS unread_count
         FROM chat_conversations c
@@ -101,8 +107,14 @@ if ($method === 'GET') {
                   AND um.status = 'active'
                   AND um.user_id <> mine.user_id
                   AND (
-                    mine.last_read_at IS NULL
-                    OR um.created_at > mine.last_read_at
+                    (mine.last_read_message_id IS NOT NULL AND um.message_id > mine.last_read_message_id)
+                    OR (
+                        mine.last_read_message_id IS NULL
+                        AND (
+                            mine.last_read_at IS NULL
+                            OR um.created_at > mine.last_read_at
+                        )
+                    )
                   )
             ) AS unread_count
         FROM chat_conversation_members mine

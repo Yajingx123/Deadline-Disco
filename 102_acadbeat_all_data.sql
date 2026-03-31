@@ -22,6 +22,15 @@ DELETE FROM training_modules;
 
 DELETE FROM forum_post_favorites;
 DELETE FROM forum_post_likes;
+DELETE FROM challenge_team_invites;
+DELETE FROM challenge_team_members;
+DELETE FROM challenge_teams;
+DELETE FROM challenge_meta;
+DELETE FROM challenge_signups;
+DELETE FROM challenge_team_public_listings;
+DELETE FROM message_center_notice_reads;
+DELETE FROM message_center_notifications;
+DELETE FROM message_center_system_notices;
 DELETE FROM forum_post_labels;
 DELETE FROM forum_labels;
 DELETE FROM forum_comment_media;
@@ -46,6 +55,14 @@ ALTER TABLE vocab_session_items AUTO_INCREMENT = 1;
 ALTER TABLE vocab_session_responses AUTO_INCREMENT = 1;
 ALTER TABLE forum_post_likes AUTO_INCREMENT = 1;
 ALTER TABLE forum_post_favorites AUTO_INCREMENT = 1;
+ALTER TABLE challenge_teams AUTO_INCREMENT = 1;
+ALTER TABLE challenge_team_members AUTO_INCREMENT = 1;
+ALTER TABLE challenge_team_invites AUTO_INCREMENT = 1;
+ALTER TABLE challenge_signups AUTO_INCREMENT = 1;
+ALTER TABLE challenge_team_public_listings AUTO_INCREMENT = 1;
+ALTER TABLE message_center_notice_reads AUTO_INCREMENT = 1;
+ALTER TABLE message_center_notifications AUTO_INCREMENT = 1;
+ALTER TABLE message_center_system_notices AUTO_INCREMENT = 1;
 ALTER TABLE chat_conversations AUTO_INCREMENT = 1;
 ALTER TABLE chat_conversation_members AUTO_INCREMENT = 1;
 ALTER TABLE chat_messages AUTO_INCREMENT = 1;
@@ -119,6 +136,15 @@ INSERT INTO chat_message_media (chat_message_media_id, message_id, media_type, m
 (2, 3, 'audio', 'http://127.0.0.1:8001/forum-project/uploads/audio/recording-1774277487228-1223e8bf9466.webm', 1, '2026-03-24 12:14:00'),
 (3, 4, 'image', 'http://127.0.0.1:8001/forum-project/uploads/image/Screenshot-2026-03-24-004358-505636a13442.png', 1, '2026-03-24 12:42:00'),
 (4, 6, 'link', 'https://example.com/library-report', 1, '2026-03-25 15:48:00');
+
+INSERT INTO message_center_notifications (notification_id, recipient_user_id, actor_user_id, notification_type, post_id, comment_id, title, body_text, cta_label, cta_url, is_read, created_at, updated_at) VALUES
+(1, 1, 2, 'reply', 1, 1, 'benjamin replied to your post', 'In my writing class, outlining ideas with AI is allowed, but paragraph-level drafting is not.', 'Reply', 'http://127.0.0.1:5173/?view=forum&postId=1', 0, '2026-03-23 10:05:00', '2026-03-23 10:05:00'),
+(2, 1, 3, 'like', 1, NULL, 'demo_student liked your post', 'How should we balance AI tools and original writing in class?', 'View post', 'http://127.0.0.1:5173/?view=forum&postId=1', 0, '2026-03-23 13:10:00', '2026-03-23 13:10:00'),
+(3, 2, 1, 'favorite', 2, NULL, 'emily favorited your post', 'Need help choosing between database systems and web development electives', 'View post', 'http://127.0.0.1:5173/?view=forum&postId=2', 1, '2026-03-23 14:24:00', '2026-03-23 14:24:00');
+
+INSERT INTO message_center_system_notices (notice_id, title, body_text, cta_label, cta_url, status, created_at, updated_at) VALUES
+(1, 'Community review standards refreshed', 'Posts with clearer titles and final outcomes are now surfaced more prominently in the forum. Edit older threads if you want them to remain discoverable.', 'Open forum', 'http://127.0.0.1:5173/?view=forum', 'active', '2026-03-22 09:00:00', '2026-03-22 09:00:00'),
+(2, 'Media uploads now support audio and screenshots', 'You can attach screenshots, links, and audio clips inside personal messages and forum replies. Keep files relevant to the thread topic.', 'Open message center', 'http://127.0.0.1:5173/?view=messages', 'active', '2026-03-24 08:30:00', '2026-03-24 08:30:00');
 
 INSERT INTO vocab_word_books (word_book_id, slug, title, description) VALUES
 (1, 'daily', 'Daily life & campus', '15 high-frequency words for lectures, assignments, study routines, and campus life.'),

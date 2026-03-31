@@ -144,6 +144,22 @@ export default function ForumHome() {
     window.history.replaceState({}, document.title, cleanUrl);
   }, []);
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const postId = Number(params.get('postId') || 0)
+    if (!postId) {
+      return
+    }
+
+    fetchPostDetail(postId)
+      .then((data) => {
+        if (data?.post) {
+          setSelectedPost(data.post)
+        }
+      })
+      .catch(() => {})
+  }, [])
+
   const handleCreatePost = async (newData) => {
     const data = await createPost({
       title: newData.title,
@@ -170,6 +186,10 @@ export default function ForumHome() {
     await incrementPostViews(postId);
     const data = await fetchPostDetail(postId);
     setSelectedPost(data.post);
+    const params = new URLSearchParams(window.location.search)
+    params.set('view', 'forum')
+    params.set('postId', String(postId))
+    window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`)
     setPosts(prev => prev.map(post => (
       post.id === postId ? { ...post, views: post.views + 1 } : post
     )));
@@ -284,6 +304,10 @@ export default function ForumHome() {
 
   const handleBackToList = () => {
     setSelectedPost(null);
+    const params = new URLSearchParams(window.location.search)
+    params.delete('postId')
+    const query = params.toString()
+    window.history.replaceState({}, '', `${window.location.pathname}${query ? `?${query}` : ''}`)
   };
 
   const handleBackToForum = () => {
