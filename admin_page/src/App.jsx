@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import './App.css'
 import Navbar from './components/Navbar'
 import ForumPostReview from './components/ForumPostReview'
+import AnnouncementManager from './components/AnnouncementManager'
 import { adminFetch, redirectToHome, redirectToLogin } from './api'
 
 function App() {
@@ -99,6 +100,10 @@ function App() {
 
     if (currentPage === 'forum') {
       return <ForumPostReview />
+    }
+
+    if (currentPage === 'announcements') {
+      return <AnnouncementManager />
     }
 
     return <ForumPostReview />

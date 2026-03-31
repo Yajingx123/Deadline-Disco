@@ -381,6 +381,7 @@ export default function ForumHome() {
           onShowMyPosts={handleShowMyPosts}
           viewMode={viewMode}
           onBackToForum={handleBackToForum}
+          favoritesTab={favoritesTab}
         />
         
         <div className="forum-layout favorites-layout">
@@ -453,6 +454,7 @@ export default function ForumHome() {
         onShowMyPosts={handleShowMyPosts}
         viewMode={viewMode}
         onBackToForum={handleBackToForum}
+        favoritesTab={favoritesTab}
       />
       
       <div className="forum-layout">

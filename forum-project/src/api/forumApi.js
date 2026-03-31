@@ -287,3 +287,36 @@ export function connectRealtime(onEvent, onStatusChange) {
     }
   }
 }
+
+// Announcement API
+export async function fetchAnnouncements(params = {}) {
+  const qs = new URLSearchParams();
+  if (params.page) qs.set('page', params.page);
+  if (params.limit) qs.set('limit', params.limit);
+  const query = qs.toString();
+  return forumFetch(`/announcements.php${query ? `?${query}` : ''}`);
+}
+
+export async function fetchAnnouncementDetail(announcementId) {
+  return forumFetch(`/announcements.php/${announcementId}`);
+}
+
+export async function createAnnouncement(payload) {
+  return forumFetch('/announcements.php', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function updateAnnouncement(announcementId, payload) {
+  return forumFetch(`/announcements.php/${announcementId}`, {
+    method: 'PUT',
+    body: JSON.stringify(payload),
+  });
+}
+
+export async function deleteAnnouncement(announcementId) {
+  return forumFetch(`/announcements.php/${announcementId}`, {
+    method: 'DELETE',
+  });
+}

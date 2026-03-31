@@ -10,9 +10,10 @@ function resolveInitialView() {
     return 'forum'
   }
   const view = params.get('view')
-  if (view === 'forum' || view === 'messages' || view === 'personal') {
-    return view
-  }
+if (view === 'forum' || view === 'messages' || view === 'personal' || view === 'chooser' || view === 'announcements') {
+  return view
+}
+
   return 'forum'
 }
 

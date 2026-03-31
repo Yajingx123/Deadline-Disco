@@ -271,22 +271,23 @@ const styles = {
   filterContainer: {
     display: 'flex',
     gap: '8px',
-    flexDirection: 'column',
+    flexDirection: 'row',
     width: '100%',
-    maxWidth: '360px'
+    maxWidth: '480px'
   },
   filterButton: {
     padding: '12px 22px',
     backgroundColor: 'rgba(155, 183, 212, 0.8)',
     color: 'var(--white)',
     border: 'none',
-    borderRadius: '999px',
+    borderRadius: '8px',
     cursor: 'pointer',
     fontWeight: 600,
     fontSize: '0.85rem',
     transition: 'all 0.3s ease',
     boxShadow: '0 14px 28px rgba(58, 78, 107, 0.12)',
-    fontFamily: 'Inter, sans-serif'
+    fontFamily: 'Inter, sans-serif',
+    flex: 1
   },
   activeFilter: {
     backgroundColor: 'rgba(58, 78, 107, 0.94)'
