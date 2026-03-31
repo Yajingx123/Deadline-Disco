@@ -1,0 +1,116 @@
+/* 位于画布下方全宽条带，避免与外层 pixel-border 叠出双线；行内用网格对齐 */
+.hud {
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  margin-top: 10px;
+  padding: 0.65rem 0.85rem 0.7rem;
+  background: rgba(8, 12, 24, 0.96);
+  color: var(--ui-text, #e8e8e8);
+  font-family: var(--ui-font, "Courier New", monospace);
+  font-size: 0.75rem;
+  line-height: 1.35;
+  border-top: 1px solid rgba(252, 163, 17, 0.45);
+  border-radius: 0 0 2px 2px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.04),
+    0 -2px 12px rgba(0, 0, 0, 0.25);
+}
+
+.hud-row {
+  margin-bottom: 0.4rem;
+}
+
+.hud-row:last-child {
+  margin-bottom: 0;
+}
+
+/* HP / Gold：三列 — 标签 | 条或空 | 数值右对齐 */
+.hud-row--hp,
+.hud-row--gold {
+  display: grid;
+  grid-template-columns: 4rem minmax(100px, 1fr) minmax(4.25rem, max-content);
+  align-items: center;
+  column-gap: 0.55rem;
+}
+
+.hud-label {
+  color: #fca311;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.hud-bar {
+  height: 8px;
+  background: #0f3460;
+  border-radius: 1px;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.hud-bar-fill.hp {
+  height: 100%;
+  background: linear-gradient(90deg, #c0392b, #e74c3c);
+  transition: width 0.25s ease;
+}
+
+.hud-placeholder {
+  min-height: 1px;
+}
+
+.hud-value--num,
+.hud-value--gold {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.hud-value--gold {
+  color: #feca57;
+  font-weight: bold;
+}
+
+/* Room / Type / Left：两列，右侧占满避免与标签挤在一起 */
+.hud-row--stat {
+  display: grid;
+  grid-template-columns: 4rem 1fr;
+  align-items: start;
+  column-gap: 0.55rem;
+}
+
+.hud-value--wide {
+  text-align: right;
+  color: #caf0f8;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+
+.hud-portal-tag {
+  display: inline-block;
+  margin-left: 0.45rem;
+  padding: 0.08rem 0.35rem;
+  font-size: 0.65rem;
+  color: #4cc9f0;
+  background: rgba(76, 201, 240, 0.12);
+  border: 1px solid rgba(76, 201, 240, 0.35);
+  border-radius: 2px;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+@media (max-width: 420px) {
+  .hud-row--hp,
+  .hud-row--gold {
+    grid-template-columns: 3.25rem minmax(72px, 1fr) minmax(3.5rem, max-content);
+    column-gap: 0.4rem;
+    font-size: 0.7rem;
+  }
+
+  .hud-row--stat {
+    grid-template-columns: 3.25rem 1fr;
+  }
+}

@@ -1,0 +1,52 @@
+[
+  {
+    "id": "sk-1",
+    "enemyType": "skeleton",
+    "prompt": "Match the word to its meaning: \"ABUNDANT\"",
+    "choices": ["scarce", "plentiful", "tiny", "silent"],
+    "correctIndex": 1,
+    "timeLimitSec": 12,
+    "goldReward": 15,
+    "damageOnFail": 12
+  },
+  {
+    "id": "sk-2",
+    "enemyType": "skeleton",
+    "prompt": "Which word is a synonym of \"COURAGEOUS\"?",
+    "choices": ["timid", "fearless", "lazy", "noisy"],
+    "correctIndex": 1,
+    "timeLimitSec": 12,
+    "goldReward": 12,
+    "damageOnFail": 10
+  },
+  {
+    "id": "sk-3",
+    "enemyType": "skeleton",
+    "prompt": "Choose the correct past tense: \"Yesterday she ___ to the market.\"",
+    "choices": ["go", "went", "gone", "going"],
+    "correctIndex": 1,
+    "timeLimitSec": 14,
+    "goldReward": 18,
+    "damageOnFail": 12
+  },
+  {
+    "id": "sk-4",
+    "enemyType": "skeleton",
+    "prompt": "What does \"RELUCTANT\" mean?",
+    "choices": ["eager and excited", "unwilling or hesitant", "very angry", "extremely fast"],
+    "correctIndex": 1,
+    "timeLimitSec": 12,
+    "goldReward": 14,
+    "damageOnFail": 11
+  },
+  {
+    "id": "sk-5",
+    "enemyType": "skeleton",
+    "prompt": "Pick the word that fits: \"The evidence was ___; everyone believed it.\"",
+    "choices": ["doubtful", "convincing", "hidden", "broken"],
+    "correctIndex": 1,
+    "timeLimitSec": 14,
+    "goldReward": 16,
+    "damageOnFail": 12
+  }
+]

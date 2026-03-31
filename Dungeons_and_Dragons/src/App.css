@@ -1,0 +1,293 @@
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1.25rem 1rem 2rem;
+  color: var(--ui-text, #e8e8e8);
+}
+
+.title-bar {
+  text-align: center;
+  margin-bottom: 1.1rem;
+  padding: 0.5rem 1.5rem 1rem;
+  position: relative;
+}
+
+.title-bar::after {
+  content: "";
+  display: block;
+  width: min(320px, 80vw);
+  height: 3px;
+  margin: 0.65rem auto 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--ui-accent, #fca311) 20%,
+    var(--ui-cyan, #4cc9f0) 50%,
+    var(--ui-accent, #fca311) 80%,
+    transparent
+  );
+  opacity: 0.85;
+  box-shadow: 0 0 16px rgba(252, 163, 17, 0.35);
+}
+
+.title-bar h1 {
+  margin: 0;
+  font-family: var(--ui-font, "Courier New", monospace);
+  font-size: clamp(1.15rem, 3.5vw, 1.55rem);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ui-accent, #fca311);
+  text-shadow:
+    0 0 24px rgba(252, 163, 17, 0.35),
+    0 2px 0 #1a1206;
+}
+
+.subtitle {
+  margin: 0.35rem 0 0;
+  font-size: 0.78rem;
+  color: var(--ui-text-muted, #8d99ae);
+  letter-spacing: 0.04em;
+}
+
+.game-shell {
+  position: relative;
+  width: min(960px, 100%);
+  padding: 10px;
+  padding-bottom: 10px;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  background: linear-gradient(160deg, #1e2a48 0%, #141b2e 45%, #0d121f 100%);
+  box-shadow:
+    0 0 0 1px rgba(252, 163, 17, 0.45),
+    0 0 48px rgba(67, 97, 238, 0.18),
+    0 24px 48px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.game-viewport {
+  position: relative;
+  width: 100%;
+  z-index: 1;
+  flex: 0 0 auto;
+}
+
+/* 内框只包住画布区域，不画进 HUD，避免与状态条金线叠在一起 */
+.game-viewport::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border: 1px solid rgba(76, 201, 240, 0.14);
+  border-radius: 2px;
+  z-index: 5;
+}
+
+.game-shell > .hud {
+  position: relative;
+  z-index: 1;
+}
+
+.plan-chip {
+  position: absolute;
+  top: 18px;
+  right: 14px;
+  z-index: 12;
+  max-width: 52%;
+  padding: 0.45rem 0.55rem;
+  font-family: var(--ui-font, "Courier New", monospace);
+  font-size: 0.68rem;
+  line-height: 1.35;
+  color: #caf0f8;
+  background: rgba(12, 18, 36, 0.88);
+  border: 1px solid rgba(76, 201, 240, 0.25);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+}
+
+.toast-chip {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 35;
+  padding: 0.5rem 0.75rem;
+  max-width: 90%;
+  text-align: center;
+  font-family: var(--ui-font, "Courier New", monospace);
+  font-size: 0.76rem;
+  color: #e8f7ff;
+  background: rgba(18, 28, 52, 0.96);
+  border: 1px solid rgba(252, 163, 17, 0.4);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.5);
+}
+
+.level-select {
+  width: min(960px, 100%);
+  padding: 1.15rem 1.2rem 1.35rem;
+  font-family: var(--ui-font, "Courier New", monospace);
+  background: linear-gradient(155deg, #1a2540 0%, #121a2e 55%, #0e1526 100%);
+  border-radius: 4px;
+  box-shadow:
+    0 0 0 1px rgba(252, 163, 17, 0.35),
+    0 16px 40px rgba(0, 0, 0, 0.35);
+}
+
+.level-select h2 {
+  margin: 0 0 0.4rem;
+  color: var(--ui-accent, #fca311);
+  font-size: 1rem;
+  letter-spacing: 0.06em;
+}
+
+.level-select > p {
+  margin: 0 0 1rem;
+  color: #a9b4c2;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.level-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 0.85rem;
+}
+
+.level-card {
+  text-align: left;
+  padding: 0.9rem 1rem;
+  border: 2px solid rgba(43, 53, 88, 0.9);
+  background: linear-gradient(180deg, #182238 0%, #121a2c 100%);
+  color: var(--ui-text, #e8e8e8);
+  cursor: pointer;
+  font-family: inherit;
+  border-radius: 2px;
+  transition:
+    border-color 0.15s ease,
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.level-card h3 {
+  margin: 0 0 0.4rem;
+  color: #90e0ef;
+  font-size: 0.95rem;
+}
+
+.level-card p {
+  margin: 0 0 0.55rem;
+  color: #cad5df;
+  font-size: 0.82rem;
+  line-height: 1.4;
+}
+
+.level-card span {
+  font-size: 0.78rem;
+  color: #feca57;
+}
+
+.level-card:hover {
+  border-color: var(--ui-cyan, #4cc9f0);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+}
+
+.phaser-mount {
+  width: 100%;
+  aspect-ratio: 320 / 200;
+  max-height: 70vh;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  border-radius: 2px;
+  overflow: hidden;
+  background: #050810;
+  box-shadow:
+    inset 0 0 0 2px rgba(0, 0, 0, 0.6),
+    inset 0 0 48px rgba(0, 0, 0, 0.45);
+}
+
+.phaser-mount canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.game-over-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(4, 6, 14, 0.88);
+  backdrop-filter: blur(5px);
+  z-index: 30;
+}
+
+.game-over-box {
+  padding: 1.35rem 1.6rem;
+  background: linear-gradient(160deg, #1e2a48 0%, #151d32 100%);
+  text-align: center;
+  font-family: var(--ui-font, "Courier New", monospace);
+  max-width: 300px;
+  border-radius: 2px;
+}
+
+.game-over-box h2 {
+  margin: 0 0 0.5rem;
+  color: #ff6b6b;
+  text-shadow: 0 0 20px rgba(255, 107, 107, 0.35);
+}
+
+.game-over-box p {
+  margin: 0 0 1rem;
+  font-size: 0.86rem;
+  line-height: 1.45;
+  color: #bdc3c7;
+}
+
+.overlay-actions {
+  display: flex;
+  gap: 0.55rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.restart-btn {
+  padding: 0.5rem 1.25rem;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #16213e;
+  background: linear-gradient(180deg, #3ddc84 0%, #2ecc71 100%);
+  border: none;
+  cursor: pointer;
+  border-radius: 2px;
+  box-shadow: 0 3px 0 #1e8449;
+}
+
+.restart-btn:hover {
+  filter: brightness(1.08);
+}
+
+.secondary-btn {
+  padding: 0.5rem 1rem;
+  font-family: inherit;
+  font-size: 0.8rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #e8e8e8;
+  background: linear-gradient(180deg, #4a5570 0%, #394867 100%);
+  border: none;
+  cursor: pointer;
+  border-radius: 2px;
+  box-shadow: 0 3px 0 #252d3d;
+}
+
+.secondary-btn:hover {
+  filter: brightness(1.08);
+}
