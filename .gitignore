@@ -1,0 +1,8 @@
+Picture.py
+node_modules/
+**/node_modules/
+.run/
+service_logs/
+debug.log
+**/.npm-cache/
+package-lock.json

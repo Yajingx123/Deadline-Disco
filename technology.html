@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AcadBeat | Technology Toolkits</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;1,700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #E4DFD8;
+            --primary-color: #9BB7D4;
+            --secondary-color: #3A4E6B;
+            --white: #ffffff;
+            --card-bg: rgba(255, 255, 255, 0.6);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background:
+                radial-gradient(circle at top, rgba(155, 183, 212, 0.16), transparent 28%),
+                var(--bg-color);
+            color: var(--secondary-color);
+            min-height: 100vh;
+            padding: 0 5% 48px;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            height: 80px;
+            margin: 0 calc(5% * -1);
+            padding: 0 5%;
+            border-bottom: 1px solid rgba(58, 78, 107, 0.1);
+            background-color: var(--bg-color);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+        }
+
+        .logo span {
+            color: var(--primary-color);
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        .nav-item {
+            color: var(--secondary-color);
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            opacity: 0.5;
+            padding: 8px 0;
+            position: relative;
+            transition: 0.6s ease;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            opacity: 1;
+        }
+
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--secondary-color);
+        }
+
+        .user-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: 0.4s ease;
+        }
+
+        .user-section:hover {
+            opacity: 0.7;
+        }
+
+        .avatar {
+            width: 34px;
+            height: 34px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            border: 1px solid var(--secondary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.7rem;
+        }
+
+        .logout-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 34px;
+            padding: 0 12px;
+            border-radius: 999px;
+            border: 1px solid rgba(58, 78, 107, 0.18);
+            background: rgba(255, 255, 255, 0.72);
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-size: 0.72rem;
+            font-weight: 700;
+            transition: 0.25s ease;
+        }
+
+        .logout-link:hover {
+            transform: translateY(-1px);
+            background: rgba(255, 255, 255, 0.94);
+            border-color: rgba(58, 78, 107, 0.3);
+        }
+
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 116px auto 0;
+        }
+
+        .tool-card {
+            background: var(--card-bg);
+            border: 1px solid rgba(58, 78, 107, 0.1);
+            border-radius: 16px;
+            padding: 30px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(58, 78, 107, 0.1);
+            background: var(--white);
+        }
+
+        .tool-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(155, 183, 212, 0.2);
+            color: var(--secondary-color);
+        }
+
+        .tool-name {
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .tool-desc {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            opacity: 0.7;
+            flex-grow: 1;
+        }
+
+        .tool-link {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .tool-card:hover .tool-link {
+            color: var(--secondary-color);
+        }
+
+        @media (max-width: 900px) {
+            body {
+                padding: 0 16px 36px;
+            }
+
+            nav {
+                flex-wrap: wrap;
+                justify-content: center;
+                height: auto;
+                margin: 0 -16px;
+                padding: 14px 16px;
+            }
+
+            .nav-menu {
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 1rem 1.4rem;
+            }
+
+            .tools-grid {
+                margin-top: 140px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo">Acad<span>Beat</span></div>
+        <div class="nav-menu">
+            <div class="nav-item" onclick="window.location.href='home.html?module=Insight'">Academic</div>
+            <div class="nav-item" onclick="window.location.href='home.html?module=Dialogue'">Forum</div>
+            <div class="nav-item active" onclick="window.location.href='home.html?module=Method'">Technology</div>
+        </div>
+        <div class="user-group">
+            <div class="user-section" id="userSection" onclick="handleUserAction()">
+                <span id="userLabel" style="font-size: 0.75rem; font-weight: 700;">LOGIN</span>
+                <div class="avatar" id="userAvatar">IN</div>
+            </div>
+            <a href="#" class="logout-link" id="logoutLink" onclick="return handleLogout(event)" style="display:none;">Log out</a>
+        </div>
+    </nav>
+
+    <div class="tools-grid">
+        <div class="tool-card" onclick="window.open('https://support.microsoft.com/en-us/teams', '_blank')">
+            <div class="tool-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            </div>
+            <div class="tool-name">Microsoft Teams</div>
+            <div class="tool-desc">Master academic collaboration. Learn how to set up channels, share files, and conduct seamless online meetings.</div>
+            <div class="tool-link">Official Tutorial &rarr;</div>
+        </div>
+
+        <div class="tool-card" onclick="window.open('https://docs.github.com/en/get-started', '_blank')">
+            <div class="tool-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+            </div>
+            <div class="tool-name">GitHub</div>
+            <div class="tool-desc">Essential version control for coding projects. Understand commits, pull requests, and collaborative repository management.</div>
+            <div class="tool-link">Official Docs &rarr;</div>
+        </div>
+
+        <div class="tool-card" onclick="window.open('https://matlabacademy.mathworks.com/', '_blank')">
+            <div class="tool-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+            </div>
+            <div class="tool-name">MATLAB</div>
+            <div class="tool-desc">The language of technical computing. Dive into matrix manipulations, plotting of functions, and data implementation.</div>
+            <div class="tool-link">MATLAB Academy &rarr;</div>
+        </div>
+
+        <div class="tool-card" onclick="window.open('https://help.autodesk.com/view/ACD/2024/ENU/', '_blank')">
+            <div class="tool-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+            </div>
+            <div class="tool-name">AutoCAD</div>
+            <div class="tool-desc">Computer-aided design core. Get started with 2D drafting, 3D modeling, and engineering drawing standards.</div>
+            <div class="tool-link">Autodesk Help &rarr;</div>
+        </div>
+
+        <div class="tool-card" onclick="window.open('https://www.originlab.com/index.aspx?go=Support/VideoTutorials', '_blank')">
+            <div class="tool-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+            </div>
+            <div class="tool-name">OriginLab</div>
+            <div class="tool-desc">Advanced data analysis and graphing workspace. Master curve fitting, peak analysis, and publication-quality graphs.</div>
+            <div class="tool-link">Video Tutorials &rarr;</div>
+        </div>
+    </div>
+    <script>
+        const USER_PORTAL_URL = './owner.html';
+        const ADMIN_PORTAL_URL = 'http://127.0.0.1:5174/';
+        const AUTH_API_BASE = './Auth/backend/api';
+        const authState = { user: null };
+
+        function initialsOf(name) {
+            const trimmed = String(name || '').trim();
+            if (!trimmed) return 'IN';
+            return trimmed.slice(0, 2).toUpperCase();
+        }
+
+        function getPortalUrl(user) {
+            return user && String(user.role || '').toLowerCase() === 'admin' ? ADMIN_PORTAL_URL : USER_PORTAL_URL;
+        }
+
+        function renderAuthUI() {
+            const label = document.getElementById('userLabel');
+            const avatar = document.getElementById('userAvatar');
+            const logoutLink = document.getElementById('logoutLink');
+            if (!label || !avatar || !logoutLink) return;
+
+            if (authState.user) {
+                label.textContent = authState.user.username;
+                avatar.textContent = initialsOf(authState.user.username);
+                logoutLink.style.display = 'inline-flex';
+            } else {
+                label.textContent = 'LOGIN';
+                avatar.textContent = 'IN';
+                logoutLink.style.display = 'none';
+            }
+        }
+
+        async function authFetch(path, options = {}) {
+            const response = await fetch(`${AUTH_API_BASE}/${path}`, {
+                method: options.method || 'GET',
+                headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+                credentials: 'include',
+                body: options.body || undefined
+            });
+            return response.json().catch(() => ({ status: 'error', message: 'Invalid response' }));
+        }
+
+        async function loadAuthUser() {
+            const data = await authFetch('me.php');
+            authState.user = data.status === 'success' ? data.user : null;
+            renderAuthUI();
+        }
+
+        function handleUserAction() {
+            if (authState.user) {
+                window.location.href = getPortalUrl(authState.user);
+                return;
+            }
+            window.location.href = 'home.html?login=1';
+        }
+
+        async function handleLogout(event) {
+            if (event) event.preventDefault();
+            if (!authState.user) return false;
+            await authFetch('logout.php');
+            authState.user = null;
+            renderAuthUI();
+            window.location.href = 'home.html';
+            return false;
+        }
+
+        window.addEventListener('load', loadAuthUser);
+    </script>
+</body>
+</html>

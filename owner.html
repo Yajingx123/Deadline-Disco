@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AcadBeat | The Sanctuary</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700;800&family=Playfair+Display:ital,wght@0,500;1,700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            --bg-color: #E4DFD8;
+            --primary-color: #9BB7D4;
+            --secondary-color: #3A4E6B;
+            --white: #ffffff;
+            --accent-red: #D98E8E;
+            --transition-slow: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+            --transition-fast: all 0.4s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--secondary-color);
+            overflow-x: hidden;
+        }
+
+        .site-modal {
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(circle at top, rgba(155, 183, 212, 0.14), transparent 32%),
+                rgba(34, 41, 55, 0.2);
+            backdrop-filter: blur(10px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 3100;
+            padding: 24px;
+        }
+
+        .site-modal.is-open {
+            display: flex;
+        }
+
+        .site-modal__card {
+            width: min(440px, 100%);
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(249, 245, 239, 0.96)),
+                var(--bg-color);
+            border: 1px solid rgba(58, 78, 107, 0.1);
+            border-radius: 30px;
+            box-shadow:
+                0 28px 80px rgba(58, 78, 107, 0.12),
+                inset 0 1px 0 rgba(255, 255, 255, 0.78);
+            padding: 30px 30px 24px;
+        }
+
+        .site-modal__title {
+            font-size: 1.9rem;
+            line-height: 1.06;
+            font-weight: 800;
+            margin-bottom: 12px;
+            letter-spacing: -0.03em;
+        }
+
+        .site-modal__body {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: rgba(58, 78, 107, 0.72);
+        }
+
+        .site-modal__actions {
+            display: flex;
+            justify-content: flex-start;
+            margin-top: 24px;
+        }
+
+        .site-modal__actions .btn-small {
+            min-width: 118px;
+            min-height: 44px;
+            border-radius: 999px;
+            box-shadow: 0 12px 28px rgba(58, 78, 107, 0.12);
+        }
+
+        /* --- 用户身份区域优化 --- */
+        .identity-wrap {
+            margin-bottom: 4rem;
+            position: relative;
+        }
+
+        /* 增加下方间距 */
+        .user-label {
+            font-size: 1.5rem;
+            /* 明显化 */
+            letter-spacing: 2px;
+            text-transform: none;
+            opacity: 0.8;
+            margin-bottom: 0.8rem;
+            display: block;
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+        }
+
+        .user-name-display {
+            font-size: 3.2rem;
+            font-weight: 300;
+            letter-spacing: -1px;
+            text-transform: none;
+            line-height: 1;
+            display: inline-block;
+            position: relative;
+        }
+
+        .user-name-display b {
+            font-weight: 800;
+            color: var(--primary-color);
+        }
+
+        .quote-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-style: italic;
+            line-height: 1.2;
+            margin-bottom: 2.5rem;
+        }
+
+        /* 列表页间距 */
+        .list-header-group {
+            margin-bottom: 3rem;
+        }
+
+        .sub-greeting {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            opacity: 0.5;
+            font-style: italic;
+            margin-top: 10px;
+        }
+
+        .module-label {
+            font-size: 0.7rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            opacity: 0.4;
+            font-weight: 300;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        /* 导航 */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 5%;
+            height: 80px;
+            background-color: var(--bg-color);
+            border-bottom: 1px solid rgba(58, 78, 107, 0.1);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+        }
+
+        .logo span {
+            color: var(--primary-color);
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        .nav-item {
+            text-decoration: none;
+            color: var(--secondary-color);
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            padding: 8px 0;
+            position: relative;
+            transition: 0.6s ease;
+            opacity: 0.5;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            opacity: 1;
+        }
+
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--secondary-color);
+        }
+
+        .user-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: 0.4s ease;
+        }
+
+        .user-section:hover {
+            opacity: 0.7;
+        }
+
+        .avatar {
+            width: 34px;
+            height: 34px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            border: 1px solid var(--secondary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.7rem;
+        }
+
+        .logout-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 34px;
+            padding: 0 12px;
+            border-radius: 999px;
+            border: 1px solid rgba(58, 78, 107, 0.18);
+            background: rgba(255, 255, 255, 0.72);
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-size: 0.72rem;
+            font-weight: 700;
+            transition: 0.25s ease;
+        }
+
+        .logout-link:hover {
+            transform: translateY(-1px);
+            background: rgba(255, 255, 255, 0.94);
+            border-color: rgba(58, 78, 107, 0.3);
+        }
+
+        /* 布局 */
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 60px;
+            max-width: 1400px;
+            margin: 140px auto 50px;
+            padding: 0 5%;
+        }
+
+        .sidebar {
+            position: sticky;
+            top: 120px;
+            height: fit-content;
+        }
+
+        .side-menu {
+            list-style: none;
+            margin-top: 30px;
+        }
+
+        .side-item {
+            padding: 18px 0;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            opacity: 0.3;
+            transition: var(--transition-fast);
+            border-bottom: 1px solid rgba(58, 78, 107, 0.05);
+        }
+
+        .side-item:hover,
+        .side-item.active {
+            opacity: 1;
+            padding-left: 10px;
+        }
+
+        .side-item.active {
+            border-bottom: 2px solid var(--secondary-color);
+        }
+
+        /* 卡片 */
+        .daily-focus-card {
+            background: rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(58, 78, 107, 0.08);
+            padding: 2.5rem 3.5rem;
+            border-radius: 2px;
+            backdrop-filter: blur(10px);
+            margin-bottom: 2.5rem;
+            position: relative;
+        }
+
+        .btn-small {
+            padding: 12px 30px;
+            border-radius: 40px;
+            border: 1.2px solid var(--secondary-color);
+            background: transparent;
+            color: var(--secondary-color);
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: 0.4s;
+            position: relative;
+        }
+
+        .btn-small:hover {
+            background-color: var(--secondary-color);
+            color: var(--bg-color);
+            transform: translateY(-2px);
+        }
+
+        .btn-primary-small {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        .notification-dot {
+            position: absolute;
+            top: -4px;
+            right: -4px;
+            width: 8px;
+            height: 8px;
+            background: var(--accent-red);
+            border-radius: 50%;
+            animation: pulseDot 2s infinite;
+        }
+
+        /* 日历样式保持 */
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .month-display {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            text-align: center;
+        }
+
+        .cal-day {
+            width: 44px;
+            height: 44px;
+            line-height: 44px;
+            margin: 5px auto;
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+
+        .cal-day.checked {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .cal-day.today {
+            border: 1.5px solid var(--secondary-color);
+            font-weight: 800;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .sub-tabs {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 40px;
+            border-bottom: 1px solid rgba(58, 78, 107, 0.1);
+        }
+
+        .sub-tab-item {
+            padding-bottom: 12px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            opacity: 0.3;
+        }
+
+        .sub-tab-item.active {
+            opacity: 1;
+            border-bottom: 2px solid var(--secondary-color);
+        }
+
+        #list-sec .quote-text {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            font-style: italic;
+            font-weight: 500;
+            letter-spacing: 0;
+        }
+
+        #list-sec .sub-greeting {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.1rem;
+            font-style: italic;
+            opacity: 0.5;
+        }
+
+        @keyframes rotateCW {
+            from {
+                transform: rotate(0);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes rotateCCW {
+            from {
+                transform: rotate(0);
+            }
+
+            to {
+                transform: rotate(-360deg);
+            }
+        }
+
+        @keyframes pulseDot {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.4;
+                transform: scale(1.2);
+            }
+
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav>
+        <a class="logo" href="./home.html">Acad<span>Beat</span></a>
+        <div class="nav-menu">
+            <a class="nav-item" href="./home.html?module=Insight">Academic</a>
+            <a class="nav-item" href="http://127.0.0.1:5173/?view=chooser">Forum</a>
+            <a class="nav-item" href="./technology.html">Technology</a>
+        </div>
+        <div class="user-group">
+            <div class="user-section" id="userSection" onclick="handleUserAction()">
+                <span id="userLabel" style="font-size: 0.75rem; font-weight: 700;">LOGIN</span>
+                <div class="avatar" id="userAvatar">IN</div>
+            </div>
+            <a href="#" class="logout-link" id="logoutLink" onclick="return handleLogout(event)" style="display:none;">Log out</a>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <aside class="sidebar">
+            <span class="module-label">Personal Space</span>
+            <ul class="side-menu">
+                <li class="side-item active" onclick="showSection('checkin')">Daily Check-in</li>
+                <li class="side-item" onclick="showSection('records')">Study Records</li>
+                <li class="side-item" onclick="showSection('favorites')">My Favorites</li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <div id="checkin-sec">
+                <div class="identity-wrap">
+                    <span class="user-label">Welcome back,</span>
+                    <h1 class="user-name-display" id="ownerNameDisplay">Alex <b>Rivera</b></h1>
+                </div>
+
+                <h2 class="quote-text">Quality is not an act, it is a habit.</h2>
+
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+                    <span class="module-label" id="streak-txt">Current Streak: 12 Days</span>
+                    <button class="btn-small btn-primary-small" id="checkin-btn" onclick="doCheckIn()">Commit
+                        Today</button>
+                </div>
+
+                <div class="daily-focus-card">
+                    <div class="calendar-header">
+                        <div class="month-display" id="month-year-label">March 2026</div>
+                        <div style="opacity: 0.5;">
+                            <span style="cursor:pointer; margin-right:15px;" onclick="changeMonth(-1)">&#10229;</span>
+                            <span style="cursor:pointer;" onclick="changeMonth(1)">&#10230;</span>
+                        </div>
+                    </div>
+                    <div class="calendar-grid">
+                        <div class="weekday-label">MON</div>
+                        <div class="weekday-label">TUE</div>
+                        <div class="weekday-label">WED</div>
+                        <div class="weekday-label">THU</div>
+                        <div class="weekday-label">FRI</div>
+                        <div class="weekday-label">SAT</div>
+                        <div class="weekday-label">SUN</div>
+                    </div>
+                    <div class="calendar-grid" id="calendar-days"></div>
+                </div>
+
+            </div>
+
+            <div id="list-sec" class="hidden">
+                <div class="list-header-group">
+                    <h2 class="quote-text" id="list-title" style="margin-bottom:0;">Study Records</h2>
+                    <p class="sub-greeting" id="list-subtitle">Archiving the echoes of your persistent growth.</p>
+                </div>
+
+                <div class="sub-tabs">
+                    <div class="sub-tab-item active" onclick="filterList('vocabulary')">Vocabulary</div>
+                    <div class="sub-tab-item" onclick="filterList('listening')">Listening</div>
+                    <div class="sub-tab-item" onclick="filterList('integrated')">Integrated</div>
+                </div>
+                <div id="items-container"></div>
+            </div>
+        </main>
+    </div>
+
+    <div class="site-modal" id="siteModal" aria-hidden="true">
+        <div class="site-modal__card">
+            <div class="site-modal__title" id="siteModalTitle">Notice</div>
+            <div class="site-modal__body" id="siteModalBody"></div>
+            <div class="site-modal__actions">
+                <button type="button" class="btn-small" id="siteModalConfirm">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const AUTH_API_BASE = './Auth/backend/api';
+        const OWNER_URL = './owner.html';
+        const ADMIN_URL = 'http://127.0.0.1:5174/';
+        const OWNER_VOCAB_API = './vocba_prac/api/owner-vocabulary.php';
+        const OWNER_LISTENING_API = './Academic-Practice/api/records.php';
+        const OWNER_INTEGRATED_API = './Academic-Practice/api/integrated-records.php';
+        let viewDate = new Date();
+        const today = new Date();
+        let checkedDays = ["2026-3-1", "2026-3-2", "2026-3-5", "2026-3-10", "2026-3-18"];
+        let ownerListMode = 'records';
+        let ownerVocabularyData = { records: [], favorites: [] };
+        let ownerListeningRecords = [];
+        let ownerIntegratedRecords = [];
+        let ownerAuthUser = null;
+
+        function initialsOf(name) {
+            const trimmed = String(name || '').trim();
+            if (!trimmed) return 'U';
+            return trimmed.slice(0, 2).toUpperCase();
+        }
+
+        function formatDisplayName(username) {
+            const trimmed = String(username || '').trim();
+            if (!trimmed) return 'User';
+            return trimmed
+                .split(/[\s._-]+/)
+                .filter(Boolean)
+                .map(part => part.charAt(0).toUpperCase() + part.slice(1))
+                .join(' ');
+        }
+
+        async function authFetch(path, options = {}) {
+            const response = await fetch(`${AUTH_API_BASE}/${path}`, {
+                method: options.method || 'GET',
+                headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+                credentials: 'include',
+                body: options.body || undefined
+            });
+            const data = await response.json().catch(() => ({ status: 'error', message: 'Invalid response' }));
+            return data;
+        }
+
+        function applyOwnerUser(user) {
+            ownerAuthUser = user;
+            const display = document.getElementById('ownerNameDisplay');
+            const label = document.getElementById('userLabel');
+            const avatar = document.getElementById('userAvatar');
+            const logoutLink = document.getElementById('logoutLink');
+            if (display) {
+                display.innerHTML = `${escapeHtml(String(user.username || 'User'))} <b>Owner</b>`;
+            }
+            if (label) {
+                label.textContent = user?.username || 'LOGIN';
+            }
+            if (avatar) {
+                avatar.textContent = initialsOf(user?.username || 'IN');
+            }
+            if (logoutLink) {
+                logoutLink.style.display = user ? 'inline-flex' : 'none';
+            }
+        }
+
+        function getPortalUrl(user) {
+            return user && String(user.role || '').toLowerCase() === 'admin' ? ADMIN_URL : OWNER_URL;
+        }
+
+        function handleUserAction() {
+            if (!ownerAuthUser) {
+                window.location.href = './home.html?login=1';
+                return;
+            }
+            window.location.href = getPortalUrl(ownerAuthUser);
+        }
+
+        async function handleLogout(event) {
+            if (event) event.preventDefault();
+            if (!ownerAuthUser) return false;
+            await authFetch('logout.php', { method: 'POST' });
+            ownerAuthUser = null;
+            window.location.href = './home.html';
+            return false;
+        }
+
+        function openSiteModal(title, message, onConfirm, allowHtml = false) {
+            const modal = document.getElementById('siteModal');
+            const titleEl = document.getElementById('siteModalTitle');
+            const bodyEl = document.getElementById('siteModalBody');
+            const confirmBtn = document.getElementById('siteModalConfirm');
+            if (!modal || !titleEl || !bodyEl || !confirmBtn) return;
+            titleEl.textContent = title || 'Notice';
+            if (allowHtml) {
+                bodyEl.innerHTML = message || '';
+            } else {
+                bodyEl.textContent = message || '';
+            }
+            confirmBtn.onclick = function () {
+                modal.classList.remove('is-open');
+                modal.setAttribute('aria-hidden', 'true');
+                if (typeof onConfirm === 'function') onConfirm();
+            };
+            modal.classList.add('is-open');
+            modal.setAttribute('aria-hidden', 'false');
+        }
+
+        async function ensureAuthenticated() {
+            const data = await authFetch('me.php');
+            if (data.status !== 'success' || !data.user) {
+                openSiteModal('Login required', 'Please log in first.', function () {
+                    window.location.href = 'home.html?login=1';
+                });
+                return false;
+            }
+            applyOwnerUser(data.user);
+            return true;
+        }
+
+        async function loadOwnerVocabularyData() {
+            const response = await fetch(OWNER_VOCAB_API, { credentials: 'include' });
+            const data = await response.json().catch(() => ({ ok: false }));
+            if (!data.ok) {
+                ownerVocabularyData = { records: [], favorites: [] };
+                return;
+            }
+            ownerVocabularyData = {
+                records: Array.isArray(data.records) ? data.records : [],
+                favorites: Array.isArray(data.favorites) ? data.favorites : []
+            };
+        }
+
+        async function loadOwnerListeningData() {
+            const response = await fetch(OWNER_LISTENING_API, { credentials: 'include' });
+            const data = await response.json().catch(() => ({ ok: false }));
+            ownerListeningRecords = data.ok && Array.isArray(data.records) ? data.records : [];
+        }
+
+        async function loadOwnerIntegratedData() {
+            const response = await fetch(OWNER_INTEGRATED_API, { credentials: 'include' });
+            const data = await response.json().catch(() => ({ ok: false }));
+            ownerIntegratedRecords = data.ok && Array.isArray(data.records) ? data.records : [];
+        }
+
+        function formatShortDate(value) {
+            if (!value) return 'Recent';
+            const d = new Date(String(value).replace(' ', 'T'));
+            if (Number.isNaN(d.getTime())) return value;
+            return d.toLocaleString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit'
+            });
+        }
+
+        function escapeHtml(value) {
+            return String(value || '')
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;');
+        }
+
+        function renderVocabularyRecords() {
+            const container = document.getElementById('items-container');
+            const records = ownerVocabularyData.records || [];
+            if (!records.length) {
+                container.innerHTML = `
+                <div class="daily-focus-card list-item">
+                    <div>
+                        <h4 style="font-size:0.78rem; opacity:0.45;">VOCABULARY • NO RECORDS YET</h4>
+                        <p style="font-family:'Playfair Display'; font-size:1.35rem;">No vocabulary sessions saved yet</p>
+                        <p style="font-size:0.86rem; opacity:0.62; margin-top:10px;">Finish a vocabulary session and your study record will appear here automatically.</p>
+                    </div>
+                </div>`;
+                return;
+            }
+            container.innerHTML = records.map((record, index) => `
+                <div class="daily-focus-card list-item" style="display:block;">
+                    <div style="display:flex; justify-content:space-between; gap:18px; align-items:flex-start;">
+                        <div style="flex:1;">
+                            <h4 style="font-size:0.78rem; opacity:0.45;">VOCABULARY • ${escapeHtml(formatShortDate(record.completedAt))}</h4>
+                            <p style="font-family:'Playfair Display'; font-size:1.35rem;">${escapeHtml(record.title)}</p>
+                        </div>
+                        <div style="font-family:'Playfair Display'; font-size:2.5rem; opacity:0.18; font-style:italic;">${String(index + 1).padStart(2, '0')}</div>
+                    </div>
+                    <div style="margin-top:14px;">
+                        <div style="font-size:0.78rem; opacity:0.55; margin-bottom:8px;">Words in this session</div>
+                        <div style="display:flex; flex-wrap:wrap; gap:8px;">
+                            ${(record.words || []).map(word => `<span style="padding:8px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.82rem;">${escapeHtml(word)}</span>`).join('')}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderVocabularyFavorites() {
+            const container = document.getElementById('items-container');
+            const favorites = ownerVocabularyData.favorites || [];
+            if (!favorites.length) {
+                container.innerHTML = `
+                <div class="daily-focus-card list-item">
+                    <div>
+                        <h4 style="font-size:0.78rem; opacity:0.45;">VOCABULARY • NO FAVORITES YET</h4>
+                        <p style="font-family:'Playfair Display'; font-size:1.35rem;">No selected word books yet</p>
+                        <p style="font-size:0.86rem; opacity:0.62; margin-top:10px;">Choose word books in Vocabulary Practice and they will appear here with progress.</p>
+                    </div>
+                </div>`;
+                return;
+            }
+            container.innerHTML = favorites.map((book, index) => `
+                <div class="daily-focus-card list-item" style="display:block;">
+                    <div style="display:flex; justify-content:space-between; gap:18px; align-items:flex-start;">
+                        <div style="display:flex; gap:16px; align-items:flex-start; flex:1;">
+                            <img src="${escapeHtml(book.coverUrl)}" alt="" style="width:76px; height:102px; object-fit:cover; border-radius:16px; box-shadow:0 12px 28px rgba(0,0,0,0.08);" />
+                            <div style="flex:1;">
+                                <h4 style="font-size:0.78rem; opacity:0.45;">VOCABULARY FAVORITE</h4>
+                                <p style="font-family:'Playfair Display'; font-size:1.35rem;">${escapeHtml(book.title)}</p>
+                                <p style="font-size:0.84rem; opacity:0.62; margin-top:8px;">${escapeHtml(book.description)}</p>
+                                <p style="font-size:0.82rem; opacity:0.68; margin-top:10px;">${book.masteredWords} of ${book.totalWords} words marked learned</p>
+                                <div style="margin-top:12px; width:100%; max-width:320px; height:8px; background:rgba(0,0,0,0.08); border-radius:999px; overflow:hidden;">
+                                    <div style="width:${book.progressPercent}%; height:100%; background:linear-gradient(90deg, #ff6a00, #ff9b54); border-radius:999px;"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="font-family:'Playfair Display'; font-size:2.5rem; opacity:0.18; font-style:italic;">${String(index + 1).padStart(2, '0')}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderListeningRecords() {
+            const container = document.getElementById('items-container');
+            const records = ownerListeningRecords || [];
+            if (!records.length) {
+                container.innerHTML = `
+                <div class="daily-focus-card list-item">
+                    <div>
+                        <h4 style="font-size:0.78rem; opacity:0.45;">LISTENING • NO RECORDS YET</h4>
+                        <p style="font-family:'Playfair Display'; font-size:1.35rem;">No listening records saved yet</p>
+                        <p style="font-size:0.86rem; opacity:0.62; margin-top:10px;">Save an answer from the note page in Academic Practice and it will appear here automatically.</p>
+                    </div>
+                </div>`;
+                return;
+            }
+            container.innerHTML = records.map((record, index) => `
+                <button class="daily-focus-card list-item" type="button" onclick="openListeningRecord(${record.recordId})" style="display:block; width:100%; text-align:left; border:none; cursor:pointer;">
+                    <div style="display:flex; justify-content:space-between; gap:18px; align-items:flex-start;">
+                        <div style="flex:1;">
+                            <h4 style="font-size:0.78rem; opacity:0.45;">LISTENING • ${escapeHtml(formatShortDate(record.createdAt))}</h4>
+                            <p style="font-family:'Playfair Display'; font-size:1.35rem;">${escapeHtml(record.title)}</p>
+                            <p style="font-size:0.84rem; opacity:0.62; margin-top:8px;">${escapeHtml(record.personMeta || 'Academic Practice')}</p>
+                            <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:12px;">
+                                ${record.mode ? `<span style="padding:8px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.82rem;">${escapeHtml(record.mode)}</span>` : ''}
+                                ${record.difficulty ? `<span style="padding:8px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.82rem;">${escapeHtml(record.difficulty)}</span>` : ''}
+                                ${record.duration ? `<span style="padding:8px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.82rem;">${escapeHtml(record.duration)}</span>` : ''}
+                            </div>
+                        </div>
+                        <div style="font-family:'Playfair Display'; font-size:2.5rem; opacity:0.18; font-style:italic;">${String(index + 1).padStart(2, '0')}</div>
+                    </div>
+                    <p style="font-size:0.82rem; opacity:0.64; margin-top:14px;">Tap to view the saved answer details.</p>
+                </button>
+            `).join('');
+        }
+
+        async function openListeningRecord(recordId) {
+            const response = await fetch(`${OWNER_LISTENING_API}?id=${encodeURIComponent(recordId)}`, { credentials: 'include' });
+            const data = await response.json().catch(() => ({ ok: false }));
+            if (!data.ok || !data.record) {
+                openSiteModal('Unable to open record', 'This listening record could not be loaded right now.');
+                return;
+            }
+            const record = data.record;
+            openSiteModal(
+                record.title || 'Listening Record',
+                `
+                <div style="display:grid; gap:14px; text-align:left;">
+                    <div style="font-size:0.86rem; opacity:0.68;">${escapeHtml(formatShortDate(record.createdAt))}</div>
+                    <div style="display:flex; flex-wrap:wrap; gap:8px;">
+                        ${record.mode ? `<span style="padding:7px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.8rem;">${escapeHtml(record.mode)}</span>` : ''}
+                        ${record.difficulty ? `<span style="padding:7px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.8rem;">${escapeHtml(record.difficulty)}</span>` : ''}
+                        ${record.duration ? `<span style="padding:7px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.8rem;">${escapeHtml(record.duration)}</span>` : ''}
+                        ${record.source ? `<span style="padding:7px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.8rem;">${escapeHtml(record.source)}</span>` : ''}
+                    </div>
+                    <div>
+                        <h4 style="font-size:0.76rem; opacity:0.5; letter-spacing:0.12em; text-transform:uppercase; margin-bottom:6px;">Main Content</h4>
+                        <p style="line-height:1.8; white-space:pre-wrap;">${escapeHtml(record.mainContent || 'No main content recorded.')}</p>
+                    </div>
+                    <div>
+                        <h4 style="font-size:0.76rem; opacity:0.5; letter-spacing:0.12em; text-transform:uppercase; margin-bottom:6px;">Key Word</h4>
+                        <p style="line-height:1.8; white-space:pre-wrap;">${escapeHtml(record.keyWord || 'No keywords recorded.')}</p>
+                    </div>
+                    <div>
+                        <h4 style="font-size:0.76rem; opacity:0.5; letter-spacing:0.12em; text-transform:uppercase; margin-bottom:6px;">Personal View</h4>
+                        <p style="line-height:1.8; white-space:pre-wrap;">${escapeHtml(record.personalView || 'No personal view recorded.')}</p>
+                    </div>
+                </div>
+                `,
+                null,
+                true
+            );
+        }
+
+        function renderIntegratedRecords() {
+            const container = document.getElementById('items-container');
+            const records = ownerIntegratedRecords || [];
+            if (!records.length) {
+                container.innerHTML = `
+                <div class="daily-focus-card list-item">
+                    <div>
+                        <h4 style="font-size:0.78rem; opacity:0.45;">INTEGRATED • NO RECORDS YET</h4>
+                        <p style="font-family:'Playfair Display'; font-size:1.35rem;">No integrated speaking records saved yet</p>
+                        <p style="font-size:0.86rem; opacity:0.62; margin-top:10px;">Use Response Practice and save your audio answer to create an integrated record here.</p>
+                    </div>
+                </div>`;
+                return;
+            }
+            container.innerHTML = records.map((record, index) => `
+                <button class="daily-focus-card list-item" type="button" onclick="openIntegratedRecord(${record.recordId})" style="display:block; width:100%; text-align:left; border:none; cursor:pointer;">
+                    <div style="display:flex; justify-content:space-between; gap:18px; align-items:flex-start;">
+                        <div style="flex:1;">
+                            <h4 style="font-size:0.78rem; opacity:0.45;">INTEGRATED • ${escapeHtml(formatShortDate(record.createdAt))}</h4>
+                            <p style="font-family:'Playfair Display'; font-size:1.35rem;">${escapeHtml(record.title)}</p>
+                            <p style="font-size:0.84rem; opacity:0.62; margin-top:8px;">${escapeHtml(record.personMeta || 'Response Practice')}</p>
+                            <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:12px;">
+                                ${record.mode ? `<span style="padding:8px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.82rem;">${escapeHtml(record.mode)}</span>` : ''}
+                                ${record.difficulty ? `<span style="padding:8px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.82rem;">${escapeHtml(record.difficulty)}</span>` : ''}
+                                ${record.duration ? `<span style="padding:8px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.82rem;">${escapeHtml(record.duration)}</span>` : ''}
+                            </div>
+                        </div>
+                        <div style="font-family:'Playfair Display'; font-size:2.5rem; opacity:0.18; font-style:italic;">${String(index + 1).padStart(2, '0')}</div>
+                    </div>
+                    <p style="font-size:0.82rem; opacity:0.64; margin-top:14px;">Tap to play your saved response.</p>
+                </button>
+            `).join('');
+        }
+
+        async function openIntegratedRecord(recordId) {
+            const response = await fetch(`${OWNER_INTEGRATED_API}?id=${encodeURIComponent(recordId)}`, { credentials: 'include' });
+            const data = await response.json().catch(() => ({ ok: false }));
+            if (!data.ok || !data.record) {
+                openSiteModal('Unable to open record', 'This integrated record could not be loaded right now.');
+                return;
+            }
+            const record = data.record;
+            openSiteModal(
+                record.title || 'Integrated Record',
+                `
+                <div style="display:grid; gap:14px; text-align:left;">
+                    <div style="font-size:0.86rem; opacity:0.68;">${escapeHtml(formatShortDate(record.createdAt))}</div>
+                    <div style="display:flex; flex-wrap:wrap; gap:8px;">
+                        ${record.mode ? `<span style="padding:7px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.8rem;">${escapeHtml(record.mode)}</span>` : ''}
+                        ${record.difficulty ? `<span style="padding:7px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.8rem;">${escapeHtml(record.difficulty)}</span>` : ''}
+                        ${record.duration ? `<span style="padding:7px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.8rem;">${escapeHtml(record.duration)}</span>` : ''}
+                        ${record.source ? `<span style="padding:7px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.8rem;">${escapeHtml(record.source)}</span>` : ''}
+                    </div>
+                    <audio controls style="width:100%;">
+                        <source src="${record.audioData}" type="${escapeHtml(record.audioMime || 'audio/webm')}">
+                    </audio>
+                </div>
+                `,
+                null,
+                true
+            );
+        }
+
+        function renderPlaceholderList(cat) {
+            document.getElementById('items-container').innerHTML = `
+            <div class="daily-focus-card list-item" style="display:flex; justify-content:space-between; align-items:center;">
+                <div><h4 style="font-size:0.7rem; opacity:0.4;">${cat.toUpperCase()} • MAR 2026</h4><p style="font-family:'Playfair Display'; font-size:1.4rem;">The Architecture of Resonance</p></div>
+                <div style="font-family:'Playfair Display'; font-size:2.5rem; opacity:0.2; font-style:italic;">01</div>
+            </div>`;
+        }
+
+        function renderCalendar() {
+            const grid = document.getElementById('calendar-days');
+            const label = document.getElementById('month-year-label');
+            grid.innerHTML = '';
+            const year = viewDate.getFullYear();
+            const month = viewDate.getMonth();
+            label.innerText = viewDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+
+            let firstDay = new Date(year, month, 1).getDay();
+            firstDay = firstDay === 0 ? 6 : firstDay - 1;
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+            const prevDaysInMonth = new Date(year, month, 0).getDate();
+
+            for (let x = firstDay; x > 0; x--) {
+                const div = document.createElement('div'); div.className = 'cal-day other-month';
+                div.innerText = prevDaysInMonth - x + 1; grid.appendChild(div);
+            }
+            for (let i = 1; i <= daysInMonth; i++) {
+                const div = document.createElement('div'); div.className = 'cal-day'; div.innerText = i;
+                const dateStr = `${year}-${month + 1}-${i}`;
+                if (checkedDays.includes(dateStr)) div.classList.add('checked');
+                if (i === today.getDate() && month === today.getMonth() && year === today.getFullYear()) div.classList.add('today');
+                grid.appendChild(div);
+            }
+        }
+
+        function changeMonth(step) { viewDate.setMonth(viewDate.getMonth() + step); renderCalendar(); }
+
+        async function doCheckIn() {
+            const dateStr = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+            if (!checkedDays.includes(dateStr)) {
+                checkedDays.push(dateStr); renderCalendar();
+                const btn = document.getElementById('checkin-btn');
+                btn.innerText = "Committed"; btn.style.opacity = "0.5"; btn.disabled = true;
+                document.getElementById('streak-txt').innerText = "Current Streak: 13 Days";
+            }
+        }
+
+        function showSection(type) {
+            document.querySelectorAll('.side-item').forEach(el => el.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            document.getElementById('checkin-sec').classList.toggle('hidden', type !== 'checkin');
+            document.getElementById('list-sec').classList.toggle('hidden', type === 'checkin');
+            if (type !== 'checkin') {
+                ownerListMode = type;
+                const isRec = type === 'records';
+                document.getElementById('list-title').innerText = isRec ? "Study Records" : "My Favorites";
+                document.getElementById('list-subtitle').innerText = isRec ? "Archiving the echoes of your persistent growth." : "A curated collection of your intellectual sparks.";
+                filterList('vocabulary');
+            }
+        }
+
+        function filterList(cat) {
+            document.querySelectorAll('.sub-tab-item').forEach(el => el.classList.remove('active'));
+            const tabs = document.querySelectorAll('.sub-tab-item');
+            tabs.forEach(t => { if (t.innerText.toLowerCase() === cat) t.classList.add('active'); });
+            if (cat === 'listening' && ownerListMode === 'records') {
+                renderListeningRecords();
+                return;
+            }
+            if (cat === 'integrated' && ownerListMode === 'records') {
+                renderIntegratedRecords();
+                return;
+            }
+            if (cat !== 'vocabulary') {
+                renderPlaceholderList(cat);
+                return;
+            }
+            if (ownerListMode === 'records') {
+                renderVocabularyRecords();
+                return;
+            }
+            renderVocabularyFavorites();
+        }
+
+        window.onload = async () => {
+            const ok = await ensureAuthenticated();
+            if (!ok) return;
+            await loadOwnerVocabularyData();
+            await loadOwnerListeningData();
+            await loadOwnerIntegratedData();
+            renderCalendar();
+        };
+    </script>
+
+</body>
+
+</html>
