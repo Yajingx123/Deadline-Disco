@@ -693,6 +693,7 @@ body {
   cursor: pointer;
   transition: all 0.3s ease;
   flex-shrink: 0;
+  text-decoration: none;
 }
 
 .announcement-link:hover {
@@ -1005,11 +1006,6 @@ body {
     align-items: flex-start;
     gap: 8px;
   }
-}
-
-/* Add this to make the announcement bar link to the announcements page */
-.announcement-link {
-  text-decoration: none;
 }
 
 /* Modal Styles */

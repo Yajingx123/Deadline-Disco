@@ -1,0 +1,271 @@
+[Tue Mar 24 10:36:22 2026] PHP 8.4.7 Development Server (http://127.0.0.1:8001) started
+[Tue Mar 24 10:36:29 2026] 127.0.0.1:51934 Accepted
+[Tue Mar 24 10:36:29 2026] 127.0.0.1:51934 [200]: GET /Academic-Practice/training.html
+[Tue Mar 24 10:36:29 2026] 127.0.0.1:51935 Accepted
+[Tue Mar 24 10:36:29 2026] 127.0.0.1:51934 Closing
+[Tue Mar 24 10:36:29 2026] 127.0.0.1:51935 [200]: GET /Academic-Practice/acadbeat-global.css
+[Tue Mar 24 10:36:29 2026] 127.0.0.1:51935 Closing
+[Tue Mar 24 10:36:29 2026] 127.0.0.1:51936 Accepted
+[Tue Mar 24 10:36:29 2026] 127.0.0.1:51937 Accepted
+[Tue Mar 24 10:36:29 2026] 127.0.0.1:51938 Accepted
+[Tue Mar 24 10:36:29 2026] 127.0.0.1:51936 [200]: GET /Academic-Practice/practice-style.css
+[Tue Mar 24 10:36:29 2026] 127.0.0.1:51937 [200]: GET /Academic-Practice/practice-data.js
+[Tue Mar 24 10:36:29 2026] 127.0.0.1:51938 [200]: GET /Academic-Practice/practice-app.js
+[Tue Mar 24 10:36:29 2026] 127.0.0.1:51936 Closing
+[Tue Mar 24 10:36:29 2026] 127.0.0.1:51937 Closing
+[Tue Mar 24 10:36:29 2026] 127.0.0.1:51938 Closing
+[Tue Mar 24 10:36:29 2026] 127.0.0.1:51939 Accepted
+[Tue Mar 24 10:36:29 2026] 127.0.0.1:51939 [200]: GET /Auth/backend/api/me.php
+[Tue Mar 24 10:36:29 2026] 127.0.0.1:51939 Closing
+[Tue Mar 24 10:36:31 2026] 127.0.0.1:51940 Accepted
+[Tue Mar 24 10:36:31 2026] 127.0.0.1:51940 [200]: GET /home.html?module=Dialogue
+[Tue Mar 24 10:36:31 2026] 127.0.0.1:51940 Closing
+[Tue Mar 24 10:36:31 2026] 127.0.0.1:51941 Accepted
+[Tue Mar 24 10:36:31 2026] 127.0.0.1:51941 [200]: GET /Auth/backend/api/me.php
+[Tue Mar 24 10:36:31 2026] 127.0.0.1:51941 Closing
+[Tue Mar 24 10:36:33 2026] 127.0.0.1:51942 Accepted
+[Tue Mar 24 10:36:33 2026] 127.0.0.1:51942 [200]: GET /owner.html
+[Tue Mar 24 10:36:33 2026] 127.0.0.1:51942 Closing
+[Tue Mar 24 10:36:33 2026] 127.0.0.1:51943 Accepted
+[Tue Mar 24 10:36:33 2026] 127.0.0.1:51943 [200]: GET /Auth/backend/api/me.php
+[Tue Mar 24 10:36:33 2026] 127.0.0.1:51943 Closing
+[Tue Mar 24 10:36:33 2026] 127.0.0.1:51944 Accepted
+[Tue Mar 24 10:36:33 2026] 127.0.0.1:51944 [200]: GET /vocba_prac/api/owner-vocabulary.php
+[Tue Mar 24 10:36:33 2026] 127.0.0.1:51944 Closing
+[Tue Mar 24 10:36:33 2026] 127.0.0.1:51946 Accepted
+[Tue Mar 24 10:36:33 2026] 127.0.0.1:51946 [200]: GET /Academic-Practice/api/records.php
+[Tue Mar 24 10:36:33 2026] 127.0.0.1:51946 Closing
+[Tue Mar 24 10:36:33 2026] 127.0.0.1:51948 Accepted
+[Tue Mar 24 10:36:33 2026] 127.0.0.1:51948 [200]: GET /Academic-Practice/api/integrated-records.php
+[Tue Mar 24 10:36:33 2026] 127.0.0.1:51948 Closing
+[Tue Mar 24 10:36:33 2026] 127.0.0.1:51950 Accepted
+[Tue Mar 24 10:36:33 2026] 127.0.0.1:51950 [200]: GET /peer-resonance/api/status.php
+[Tue Mar 24 10:36:33 2026] 127.0.0.1:51950 Closing
+[Tue Mar 24 10:36:35 2026] 127.0.0.1:51954 Accepted
+[Tue Mar 24 10:36:35 2026] 127.0.0.1:51954 [200]: GET /vocba_prac/book-cover.php?slug=cs
+[Tue Mar 24 10:36:35 2026] 127.0.0.1:51954 Closing
+[Tue Mar 24 10:36:40 2026] 127.0.0.1:51967 Accepted
+[Tue Mar 24 10:36:40 2026] 127.0.0.1:51967 [200]: GET /vocba_prac/book-cover.php?slug=cs
+[Tue Mar 24 10:36:40 2026] 127.0.0.1:51967 Closing
+[Tue Mar 24 10:36:43 2026] 127.0.0.1:51968 Accepted
+[Tue Mar 24 10:36:43 2026] 127.0.0.1:51968 [200]: GET /home.html
+[Tue Mar 24 10:36:43 2026] 127.0.0.1:51969 Accepted
+[Tue Mar 24 10:36:43 2026] 127.0.0.1:51968 Closing
+[Tue Mar 24 10:36:43 2026] 127.0.0.1:51969 [200]: GET /Auth/backend/api/me.php
+[Tue Mar 24 10:36:43 2026] 127.0.0.1:51969 Closing
+[Tue Mar 24 10:36:46 2026] 127.0.0.1:51974 Accepted
+[Tue Mar 24 10:36:46 2026] 127.0.0.1:51974 [200]: GET /Academic-Practice/training.html
+[Tue Mar 24 10:36:46 2026] 127.0.0.1:51975 Accepted
+[Tue Mar 24 10:36:46 2026] 127.0.0.1:51974 Closing
+[Tue Mar 24 10:36:46 2026] 127.0.0.1:51975 [200]: GET /Academic-Practice/acadbeat-global.css
+[Tue Mar 24 10:36:46 2026] 127.0.0.1:51976 Accepted
+[Tue Mar 24 10:36:46 2026] 127.0.0.1:51975 Closing
+[Tue Mar 24 10:36:46 2026] 127.0.0.1:51977 Accepted
+[Tue Mar 24 10:36:46 2026] 127.0.0.1:51978 Accepted
+[Tue Mar 24 10:36:46 2026] 127.0.0.1:51976 [200]: GET /Academic-Practice/practice-style.css
+[Tue Mar 24 10:36:46 2026] 127.0.0.1:51977 [200]: GET /Academic-Practice/practice-data.js
+[Tue Mar 24 10:36:46 2026] 127.0.0.1:51976 Closing
+[Tue Mar 24 10:36:46 2026] 127.0.0.1:51978 [200]: GET /Academic-Practice/practice-app.js
+[Tue Mar 24 10:36:46 2026] 127.0.0.1:51977 Closing
+[Tue Mar 24 10:36:46 2026] 127.0.0.1:51978 Closing
+[Tue Mar 24 10:36:46 2026] 127.0.0.1:51979 Accepted
+[Tue Mar 24 10:36:46 2026] 127.0.0.1:51979 [200]: GET /Auth/backend/api/me.php
+[Tue Mar 24 10:36:46 2026] 127.0.0.1:51979 Closing
+[Tue Mar 24 10:37:11 2026] 127.0.0.1:52007 Accepted
+[Tue Mar 24 10:37:11 2026] 127.0.0.1:52007 [200]: GET /Academic-Practice/voice_room.html
+[Tue Mar 24 10:37:11 2026] 127.0.0.1:52008 Accepted
+[Tue Mar 24 10:37:11 2026] 127.0.0.1:52007 Closing
+[Tue Mar 24 10:37:11 2026] 127.0.0.1:52008 [200]: GET /Academic-Practice/practice-style.css
+[Tue Mar 24 10:37:11 2026] 127.0.0.1:52009 Accepted
+[Tue Mar 24 10:37:11 2026] 127.0.0.1:52009 [200]: GET /Academic-Practice/voice-room.js
+[Tue Mar 24 10:37:11 2026] 127.0.0.1:52008 Closing
+[Tue Mar 24 10:37:11 2026] 127.0.0.1:52009 Closing
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52010 Accepted
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52010 [200]: GET /Academic-Practice/listening.html?mode=respond
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52010 Closing
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52011 Accepted
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52011 [200]: GET /Academic-Practice/acadbeat-global.css
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52012 Accepted
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52011 Closing
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52013 Accepted
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52014 Accepted
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52012 [200]: GET /Academic-Practice/practice-style.css
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52012 Closing
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52013 [200]: GET /Academic-Practice/practice-data.js
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52014 [200]: GET /Academic-Practice/practice-app.js
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52013 Closing
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52014 Closing
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52015 Accepted
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52016 Accepted
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52017 Accepted
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52015 [200]: GET /Academic-Practice/flags/flags/th.png
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52016 [200]: GET /Academic-Practice/flags/flags/gb.png
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52018 Accepted
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52015 Closing
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52017 [200]: GET /Academic-Practice/flags/flags/ca.png
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52019 Accepted
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52016 Closing
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52018 [200]: GET /Academic-Practice/flags/flags/au.png
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52020 Accepted
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52019 [200]: GET /Academic-Practice/flags/flags/us.png
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52021 Accepted
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52017 Closing
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52020 [200]: GET /Academic-Practice/flags/flags/ie.png
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52022 Accepted
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52018 Closing
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52021 [200]: GET /Academic-Practice/flags/flags/nz.png
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52023 Accepted
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52022 [200]: GET /Academic-Practice/flags/flags/de.png
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52019 Closing
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52024 Accepted
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52020 Closing
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52021 Closing
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52025 Accepted
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52022 Closing
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52023 [200]: GET /Academic-Practice/flags/flags/jp.png
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52026 Accepted
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52024 [200]: GET /Academic-Practice/flags/flags/sg.png
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52023 Closing
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52027 Accepted
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52025 [200]: GET /Academic-Practice/flags/flags/fr.png
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52026 [200]: GET /Academic-Practice/cover2/13.png
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52024 Closing
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52028 Accepted
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52027 [200]: GET /Academic-Practice/cover2/14.png
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52028 [200]: GET /Academic-Practice/cover2/15.png
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52029 Accepted
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52025 Closing
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52030 Accepted
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52029 [200]: GET /Academic-Practice/cover2/16.png
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52031 Accepted
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52030 [200]: GET /Academic-Practice/cover2/17.png
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52026 Closing
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52032 Accepted
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52027 Closing
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52031 [200]: GET /Academic-Practice/cover2/18.png
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52033 Accepted
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52032 [200]: GET /Academic-Practice/cover2/19.png
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52028 Closing
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52033 [200]: GET /Academic-Practice/cover2/24.png
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52029 Closing
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52034 Accepted
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52031 Closing
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52035 Accepted
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52030 Closing
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52033 Closing
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52034 [200]: GET /Academic-Practice/cover2/21.png
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52036 Accepted
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52035 [200]: GET /Academic-Practice/cover2/22.png
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52032 Closing
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52037 Accepted
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52036 [200]: GET /Academic-Practice/cover2/23.png
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52037 [200]: GET /Academic-Practice/cover2/20.png
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52034 Closing
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52035 Closing
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52036 Closing
+[Tue Mar 24 10:37:13 2026] 127.0.0.1:52037 Closing
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52038 Accepted
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52038 [200]: GET /Academic-Practice/listening.html?mode=understand
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52038 Closing
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52039 Accepted
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52040 Accepted
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52039 [200]: GET /Academic-Practice/acadbeat-global.css
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52041 Accepted
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52039 Closing
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52042 Accepted
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52040 [200]: GET /Academic-Practice/practice-style.css
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52041 [200]: GET /Academic-Practice/practice-data.js
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52040 Closing
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52041 Closing
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52042 [200]: GET /Academic-Practice/practice-app.js
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52042 Closing
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52043 Accepted
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52044 Accepted
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52043 [200]: GET /Academic-Practice/flags/flags/de.png
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52045 Accepted
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52043 Closing
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52046 Accepted
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52044 [200]: GET /Academic-Practice/flags/flags/us.png
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52044 Closing
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52045 [200]: GET /Academic-Practice/flags/flags/au.png
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52047 Accepted
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52046 [200]: GET /Academic-Practice/flags/flags/ca.png
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52048 Accepted
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52047 [200]: GET /Academic-Practice/flags/flags/gb.png
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52045 Closing
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52049 Accepted
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52046 Closing
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52047 Closing
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52048 [200]: GET /Academic-Practice/flags/flags/nz.png
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52048 Closing
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52050 Accepted
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52049 [200]: GET /Academic-Practice/flags/flags/ie.png
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52049 Closing
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52051 Accepted
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52050 [200]: GET /Academic-Practice/cover/1.png
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52052 Accepted
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52051 [200]: GET /Academic-Practice/cover/2.png
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52053 Accepted
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52052 [200]: GET /Academic-Practice/cover/3.png
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52054 Accepted
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52053 [200]: GET /Academic-Practice/cover/4.png
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52055 Accepted
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52050 Closing
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52054 [200]: GET /Academic-Practice/cover/5.png
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52055 [200]: GET /Academic-Practice/cover/6.png
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52051 Closing
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52056 Accepted
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52057 Accepted
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52056 [200]: GET /Academic-Practice/cover/7.png
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52052 Closing
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52058 Accepted
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52057 [200]: GET /Academic-Practice/cover/8.png
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52058 [200]: GET /Academic-Practice/cover/10.png
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52053 Closing
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52059 Accepted
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52055 Closing
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52060 Accepted
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52059 [200]: GET /Academic-Practice/cover/9.png
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52054 Closing
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52061 Accepted
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52060 [200]: GET /Academic-Practice/cover/11.png
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52061 [200]: GET /Academic-Practice/cover/12.png
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52056 Closing
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52058 Closing
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52057 Closing
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52059 Closing
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52061 Closing
+[Tue Mar 24 10:37:14 2026] 127.0.0.1:52060 Closing
+[Tue Mar 24 10:39:12 2026] 127.0.0.1:52182 Accepted
+[Tue Mar 24 10:39:12 2026] 127.0.0.1:52183 Accepted
+[Tue Mar 24 10:39:12 2026] 127.0.0.1:52182 [200]: GET /Academic-Practice/training.html
+[Tue Mar 24 10:39:12 2026] 127.0.0.1:52182 Closing
+[Tue Mar 24 10:39:12 2026] 127.0.0.1:52183 [200]: GET /Academic-Practice/acadbeat-global.css
+[Tue Mar 24 10:39:12 2026] 127.0.0.1:52183 Closing
+[Tue Mar 24 10:39:12 2026] 127.0.0.1:52184 Accepted
+[Tue Mar 24 10:39:12 2026] 127.0.0.1:52185 Accepted
+[Tue Mar 24 10:39:12 2026] 127.0.0.1:52186 Accepted
+[Tue Mar 24 10:39:12 2026] 127.0.0.1:52184 [200]: GET /Academic-Practice/practice-style.css
+[Tue Mar 24 10:39:12 2026] 127.0.0.1:52185 [200]: GET /Academic-Practice/practice-data.js
+[Tue Mar 24 10:39:12 2026] 127.0.0.1:52184 Closing
+[Tue Mar 24 10:39:12 2026] 127.0.0.1:52186 [200]: GET /Academic-Practice/practice-app.js
+[Tue Mar 24 10:39:12 2026] 127.0.0.1:52185 Closing
+[Tue Mar 24 10:39:12 2026] 127.0.0.1:52186 Closing
+[Tue Mar 24 10:39:12 2026] 127.0.0.1:52187 Accepted
+[Tue Mar 24 10:39:12 2026] 127.0.0.1:52187 [200]: GET /Auth/backend/api/me.php
+[Tue Mar 24 10:39:12 2026] 127.0.0.1:52187 Closing
+[Tue Mar 24 10:39:19 2026] 127.0.0.1:52202 Accepted
+[Tue Mar 24 10:39:19 2026] 127.0.0.1:52203 Accepted
+[Tue Mar 24 10:39:19 2026] 127.0.0.1:52202 [200]: GET /Academic-Practice/acadbeat-global.css
+[Tue Mar 24 10:39:19 2026] 127.0.0.1:52202 Closing
+[Tue Mar 24 10:39:19 2026] 127.0.0.1:52203 [200]: GET /Academic-Practice/practice-style.css
+[Tue Mar 24 10:39:19 2026] 127.0.0.1:52203 Closing
+[Tue Mar 24 10:39:19 2026] 127.0.0.1:52204 Accepted
+[Tue Mar 24 10:39:19 2026] 127.0.0.1:52204 [404]: GET /.well-known/appspecific/com.chrome.devtools.json - No such file or directory
+[Tue Mar 24 10:39:19 2026] 127.0.0.1:52204 Closing
+[Tue Mar 24 10:39:28 2026] 127.0.0.1:52258 Accepted
+[Tue Mar 24 10:39:28 2026] 127.0.0.1:52258 [404]: GET /.well-known/appspecific/com.chrome.devtools.json - No such file or directory
+[Tue Mar 24 10:39:28 2026] 127.0.0.1:52258 Closing
+[Tue Mar 24 10:39:28 2026] 127.0.0.1:52259 Accepted
+[Tue Mar 24 10:39:28 2026] 127.0.0.1:52259 [404]: GET /.well-known/appspecific/com.chrome.devtools.json - No such file or directory
+[Tue Mar 24 10:39:28 2026] 127.0.0.1:52259 Closing

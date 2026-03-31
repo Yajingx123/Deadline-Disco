@@ -1,0 +1,5 @@
+
+> acadbeat-voice-room-server@1.0.0 start
+> node server.js
+
+Voice room server running at http://0.0.0.0:3001
