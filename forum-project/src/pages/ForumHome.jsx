@@ -51,6 +51,10 @@ export default function ForumHome() {
         }),
       ]);
       setLabels(labelData.labels || []);
+      if ((labelData.currentUser?.role || '').toLowerCase() === 'admin') {
+        window.location.replace('http://127.0.0.1:8001/admin_page/dist/index.html')
+        return
+      }
       setCurrentUser(labelData.currentUser || null);
       setPosts((postData.posts || []).map((post) => ({
         ...post,

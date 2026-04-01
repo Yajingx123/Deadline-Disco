@@ -8,6 +8,22 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700;800&family=Playfair+Display:ital,wght@0,500;1,700&display=swap"
         rel="stylesheet">
+    <link rel="stylesheet" href="./shared-nav.css">
+    <style>html.acadbeat-role-guard body{visibility:hidden}</style>
+    <script>
+        document.documentElement.classList.add('acadbeat-role-guard');
+        (async function guardAdminOwner() {
+            try {
+                const response = await fetch('./Auth/backend/api/me.php', { credentials: 'include' });
+                const data = await response.json().catch(() => ({ status: 'error' }));
+                if (data.status === 'success' && data.user && String(data.user.role || '').toLowerCase() === 'admin') {
+                    window.location.replace('http://127.0.0.1:8001/admin_page/dist/index.html');
+                    return;
+                }
+            } catch (_err) {}
+            document.documentElement.classList.remove('acadbeat-role-guard');
+        })();
+    </script>
 
     <style>
         :root {
@@ -317,7 +333,7 @@
             grid-template-columns: 280px 1fr;
             gap: 60px;
             max-width: 1400px;
-            margin: 56px auto 50px;
+            margin: 112px auto 50px;
             padding: 0 5%;
         }
 
@@ -554,10 +570,7 @@
 </head>
 
 <body>
-
-    <div class="owner-return">
-        <a class="owner-return__btn" href="./home.html">Return</a>
-    </div>
+    <div id="acadbeatNav"></div>
 
     <div class="dashboard-container">
         <aside class="sidebar">
@@ -635,8 +648,7 @@
     <script>
         const AUTH_API_BASE = './Auth/backend/api';
         const OWNER_URL = './owner.html';
-        const ADMIN_URL = 'http://127.0.0.1:5174/';
-        const MESSAGE_CENTER_API_URL = 'http://127.0.0.1:8001/forum-project/api/message-center.php?summaryOnly=1';
+        const ADMIN_URL = 'http://127.0.0.1:8001/admin_page/dist/index.html';
         const OWNER_VOCAB_API = './vocba_prac/api/owner-vocabulary.php';
         const OWNER_LISTENING_API = './Academic-Practice/api/records.php';
         const OWNER_INTEGRATED_API = './Academic-Practice/api/integrated-records.php';
@@ -679,59 +691,8 @@
         function applyOwnerUser(user) {
             ownerAuthUser = user;
             const display = document.getElementById('ownerNameDisplay');
-            const label = document.getElementById('userLabel');
-            const avatar = document.getElementById('userAvatar');
-            const logoutLink = document.getElementById('logoutLink');
-            const messageLink = document.getElementById('messageCenterLink');
-            const messageBadge = document.getElementById('messageBadge');
             if (display) {
                 display.innerHTML = `${escapeHtml(String(user.username || 'User'))} <b>Owner</b>`;
-            }
-            if (label) {
-                label.textContent = user?.username || 'LOGIN';
-            }
-            if (avatar) {
-                avatar.textContent = initialsOf(user?.username || 'IN');
-            }
-            if (logoutLink) {
-                logoutLink.style.display = user ? 'inline-flex' : 'none';
-            }
-            if (messageLink) {
-                messageLink.hidden = !user;
-            }
-            if (!user && messageBadge) {
-                messageBadge.hidden = true;
-                messageBadge.textContent = '0';
-            }
-        }
-
-        async function loadMessageSummary() {
-            const messageBadge = document.getElementById('messageBadge');
-            if (!messageBadge || !ownerAuthUser) {
-                if (messageBadge) {
-                    messageBadge.hidden = true;
-                    messageBadge.textContent = '0';
-                }
-                return;
-            }
-
-            try {
-                const response = await fetch(MESSAGE_CENTER_API_URL, { credentials: 'include' });
-                const data = await response.json().catch(() => ({ ok: false }));
-                const totalUnread = Number(data?.summary?.totalUnread || 0);
-                if (totalUnread > 0) {
-                    messageBadge.hidden = false;
-                    messageBadge.textContent = totalUnread > 99 ? '99+' : String(totalUnread);
-                    messageBadge.style.display = 'inline-flex';
-                } else {
-                    messageBadge.hidden = true;
-                    messageBadge.textContent = '0';
-                    messageBadge.style.display = 'none';
-                }
-            } catch (_err) {
-                messageBadge.hidden = true;
-                messageBadge.textContent = '0';
-                messageBadge.style.display = 'none';
             }
         }
 
@@ -778,7 +739,8 @@
         }
 
         async function ensureAuthenticated() {
-            const data = await authFetch('me.php');
+            const navUser = window.acadbeatNavState && window.acadbeatNavState.user;
+            const data = navUser ? { status: 'success', user: navUser } : await authFetch('me.php');
             if (data.status !== 'success' || !data.user) {
                 openSiteModal('Login required', 'Please log in first.', function () {
                     window.location.href = 'home.html?login=1';
@@ -786,7 +748,6 @@
                 return false;
             }
             applyOwnerUser(data.user);
-            await loadMessageSummary();
             return true;
         }
 
@@ -1121,7 +1082,21 @@
             renderVocabularyFavorites();
         }
 
+        window.addEventListener('acadbeat:nav-user', (event) => {
+            ownerAuthUser = event?.detail?.user || null;
+        });
+
         window.onload = async () => {
+            await window.initializeAcadBeatNav({
+                mountId: 'acadbeatNav',
+                basePath: './',
+                active: 'academic',
+                authApiBase: './Auth/backend/api',
+                homeUrl: './home.html',
+                ownerUrl: './owner.html',
+                adminUrl: 'http://127.0.0.1:8001/admin_page/dist/index.html',
+                redirectAdmins: true
+            });
             const ok = await ensureAuthenticated();
             if (!ok) return;
             await loadOwnerVocabularyData();
@@ -1130,6 +1105,7 @@
             renderCalendar();
         };
     </script>
+    <script src="./shared-nav.js"></script>
 
 </body>
 

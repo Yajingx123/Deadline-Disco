@@ -18,6 +18,13 @@ function Navbar({ currentPage, setCurrentPage, currentUser, isReady, onLogout })
           >
             Announcements
           </button>
+          <button 
+            style={{ ...styles.navLink, ...(currentPage === 'competition' && styles.activeLink) }} 
+            onClick={() => setCurrentPage('competition')}
+            disabled={!isReady}
+          >
+            Weekly Competition
+          </button>
         </div>
         <div style={styles.userPanel}>
           <div style={styles.userMeta}>

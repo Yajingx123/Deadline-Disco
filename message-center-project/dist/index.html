@@ -3,11 +3,11 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Academic Forum</title>
+    <title>Message Center</title>
     <style>html.acadbeat-role-guard body{visibility:hidden}</style>
     <script>
       document.documentElement.classList.add('acadbeat-role-guard');
-      (async function guardAdminForum() {
+      (async function guardAdminMessageCenter() {
         try {
           const response = await fetch('http://127.0.0.1:8001/Auth/backend/api/me.php', { credentials: 'include' });
           const data = await response.json().catch(() => ({ status: 'error' }));
@@ -19,8 +19,8 @@
         document.documentElement.classList.remove('acadbeat-role-guard');
       })();
     </script>
-    <script type="module" crossorigin src="/forum-project/dist/assets/index-DcSwJ4as.js"></script>
-    <link rel="stylesheet" crossorigin href="/forum-project/dist/assets/index-DbbCEDHE.css">
+    <script type="module" crossorigin src="/message-center-project/dist/assets/index-_v51u58P.js"></script>
+    <link rel="stylesheet" crossorigin href="/message-center-project/dist/assets/index-BfSG0Ya-.css">
   </head>
   <body>
     <div id="root"></div>

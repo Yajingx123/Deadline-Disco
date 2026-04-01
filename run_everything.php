@@ -59,7 +59,7 @@ run_or_fail(
 
 echo "=== Ready ===\n";
 echo "Home: http://127.0.0.1:8001/home.html\n";
-echo "Forum: http://127.0.0.1:5173/?view=forum\n";
-echo "Message Center: http://127.0.0.1:5173/?view=messages\n";
-echo "Admin: http://127.0.0.1:5174/\n";
+echo "Forum: http://127.0.0.1:8001/forum-project/dist/index.html?view=forum\n";
+echo "Message Center: http://127.0.0.1:8001/message-center-project/dist/index.html\n";
+echo "Admin: http://127.0.0.1:8001/admin_page/dist/index.html\n";
 echo "Realtime health: http://127.0.0.1:3001/health\n";

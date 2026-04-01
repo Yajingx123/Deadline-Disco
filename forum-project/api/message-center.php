@@ -214,7 +214,7 @@ $replies = array_map(static function(array $row): array {
         'postPreview' => forum_plain_text_preview((string)($row['post_content'] ?? ''), 86),
         'commentPreview' => forum_plain_text_preview((string)($row['comment_content'] ?? ''), 96),
         'ctaLabel' => (string)($row['cta_label'] ?? 'Reply'),
-        'ctaUrl' => (string)($row['cta_url'] ?? ''),
+        'ctaUrl' => forum_normalize_local_url((string)($row['cta_url'] ?? '')),
         'isRead' => (bool)($row['is_read'] ?? false),
         'createdAt' => (string)($row['created_at'] ?? ''),
     ];
@@ -230,7 +230,7 @@ $reactions = array_map(static function(array $row): array {
         'postId' => (int)($row['post_id'] ?? 0),
         'postTitle' => (string)($row['post_title'] ?? ''),
         'ctaLabel' => (string)($row['cta_label'] ?? 'View post'),
-        'ctaUrl' => (string)($row['cta_url'] ?? ''),
+        'ctaUrl' => forum_normalize_local_url((string)($row['cta_url'] ?? '')),
         'isRead' => (bool)($row['is_read'] ?? false),
         'createdAt' => (string)($row['created_at'] ?? ''),
     ];
@@ -243,7 +243,7 @@ $systemNotices = array_map(static function(array $row): array {
         'title' => (string)($row['title'] ?? ''),
         'body' => (string)($row['body_text'] ?? ''),
         'ctaLabel' => (string)($row['cta_label'] ?? ''),
-        'ctaUrl' => (string)($row['cta_url'] ?? ''),
+        'ctaUrl' => forum_normalize_local_url((string)($row['cta_url'] ?? '')),
         'isRead' => (bool)($row['is_read'] ?? false),
         'createdAt' => (string)($row['created_at'] ?? ''),
     ];
@@ -256,7 +256,7 @@ $challengeNotices = array_map(static function(array $row): array {
         'title' => (string)($row['title'] ?? ''),
         'body' => (string)($row['body_text'] ?? ''),
         'ctaLabel' => (string)($row['cta_label'] ?? ''),
-        'ctaUrl' => (string)($row['cta_url'] ?? ''),
+        'ctaUrl' => forum_normalize_local_url((string)($row['cta_url'] ?? '')),
         'isRead' => (bool)($row['is_read'] ?? false),
         'createdAt' => (string)($row['created_at'] ?? ''),
     ];

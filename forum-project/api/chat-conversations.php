@@ -242,19 +242,24 @@ if ($action === 'group') {
     $memberIds = array_values(array_unique(array_map('intval', (array)($input['memberIds'] ?? []))));
     $sourceConversationId = (int)($input['conversationId'] ?? 0);
     $title = trim((string)($input['title'] ?? ''));
+    $sourceConversationType = '';
+    $sourceMemberIds = [];
 
     if ($sourceConversationId > 0) {
         $sourceAccessStmt = $pdo->prepare("
-            SELECT conversation_id
-            FROM chat_conversation_members
-            WHERE conversation_id = ?
-              AND user_id = ?
+            SELECT c.conversation_id, c.conversation_type
+            FROM chat_conversation_members cm
+            JOIN chat_conversations c ON c.conversation_id = cm.conversation_id
+            WHERE cm.conversation_id = ?
+              AND cm.user_id = ?
             LIMIT 1
         ");
         $sourceAccessStmt->execute([$sourceConversationId, $currentUserId]);
-        if (!$sourceAccessStmt->fetch()) {
+        $sourceConversation = $sourceAccessStmt->fetch();
+        if (!$sourceConversation) {
             forum_json(['ok' => false, 'message' => 'Source conversation not found.'], 404);
         }
+        $sourceConversationType = (string)($sourceConversation['conversation_type'] ?? '');
 
         $sourceMembersStmt = $pdo->prepare("
             SELECT user_id
@@ -263,6 +268,7 @@ if ($action === 'group') {
         ");
         $sourceMembersStmt->execute([$sourceConversationId]);
         foreach ($sourceMembersStmt->fetchAll(PDO::FETCH_COLUMN) as $memberId) {
+            $sourceMemberIds[] = (int)$memberId;
             $memberIds[] = (int)$memberId;
         }
     }
@@ -287,6 +293,51 @@ if ($action === 'group') {
     sort($expectedUserIds);
     if ($validUserIds !== $expectedUserIds) {
         forum_json(['ok' => false, 'message' => 'One or more members do not exist.'], 404);
+    }
+
+    if ($sourceConversationId > 0 && $sourceConversationType === 'group') {
+        $existingMemberIds = array_values(array_unique($sourceMemberIds));
+        $newMemberIds = array_values(array_diff($memberIds, $existingMemberIds));
+
+        if ($newMemberIds) {
+            $pdo->beginTransaction();
+            try {
+                $insertMember = $pdo->prepare("
+                    INSERT INTO chat_conversation_members (conversation_id, user_id, member_role, joined_at, created_at, updated_at)
+                    VALUES (?, ?, 'member', NOW(), NOW(), NOW())
+                ");
+                foreach ($newMemberIds as $memberId) {
+                    $insertMember->execute([$sourceConversationId, $memberId]);
+                }
+
+                $updateConversation = $pdo->prepare("
+                    UPDATE chat_conversations
+                    SET updated_at = NOW()
+                    WHERE conversation_id = ?
+                ");
+                $updateConversation->execute([$sourceConversationId]);
+
+                $pdo->commit();
+            } catch (Throwable $e) {
+                if ($pdo->inTransaction()) {
+                    $pdo->rollBack();
+                }
+                forum_json(['ok' => false, 'message' => 'Failed to add members to group chat.'], 500);
+            }
+        }
+
+        $conversation = chat_load_conversation($pdo, $sourceConversationId, $currentUserId);
+        forum_realtime_publish('chat.conversation.updated', [
+            'conversationId' => $sourceConversationId,
+            'conversationType' => 'group',
+            'memberIdsAdded' => $newMemberIds,
+        ]);
+        forum_json([
+            'ok' => true,
+            'created' => false,
+            'updatedExisting' => true,
+            'conversation' => $conversation,
+        ]);
     }
 
     $pdo->beginTransaction();

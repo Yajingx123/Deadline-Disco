@@ -2,8 +2,9 @@
   const data = window.PracticeData;
   const LISTENING_RECORD_API = "./api/save-record.php";
   const INTEGRATED_RECORD_API = "./api/save-integrated-record.php";
-  const FORUM_COMPOSE_URL = "http://127.0.0.1:5173/?compose=1";
+  const FORUM_COMPOSE_URL = "http://127.0.0.1:8001/forum-project/dist/index.html?view=forum&compose=1";
   const FORUM_PREFILL_WINDOW_NAME_KEY = "__acadbeat_forum_prefill__";
+  const CHAT_API_BASE = "http://127.0.0.1:8001/forum-project/api";
   if (!data) {
     return;
   }
@@ -43,6 +44,363 @@
 
   function buildAbsoluteProjectUrl(pathWithQuery) {
     return new URL(pathWithQuery, window.location.origin + "/").toString();
+  }
+
+  async function forumApiFetch(path, options) {
+    const response = await fetch(CHAT_API_BASE + path, {
+      method: (options && options.method) || "GET",
+      headers: { "Content-Type": "application/json", ...((options && options.headers) || {}) },
+      credentials: "include",
+      body: options && options.body ? options.body : undefined
+    });
+    const payload = await response.json().catch(function () {
+      return { ok: false, message: "Invalid server response." };
+    });
+    if (!response.ok || payload.ok === false) {
+      throw new Error(payload.message || "Request failed.");
+    }
+    return payload;
+  }
+
+  function ensureShareSheetStyles() {
+    if (document.getElementById("practiceShareSheetStyles")) {
+      return;
+    }
+    const styleEl = document.createElement("style");
+    styleEl.id = "practiceShareSheetStyles";
+    styleEl.textContent = `
+      .practice-share-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 4200;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+      }
+      .practice-share-modal__backdrop {
+        position: absolute;
+        inset: 0;
+        background: rgba(34, 41, 55, 0.32);
+        backdrop-filter: blur(6px);
+      }
+      .practice-share-modal__card {
+        position: relative;
+        width: min(860px, 100%);
+        max-height: min(88vh, 860px);
+        overflow: auto;
+        border-radius: 28px;
+        background: #fffdf9;
+        box-shadow: 0 28px 70px rgba(58, 78, 107, 0.18);
+        padding: 28px;
+      }
+      .practice-share-modal__header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 18px;
+        margin-bottom: 20px;
+      }
+      .practice-share-modal__title {
+        font-size: 1.35rem;
+        margin: 0 0 8px;
+        color: #24354d;
+      }
+      .practice-share-modal__subtitle {
+        margin: 0;
+        color: rgba(36, 53, 77, 0.68);
+        line-height: 1.6;
+        font-size: 0.94rem;
+      }
+      .practice-share-modal__close {
+        border: none;
+        background: rgba(155, 183, 212, 0.14);
+        color: #3A4E6B;
+        width: 38px;
+        height: 38px;
+        border-radius: 999px;
+        cursor: pointer;
+        font-size: 1rem;
+      }
+      .practice-share-modal__grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+      }
+      .practice-share-panel {
+        border: 1px solid rgba(58, 78, 107, 0.1);
+        border-radius: 22px;
+        background: rgba(255, 255, 255, 0.92);
+        padding: 22px;
+      }
+      .practice-share-panel h4 {
+        margin: 0 0 8px;
+        font-size: 1rem;
+        color: #24354d;
+      }
+      .practice-share-panel p {
+        margin: 0 0 14px;
+        color: rgba(36, 53, 77, 0.68);
+        line-height: 1.55;
+        font-size: 0.9rem;
+      }
+      .practice-share-primary {
+        width: 100%;
+        min-height: 46px;
+        border-radius: 999px;
+        border: none;
+        background: #3A4E6B;
+        color: #fff;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .practice-share-search {
+        width: 100%;
+        border: 1px solid rgba(58, 78, 107, 0.14);
+        border-radius: 16px;
+        padding: 12px 14px;
+        font-size: 0.95rem;
+        margin-bottom: 14px;
+      }
+      .practice-share-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        max-height: 300px;
+        overflow: auto;
+      }
+      .practice-share-item {
+        width: 100%;
+        border: 1px solid rgba(58, 78, 107, 0.08);
+        border-radius: 18px;
+        background: #fff;
+        padding: 12px 14px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+      }
+      .practice-share-item__meta {
+        min-width: 0;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .practice-share-item__avatar {
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: #9BB7D4;
+        color: #24354d;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+      }
+      .practice-share-item__copy {
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+      }
+      .practice-share-item__copy strong,
+      .practice-share-item__copy span {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .practice-share-item__copy span {
+        color: rgba(36, 53, 77, 0.58);
+        font-size: 0.84rem;
+      }
+      .practice-share-item__action {
+        border: none;
+        border-radius: 999px;
+        min-height: 38px;
+        padding: 0 14px;
+        background: rgba(58, 78, 107, 0.1);
+        color: #24354d;
+        font-weight: 700;
+        cursor: pointer;
+      }
+      .practice-share-feedback {
+        margin-top: 14px;
+        min-height: 20px;
+        color: #3A4E6B;
+        font-size: 0.9rem;
+      }
+      @media (max-width: 800px) {
+        .practice-share-modal__grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    `;
+    document.head.appendChild(styleEl);
+  }
+
+  function closeShareModal() {
+    const modal = document.getElementById("practiceShareModal");
+    if (modal) {
+      modal.remove();
+    }
+  }
+
+  async function sharePracticeContentToConversation(conversationId, content) {
+    await forumApiFetch("/chat-messages.php", {
+      method: "POST",
+      body: JSON.stringify({
+        conversationId: conversationId,
+        content: content
+      })
+    });
+  }
+
+  function openShareModal(options) {
+    ensureShareSheetStyles();
+    closeShareModal();
+
+    const modal = document.createElement("div");
+    modal.className = "practice-share-modal";
+    modal.id = "practiceShareModal";
+    modal.innerHTML = `
+      <div class="practice-share-modal__backdrop"></div>
+      <div class="practice-share-modal__card">
+        <div class="practice-share-modal__header">
+          <div>
+            <h3 class="practice-share-modal__title">Share your practice</h3>
+            <p class="practice-share-modal__subtitle">Send this draft into the forum review flow, or send it directly to one of your existing chats.</p>
+          </div>
+          <button type="button" class="practice-share-modal__close" aria-label="Close">✕</button>
+        </div>
+        <div class="practice-share-modal__grid">
+          <section class="practice-share-panel">
+            <h4>Share to Forum</h4>
+            <p>The draft will be prefilled into the normal post flow and still goes through admin review.</p>
+            <button type="button" class="practice-share-primary" id="practiceShareForumBtn">Continue to forum draft</button>
+          </section>
+          <section class="practice-share-panel">
+            <h4>Share to Private Chat</h4>
+            <p>Pick one of your existing group chats, or search a person and send it into a direct conversation.</p>
+            <input type="text" class="practice-share-search" id="practiceShareSearch" placeholder="Search a username to share privately">
+            <div class="practice-share-list" id="practiceShareList"></div>
+            <div class="practice-share-feedback" id="practiceShareFeedback"></div>
+          </section>
+        </div>
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    const closeBtn = modal.querySelector(".practice-share-modal__close");
+    const backdrop = modal.querySelector(".practice-share-modal__backdrop");
+    const forumBtn = modal.querySelector("#practiceShareForumBtn");
+    const searchInput = modal.querySelector("#practiceShareSearch");
+    const listEl = modal.querySelector("#practiceShareList");
+    const feedbackEl = modal.querySelector("#practiceShareFeedback");
+
+    function setFeedback(message, isError) {
+      if (!feedbackEl) return;
+      feedbackEl.textContent = message || "";
+      feedbackEl.style.color = isError ? "#c2410c" : "#3A4E6B";
+    }
+
+    function renderShareItems(items, kind) {
+      if (!listEl) return;
+      if (!items.length) {
+        listEl.innerHTML = `<div class="chat-sidebar__empty">${kind === "search" ? "No users found." : "No group chats yet."}</div>`;
+        return;
+      }
+      listEl.innerHTML = items.map(function (item) {
+        const actionLabel = kind === "search" ? "Share" : "Send";
+        const subline = kind === "search"
+          ? escapeHtml(item.email || "")
+          : escapeHtml((item.memberCount || 0) + " members");
+        return `
+          <div class="practice-share-item">
+            <div class="practice-share-item__meta">
+              <span class="practice-share-item__avatar">${escapeHtml(item.avatar || "U")}</span>
+              <span class="practice-share-item__copy">
+                <strong>${escapeHtml(item.title || item.username || "Conversation")}</strong>
+                <span>${subline}</span>
+              </span>
+            </div>
+            <button type="button" class="practice-share-item__action" data-kind="${kind}" data-id="${escapeHtml(String(item.id || item.conversationId || ""))}">
+              ${actionLabel}
+            </button>
+          </div>
+        `;
+      }).join("");
+    }
+
+    async function loadGroupChats() {
+      try {
+        const payload = await forumApiFetch("/chat-conversations.php");
+        const groups = (payload.conversations || []).filter(function (conversation) {
+          return String(conversation.type || "") === "group";
+        });
+        renderShareItems(groups, "group");
+      } catch (error) {
+        setFeedback(error.message || "Unable to load chats.", true);
+        renderShareItems([], "group");
+      }
+    }
+
+    async function runUserSearch(query) {
+      try {
+        const payload = await forumApiFetch("/chat-users.php?q=" + encodeURIComponent(query));
+        renderShareItems(payload.users || [], "search");
+      } catch (error) {
+        setFeedback(error.message || "Unable to search users.", true);
+      }
+    }
+
+    closeBtn.addEventListener("click", closeShareModal);
+    backdrop.addEventListener("click", closeShareModal);
+    forumBtn.addEventListener("click", function () {
+      closeShareModal();
+      openForumWithDraft(options.forumDraft);
+    });
+
+    searchInput.addEventListener("input", function () {
+      const query = searchInput.value.trim();
+      setFeedback("", false);
+      if (!query) {
+        loadGroupChats();
+        return;
+      }
+      runUserSearch(query);
+    });
+
+    listEl.addEventListener("click", async function (event) {
+      const button = event.target.closest(".practice-share-item__action");
+      if (!button) return;
+      const kind = button.getAttribute("data-kind");
+      const targetId = Number(button.getAttribute("data-id") || 0);
+      if (!targetId) return;
+      button.disabled = true;
+      setFeedback("Sending…", false);
+      try {
+        if (kind === "group") {
+          await sharePracticeContentToConversation(targetId, options.chatContent);
+        } else {
+          const directPayload = await forumApiFetch("/chat-conversations.php", {
+            method: "POST",
+            body: JSON.stringify({
+              action: "direct",
+              targetUserId: targetId
+            })
+          });
+          await sharePracticeContentToConversation(Number(directPayload.conversation.id), options.chatContent);
+        }
+        setFeedback("Shared successfully.", false);
+        window.setTimeout(closeShareModal, 650);
+      } catch (error) {
+        button.disabled = false;
+        setFeedback(error.message || "Share failed.", true);
+      }
+    });
+
+    loadGroupChats();
   }
 
   function openForumWithDraft(draft) {
@@ -1089,9 +1447,12 @@
         answerText
       ].join("\n");
 
-      openForumWithDraft({
-        title: "",
-        content: prefillContent
+      openShareModal({
+        forumDraft: {
+          title: "",
+          content: prefillContent
+        },
+        chatContent: prefillContent
       });
     });
 
@@ -1360,9 +1721,13 @@
         }
 
         respondSaveError.classList.add("hidden");
-        openForumWithDraft({
-          title: "",
-          content: buildRespondShareContent()
+        const sharedContent = buildRespondShareContent();
+        openShareModal({
+          forumDraft: {
+            title: "",
+            content: sharedContent
+          },
+          chatContent: sharedContent
         });
       });
     }

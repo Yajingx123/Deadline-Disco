@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
 import ForumHome from './pages/ForumHome'
-import MessageCenter from './pages/MessageCenter'
 import PersonalHub from './pages/PersonalHub'
 import PortalChoice from './pages/PortalChoice'
 
@@ -10,9 +9,9 @@ function resolveInitialView() {
     return 'forum'
   }
   const view = params.get('view')
-if (view === 'forum' || view === 'messages' || view === 'personal' || view === 'chooser' || view === 'announcements') {
-  return view
-}
+  if (view === 'forum' || view === 'personal' || view === 'chooser' || view === 'announcements') {
+    return view
+  }
 
   return 'forum'
 }
@@ -21,7 +20,7 @@ function App() {
   const [view, setView] = useState(resolveInitialView)
 
   const normalizedView = useMemo(() => {
-    if (view === 'forum' || view === 'messages' || view === 'personal') {
+    if (view === 'forum' || view === 'personal') {
       return view
     }
     return 'forum'
@@ -47,10 +46,8 @@ function App() {
   let content = null
   if (normalizedView === 'forum') {
     content = <ForumHome />
-  } else if (normalizedView === 'messages') {
-    content = <MessageCenter />
   } else if (normalizedView === 'personal') {
-    content = <PersonalHub onBackToChooser={() => handleNavigate('messages')} />
+    content = <PersonalHub onBackToChooser={() => handleNavigate('forum')} />
   } else {
     content = <PortalChoice onChoose={handleNavigate} />
   }

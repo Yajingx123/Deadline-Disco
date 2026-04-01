@@ -3,6 +3,29 @@
   padding-bottom: 24px;
 }
 
+.message-center__topbar {
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 18px 24px 0;
+}
+
+.message-center__backBtn {
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 1px solid rgba(58, 78, 107, 0.12);
+  background: rgba(255, 255, 255, 0.92);
+  color: #1e293b;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(58, 78, 107, 0.08);
+}
+
+.message-center__backBtn:hover {
+  transform: translateY(-1px);
+}
+
 .message-center {
   max-width: 1480px;
   margin: 0 auto;
@@ -10,7 +33,7 @@
   display: grid;
   grid-template-columns: 248px minmax(0, 1fr);
   gap: 0;
-  height: calc(100vh - 98px);
+  height: calc(100vh - 92px);
   min-height: 0;
   border: 1px solid #e5e7eb;
   border-radius: 24px;

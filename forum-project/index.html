@@ -4,6 +4,21 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Academic Forum</title>
+    <style>html.acadbeat-role-guard body{visibility:hidden}</style>
+    <script>
+      document.documentElement.classList.add('acadbeat-role-guard');
+      (async function guardAdminForum() {
+        try {
+          const response = await fetch('http://127.0.0.1:8001/Auth/backend/api/me.php', { credentials: 'include' });
+          const data = await response.json().catch(() => ({ status: 'error' }));
+          if (data.status === 'success' && data.user && String(data.user.role || '').toLowerCase() === 'admin') {
+            window.location.replace('http://127.0.0.1:8001/admin_page/dist/index.html');
+            return;
+          }
+        } catch (_err) {}
+        document.documentElement.classList.remove('acadbeat-role-guard');
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

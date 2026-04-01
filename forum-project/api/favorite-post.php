@@ -86,7 +86,7 @@ try {
                     $postId,
                     sprintf('%s favorited your post', (string)($user['username'] ?? 'Someone')),
                     (string)($postOwner['title'] ?? ''),
-                    sprintf('http://127.0.0.1:5173/?view=forum&postId=%d', $postId),
+                    sprintf('http://127.0.0.1:8001/forum-project/dist/index.html?view=forum&postId=%d', $postId),
                 ]);
             } catch (Throwable $notificationError) {
                 error_log('[forum favorite notification insert] ' . $notificationError->getMessage());
