@@ -16,65 +16,41 @@ $services = [
         'host' => '127.0.0.1',
         'port' => 8001,
         'workdir' => $root,
-        'exe' => $php,
-        'args' => ['-S', '127.0.0.1:8001', '-t', $root],
+        'command' => '"' . $php . '" -S 127.0.0.1:8001 -t .',
     ],
     [
         'name' => 'vocab',
         'host' => '127.0.0.1',
         'port' => 8002,
         'workdir' => $root . '/vocba_prac',
-        'exe' => $php,
-        'args' => ['-S', '127.0.0.1:8002', '-t', $root . '/vocba_prac'],
+        'command' => '"' . $php . '" -S 127.0.0.1:8002 -t .',
     ],
     [
         'name' => 'forum',
         'host' => '127.0.0.1',
         'port' => 5173,
         'workdir' => $root . '/forum-project',
-        'exe' => $npm,
-        'args' => ['run', 'dev', '--', '--host', '127.0.0.1', '--port', '5173'],
+        'command' => $npm . ' run dev -- --host 127.0.0.1 --port 5173',
     ],
     [
         'name' => 'admin',
         'host' => '127.0.0.1',
         'port' => 5174,
         'workdir' => $root . '/admin_page',
-        'exe' => $npm,
-        'args' => ['run', 'dev', '--', '--host', '127.0.0.1', '--port', '5174'],
+        'command' => $npm . ' run dev -- --host 127.0.0.1 --port 5174',
+    ],
+    [
+        'name' => 'godot_ui',
+        'host' => '127.0.0.1',
+        'port' => 5500,
+        'workdir' => $root . '/newUI/homepage/Release',
+        'command' => 'python serve.py',
     ],
 ];
 
-function pwshQuote(string $value): string {
-    return "'" . str_replace("'", "''", $value) . "'";
-}
-
-function startWindowsProcess(string $exe, array $args, string $workdir, string $stdoutLog, string $stderrLog): int {
-    $argList = '@(' . implode(',', array_map(
-        static fn(string $arg): string => pwshQuote($arg),
-        $args
-    )) . ')';
-
-    $command = implode('; ', [
-        '$ErrorActionPreference = "Stop"',
-        '$p = Start-Process -FilePath ' . pwshQuote($exe)
-            . ' -ArgumentList ' . $argList
-            . ' -WorkingDirectory ' . pwshQuote($workdir)
-            . ' -PassThru -WindowStyle Hidden'
-            . ' -RedirectStandardOutput ' . pwshQuote($stdoutLog)
-            . ' -RedirectStandardError ' . pwshQuote($stderrLog),
-        'Write-Output $p.Id',
-    ]);
-
-    $shell = 'powershell -NoProfile -ExecutionPolicy Bypass -Command ' . escapeshellarg($command);
-    $output = shell_exec($shell);
-    $pid = (int)trim((string)$output);
-
-    if ($pid <= 0) {
-        throw new RuntimeException("Failed to start process: {$exe}");
-    }
-
-    return $pid;
+function startWindowsDetached(string $title, string $workdir, string $command, string $stdoutLog, string $stderrLog): void {
+    $cmd = 'start "' . $title . '" /min cmd /c "cd /d "' . $workdir . '" && ' . $command . ' > "' . $stdoutLog . '" 2> "' . $stderrLog . '"';
+    pclose(popen($cmd, 'r'));
 }
 
 echo "=== Start Services (Windows) ===\n\n";
@@ -85,18 +61,10 @@ foreach ($services as $service) {
     $host = $service['host'];
     $stdoutLog = "{$runDir}/{$name}_{$port}.out.log";
     $stderrLog = "{$runDir}/{$name}_{$port}.err.log";
-    $pidFile = "{$runDir}/{$name}_{$port}.pid";
 
     try {
-        $pid = startWindowsProcess(
-            $service['exe'],
-            $service['args'],
-            $service['workdir'],
-            $stdoutLog,
-            $stderrLog
-        );
-        file_put_contents($pidFile, (string)$pid);
-        echo "[started] {$name} http://{$host}:{$port} (PID {$pid})\n";
+        startWindowsDetached($name, $service['workdir'], $service['command'], $stdoutLog, $stderrLog);
+        echo "[started] {$name} http://{$host}:{$port}\n";
     } catch (Throwable $e) {
         echo "[failed] {$name}: {$e->getMessage()}\n";
     }
@@ -105,3 +73,8 @@ foreach ($services as $service) {
 echo "\nLogs are in .run\n";
 echo "Start command: php start_all_windows.php\n";
 echo "Auto-detect command: php start_all.php\n";
+echo "\n=== Entry URLs (open in browser) ===\n";
+echo "  Main homepage (default):     http://127.0.0.1:8001/home.html\n";
+echo "  (or via index redirect)      http://127.0.0.1:8001/\n";
+echo "  Godot animated UI:           http://127.0.0.1:5500/index.html\n";
+echo "  Tip: start from Main; use \"Animated Home\" in nav or Godot switch to swap.\n";

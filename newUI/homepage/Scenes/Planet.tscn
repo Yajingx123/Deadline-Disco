@@ -1,0 +1,72 @@
+[gd_scene format=3 uid="uid://bje1of5atggde"]
+
+[ext_resource type="Script" uid="uid://dhjav1xnk7ah" path="res://Scripts/planet.gd" id="1_vpe2g"]
+[ext_resource type="Texture2D" uid="uid://mo7uen62ikvq" path="res://AssetBunddle/Sprites/planet.png" id="1_xehyc"]
+[ext_resource type="PackedScene" uid="uid://3p4kvmyjo8rx" path="res://Scenes/Door.tscn" id="2_r86au"]
+
+[node name="Planet" type="Area2D" unique_id=490313873]
+script = ExtResource("1_vpe2g")
+rotate_speed = 30.0
+
+[node name="Door1" parent="." unique_id=270785415 instance=ExtResource("2_r86au")]
+position = Vector2(5, -360)
+scale = Vector2(0.45, 0.45)
+tip_text = "Forum"
+
+[node name="Door2" parent="." unique_id=289938450 instance=ExtResource("2_r86au")]
+position = Vector2(328, -149.99998)
+rotation = 1.0471976
+scale = Vector2(0.457, 0.457)
+tip_text = "Training"
+
+[node name="Door3" parent="." unique_id=40628788 instance=ExtResource("2_r86au")]
+position = Vector2(-240.00002, -251)
+rotation = -0.7853982
+scale = Vector2(0.367, 0.367)
+tip_text = "Game Studio"
+
+[node name="Door4" parent="." unique_id=155672748 instance=ExtResource("2_r86au")]
+position = Vector2(209, -281)
+rotation = 0.6981317
+scale = Vector2(0.351, 0.351)
+tip_text = "Technic"
+
+[node name="Door5" parent="." unique_id=275421343 instance=ExtResource("2_r86au")]
+position = Vector2(-348.00006, -102.00001)
+rotation = -1.3089969
+scale = Vector2(0.473, 0.473)
+tip_text = "Team Competition"
+
+[node name="Door6" parent="." unique_id=872164903 instance=ExtResource("2_r86au")]
+position = Vector2(6, 367.99994)
+rotation = -3.128083
+scale = Vector2(0.45, 0.45)
+tip_text = "Forum"
+
+[node name="Door7" parent="." unique_id=551336010 instance=ExtResource("2_r86au")]
+position = Vector2(-325.99997, 146.99998)
+rotation = -2.0808854
+scale = Vector2(0.457, 0.457)
+tip_text = "Training"
+
+[node name="Door8" parent="." unique_id=497984840 instance=ExtResource("2_r86au")]
+position = Vector2(224.99994, 278.99988)
+rotation = -3.9134812
+scale = Vector2(0.367, 0.367)
+tip_text = "Game Studio"
+
+[node name="Door9" parent="." unique_id=1322085135 instance=ExtResource("2_r86au")]
+position = Vector2(-199.99997, 293)
+rotation = -2.4299512
+scale = Vector2(0.351, 0.351)
+tip_text = "Technic"
+
+[node name="Door10" parent="." unique_id=1698722717 instance=ExtResource("2_r86au")]
+position = Vector2(367, 79.00003)
+rotation = -4.43708
+scale = Vector2(0.473, 0.473)
+tip_text = "Teamwork"
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1536433087]
+scale = Vector2(0.53, 0.53)
+texture = ExtResource("1_xehyc")
