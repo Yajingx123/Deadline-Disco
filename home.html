@@ -972,7 +972,7 @@
             <div class="nav-item" onclick="loadModule('Studio', this)">Studio</div>
         </div>
         <div class="user-group">
-            <a href="http://127.0.0.1:5500/index.html" class="nav-godot" title="Open animated Godot homepage (run serve.py in newUI/homepage/Release)">Switch</a>
+            <a href="http://127.0.0.1:5500/index.html?ui=godot" class="nav-godot" title="Open animated Godot homepage (run serve.py in newUI/homepage/Release)" onclick="return openGodotMode(event)">Switch</a>
             <button class="challenge-btn" onclick="toggleTeamModal(true)">CHALLENGE</button>
             <div class="user-section" id="userSection" onclick="handleUserAction()">
                 <span id="userLabel" style="font-size: 0.75rem; font-weight: 700;">LOGIN</span>
@@ -1160,6 +1160,17 @@
         const STUDIO_URL = './Studio/studio.html';
         const AUTH_API_BASE = './Auth/backend/api';
         const authState = { user: null, mode: 'login' };
+
+        function setUiMode(mode) {
+            document.cookie = `ui_mode=${encodeURIComponent(mode)}; path=/; max-age=2592000`;
+        }
+
+        function openGodotMode(event) {
+            if (event) event.preventDefault();
+            setUiMode('godot');
+            window.location.href = 'http://127.0.0.1:5500/index.html?ui=godot';
+            return false;
+        }
 
         const data = {
             // 修复点 2: 统一 Lexis 的按钮数据结构，确保 btn 存在
