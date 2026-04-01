@@ -46,6 +46,13 @@ $services = [
         'workdir' => $root . '/voice-room-server',
         'command' => escapeshellarg($npm) . ' start',
     ],
+    [
+        'name' => 'godot_ui',
+        'host' => '127.0.0.1',
+        'port' => 5500,
+        'workdir' => $root . '/newUI/homepage/Release',
+        'command' => 'python3 serve.py',
+    ],
 ];
 
 function startMacProcess(string $command, string $workdir, string $stdoutLog, string $stderrLog): int {
@@ -94,3 +101,9 @@ foreach ($services as $service) {
 echo "\nLogs are in .run\n";
 echo "Start command: php start_all_mac.php\n";
 echo "Auto-detect command: php start_all.php\n";
+
+echo "\n=== Entry URLs (open in browser) ===\n";
+echo "  Main homepage (default):     http://127.0.0.1:8001/home.html\n";
+echo "  (or via index redirect)      http://127.0.0.1:8001/\n";
+echo "  Godot animated UI:           http://127.0.0.1:5500/index.html\n";
+echo "  Tip: start from Main; use \"Animated Home\" in nav or Godot switch to swap.\n";

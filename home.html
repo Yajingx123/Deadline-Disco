@@ -8,7 +8,6 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,500;1,700&family=Inter:wght@300;400;600;800&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="./challenge-home.css">
     <style>
         :root {
             --bg-color: #E4DFD8;
@@ -92,6 +91,31 @@
             width: 100%;
             height: 2px;
             background-color: var(--secondary-color);
+        }
+
+        /* Godot animated homepage (serve.py on 127.0.0.1:5500) */
+        .nav-godot {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1.25rem;
+            padding: 0.45rem 0.9rem;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: var(--secondary-color);
+            background: rgba(155, 183, 212, 0.35);
+            border: 1px solid var(--primary-color);
+            border-radius: 6px;
+            transition: var(--transition-fast);
+            white-space: nowrap;
+        }
+
+        .nav-godot:hover {
+            background: rgba(155, 183, 212, 0.55);
+            opacity: 1;
         }
 
         .user-section {
@@ -392,50 +416,6 @@
             display: flex;
             align-items: center;
             gap: 12px;
-        }
-
-        .message-link {
-            position: relative;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border: 1px solid rgba(58, 78, 107, 0.16);
-            background: rgba(255, 255, 255, 0.74);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--secondary-color);
-            text-decoration: none;
-            box-shadow: 0 8px 20px rgba(58, 78, 107, 0.08);
-            transition: 0.25s ease;
-        }
-
-        .message-link:hover {
-            background: rgba(155, 183, 212, 0.22);
-            transform: translateY(-1px);
-        }
-
-        .message-link[hidden] {
-            display: none !important;
-        }
-
-        .message-badge {
-            position: absolute;
-            top: -3px;
-            right: -3px;
-            width: 10px;
-            min-width: 10px;
-            height: 10px;
-            padding: 0;
-            border-radius: 999px;
-            background: #ef4444;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border: 2px solid #f7f3eb;
-            box-shadow: 0 0 0 1px rgba(58, 78, 107, 0.08);
-            color: transparent;
-            font-size: 0;
         }
 
         .user-section {
@@ -992,11 +972,8 @@
             <div class="nav-item" onclick="loadModule('Studio', this)">Studio</div>
         </div>
         <div class="user-group">
-            <button class="challenge-btn" id="challengeEntryBtn" onclick="toggleTeamModal(true)">CHALLENGE</button>
-            <a class="message-link" id="messageCenterLink" href="http://127.0.0.1:8001/forum-project/dist/index.html?view=messages" aria-label="Open message center" hidden>
-                ✉
-                <span class="message-badge" id="messageBadge" hidden>0</span>
-            </a>
+            <a href="http://127.0.0.1:5500/index.html?ui=godot" class="nav-godot" title="Open animated Godot homepage (run serve.py in newUI/homepage/Release)" onclick="return openGodotMode(event)">Switch</a>
+            <button class="challenge-btn" onclick="toggleTeamModal(true)">CHALLENGE</button>
             <div class="user-section" id="userSection" onclick="handleUserAction()">
                 <span id="userLabel" style="font-size: 0.75rem; font-weight: 700;">LOGIN</span>
                 <div class="avatar" id="userAvatar">IN</div>
@@ -1065,159 +1042,97 @@
 
     <div class="modal-overlay" id="teamModalOverlay">
         <div class="team-modal" id="teamModal">
+            
             <div class="success-overlay" id="successOverlay">
                 <p class="module-label" style="opacity: 0.7; color: white;">Team Confirmed</p>
-                <h2 class="quote-text" id="successTeamTitle" style="font-size: 3.5rem; margin: 1rem 0;">Ready to Sprint</h2>
-                <p id="successTeamCopy" style="letter-spacing: 1px; font-size: 0.82rem; margin-bottom: 2rem; max-width: 520px;">Your team is locked for this week.</p>
-                <button class="challenge-btn" style="background: var(--primary-color);" onclick="closeChallengeCelebration()">BACK TO ARENA</button>
+                <h2 class="quote-text" style="font-size: 3.5rem; margin: 1rem 0;">Ready to Sprint</h2>
+                <p style="letter-spacing: 2px; font-size: 0.8rem; margin-bottom: 2rem;">YOUR ACADEMIC JOURNEY BEGINS IN 02:14:55</p>
+                <button class="challenge-btn" style="background: var(--primary-color);" onclick="toggleTeamModal(false)">VIEW ARENA</button>
             </div>
 
             <div class="team-main">
-                <p class="module-label" id="challengeCycleLabel">Weekly Challenge</p>
-                <div class="challenge-hero">
-                    <div>
-                        <h2 class="quote-text" id="challengeTitle">Create your fellowship</h2>
-                        <p class="challenge-copy" id="challengeCopy">Sign up first, then either create your own 4-person team or join one from the square. Teams that fail to fill in time dissolve automatically.</p>
+                <p class="module-label">Session 12 — Linguistic Relay</p>
+                <h2 class="quote-text">Create your fellowship</h2>
+
+                <div style="margin-top: 2rem;">
+                    <input type="text" placeholder="NAME YOUR TEAM..." style="background:transparent; border:none; border-bottom:1.5px solid var(--secondary-color); width: 300px; padding: 10px 0; font-family:'Playfair Display'; font-size: 1.5rem; outline:none;">
+                </div>
+
+                <div class="slots-grid" id="slotsGrid">
+                    <div class="slot-card">
+                        <div style="width:50px; height:50px; background:var(--primary-color); border-radius:50%; margin-bottom:15px;"></div>
+                        <p class="module-label" style="margin:0; font-weight:800;">Captain</p>
+                        <p style="font-size: 0.8rem;">Arthur_W</p>
                     </div>
-                    <button type="button" class="challenge-secondary-btn" id="openInviteInboxBtn" onclick="openInviteInbox()">
-                        Invitations
-                        <span class="challenge-secondary-btn__count" id="inviteInboxCount">0</span>
-                    </button>
-                </div>
-
-                <div class="challenge-status-row">
-                    <div class="challenge-status-chip" id="challengeWeekChip">Teams reset every Monday at 00:00.</div>
-                    <div class="challenge-status-chip" id="challengeRoleChip">Role: Open</div>
-                </div>
-
-                <div class="challenge-stage" id="challengeSignupPanel" hidden>
-                    <div class="challenge-card challenge-card--center">
-                        <p class="challenge-stage__eyebrow">Step 1</p>
-                        <h3>Sign up for this week&apos;s challenge</h3>
-                        <p>After signing up, you can create your own 4-person team or go to the square and join another open team.</p>
-                        <button type="button" class="challenge-btn" onclick="signUpForChallenge()">Sign Up</button>
+                    <div class="slot-card slot-empty" onclick="openSearch(this)">
+                        <span style="font-size: 2rem; font-weight:200;">+</span>
+                        <p class="module-label" style="margin:0;">Invite</p>
                     </div>
-                </div>
-
-                <div class="challenge-stage" id="challengeChooserPanel" hidden>
-                    <div class="challenge-card challenge-card--center">
-                        <p class="challenge-stage__eyebrow">Step 2</p>
-                        <h3>Choose your route</h3>
-                        <p>You can create your own 4-person team or go to the square and join a team.</p>
-                        <div class="team-float-actions team-float-actions--wide">
-                            <button class="btn-publish" onclick="createChallengeTeam()">Create My Team</button>
-                            <button class="btn-publish btn-publish--secondary" onclick="openPublicHub()">Go To Square</button>
-                        </div>
+                    <div class="slot-card slot-empty" onclick="openSearch(this)">
+                        <span style="font-size: 2rem; font-weight:200;">+</span>
+                        <p class="module-label" style="margin:0;">Invite</p>
+                    </div>
+                    <div class="slot-card slot-empty" onclick="openSearch(this)">
+                        <span style="font-size: 2rem; font-weight:200;">+</span>
+                        <p class="module-label" style="margin:0;">Invite</p>
                     </div>
                 </div>
 
-                <div class="challenge-stage" id="challengeFormingPanel" hidden>
-                    <div class="challenge-forming-head">
-                        <div>
-                            <p class="challenge-stage__eyebrow">Forming Team</p>
-                            <h3 id="formingTeamHeading">Your team is forming</h3>
-                            <p id="formingTeamSubcopy">Fill all 4 seats before the countdown ends, or the team will dissolve and everyone returns to the signup chooser.</p>
-                        </div>
-                        <div class="challenge-countdown-card">
-                            <span>Team Countdown</span>
-                            <div class="challenge-countdown" id="formingCountdown" aria-label="Team countdown">
-                                <div class="challenge-countdown__unit">
-                                    <strong id="formingCountdownHours">01</strong>
-                                </div>
-                                <div class="challenge-countdown__divider">:</div>
-                                <div class="challenge-countdown__unit">
-                                    <strong id="formingCountdownMinutes">00</strong>
-                                </div>
-                                <div class="challenge-countdown__divider">:</div>
-                                <div class="challenge-countdown__unit">
-                                    <strong id="formingCountdownSeconds">00</strong>
-                                </div>
-                            </div>
-                            <small id="formingMissingCopy">Still missing 3 members</small>
-                        </div>
-                    </div>
-
-                    <div class="slots-grid" id="slotsGrid"></div>
-
-                    <div class="team-float-actions">
-                        <button class="btn-publish btn-publish--secondary" id="publishPublicBtn" onclick="toggleChallengePublicListing()">Post To Public</button>
-                        <button class="btn-publish" onclick="openInviteComposer()">Invite Friend</button>
-                    </div>
-
-                    <div class="challenge-pending" id="pendingInvitesSection" hidden>
-                        <label>Pending Sent Invites</label>
-                        <div class="challenge-pending__list" id="sentInvitesList"></div>
-                    </div>
+                <div style="margin-top: auto;">
+                    <p class="module-label" style="letter-spacing: 1px;">Week 12 Prize: "The Oxford Gaze" Profile Badge</p>
                 </div>
 
-                <div class="challenge-stage" id="challengeLockedPanel" hidden>
-                    <div class="challenge-card challenge-card--stacked">
-                        <p class="challenge-stage__eyebrow">Team Ready</p>
-                        <h3 id="lockedTeamHeading">Your 4-person team is locked</h3>
-                        <p id="lockedTeamSubcopy">Now the captain confirms the official team name, and the team begins to accumulate points for the weekly rank.</p>
-                        <div class="challenge-name-row">
-                            <div class="challenge-name-field">
-                                <label for="teamNameInput">Official Team Name</label>
-                                <input id="teamNameInput" class="challenge-name-input" type="text" placeholder="Confirm the team name...">
-                            </div>
-                            <button type="button" class="challenge-secondary-btn" id="saveTeamNameBtn" onclick="saveChallengeTeamName()">Confirm Name</button>
-                        </div>
-                        <div class="slots-grid" id="lockedSlotsGrid"></div>
-                    </div>
+                <!-- 新增：发布到广场 + 打开广场按钮 -->
+                <div class="team-float-actions">
+                  <button class="btn-publish" id="publishBtn" onclick="publishTeamToLobby()">Publish to Lobby</button>
+                  <button class="btn-publish" style="background:var(--primary-color);color:var(--secondary-color)" onclick="openLobbyModal()">Browse Lobby</button>
                 </div>
-
-                <p class="challenge-admin-note" id="challengeAdminNote" hidden>Admin accounts do not join challenge teams.</p>
             </div>
 
             <aside class="leaderboard-aside">
-                <h4 class="module-label" style="color: rgba(255,255,255,0.4);">Weekly Rank</h4>
-                <div id="leaderboardList" style="margin-top: 1rem;"></div>
-                <div class="leaderboard-empty" id="leaderboardEmpty">Rankings stay hidden until teams earn points. Every team begins the week at 0.</div>
-                <div class="challenge-system-card">
+                <h4 class="module-label" style="color: rgba(255,255,255,0.4);">Hall of Fame</h4>
+                <div style="margin-top: 1rem;">
+                    <div class="rank-item">
+                        <span class="rank-badge gold">01</span>
+                        <div class="rank-info">
+                            <p class="rank-name">OXFORD REBELS</p>
+                            <p class="rank-pts">4,250 pts</p>
+                        </div>
+                    </div>
+                    <div class="rank-item">
+                        <span class="rank-badge silver">02</span>
+                        <div class="rank-info">
+                            <p class="rank-name">LEXICON ELITE</p>
+                            <p class="rank-pts">3,890 pts</p>
+                        </div>
+                    </div>
+                    <div class="rank-item">
+                        <span class="rank-badge bronze">03</span>
+                        <div class="rank-info">
+                            <p class="rank-name">THE POLYGLOTS</p>
+                            <p class="rank-pts">3,720 pts</p>
+                        </div>
+                    </div>
+                    <div class="rank-item">
+                        <span class="rank-badge" style="color:rgba(255,255,255,0.4)">04</span>
+                        <div class="rank-info">
+                            <p class="rank-name">SOPHISTS</p>
+                            <p class="rank-pts">2,410 pts</p>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top: auto; border: 1px solid rgba(255,255,255,0.1); padding: 15px; text-align: left;">
                     <p class="module-label" style="margin:0; font-size: 0.6rem;">YOUR STATUS</p>
-                    <p class="challenge-system-card__value" id="challengeStatusCardValue">No team yet. Invite classmates to start this week.</p>
+                    <p style="font-weight: 700; margin-top: 5px;">NOT RANKED</p>
                 </div>
             </aside>
 
             <div class="search-layer" id="searchLayer">
-                <div class="search-layer__card">
-                    <p class="module-label">Send Weekly Invite</p>
-                    <h3 class="challenge-panel-title">Invite by Username</h3>
-                    <p class="search-layer__copy">Type the exact AcadBeat username. The invitee will receive it in their challenge inbox and can accept or decline there.</p>
-                    <input type="text" id="searchInput" class="challenge-search-input" placeholder="Enter username...">
-                    <div class="challenge-panel-error" id="challengeComposerError" hidden></div>
-                    <div class="search-layer__actions">
-                        <button type="button" class="challenge-ghost-btn" onclick="closeSearch()">Cancel</button>
-                        <button type="button" onclick="challengeSendInvite()" class="challenge-btn">Send Invite</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="search-layer" id="publicHubLayer">
-                <div class="search-layer__card search-layer__card--wide">
-                    <p class="module-label">Team Square</p>
-                    <h3 class="challenge-panel-title">Open Teams</h3>
-                    <p class="search-layer__copy">These teams are still forming. Joining from the square is direct, and the team will lock automatically as soon as it reaches 4 members.</p>
-                    <div class="challenge-empty" id="publicLobbyEmpty">No public teams are open right now.</div>
-                    <div class="challenge-invite-list" id="publicLobbyList"></div>
-                    <div class="challenge-panel-error" id="publicLobbyError" hidden></div>
-                    <div class="search-layer__actions">
-                        <button type="button" class="challenge-ghost-btn" onclick="closePublicHub()">Close</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="search-layer" id="inviteHubLayer">
-                <div class="search-layer__card">
-                    <p class="module-label">Invite Inbox</p>
-                    <h3 class="challenge-panel-title">Invitations</h3>
-                    <p class="search-layer__copy">Accept an invite to move into that forming team, or decline it and stay in your current state.</p>
-                    <div class="challenge-empty" id="inviteInboxEmpty">No invite records right now.</div>
-                    <div class="challenge-invite-list" id="inviteInboxList"></div>
-                    <div class="challenge-panel-error" id="inviteInboxError" hidden></div>
-                    <div class="search-layer__actions">
-                        <button type="button" class="challenge-ghost-btn" onclick="closeInviteInbox()">Close</button>
-                    </div>
+                <p class="module-label">Locate Scholar by ID</p>
+                <input type="text" id="searchInput" placeholder="Search..." style="background:transparent; border:1px solid var(--secondary-color); width: 300px; padding: 15px; margin: 20px 0; outline:none;">
+                <div style="display: flex; gap: 15px;">
+                    <button onclick="closeSearch()" style="background:none; border:none; cursor:pointer; text-transform:uppercase; letter-spacing:2px; font-size:0.7rem;">Cancel</button>
+                    <button onclick="confirmInvite()" class="challenge-btn">Send Invite</button>
                 </div>
             </div>
 
@@ -1225,26 +1140,36 @@
         </div>
     </div>
 
+    <!-- -------------------------- 新增：队伍广场弹窗 -------------------------- -->
+    <div class="lobby-modal" id="lobbyModal">
+      <button class="close-lobby" onclick="closeLobbyModal()">✕</button>
+      <div class="lobby-card">
+        <h2 class="lobby-title">Team Lobby</h2>
+        <div class="lobby-grid" id="lobbyGrid"></div>
+      </div>
+    </div>
+
     <script>
         const HOME_URL = './home.html';
         const OWNER_URL = './owner.html';
         const ADMIN_URL = 'http://127.0.0.1:5174/';
         const VOCABULARY_URL = './vocba_prac/';
-        const FORUM_URL = 'http://127.0.0.1:8001/forum-project/dist/index.html?view=forum';
+        const FORUM_URL = 'http://127.0.0.1:5173/?view=chooser';
         const TECHNOLOGY_URL = './technology.html';
         const ACADEMIC_PRACTICE_URL = './Academic-Practice/training.html';
         const STUDIO_URL = './Studio/studio.html';
         const AUTH_API_BASE = './Auth/backend/api';
-        const MESSAGE_CENTER_API_URL = 'http://127.0.0.1:8001/forum-project/api/message-center.php?summaryOnly=1';
-        const REALTIME_WS_URL = 'ws://127.0.0.1:3001/ws';
         const authState = { user: null, mode: 'login' };
-        const homeRealtimeState = { socket: null, reconnectTimer: null, refreshTimer: null, summaryPollTimer: null, closedManually: false };
 
-        function portalUrlForCurrentUser() {
-            if (authState.user && String(authState.user.role || '').toLowerCase() === 'admin') {
-                return ADMIN_URL;
-            }
-            return OWNER_URL;
+        function setUiMode(mode) {
+            document.cookie = `ui_mode=${encodeURIComponent(mode)}; path=/; max-age=2592000`;
+        }
+
+        function openGodotMode(event) {
+            if (event) event.preventDefault();
+            setUiMode('godot');
+            window.location.href = 'http://127.0.0.1:5500/index.html?ui=godot';
+            return false;
         }
 
         const data = {
@@ -1292,121 +1217,15 @@
             const label = document.getElementById('userLabel');
             const avatar = document.getElementById('userAvatar');
             const logoutLink = document.getElementById('logoutLink');
-            const messageLink = document.getElementById('messageCenterLink');
-            const messageBadge = document.getElementById('messageBadge');
-            if (!label || !avatar || !logoutLink || !messageLink || !messageBadge) return;
+            if (!label || !avatar || !logoutLink) return;
             if (authState.user) {
                 label.textContent = authState.user.username;
                 avatar.textContent = initialsOf(authState.user.username);
                 logoutLink.style.display = 'inline-flex';
-                messageLink.hidden = false;
             } else {
                 label.textContent = 'LOGIN';
                 avatar.textContent = 'IN';
                 logoutLink.style.display = 'none';
-                messageLink.hidden = true;
-                messageBadge.hidden = true;
-                messageBadge.textContent = '';
-            }
-            if (window.challengeHome && typeof window.challengeHome.syncAccess === 'function') {
-                window.challengeHome.syncAccess(authState.user);
-            }
-        }
-
-        async function loadMessageSummary() {
-            const messageBadge = document.getElementById('messageBadge');
-            if (!messageBadge || !authState.user) {
-                if (messageBadge) {
-                    messageBadge.hidden = true;
-                    messageBadge.textContent = '';
-                }
-                return;
-            }
-
-            try {
-                const response = await fetch(MESSAGE_CENTER_API_URL, { credentials: 'include' });
-                const data = await response.json().catch(() => ({ ok: false }));
-                const chatsUnread = Number(data?.summary?.chatsUnread || 0);
-                if (chatsUnread > 0) {
-                    messageBadge.hidden = false;
-                    messageBadge.textContent = '';
-                    messageBadge.style.display = 'inline-flex';
-                } else {
-                    messageBadge.hidden = true;
-                    messageBadge.textContent = '';
-                    messageBadge.style.display = 'none';
-                }
-            } catch (_err) {
-                messageBadge.hidden = true;
-                messageBadge.textContent = '';
-                messageBadge.style.display = 'none';
-            }
-        }
-
-        function scheduleMessageSummaryRefresh() {
-            if (homeRealtimeState.refreshTimer) {
-                window.clearTimeout(homeRealtimeState.refreshTimer);
-            }
-            homeRealtimeState.refreshTimer = window.setTimeout(() => {
-                homeRealtimeState.refreshTimer = null;
-                loadMessageSummary().catch(() => {});
-            }, 120);
-        }
-
-        function restartMessageSummaryPolling() {
-            if (homeRealtimeState.summaryPollTimer) {
-                window.clearInterval(homeRealtimeState.summaryPollTimer);
-                homeRealtimeState.summaryPollTimer = null;
-            }
-            if (!authState.user) {
-                return;
-            }
-            homeRealtimeState.summaryPollTimer = window.setInterval(() => {
-                if (document.hidden) {
-                    return;
-                }
-                loadMessageSummary().catch(() => {});
-            }, 3000);
-        }
-
-        function connectHomeRealtime() {
-            if (homeRealtimeState.socket || homeRealtimeState.closedManually) {
-                return;
-            }
-
-            try {
-                const socket = new WebSocket(REALTIME_WS_URL);
-                homeRealtimeState.socket = socket;
-
-                socket.addEventListener('message', (event) => {
-                    try {
-                        const payload = JSON.parse(event.data);
-                        const type = String(payload?.type || '');
-                        if (!type.startsWith('chat.') && !type.startsWith('message-center.') && !type.startsWith('forum.')) {
-                            return;
-                        }
-                        if (!authState.user) {
-                            return;
-                        }
-                        scheduleMessageSummaryRefresh();
-                    } catch (_err) {}
-                });
-
-                socket.addEventListener('close', () => {
-                    homeRealtimeState.socket = null;
-                    if (homeRealtimeState.closedManually) {
-                        return;
-                    }
-                    homeRealtimeState.reconnectTimer = window.setTimeout(connectHomeRealtime, 1500);
-                });
-
-                socket.addEventListener('error', () => {
-                    try {
-                        socket.close();
-                    } catch (_err) {}
-                });
-            } catch (_err) {
-                homeRealtimeState.socket = null;
             }
         }
 
@@ -1425,8 +1244,6 @@
             const data = await authFetch('me.php');
             authState.user = data.status === 'success' ? data.user : null;
             renderAuthUI();
-            await loadMessageSummary();
-            restartMessageSummaryPolling();
         }
 
         function openAuthModal(mode = 'login', message = '') {
@@ -1509,8 +1326,6 @@
 
             authState.user = data.user || null;
             renderAuthUI();
-            await loadMessageSummary();
-            restartMessageSummaryPolling();
             closeAuthModal();
             if (authState.user && String(authState.user.role || '').toLowerCase() === 'admin') {
                 window.location.href = ADMIN_URL;
@@ -1531,8 +1346,6 @@
             await authFetch('logout.php');
             authState.user = null;
             renderAuthUI();
-            await loadMessageSummary();
-            restartMessageSummaryPolling();
             closeAuthModal();
             loadModule('Insight', navElementFor('Insight'));
             return false;
@@ -1650,20 +1463,173 @@
             viewport.innerHTML = html;
         }
 
+        // 组队弹窗逻辑
+        let currentSlot = null;
+        let filledCount = 1; // 初始只有队长
+
+        function toggleTeamModal(show) {
+            document.getElementById('teamModalOverlay').style.display = show ? 'flex' : 'none';
+            if(!show) {
+                // 关闭时重置状态（仅演示）
+                document.getElementById('successOverlay').style.display = 'none';
+                document.getElementById('teamModal').classList.remove('is-ready');
+            }
+        }
+
+        function openSearch(slot) {
+            currentSlot = slot;
+            document.getElementById('searchLayer').style.display = 'flex';
+        }
+
+        function closeSearch() {
+            document.getElementById('searchLayer').style.display = 'none';
+        }
+
+        function confirmInvite() {
+            if (currentSlot) {
+                // 将空位变为已填充状态
+                currentSlot.classList.remove('slot-empty');
+                currentSlot.onclick = null;
+                currentSlot.innerHTML = `
+                    <div style="width:40px; height:40px; background:var(--secondary-color); border-radius:50%; margin-bottom:10px; opacity: 0.8;"></div>
+                    <p class="module-label" style="margin:0; font-weight:800;">Member</p>
+                    <p style="font-size: 0.75rem;">${document.getElementById('searchInput').value || 'NewScholar'}</p>
+                `;
+                filledCount++;
+                closeSearch();
+                
+                // 检查是否组队成功 (4人满)
+                if (filledCount === 4) {
+                    triggerSuccess();
+                }
+            }
+        }
+
+        function triggerSuccess() {
+            setTimeout(() => {
+                document.getElementById('teamModal').classList.add('is-ready');
+                document.getElementById('successOverlay').style.display = 'flex';
+            }, 500);
+        }
+
+        // 点击背景关闭
+        document.getElementById('teamModalOverlay').addEventListener('click', function(e) {
+            if (e.target === this) toggleTeamModal(false);
+        });
+
+        /* ==========================================================================
+           新增：队伍广场 + 自动成队 + 一键加入功能
+        ========================================================================== */
+        let teamData = {
+          name: "New Team",
+          members: 1,
+          max: 4,
+          published: false,
+          id: "team_" + Date.now()
+        };
+        const teamsLobby = [teamData];
+
+        // 监听队伍名输入
+        document.querySelector('.team-main input').addEventListener('input', function(e){
+          teamData.name = e.target.value || "Unnamed Team";
+        });
+
+        // 发布到广场
+        function publishTeamToLobby(){
+          if(authState.user == null){
+            openAuthModal('login', 'Please login to publish a team.');
+            return;
+          }
+          if(teamData.published) return;
+          teamData.published = true;
+          document.getElementById('publishBtn').disabled = true;
+          document.getElementById('publishBtn').innerText = "Published";
+          refreshLobby();
+        }
+
+        // 打开/关闭广场
+        function openLobbyModal(){ document.getElementById('lobbyModal').classList.add('is-open'); }
+        function closeLobbyModal(){ document.getElementById('lobbyModal').classList.remove('is-open'); }
+
+        // 刷新广场列表
+        function refreshLobby(){
+          const grid = document.getElementById('lobbyGrid');
+          if(!grid) return;
+          grid.innerHTML = "";
+          teamsLobby.forEach(t => {
+            const card = document.createElement('div');
+            card.className = "lobby-team-card";
+            card.innerHTML = `
+              <div class="lobby-team-name">${t.name}</div>
+              <div class="lobby-team-count">Members: ${t.members}/${t.max}</div>
+              <button class="lobby-join-btn" ${t.members>=t.max?'disabled':''} onclick="quickJoinTeam('${t.id}')">
+                ${t.members>=t.max?'FULL':'JOIN • 一键加入'}
+              </button>
+            `;
+            grid.appendChild(card);
+          });
+        }
+
+        // 一键加入队伍（无需同意）
+        function quickJoinTeam(teamId){
+          if(authState.user == null){
+            openAuthModal('login', 'Please login to join a team.');
+            return;
+          }
+          const t = teamsLobby.find(x=>x.id===teamId);
+          if(!t || t.members >= t.max) return;
+
+          t.members++;
+          filledCount = t.members;
+          refreshSlotByCount(filledCount);
+          refreshLobby();
+          closeLobbyModal();
+
+          // 满4人自动成队
+          if(t.members >= t.max){
+            t.published = false;
+            document.getElementById('publishBtn').disabled = true;
+            triggerSuccess();
+          }
+        }
+
+        // 根据人数自动填充空位
+        function refreshSlotByCount(count){
+          const slots = document.querySelectorAll('.slot-empty');
+          for(let i=0; i<count-1 && i<slots.length; i++){
+            const slot = slots[i];
+            slot.classList.remove('slot-empty');
+            slot.onclick = null;
+            slot.innerHTML = `
+              <div style="width:40px;height:40px;background:var(--secondary-color);border-radius:50%;margin-bottom:10px;"></div>
+              <p class="module-label" style="margin:0;font-weight:800;">Member</p>
+              <p style="font-size:0.75rem;">Scholar_${Math.floor(Math.random()*999)}</p>
+            `;
+          }
+        }
+
+        // 点击广场背景关闭
+        document.getElementById('lobbyModal').addEventListener('click',(e)=>{
+          if(e.target === document.getElementById('lobbyModal')) closeLobbyModal();
+        });
+
+        // 初始化加载
         window.onload = async () => {
             const params = new URLSearchParams(window.location.search);
             const moduleName = resolveModuleName(params.get('module'));
             loadModule(moduleName, navElementFor(moduleName));
-            connectHomeRealtime();
             await loadAuthUser();
             if (params.get('login') === '1') {
                 openAuthModal('login', 'Please log in first.');
             }
-            if (window.challengeHome && typeof window.challengeHome.handleInitialRoute === 'function') {
-                window.challengeHome.handleInitialRoute(params);
-            }
         };
     </script>
-    <script src="./challenge-home.js"></script>
 </body>
+
 </html>
+        function portalUrlForCurrentUser() {
+            if (authState.user && String(authState.user.role || '').toLowerCase() === 'admin') {
+                return ADMIN_URL;
+            }
+            return OWNER_URL;
+        }
