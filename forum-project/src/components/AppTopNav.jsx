@@ -1,6 +1,3 @@
-import { useEffect, useState } from 'react'
-import { connectRealtime, fetchMessageCenter } from '../api/forumApi'
-
 export default function AppTopNav({ currentUser, activeMode = 'forum' }) {
   const userName = currentUser?.username || 'LOGIN'
   const userInitial = userName.slice(0, 2).toUpperCase()
@@ -91,9 +88,9 @@ export default function AppTopNav({ currentUser, activeMode = 'forum' }) {
     <header className="forum-topnav">
       <a className="forum-topnav__logo" href="http://127.0.0.1:8001/home.html">Acad<span>Beat</span></a>
       <nav className="forum-topnav__menu" aria-label="Main">
-        <a className={`forum-topnav__item ${activeMode === 'academic' ? 'is-active' : ''}`} href="http://127.0.0.1:8001/home.html?module=Insight">Academic</a>
-        <a className={`forum-topnav__item ${activeMode === 'forum' || activeMode === 'personal' || activeMode === 'chooser' || activeMode === 'messages' ? 'is-active' : ''}`} href="http://127.0.0.1:8001/home.html?module=Dialogue">Forum</a>
-        <a className={`forum-topnav__item ${activeMode === 'technology' ? 'is-active' : ''}`} href="http://127.0.0.1:8001/home.html?module=Method">Technology</a>
+        <a className="forum-topnav__item" href="http://127.0.0.1:8001/home.html?module=Insight">Academic</a>
+        <a className={`forum-topnav__item ${activeMode === 'forum' || activeMode === 'personal' || activeMode === 'chooser' ? 'is-active' : ''}`} href="http://127.0.0.1:8001/home.html?module=Dialogue">Forum</a>
+        <a className="forum-topnav__item" href="http://127.0.0.1:8001/home.html?module=Method">Technology</a>
       </nav>
       <div className="forum-topnav__actions">
         {currentUser && (

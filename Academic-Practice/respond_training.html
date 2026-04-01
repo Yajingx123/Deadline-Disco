@@ -24,7 +24,19 @@
     })();
   </script>
   <link rel="stylesheet" href="acadbeat-global.css">
-  <link rel="stylesheet" href="practice-style.css">
+  <link rel="stylesheet" href="practice-style.css" id="practice-theme-style">
+  <script>
+    (function () {
+      const params = new URLSearchParams(window.location.search);
+      const cookiePair = document.cookie.split('; ').find(item => item.startsWith('ui_mode='));
+      const cookieMode = cookiePair ? decodeURIComponent(cookiePair.split('=')[1] || '') : '';
+      const uiMode = params.get('ui') || cookieMode;
+      if (uiMode !== 'godot') return;
+      document.cookie = 'ui_mode=godot; path=/; max-age=2592000';
+      const link = document.getElementById('practice-theme-style');
+      if (link) link.href = '../newUI/static/game-practice-style.css';
+    })();
+  </script>
 </head>
 <body data-page="response-detail">
   <div id="acadbeatNav"></div>

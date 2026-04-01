@@ -1,0 +1,113 @@
+[gd_scene format=3 uid="uid://dt0h3ey77fr11"]
+
+[ext_resource type="Script" uid="uid://dhy5vtaywtevx" path="res://Scripts/global_ui.gd" id="1_omr73"]
+[ext_resource type="Texture2D" uid="uid://cnfm2f7s5dnfi" path="res://AssetBunddle/Sprites/login_button.png" id="2_8fe3e"]
+[ext_resource type="Texture2D" uid="uid://cbghb3c48nn4a" path="res://AssetBunddle/Sprites/swicth_button.png" id="3_3lr2d"]
+[ext_resource type="Texture2D" uid="uid://b556815mp1q3h" path="res://AssetBunddle/Sprites/menu_button.png" id="4_3lr2d"]
+[ext_resource type="Texture2D" uid="uid://cxoo4jrrlrs70" path="res://AssetBunddle/Sprites/login.png" id="5_ju374"]
+[ext_resource type="FontFile" uid="uid://dj8m3ejixir1v" path="res://AssetBunddle/Font/Myfont-Regular.ttf" id="6_sym7s"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8umk0"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ju374"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_sym7s"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_o1hx8"]
+
+[node name="GlobalUI" type="CanvasLayer" unique_id=830122360]
+script = ExtResource("1_omr73")
+
+[node name="Login" type="TextureRect" parent="." unique_id=2043236276]
+offset_left = 1065.0
+offset_top = 13.0
+offset_right = 1327.0
+offset_bottom = 238.0
+scale = Vector2(0.3, 0.3)
+size_flags_horizontal = 0
+texture = ExtResource("2_8fe3e")
+
+[node name="Switch" type="TextureRect" parent="." unique_id=1641067591]
+offset_left = 1063.0
+offset_top = 107.0
+offset_right = 1326.0
+offset_bottom = 333.0
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("3_3lr2d")
+
+[node name="Menu" type="TextureRect" parent="." unique_id=1907727849]
+offset_left = 1072.0001
+offset_top = 193.0
+offset_right = 1229.0001
+offset_bottom = 385.0
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("4_3lr2d")
+
+[node name="LoginPopup" type="PanelContainer" parent="." unique_id=488282037]
+visible = false
+texture_filter = 1
+texture_repeat = 1
+offset_right = 2470.9678
+offset_bottom = 1397.8495
+scale = Vector2(0.465, 0.465)
+theme_override_styles/panel = SubResource("StyleBoxEmpty_8umk0")
+
+[node name="LockBg" type="ColorRect" parent="LoginPopup" unique_id=109832280]
+layout_mode = 2
+color = Color(0.22352941, 0.22352941, 0.22352941, 0.40784314)
+
+[node name="Content" type="TextureRect" parent="LoginPopup" unique_id=77009343]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("5_ju374")
+
+[node name="Title" type="Label" parent="LoginPopup/Content" unique_id=1348546357]
+layout_mode = 0
+offset_left = 190.30109
+offset_top = 69.27955
+offset_right = 346.3011
+offset_bottom = 117.27955
+theme_override_fonts/font = ExtResource("6_sym7s")
+theme_override_font_sizes/font_size = 60
+text = "Login"
+
+[node name="UsernameInput" type="LineEdit" parent="LoginPopup/Content" unique_id=268880019]
+layout_mode = 0
+offset_left = 92.76344
+offset_top = 170.49463
+offset_right = 456.20435
+offset_bottom = 228.55914
+theme_override_styles/normal = SubResource("StyleBoxEmpty_ju374")
+
+[node name="PasswordInput" type="LineEdit" parent="LoginPopup/Content" unique_id=1833038839]
+layout_mode = 0
+offset_left = 97.064545
+offset_top = 290.92474
+offset_right = 449.75266
+offset_bottom = 359.74194
+theme_override_styles/normal = SubResource("StyleBoxEmpty_sym7s")
+secret = true
+
+[node name="SubmitBtn" type="Button" parent="LoginPopup/Content" unique_id=2049380678]
+layout_mode = 0
+offset_left = 166.64513
+offset_top = 434.87097
+offset_right = 381.69897
+offset_bottom = 514.4409
+theme_override_fonts/font = ExtResource("6_sym7s")
+theme_override_font_sizes/font_size = 45
+theme_override_styles/normal = SubResource("StyleBoxEmpty_o1hx8")
+text = "login"
+
+[connection signal="gui_input" from="Login" to="." method="_on_texture_rect_gui_input"]
+[connection signal="gui_input" from="Login" to="." method="_on_login_gui_input"]
+[connection signal="mouse_entered" from="Login" to="." method="_on_login_mouse_entered"]
+[connection signal="mouse_exited" from="Login" to="." method="_on_login_mouse_exited"]
+[connection signal="gui_input" from="Switch" to="." method="_on_switch_gui_input"]
+[connection signal="mouse_entered" from="Switch" to="." method="_on_switch_mouse_entered"]
+[connection signal="mouse_exited" from="Switch" to="." method="_on_switch_mouse_exited"]
+[connection signal="gui_input" from="Menu" to="." method="_on_menu_gui_input"]
+[connection signal="mouse_entered" from="Menu" to="." method="_on_menu_mouse_entered"]
+[connection signal="mouse_exited" from="Menu" to="." method="_on_menu_mouse_exited"]
+[connection signal="gui_input" from="LoginPopup/Content/SubmitBtn" to="." method="_on_submit_btn_gui_input"]

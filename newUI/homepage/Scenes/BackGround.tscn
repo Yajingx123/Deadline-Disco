@@ -1,0 +1,26 @@
+[gd_scene format=3 uid="uid://d12vcjcfiefbu"]
+
+[ext_resource type="Texture2D" uid="uid://dy3o6mifb7fp" path="res://AssetBunddle/Sprites/universeBackground.jpg" id="1_eusa8"]
+[ext_resource type="PackedScene" uid="uid://bje1of5atggde" path="res://Scenes/Planet.tscn" id="2_iw1j8"]
+[ext_resource type="PackedScene" uid="uid://sixtvjpu3ckb" path="res://Scenes/Player.tscn" id="3_vvphy"]
+
+[node name="Backgroud" type="Node2D" unique_id=1338679727]
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1524746762]
+texture = ExtResource("1_eusa8")
+metadata/_edit_lock_ = true
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1939833951]
+zoom = Vector2(0.4, 0.4)
+metadata/_edit_lock_ = true
+
+[node name="Planet" parent="." unique_id=490313873 instance=ExtResource("2_iw1j8")]
+position = Vector2(-8, 1090.0001)
+scale = Vector2(2.785, 2.785)
+metadata/_edit_lock_ = true
+
+[node name="Player" parent="." unique_id=1343888655 instance=ExtResource("3_vvphy")]
+position = Vector2(0, 173)
+scale = Vector2(1.945, 1.945)
+move_speed = 300.0
+metadata/_edit_lock_ = true

@@ -1,0 +1,38 @@
+[gd_scene format=3 uid="uid://3p4kvmyjo8rx"]
+
+[ext_resource type="Script" uid="uid://dvhrksd0i1cmj" path="res://Scripts/door.gd" id="1_mw28t"]
+[ext_resource type="FontFile" uid="uid://dj8m3ejixir1v" path="res://AssetBunddle/Font/Myfont-Regular.ttf" id="2_mw28t"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_mw28t"]
+load_path = "res://.godot/imported/door.png-14a3d21b1ebea2e01f41c9179e07af6b.ctex"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7mbvs"]
+size = Vector2(219.75, 330.25)
+
+[node name="Area2D" type="Area2D" unique_id=270785415]
+script = ExtResource("1_mw28t")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1981190869]
+texture = SubResource("CompressedTexture2D_mw28t")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=356704593]
+shape = SubResource("RectangleShape2D_7mbvs")
+
+[node name="Tip" type="Label" parent="." unique_id=218024071]
+visible = false
+custom_minimum_size = Vector2(200, 0)
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -94.0
+offset_top = -288.0
+offset_right = 106.0
+offset_bottom = -151.0
+grow_horizontal = 2
+theme_override_fonts/font = ExtResource("2_mw28t")
+theme_override_font_sizes/font_size = 57
+text = "
+"
+horizontal_alignment = 3
+vertical_alignment = 2
+autowrap_mode = 2

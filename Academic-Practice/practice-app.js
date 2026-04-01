@@ -27,6 +27,21 @@
     return params.get(name) || fallback;
   }
 
+  function getCookie(name) {
+    const prefix = name + "=";
+    const pair = document.cookie.split("; ").find(function (item) { return item.indexOf(prefix) === 0; });
+    return pair ? decodeURIComponent(pair.slice(prefix.length)) : "";
+  }
+
+  const UI_MODE = getParam("ui", "") || getCookie("ui_mode");
+
+  function withUiMode(url) {
+    if (UI_MODE !== "godot") {
+      return url;
+    }
+    return url + (url.indexOf("?") === -1 ? "?" : "&") + "ui=godot";
+  }
+
   function buildAbsoluteProjectUrl(pathWithQuery) {
     return new URL(pathWithQuery, window.location.origin + "/").toString();
   }
@@ -396,7 +411,7 @@
     } catch (_err) {
       window.name = "";
     }
-    window.location.href = FORUM_COMPOSE_URL;
+    window.location.href = withUiMode(FORUM_COMPOSE_URL);
   }
 
   function goBack(target) {
@@ -1218,7 +1233,7 @@
 
         card.querySelector(".video-go-btn").addEventListener("click", function () {
           const targetPage = mode === "respond" ? "respond_training.html" : "note_training.html";
-          window.location.href = targetPage + "?mode=" + mode + "&videoId=" + video.id;
+          window.location.href = withUiMode(targetPage + "?mode=" + mode + "&videoId=" + video.id);
         });
 
         resultList.appendChild(card);
@@ -1422,7 +1437,7 @@
 
       if (recordAnswerError) recordAnswerError.classList.add("hidden");
 
-      const trainingPath = "Academic-Practice/note_training.html?mode=" + encodeURIComponent(mode) + "&videoId=" + encodeURIComponent(video.id);
+      const trainingPath = withUiMode("Academic-Practice/note_training.html?mode=" + encodeURIComponent(mode) + "&videoId=" + encodeURIComponent(video.id));
       const trainingUrl = buildAbsoluteProjectUrl(trainingPath);
       const answerText = buildSharedAnswerText(values);
       const prefillContent = [
@@ -1607,7 +1622,7 @@
     }
 
     function buildRespondShareContent() {
-      const trainingPath = "Academic-Practice/respond_training.html?mode=" + encodeURIComponent(mode) + "&videoId=" + encodeURIComponent(video.id);
+      const trainingPath = withUiMode("Academic-Practice/respond_training.html?mode=" + encodeURIComponent(mode) + "&videoId=" + encodeURIComponent(video.id));
       const trainingUrl = buildAbsoluteProjectUrl(trainingPath);
       const audioFileName = "response-" + video.id + "." + getAudioExtensionFromMime(currentAudioMime);
       return [

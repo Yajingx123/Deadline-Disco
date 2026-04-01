@@ -48,8 +48,24 @@ set LOG_ERR=%cd%\service_logs\%NAME%_%PORT%.err.log
 start /min "admin" cmd /c "cd /d "%WORKDIR%" && npm run dev -- --host 127.0.0.1 --port 5174 > "%LOG_OUT%" 2> "%LOG_ERR%""
 echo [started] admin http://127.0.0.1:5174
 
+:: ====================== 5. godot homepage (python 5500) ======================
+set NAME=godot_ui
+set PORT=5500
+set WORKDIR=%cd%\newUI\homepage\Release
+set LOG_OUT=%cd%\service_logs\%NAME%_%PORT%.out.log
+set LOG_ERR=%cd%\service_logs\%NAME%_%PORT%.err.log
+
+start /min "godot_ui" cmd /c "cd /d "%WORKDIR%" && python serve.py > "%LOG_OUT%" 2> "%LOG_ERR%""
+echo [started] godot_ui http://127.0.0.1:5500
+
 echo.
 echo Logs are in service_logs
 echo All services started successfully!
+echo.
+echo === Entry URLs (open in browser) ===
+echo   Main homepage (default^):     http://127.0.0.1:8001/home.html
+echo   (or via index redirect^)      http://127.0.0.1:8001/
+echo   Godot animated UI:           http://127.0.0.1:5500/index.html
+echo   Tip: start from Main; use "Animated Home" in nav or Godot switch to swap.
 echo.
 pause
