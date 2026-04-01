@@ -1,0 +1,209 @@
+[gd_scene format=3 uid="uid://dt0h3ey77fr11"]
+
+[ext_resource type="Script" uid="uid://dhy5vtaywtevx" path="res://Scripts/global/right_side_btn.gd" id="1_5syix"]
+[ext_resource type="Texture2D" uid="uid://nf81w7jqt1ou" path="res://Assets/Sprites/right_side_btn/switch.png" id="2_yo8lr"]
+[ext_resource type="Texture2D" uid="uid://b556815mp1q3h" path="res://Assets/Sprites/menu_button.png" id="3_exwb4"]
+[ext_resource type="Texture2D" uid="uid://cxoo4jrrlrs70" path="res://Assets/Sprites/login.png" id="4_ufkks"]
+[ext_resource type="Texture2D" uid="uid://b3hgjqafkxb" path="res://Assets/Sprites/right_side_btn/settings.png" id="5_648te"]
+[ext_resource type="FontFile" uid="uid://dj8m3ejixir1v" path="res://Assets/Fonts/Myfont-Regular.ttf" id="5_yo8lr"]
+[ext_resource type="Texture2D" uid="uid://c2the24nbl3jv" path="res://Assets/Sprites/right_side_btn/team.png" id="6_tn37e"]
+[ext_resource type="Texture2D" uid="uid://dngqp7oggryu0" path="res://Assets/Sprites/right_side_btn/profile.png" id="7_mqaxc"]
+[ext_resource type="Texture2D" uid="uid://dsri2i6ng8rva" path="res://Assets/Sprites/right_side_btn/message.png" id="8_8kgb7"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_8umk0"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_ju374"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_sym7s"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_o1hx8"]
+
+[node name="RightSideBtn" type="CanvasLayer" unique_id=830122360]
+script = ExtResource("1_5syix")
+
+[node name="Button" type="Node2D" parent="." unique_id=1493281610]
+
+[node name="Switch" type="TextureRect" parent="Button" unique_id=1641067591]
+offset_left = 1076.0
+offset_top = 331.0
+offset_right = 1299.3333
+offset_bottom = 517.6667
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("2_yo8lr")
+
+[node name="Label" type="Label" parent="Button/Switch" unique_id=243432634]
+layout_mode = 0
+offset_left = 53.333332
+offset_top = 190.0
+offset_right = 189.33333
+offset_bottom = 222.0
+theme_override_fonts/font = ExtResource("5_yo8lr")
+theme_override_font_sizes/font_size = 40
+text = "Switch"
+
+[node name="Menu" type="TextureRect" parent="Button" unique_id=1907727849]
+offset_left = 1080.0001
+offset_top = 7.0
+offset_right = 1237.0001
+offset_bottom = 147.0
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("3_exwb4")
+
+[node name="Label" type="Label" parent="Button/Menu" unique_id=365862783]
+layout_mode = 0
+offset_left = 34.499966
+offset_top = 139.99998
+offset_right = 136.49997
+offset_bottom = 171.99998
+theme_override_fonts/font = ExtResource("5_yo8lr")
+theme_override_font_sizes/font_size = 34
+text = "Menu"
+
+[node name="Settings" type="TextureRect" parent="Button" unique_id=96455953]
+offset_left = 1085.0
+offset_top = 419.0
+offset_right = 1281.6667
+offset_bottom = 605.6667
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("5_648te")
+
+[node name="Label" type="Label" parent="Button/Settings" unique_id=1621603306]
+layout_mode = 0
+offset_left = 13.333333
+offset_top = 196.66666
+offset_right = 185.33333
+offset_bottom = 228.66666
+theme_override_fonts/font = ExtResource("5_yo8lr")
+theme_override_font_sizes/font_size = 40
+text = "Settings"
+
+[node name="Team" type="TextureRect" parent="Button" unique_id=2085642183]
+offset_left = 1081.0
+offset_top = 89.0
+offset_right = 1289.0
+offset_bottom = 273.0
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("6_tn37e")
+
+[node name="Label" type="Label" parent="Button/Team" unique_id=872531934]
+layout_mode = 0
+offset_left = 49.999794
+offset_top = 193.33333
+offset_right = 151.99979
+offset_bottom = 225.33333
+theme_override_fonts/font = ExtResource("5_yo8lr")
+theme_override_font_sizes/font_size = 40
+text = "Team"
+
+[node name="Profile" type="TextureRect" parent="Button" unique_id=1494895653]
+offset_left = 1077.0
+offset_top = 250.0
+offset_right = 1300.3335
+offset_bottom = 440.0
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("7_mqaxc")
+
+[node name="Label" type="Label" parent="Button/Profile" unique_id=1837251258]
+layout_mode = 0
+offset_left = 50.0
+offset_top = 200.0
+offset_right = 190.0
+offset_bottom = 232.0
+theme_override_fonts/font = ExtResource("5_yo8lr")
+theme_override_font_sizes/font_size = 40
+text = "Profile"
+
+[node name="Message" type="TextureRect" parent="Button" unique_id=1069019772]
+offset_left = 1080.0
+offset_top = 172.0
+offset_right = 1280.0
+offset_bottom = 322.0
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("8_8kgb7")
+
+[node name="Label" type="Label" parent="Button/Message" unique_id=346405541]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 166.66666
+offset_right = 191.0
+offset_bottom = 198.66666
+theme_override_fonts/font = ExtResource("5_yo8lr")
+theme_override_font_sizes/font_size = 40
+text = "Message"
+
+[node name="LoginPopup" type="PanelContainer" parent="." unique_id=488282037]
+visible = false
+texture_filter = 1
+texture_repeat = 1
+offset_right = 2470.9678
+offset_bottom = 1397.8495
+scale = Vector2(0.465, 0.465)
+theme_override_styles/panel = SubResource("StyleBoxEmpty_8umk0")
+
+[node name="LockBg" type="ColorRect" parent="LoginPopup" unique_id=109832280]
+layout_mode = 2
+color = Color(0.22352941, 0.22352941, 0.22352941, 0.40784314)
+
+[node name="Content" type="TextureRect" parent="LoginPopup" unique_id=77009343]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture = ExtResource("4_ufkks")
+
+[node name="Title" type="Label" parent="LoginPopup/Content" unique_id=1348546357]
+layout_mode = 0
+offset_left = 190.30109
+offset_top = 69.27955
+offset_right = 346.3011
+offset_bottom = 117.27955
+theme_override_fonts/font = ExtResource("5_yo8lr")
+theme_override_font_sizes/font_size = 60
+text = "Login"
+
+[node name="UsernameInput" type="LineEdit" parent="LoginPopup/Content" unique_id=268880019]
+layout_mode = 0
+offset_left = 92.76344
+offset_top = 170.49463
+offset_right = 456.20435
+offset_bottom = 228.55914
+theme_override_styles/normal = SubResource("StyleBoxEmpty_ju374")
+
+[node name="PasswordInput" type="LineEdit" parent="LoginPopup/Content" unique_id=1833038839]
+layout_mode = 0
+offset_left = 97.064545
+offset_top = 290.92474
+offset_right = 449.75266
+offset_bottom = 359.74194
+theme_override_styles/normal = SubResource("StyleBoxEmpty_sym7s")
+secret = true
+
+[node name="SubmitBtn" type="Button" parent="LoginPopup/Content" unique_id=2049380678]
+layout_mode = 0
+offset_left = 166.64513
+offset_top = 434.87097
+offset_right = 381.69897
+offset_bottom = 514.4409
+theme_override_fonts/font = ExtResource("5_yo8lr")
+theme_override_font_sizes/font_size = 45
+theme_override_styles/normal = SubResource("StyleBoxEmpty_o1hx8")
+text = "login"
+
+[connection signal="gui_input" from="Button/Switch" to="." method="_on_switch_gui_input"]
+[connection signal="mouse_entered" from="Button/Switch" to="." method="_on_switch_mouse_entered"]
+[connection signal="mouse_exited" from="Button/Switch" to="." method="_on_switch_mouse_exited"]
+[connection signal="gui_input" from="Button/Menu" to="." method="_on_menu_gui_input"]
+[connection signal="mouse_entered" from="Button/Menu" to="." method="_on_menu_mouse_entered"]
+[connection signal="mouse_exited" from="Button/Menu" to="." method="_on_menu_mouse_exited"]
+[connection signal="gui_input" from="Button/Settings" to="." method="_on_settings_gui_input"]
+[connection signal="mouse_entered" from="Button/Settings" to="." method="_on_settings_mouse_entered"]
+[connection signal="mouse_exited" from="Button/Settings" to="." method="_on_settings_mouse_exited"]
+[connection signal="gui_input" from="Button/Team" to="." method="_on_team_gui_input"]
+[connection signal="mouse_entered" from="Button/Team" to="." method="_on_team_mouse_entered"]
+[connection signal="mouse_exited" from="Button/Team" to="." method="_on_team_mouse_exited"]
+[connection signal="gui_input" from="Button/Profile" to="." method="_on_profile_gui_input"]
+[connection signal="mouse_entered" from="Button/Profile" to="." method="_on_profile_mouse_entered"]
+[connection signal="mouse_exited" from="Button/Profile" to="." method="_on_profile_mouse_exited"]
+[connection signal="gui_input" from="Button/Message" to="." method="_on_message_gui_input"]
+[connection signal="mouse_entered" from="Button/Message" to="." method="_on_message_mouse_entered"]
+[connection signal="mouse_exited" from="Button/Message" to="." method="_on_message_mouse_exited"]
+[connection signal="gui_input" from="LoginPopup/Content/SubmitBtn" to="." method="_on_submit_btn_gui_input"]

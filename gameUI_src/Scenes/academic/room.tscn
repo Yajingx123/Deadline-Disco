@@ -1,0 +1,172 @@
+[gd_scene format=3 uid="uid://buhlagn4gjrou"]
+
+[ext_resource type="Texture2D" uid="uid://btg7qkulfs3pd" path="res://Assets/Sprites/room.png" id="1_hlpw5"]
+[ext_resource type="Script" uid="uid://wmbp5bk2p347" path="res://Scripts/academic/exit.gd" id="3_7esl3"]
+[ext_resource type="FontFile" uid="uid://dj8m3ejixir1v" path="res://Assets/Fonts/Myfont-Regular.ttf" id="3_fwidp"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_7esl3"]
+radius = 415.39017
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_d4xm3"]
+size = Vector2(385, 441)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8gsmh"]
+size = Vector2(559, 384)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0bevf"]
+size = Vector2(456, 351.5)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8w0og"]
+size = Vector2(540, 258)
+
+[node name="Node2D" type="Node2D" unique_id=74389076]
+
+[node name="Room" type="Sprite2D" parent="." unique_id=1638942936]
+texture = ExtResource("1_hlpw5")
+metadata/_edit_lock_ = true
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1685550079]
+zoom = Vector2(0.33, 0.33)
+
+[node name="SpawnPoint" type="Marker2D" parent="." unique_id=211047109]
+position = Vector2(-191, 781)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=1334845278]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="StaticBody2D" unique_id=1233584513]
+polygon = PackedVector2Array(-80, 687, 892, 687, 897, -574, -888, -573, -883, 683, -321, 680, -324, 971, -1458, 964, -1453, -956, 1451, -946, 1458, 941, -92, 944)
+
+[node name="GameArea" type="StaticBody2D" parent="." unique_id=1825090818]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="GameArea" unique_id=219192387]
+position = Vector2(724, 470)
+shape = SubResource("CircleShape2D_7esl3")
+
+[node name="Label" type="Label" parent="GameArea" unique_id=818790697]
+visible = false
+offset_left = -801.0
+offset_top = -934.0
+offset_right = 807.0
+offset_bottom = -823.0
+theme_override_fonts/font = ExtResource("3_fwidp")
+theme_override_font_sizes/font_size = 120
+text = "Game Area"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label" type="Label" parent="GameArea/Label" unique_id=141902152]
+visible = false
+layout_mode = 0
+offset_left = 126.0
+offset_top = 69.0
+offset_right = 1491.0
+offset_bottom = 293.0
+theme_override_fonts/font = ExtResource("3_fwidp")
+theme_override_font_sizes/font_size = 50
+text = "A variety of games help you learn English in a fun way."
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="NoteArea" type="StaticBody2D" parent="." unique_id=2115049123]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="NoteArea" unique_id=508419834]
+position = Vector2(-714.5, 376.5)
+shape = SubResource("RectangleShape2D_d4xm3")
+
+[node name="Label" type="Label" parent="NoteArea" unique_id=1575120617]
+visible = false
+offset_left = -801.0
+offset_top = -934.0
+offset_right = 807.0
+offset_bottom = -823.0
+theme_override_fonts/font = ExtResource("3_fwidp")
+theme_override_font_sizes/font_size = 120
+text = "Listening and Understand"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label" type="Label" parent="NoteArea/Label" unique_id=1112402243]
+visible = false
+layout_mode = 0
+offset_left = 126.0
+offset_top = 69.0
+offset_right = 1491.0
+offset_bottom = 293.0
+theme_override_fonts/font = ExtResource("3_fwidp")
+theme_override_font_sizes/font_size = 50
+text = "Watch and listen to the videos and take down your note to gasp the main idea"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="RespondAera" type="StaticBody2D" parent="." unique_id=2008320735]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RespondAera" unique_id=1831165235]
+position = Vector2(-702.5, -413)
+shape = SubResource("RectangleShape2D_8gsmh")
+
+[node name="Label" type="Label" parent="RespondAera" unique_id=1536979005]
+visible = false
+offset_left = -801.0
+offset_top = -934.0
+offset_right = 807.0
+offset_bottom = -823.0
+theme_override_fonts/font = ExtResource("3_fwidp")
+theme_override_font_sizes/font_size = 120
+text = "Listening and Respond"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label" type="Label" parent="RespondAera/Label" unique_id=1952450732]
+visible = false
+layout_mode = 0
+offset_left = 126.0
+offset_top = 69.0
+offset_right = 1491.0
+offset_bottom = 293.0
+theme_override_fonts/font = ExtResource("3_fwidp")
+theme_override_font_sizes/font_size = 50
+text = "Various topics for you to give respond and learn from the people in different countries"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="PairArea" type="StaticBody2D" parent="." unique_id=1624568029]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PairArea" unique_id=1478657771]
+position = Vector2(677, -286.75)
+shape = SubResource("RectangleShape2D_0bevf")
+
+[node name="Label" type="Label" parent="PairArea" unique_id=1695087471]
+visible = false
+offset_left = -801.0
+offset_top = -934.0
+offset_right = 807.0
+offset_bottom = -823.0
+theme_override_fonts/font = ExtResource("3_fwidp")
+theme_override_font_sizes/font_size = 120
+text = "Pair Speaking Area"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label" type="Label" parent="PairArea/Label" unique_id=875754893]
+visible = false
+layout_mode = 0
+offset_left = 126.0
+offset_top = 69.0
+offset_right = 1491.0
+offset_bottom = 293.0
+theme_override_fonts/font = ExtResource("3_fwidp")
+theme_override_font_sizes/font_size = 50
+text = "Speak with people in a room with provided topic"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Exit" type="Area2D" parent="." unique_id=1161189708]
+script = ExtResource("3_7esl3")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Exit" unique_id=1333965602]
+position = Vector2(-190, 1091)
+shape = SubResource("RectangleShape2D_8w0og")
+
+[connection signal="body_entered" from="Exit" to="Exit" method="_on_body_entered"]

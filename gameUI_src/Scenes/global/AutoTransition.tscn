@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://degivfthkapbd"]
+
+[ext_resource type="Script" uid="uid://ctqokidofv3y0" path="res://Scripts/global/auto_transition.gd" id="1_ljmce"]
+
+[node name="AutoTransition" type="Node2D" unique_id=1864262817]
+script = ExtResource("1_ljmce")
+
+[node name="Transition" type="ColorRect" parent="." unique_id=1804625955]
+offset_left = -1664.0
+offset_top = -945.0
+offset_right = 1661.0
+offset_bottom = 1225.0
+mouse_filter = 2
+color = Color(0, 0, 0, 1)
