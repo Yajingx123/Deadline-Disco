@@ -19,6 +19,20 @@
     return response.json().catch(() => ({ status: 'error', message: 'Invalid response' }));
   }
 
+  function releaseRoleGuard() {
+    document.documentElement.classList.remove('acadbeat-role-guard');
+  }
+
+  function withMessageCenterSource(url) {
+    try {
+      const next = new URL(url, window.location.origin);
+      next.searchParams.set('from', window.location.href);
+      return next.toString();
+    } catch (_err) {
+      return url;
+    }
+  }
+
   async function loadMessageSummary(messageApiUrl, user, badgeEl) {
       if (!badgeEl || !user) {
         if (badgeEl) {
@@ -33,8 +47,8 @@
     try {
       const response = await fetch(messageApiUrl, { credentials: 'include' });
       const data = await response.json().catch(() => ({ ok: false }));
-      const chatsUnread = Number(data?.summary?.chatsUnread || 0);
-      if (chatsUnread >= 1) {
+      const totalUnread = Number(data?.summary?.totalUnread || 0);
+      if (totalUnread >= 1) {
         badgeEl.hidden = false;
         badgeEl.style.display = 'inline-flex';
         badgeEl.classList.add('is-visible');
@@ -57,17 +71,25 @@
     const mount = document.getElementById(options.mountId || 'acadbeatNav');
     if (!mount) return null;
 
+    if (typeof mount.__acadbeatCleanup === 'function') {
+      mount.__acadbeatCleanup();
+      mount.__acadbeatCleanup = null;
+    }
+
     const basePath = withSlashPrefix(options.basePath || './');
     const homeUrl = options.homeUrl || `${basePath}home.html`;
-    const forumUrl = options.forumUrl || 'http://127.0.0.1:5173/?view=forum';
-    const technologyUrl = options.technologyUrl || `${basePath}technology.html`;
+    const forumUrl = options.forumUrl || `${homeUrl}?module=Dialogue`;
+    const technologyUrl = options.technologyUrl || `${homeUrl}?module=Method`;
     const authApiBase = options.authApiBase || `${basePath}Auth/backend/api`;
     const loginUrl = options.loginUrl || `${homeUrl}?login=1`;
     const ownerUrl = options.ownerUrl || `${basePath}owner.html`;
-    const adminUrl = options.adminUrl || 'http://127.0.0.1:5174/';
-    const messageCenterUrl = options.messageCenterUrl || 'http://127.0.0.1:5173/?view=messages';
+    const adminUrl = options.adminUrl || 'http://127.0.0.1:8001/admin_page/dist/index.html';
+    const messageCenterUrl = options.messageCenterUrl || 'http://127.0.0.1:8001/message-center-project/dist/index.html';
     const messageApiUrl = options.messageApiUrl || 'http://127.0.0.1:8001/forum-project/api/message-center.php?summaryOnly=1';
     const active = String(options.active || '').toLowerCase();
+    const showChallengeButton = Boolean(options.showChallengeButton);
+    const challengeButtonLabel = options.challengeButtonLabel || 'CHALLENGE';
+    const redirectAdmins = Boolean(options.redirectAdmins);
 
     mount.innerHTML = `
       <nav class="acadbeat-shared-nav">
@@ -78,7 +100,8 @@
           <a class="nav-item ${active === 'technology' ? 'active' : ''}" href="${homeUrl}?module=Method">Technology</a>
         </div>
         <div class="user-group">
-          <a class="message-link" id="messageCenterLink" href="${messageCenterUrl}" aria-label="Open message center" hidden>
+          ${showChallengeButton ? `<button type="button" class="nav-utility-btn" id="sharedChallengeBtn">${challengeButtonLabel}</button>` : ''}
+          <a class="message-link" id="messageCenterLink" href="${withMessageCenterSource(messageCenterUrl)}" aria-label="Open message center" hidden>
             ✉
             <span class="message-badge" id="messageBadge" hidden>0</span>
           </a>
@@ -97,6 +120,7 @@
     const logoutLink = mount.querySelector('#logoutLink');
     const messageLink = mount.querySelector('#messageCenterLink');
     const messageBadge = mount.querySelector('#messageBadge');
+    const challengeButton = mount.querySelector('#sharedChallengeBtn');
 
     let authUser = null;
 
@@ -121,6 +145,13 @@
         messageBadge.classList.remove('is-visible');
         messageBadge.textContent = '';
       }
+      if (challengeButton) {
+        challengeButton.hidden = !authUser;
+      }
+    }
+
+    if (challengeButton && typeof options.onChallengeClick === 'function') {
+      challengeButton.addEventListener('click', options.onChallengeClick);
     }
 
     userSection?.addEventListener('click', () => {
@@ -143,15 +174,19 @@
 
     const data = await authFetch(authApiBase, 'me.php');
     authUser = data.status === 'success' ? data.user : null;
+    if (redirectAdmins && authUser && String(authUser.role || '').toLowerCase() === 'admin') {
+      window.location.replace(adminUrl);
+      return authUser;
+    }
     window.acadbeatNavState = { user: authUser };
     window.dispatchEvent(new CustomEvent('acadbeat:nav-user', { detail: { user: authUser } }));
     renderAuthUI();
     await loadMessageSummary(messageApiUrl, authUser, messageBadge);
 
-    window.addEventListener('acadbeat:message-summary', (event) => {
-      const chatsUnread = Number(event?.detail?.summary?.chatsUnread ?? event?.detail?.chatsUnread ?? 0);
+    const handleSummaryEvent = (event) => {
+      const totalUnread = Number(event?.detail?.summary?.totalUnread ?? event?.detail?.totalUnread ?? 0);
       if (!messageBadge || !authUser) return;
-      if (chatsUnread >= 1) {
+      if (totalUnread >= 1) {
         messageBadge.hidden = false;
         messageBadge.style.display = 'inline-flex';
         messageBadge.classList.add('is-visible');
@@ -162,7 +197,32 @@
         messageBadge.classList.remove('is-visible');
         messageBadge.textContent = '';
       }
-    });
+    };
+    window.addEventListener('acadbeat:message-summary', handleSummaryEvent);
+
+    if (window.acadbeatNavSummaryPollTimer) {
+      window.clearInterval(window.acadbeatNavSummaryPollTimer);
+      window.acadbeatNavSummaryPollTimer = null;
+    }
+
+    if (authUser) {
+      window.acadbeatNavSummaryPollTimer = window.setInterval(() => {
+        if (document.hidden) {
+          return;
+        }
+        loadMessageSummary(messageApiUrl, authUser, messageBadge).catch(() => {});
+      }, 3000);
+    }
+
+    releaseRoleGuard();
+
+    mount.__acadbeatCleanup = function cleanupAcadbeatNav() {
+      window.removeEventListener('acadbeat:message-summary', handleSummaryEvent);
+      if (window.acadbeatNavSummaryPollTimer) {
+        window.clearInterval(window.acadbeatNavSummaryPollTimer);
+        window.acadbeatNavSummaryPollTimer = null;
+      }
+    };
 
     return authUser;
   };

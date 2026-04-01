@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from 'react'
-import AppTopNav from '../components/AppTopNav'
 import PersonalHub from './PersonalHub'
 import { connectRealtime, fetchMessageCenter, fetchSessionUser, markMessageCenterCategoryRead, markMessageCenterNoticeRead } from '../api/forumApi'
 import './MessageCenter.css'
@@ -34,18 +33,67 @@ const TAB_META = [
   { id: 'system', label: 'System Notices', desc: 'Product and community updates' },
 ]
 
+const FALLBACK_BACK_URL = 'http://127.0.0.1:8001/home.html?module=Dialogue'
+
+function resolveBackUrl() {
+  const params = new URLSearchParams(window.location.search)
+  const from = params.get('from')
+  if (from) {
+    try {
+      const decoded = decodeURIComponent(from)
+      const parsed = new URL(decoded, window.location.origin)
+      if (parsed.origin === window.location.origin) {
+        sessionStorage.setItem('acadbeatMessageCenterFrom', parsed.toString())
+        return parsed.toString()
+      }
+    } catch (_err) {
+      // Ignore malformed referrer values.
+    }
+  }
+
+  const stored = sessionStorage.getItem('acadbeatMessageCenterFrom')
+  if (stored) {
+    try {
+      const parsed = new URL(stored, window.location.origin)
+      if (parsed.origin === window.location.origin) {
+        return parsed.toString()
+      }
+    } catch (_err) {
+      // Ignore malformed storage values.
+    }
+  }
+
+  if (document.referrer) {
+    try {
+      const parsed = new URL(document.referrer, window.location.origin)
+      if (parsed.origin === window.location.origin) {
+        return parsed.toString()
+      }
+    } catch (_err) {
+      // Ignore malformed browser referrers.
+    }
+  }
+
+  return FALLBACK_BACK_URL
+}
+
 export default function MessageCenter() {
   const [currentUser, setCurrentUser] = useState(null)
   const [activeTab, setActiveTab] = useState('messages')
   const [data, setData] = useState({ summary: {}, replies: [], reactions: [], notices: [] })
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const [backUrl] = useState(resolveBackUrl)
 
   const loadCenter = async () => {
     const [sessionData, centerData] = await Promise.all([
       fetchSessionUser(),
       fetchMessageCenter(false),
     ])
+    if ((sessionData.user?.role || '').toLowerCase() === 'admin') {
+      window.location.replace('http://127.0.0.1:8001/admin_page/dist/index.html')
+      return
+    }
     setCurrentUser(sessionData.user || null)
     setData({
       summary: centerData.summary || {},
@@ -67,6 +115,10 @@ export default function MessageCenter() {
           fetchMessageCenter(false),
         ])
         if (cancelled) return
+        if ((sessionData.user?.role || '').toLowerCase() === 'admin') {
+          window.location.replace('http://127.0.0.1:8001/admin_page/dist/index.html')
+          return
+        }
         setCurrentUser(sessionData.user || null)
         setData({
           summary: centerData.summary || {},
@@ -295,7 +347,11 @@ export default function MessageCenter() {
 
   return (
     <div className="forum-container forum-container--messages">
-      <AppTopNav currentUser={currentUser} activeMode="messages" />
+      <header className="message-center__topbar">
+        <button type="button" className="message-center__backBtn" onClick={() => { window.location.href = backUrl }}>
+          ←
+        </button>
+      </header>
 
       <section className="message-center">
         <aside className="message-center__sidebar">

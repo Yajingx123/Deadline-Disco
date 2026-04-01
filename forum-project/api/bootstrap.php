@@ -19,6 +19,31 @@ $allowedOrigins = [
     'http://127.0.0.1:8001',
 ];
 
+function forum_admin_url(): string {
+    return 'http://127.0.0.1:8001/admin_page/dist/index.html';
+}
+
+function forum_forum_url(string $suffix = ''): string {
+    return 'http://127.0.0.1:8001/forum-project/dist/index.html' . $suffix;
+}
+
+function forum_message_center_url(): string {
+    return 'http://127.0.0.1:8001/message-center-project/dist/index.html';
+}
+
+function forum_normalize_local_url(string $url): string {
+    $trimmed = trim($url);
+    if ($trimmed === '') {
+        return '';
+    }
+    $normalized = str_replace('http://127.0.0.1:5173/', forum_forum_url('?'), $trimmed);
+    $normalized = str_replace('http://127.0.0.1:5174/', forum_admin_url(), $normalized);
+    $normalized = str_replace('http://127.0.0.1:5173?', forum_forum_url('?'), $normalized);
+    $normalized = str_replace('http://127.0.0.1:8001/forum-project/dist/index.html?view=messages', forum_message_center_url(), $normalized);
+    $normalized = str_replace('http://127.0.0.1:8001/forum-project/dist/message-center.html', forum_message_center_url(), $normalized);
+    return $normalized;
+}
+
 $origin = (string)($_SERVER['HTTP_ORIGIN'] ?? '');
 if (in_array($origin, $allowedOrigins, true)) {
     header('Access-Control-Allow-Origin: ' . $origin);
@@ -300,7 +325,7 @@ function forum_sync_message_center_notifications(PDO $pdo, int $recipientUserId)
             CONCAT(u.username, ' replied to your post') AS title,
             LEFT(TRIM(fc.content_text), 180) AS body_text,
             'Reply' AS cta_label,
-            CONCAT('http://127.0.0.1:5173/?view=forum&postId=', fc.post_id) AS cta_url,
+            CONCAT('http://127.0.0.1:8001/forum-project/dist/index.html?view=forum&postId=', fc.post_id) AS cta_url,
             0 AS is_read,
             fc.created_at,
             fc.updated_at
@@ -342,7 +367,7 @@ function forum_sync_message_center_notifications(PDO $pdo, int $recipientUserId)
             CONCAT(u.username, ' replied to your comment') AS title,
             LEFT(TRIM(child.content_text), 180) AS body_text,
             'Reply' AS cta_label,
-            CONCAT('http://127.0.0.1:5173/?view=forum&postId=', child.post_id) AS cta_url,
+            CONCAT('http://127.0.0.1:8001/forum-project/dist/index.html?view=forum&postId=', child.post_id) AS cta_url,
             0 AS is_read,
             child.created_at,
             child.updated_at
@@ -382,7 +407,7 @@ function forum_sync_message_center_notifications(PDO $pdo, int $recipientUserId)
             CONCAT(u.username, ' liked your post') AS title,
             fp.title AS body_text,
             'View post' AS cta_label,
-            CONCAT('http://127.0.0.1:5173/?view=forum&postId=', l.post_id) AS cta_url,
+            CONCAT('http://127.0.0.1:8001/forum-project/dist/index.html?view=forum&postId=', l.post_id) AS cta_url,
             0 AS is_read,
             l.created_at,
             l.created_at
@@ -422,7 +447,7 @@ function forum_sync_message_center_notifications(PDO $pdo, int $recipientUserId)
             CONCAT(u.username, ' favorited your post') AS title,
             fp.title AS body_text,
             'View post' AS cta_label,
-            CONCAT('http://127.0.0.1:5173/?view=forum&postId=', f.post_id) AS cta_url,
+            CONCAT('http://127.0.0.1:8001/forum-project/dist/index.html?view=forum&postId=', f.post_id) AS cta_url,
             0 AS is_read,
             f.created_at,
             f.created_at

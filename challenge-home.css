@@ -183,10 +183,12 @@
     border-radius: 22px;
     background: rgba(255, 255, 255, 0.78);
     border: 1px solid rgba(58, 78, 107, 0.08);
-    padding: 18px 20px;
+    min-width: 224px;
+    padding: 18px 18px 16px;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: stretch;
     gap: 10px;
 }
 
@@ -202,12 +204,14 @@
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
     align-items: center;
+    justify-items: center;
     gap: 8px;
 }
 
 .challenge-countdown__unit {
+    width: 100%;
     min-width: 0;
-    padding: 14px 8px;
+    padding: 12px 6px;
     border-radius: 18px;
     background: linear-gradient(180deg, rgba(255, 245, 236, 0.98), rgba(255, 238, 225, 0.9));
     border: 1px solid rgba(255, 125, 33, 0.12);
@@ -217,7 +221,7 @@
 
 .challenge-countdown__unit strong {
     display: block;
-    font-size: 1.72rem;
+    font-size: 1.6rem;
     line-height: 1;
     color: #ff7d21;
     letter-spacing: 0.04em;
@@ -226,10 +230,10 @@
 
 .challenge-countdown__divider {
     color: rgba(255, 125, 33, 0.7);
-    font-size: 1.5rem;
+    font-size: 1.35rem;
     font-weight: 700;
     line-height: 1;
-    transform: translateY(-6px);
+    transform: translateY(0);
 }
 
 .slots-grid {

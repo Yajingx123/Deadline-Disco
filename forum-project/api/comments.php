@@ -107,7 +107,7 @@ try {
                 $commentId,
                 sprintf('%s replied to your post', (string)($user['username'] ?? 'Someone')),
                 forum_plain_text_preview($content, 180),
-                sprintf('http://127.0.0.1:5173/?view=forum&postId=%d', $postId),
+                sprintf('http://127.0.0.1:8001/forum-project/dist/index.html?view=forum&postId=%d', $postId),
             ]);
         } catch (Throwable $notificationError) {
             error_log('[forum comment notification] ' . $notificationError->getMessage());
@@ -145,7 +145,7 @@ try {
                 $commentId,
                 sprintf('%s replied to your comment', (string)($user['username'] ?? 'Someone')),
                 forum_plain_text_preview($content, 180),
-                sprintf('http://127.0.0.1:5173/?view=forum&postId=%d', $postId),
+                sprintf('http://127.0.0.1:8001/forum-project/dist/index.html?view=forum&postId=%d', $postId),
             ]);
         } catch (Throwable $notificationError) {
             error_log('[forum comment parent notification] ' . $notificationError->getMessage());

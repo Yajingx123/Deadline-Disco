@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+
 export default defineConfig({
-  base: '/forum-project/dist/',
+  base: '/message-center-project/dist/',
   plugins: [react()],
 })

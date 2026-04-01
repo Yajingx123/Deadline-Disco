@@ -72,6 +72,29 @@
   gap: 12px;
 }
 
+.acadbeat-shared-nav .nav-utility-btn {
+  min-height: 36px;
+  padding: 0 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(58, 78, 107, 0.18);
+  background: rgba(255, 255, 255, 0.74);
+  color: var(--acad-nav-text);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.acadbeat-shared-nav .nav-utility-btn:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.acadbeat-shared-nav .nav-utility-btn[hidden] {
+  display: none !important;
+}
+
 .acadbeat-shared-nav .message-link {
   position: relative;
   width: 36px;

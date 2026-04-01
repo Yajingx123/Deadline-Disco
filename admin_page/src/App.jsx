@@ -3,6 +3,7 @@ import './App.css'
 import Navbar from './components/Navbar'
 import ForumPostReview from './components/ForumPostReview'
 import AnnouncementManager from './components/AnnouncementManager'
+import WeeklyCompetitionShell from './components/WeeklyCompetitionShell'
 import { adminFetch, redirectToHome, redirectToLogin } from './api'
 
 function App() {
@@ -104,6 +105,10 @@ function App() {
 
     if (currentPage === 'announcements') {
       return <AnnouncementManager />
+    }
+
+    if (currentPage === 'competition') {
+      return <WeeklyCompetitionShell />
     }
 
     return <ForumPostReview />

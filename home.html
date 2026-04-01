@@ -9,6 +9,22 @@
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,500;1,700&family=Inter:wght@300;400;600;800&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="./challenge-home.css">
+    <link rel="stylesheet" href="./shared-nav.css">
+    <style>html.acadbeat-role-guard body{visibility:hidden}</style>
+    <script>
+        document.documentElement.classList.add('acadbeat-role-guard');
+        (async function guardAdminHome() {
+            try {
+                const response = await fetch('./Auth/backend/api/me.php', { credentials: 'include' });
+                const data = await response.json().catch(() => ({ status: 'error' }));
+                if (data.status === 'success' && data.user && String(data.user.role || '').toLowerCase() === 'admin') {
+                    window.location.replace('http://127.0.0.1:8001/admin_page/dist/index.html');
+                    return;
+                }
+            } catch (_err) {}
+            document.documentElement.classList.remove('acadbeat-role-guard');
+        })();
+    </script>
     <style>
         :root {
             --bg-color: #E4DFD8;
@@ -983,27 +999,7 @@
 
 <body>
 
-    <nav>
-        <div class="logo">Acad<span>Beat</span></div>
-        <div class="nav-menu">
-            <div class="nav-item active" onclick="loadModule('Insight', this)">Academic</div>
-            <div class="nav-item" onclick="loadModule('Dialogue', this)">Forum</div>
-            <div class="nav-item" onclick="loadModule('Method', this)">Technology</div>
-            <div class="nav-item" onclick="loadModule('Studio', this)">Studio</div>
-        </div>
-        <div class="user-group">
-            <button class="challenge-btn" id="challengeEntryBtn" onclick="toggleTeamModal(true)">CHALLENGE</button>
-            <a class="message-link" id="messageCenterLink" href="http://127.0.0.1:8001/forum-project/dist/index.html?view=messages" aria-label="Open message center" hidden>
-                ✉
-                <span class="message-badge" id="messageBadge" hidden>0</span>
-            </a>
-            <div class="user-section" id="userSection" onclick="handleUserAction()">
-                <span id="userLabel" style="font-size: 0.75rem; font-weight: 700;">LOGIN</span>
-                <div class="avatar" id="userAvatar">IN</div>
-            </div>
-            <a href="#" class="logout-link" id="logoutLink" onclick="return handleLogout(event)" style="display:none;">Log out</a>
-        </div>
-    </nav>
+    <div id="acadbeatNav"></div>
 
     <main id="app-viewport"></main>
 
@@ -1228,17 +1224,14 @@
     <script>
         const HOME_URL = './home.html';
         const OWNER_URL = './owner.html';
-        const ADMIN_URL = 'http://127.0.0.1:5174/';
+        const ADMIN_URL = 'http://127.0.0.1:8001/admin_page/dist/index.html';
         const VOCABULARY_URL = './vocba_prac/';
         const FORUM_URL = 'http://127.0.0.1:8001/forum-project/dist/index.html?view=forum';
         const TECHNOLOGY_URL = './technology.html';
         const ACADEMIC_PRACTICE_URL = './Academic-Practice/training.html';
-        const STUDIO_URL = './Studio/studio.html';
         const AUTH_API_BASE = './Auth/backend/api';
-        const MESSAGE_CENTER_API_URL = 'http://127.0.0.1:8001/forum-project/api/message-center.php?summaryOnly=1';
-        const REALTIME_WS_URL = 'ws://127.0.0.1:3001/ws';
         const authState = { user: null, mode: 'login' };
-        const homeRealtimeState = { socket: null, reconnectTimer: null, refreshTimer: null, summaryPollTimer: null, closedManually: false };
+        let currentHomeModule = 'Insight';
 
         function portalUrlForCurrentUser() {
             if (authState.user && String(authState.user.role || '').toLowerCase() === 'admin') {
@@ -1252,19 +1245,13 @@
             Lexis: { label: "Section I — Lexical Depth", btn: "Start Study" },
             Insight: { label: "Section II — Visual Intelligence", id: "02", topic: "Visual Anthropology: A Cinematic Study", btn: "View Stream" },
             Dialogue: { label: "Section III — Collective Intellect", id: "03", topic: "Current Thread: Linguistic Relativity in AI", btn: "Enter Forum" },
-            Method: { label: "Section IV — Technical Support", id: "04", topic: "Workflow Optimization: Academic Toolkit", btn: "Get Support" },
-            Studio: { label: "Section V — Game Studio", id: "05", topic: "Play interactive English mini-games to train vocabulary and strategy.", btn: "Enter Studio" }
+            Method: { label: "Section IV — Technical Support", id: "04", topic: "Workflow Optimization: Academic Toolkit", btn: "Get Support" }
         };
 
-        function navElementFor(name) {
-            const map = {
-                Lexis: '.nav-item:nth-child(1)',
-                Insight: '.nav-item:nth-child(1)',
-                Dialogue: '.nav-item:nth-child(2)',
-                Method: '.nav-item:nth-child(3)',
-                Studio: '.nav-item:nth-child(4)'
-            };
-            return document.querySelector(map[name] || map.Insight);
+        function navActiveForModule(name) {
+            if (name === 'Dialogue') return 'forum';
+            if (name === 'Method') return 'technology';
+            return 'academic';
         }
 
         function resolveModuleName(rawName) {
@@ -1289,125 +1276,33 @@
         }
 
         function renderAuthUI() {
-            const label = document.getElementById('userLabel');
-            const avatar = document.getElementById('userAvatar');
-            const logoutLink = document.getElementById('logoutLink');
-            const messageLink = document.getElementById('messageCenterLink');
-            const messageBadge = document.getElementById('messageBadge');
-            if (!label || !avatar || !logoutLink || !messageLink || !messageBadge) return;
-            if (authState.user) {
-                label.textContent = authState.user.username;
-                avatar.textContent = initialsOf(authState.user.username);
-                logoutLink.style.display = 'inline-flex';
-                messageLink.hidden = false;
-            } else {
-                label.textContent = 'LOGIN';
-                avatar.textContent = 'IN';
-                logoutLink.style.display = 'none';
-                messageLink.hidden = true;
-                messageBadge.hidden = true;
-                messageBadge.textContent = '';
-            }
             if (window.challengeHome && typeof window.challengeHome.syncAccess === 'function') {
                 window.challengeHome.syncAccess(authState.user);
             }
         }
 
-        async function loadMessageSummary() {
-            const messageBadge = document.getElementById('messageBadge');
-            if (!messageBadge || !authState.user) {
-                if (messageBadge) {
-                    messageBadge.hidden = true;
-                    messageBadge.textContent = '';
-                }
+        async function refreshSharedNav() {
+            if (typeof window.initializeAcadBeatNav !== 'function') {
                 return;
             }
-
-            try {
-                const response = await fetch(MESSAGE_CENTER_API_URL, { credentials: 'include' });
-                const data = await response.json().catch(() => ({ ok: false }));
-                const chatsUnread = Number(data?.summary?.chatsUnread || 0);
-                if (chatsUnread > 0) {
-                    messageBadge.hidden = false;
-                    messageBadge.textContent = '';
-                    messageBadge.style.display = 'inline-flex';
-                } else {
-                    messageBadge.hidden = true;
-                    messageBadge.textContent = '';
-                    messageBadge.style.display = 'none';
-                }
-            } catch (_err) {
-                messageBadge.hidden = true;
-                messageBadge.textContent = '';
-                messageBadge.style.display = 'none';
-            }
-        }
-
-        function scheduleMessageSummaryRefresh() {
-            if (homeRealtimeState.refreshTimer) {
-                window.clearTimeout(homeRealtimeState.refreshTimer);
-            }
-            homeRealtimeState.refreshTimer = window.setTimeout(() => {
-                homeRealtimeState.refreshTimer = null;
-                loadMessageSummary().catch(() => {});
-            }, 120);
-        }
-
-        function restartMessageSummaryPolling() {
-            if (homeRealtimeState.summaryPollTimer) {
-                window.clearInterval(homeRealtimeState.summaryPollTimer);
-                homeRealtimeState.summaryPollTimer = null;
-            }
-            if (!authState.user) {
-                return;
-            }
-            homeRealtimeState.summaryPollTimer = window.setInterval(() => {
-                if (document.hidden) {
-                    return;
-                }
-                loadMessageSummary().catch(() => {});
-            }, 3000);
-        }
-
-        function connectHomeRealtime() {
-            if (homeRealtimeState.socket || homeRealtimeState.closedManually) {
-                return;
-            }
-
-            try {
-                const socket = new WebSocket(REALTIME_WS_URL);
-                homeRealtimeState.socket = socket;
-
-                socket.addEventListener('message', (event) => {
-                    try {
-                        const payload = JSON.parse(event.data);
-                        const type = String(payload?.type || '');
-                        if (!type.startsWith('chat.') && !type.startsWith('message-center.') && !type.startsWith('forum.')) {
-                            return;
-                        }
-                        if (!authState.user) {
-                            return;
-                        }
-                        scheduleMessageSummaryRefresh();
-                    } catch (_err) {}
-                });
-
-                socket.addEventListener('close', () => {
-                    homeRealtimeState.socket = null;
-                    if (homeRealtimeState.closedManually) {
-                        return;
-                    }
-                    homeRealtimeState.reconnectTimer = window.setTimeout(connectHomeRealtime, 1500);
-                });
-
-                socket.addEventListener('error', () => {
-                    try {
-                        socket.close();
-                    } catch (_err) {}
-                });
-            } catch (_err) {
-                homeRealtimeState.socket = null;
-            }
+            await window.initializeAcadBeatNav({
+                mountId: 'acadbeatNav',
+                basePath: './',
+                active: navActiveForModule(currentHomeModule),
+                authApiBase: './Auth/backend/api',
+                homeUrl: './home.html',
+                ownerUrl: './owner.html',
+                adminUrl: 'http://127.0.0.1:8001/admin_page/dist/index.html',
+                forumUrl: './home.html?module=Dialogue',
+                technologyUrl: './home.html?module=Method',
+                messageCenterUrl: 'http://127.0.0.1:8001/message-center-project/dist/index.html',
+                redirectAdmins: true,
+                showChallengeButton: true,
+                challengeButtonLabel: 'CHALLENGE',
+                onChallengeClick: () => toggleTeamModal(true)
+            });
+            authState.user = (window.acadbeatNavState && window.acadbeatNavState.user) || authState.user;
+            renderAuthUI();
         }
 
         async function authFetch(path, options = {}) {
@@ -1425,8 +1320,7 @@
             const data = await authFetch('me.php');
             authState.user = data.status === 'success' ? data.user : null;
             renderAuthUI();
-            await loadMessageSummary();
-            restartMessageSummaryPolling();
+            await refreshSharedNav();
         }
 
         function openAuthModal(mode = 'login', message = '') {
@@ -1508,9 +1402,7 @@
             }
 
             authState.user = data.user || null;
-            renderAuthUI();
-            await loadMessageSummary();
-            restartMessageSummaryPolling();
+            await refreshSharedNav();
             closeAuthModal();
             if (authState.user && String(authState.user.role || '').toLowerCase() === 'admin') {
                 window.location.href = ADMIN_URL;
@@ -1530,11 +1422,9 @@
             if (!authState.user) return false;
             await authFetch('logout.php');
             authState.user = null;
-            renderAuthUI();
-            await loadMessageSummary();
-            restartMessageSummaryPolling();
+            await refreshSharedNav();
             closeAuthModal();
-            loadModule('Insight', navElementFor('Insight'));
+            loadModule('Insight');
             return false;
         }
 
@@ -1559,17 +1449,11 @@
                 window.location.href = TECHNOLOGY_URL;
                 return;
             }
-            if (name === 'Studio') {
-                window.location.href = STUDIO_URL;
-                return;
-            }
             openSiteModal('Not connected yet', 'This module action has not been connected yet.');
         }
 
-        function loadModule(name, el) {
-            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-            if (el) el.classList.add('active');
-
+        function loadModule(name) {
+            currentHomeModule = name;
             const viewport = document.getElementById('app-viewport');
             const m = data[name];
 
@@ -1616,21 +1500,6 @@
                             </div>
                         </div>`;
             }
-            else if (name === 'Studio') {
-                html += `<div class="method-isometric">
-                            <div class="iso-card" style="left: 72px; top: 28px; border-color: var(--primary-color);">
-                                <div class="iso-ui-header" style="background:var(--primary-color); opacity:0.35;"></div>
-                                <div class="iso-ui-element"></div>
-                                <div class="iso-ui-element" style="width: 78%;"></div>
-                            </div>
-                            <div class="iso-card" style="left: 218px; top: 48px; animation-delay: -1.6s;">
-                                <div class="iso-ui-header"></div>
-                                <div class="iso-ui-element"></div>
-                                <div class="iso-ui-element"></div>
-                            </div>
-                        </div>`;
-            }
-
             if (name !== 'Lexis') {
                 html += `<div class="daily-focus-card">
                             <div class="card-number">${m.id}</div>
@@ -1653,9 +1522,8 @@
         window.onload = async () => {
             const params = new URLSearchParams(window.location.search);
             const moduleName = resolveModuleName(params.get('module'));
-            loadModule(moduleName, navElementFor(moduleName));
-            connectHomeRealtime();
-            await loadAuthUser();
+            loadModule(moduleName);
+            await refreshSharedNav();
             if (params.get('login') === '1') {
                 openAuthModal('login', 'Please log in first.');
             }
@@ -1664,6 +1532,7 @@
             }
         };
     </script>
+    <script src="./shared-nav.js"></script>
     <script src="./challenge-home.js"></script>
 </body>
 </html>

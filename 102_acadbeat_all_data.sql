@@ -31,6 +31,8 @@ DELETE FROM challenge_team_public_listings;
 DELETE FROM message_center_notice_reads;
 DELETE FROM message_center_notifications;
 DELETE FROM message_center_system_notices;
+DELETE FROM announcement_reads;
+DELETE FROM announcements;
 DELETE FROM forum_post_labels;
 DELETE FROM forum_labels;
 DELETE FROM forum_comment_media;
@@ -63,6 +65,8 @@ ALTER TABLE challenge_team_public_listings AUTO_INCREMENT = 1;
 ALTER TABLE message_center_notice_reads AUTO_INCREMENT = 1;
 ALTER TABLE message_center_notifications AUTO_INCREMENT = 1;
 ALTER TABLE message_center_system_notices AUTO_INCREMENT = 1;
+ALTER TABLE announcements AUTO_INCREMENT = 1;
+ALTER TABLE announcement_reads AUTO_INCREMENT = 1;
 ALTER TABLE chat_conversations AUTO_INCREMENT = 1;
 ALTER TABLE chat_conversation_members AUTO_INCREMENT = 1;
 ALTER TABLE chat_messages AUTO_INCREMENT = 1;
@@ -138,13 +142,18 @@ INSERT INTO chat_message_media (chat_message_media_id, message_id, media_type, m
 (4, 6, 'link', 'https://example.com/library-report', 1, '2026-03-25 15:48:00');
 
 INSERT INTO message_center_notifications (notification_id, recipient_user_id, actor_user_id, notification_type, post_id, comment_id, title, body_text, cta_label, cta_url, is_read, created_at, updated_at) VALUES
-(1, 1, 2, 'reply', 1, 1, 'benjamin replied to your post', 'In my writing class, outlining ideas with AI is allowed, but paragraph-level drafting is not.', 'Reply', 'http://127.0.0.1:5173/?view=forum&postId=1', 0, '2026-03-23 10:05:00', '2026-03-23 10:05:00'),
-(2, 1, 3, 'like', 1, NULL, 'demo_student liked your post', 'How should we balance AI tools and original writing in class?', 'View post', 'http://127.0.0.1:5173/?view=forum&postId=1', 0, '2026-03-23 13:10:00', '2026-03-23 13:10:00'),
-(3, 2, 1, 'favorite', 2, NULL, 'emily favorited your post', 'Need help choosing between database systems and web development electives', 'View post', 'http://127.0.0.1:5173/?view=forum&postId=2', 1, '2026-03-23 14:24:00', '2026-03-23 14:24:00');
+(1, 1, 2, 'reply', 1, 1, 'benjamin replied to your post', 'In my writing class, outlining ideas with AI is allowed, but paragraph-level drafting is not.', 'Reply', 'http://127.0.0.1:8001/forum-project/dist/index.html?view=forum&postId=1', 0, '2026-03-23 10:05:00', '2026-03-23 10:05:00'),
+(2, 1, 3, 'like', 1, NULL, 'demo_student liked your post', 'How should we balance AI tools and original writing in class?', 'View post', 'http://127.0.0.1:8001/forum-project/dist/index.html?view=forum&postId=1', 0, '2026-03-23 13:10:00', '2026-03-23 13:10:00'),
+(3, 2, 1, 'favorite', 2, NULL, 'emily favorited your post', 'Need help choosing between database systems and web development electives', 'View post', 'http://127.0.0.1:8001/forum-project/dist/index.html?view=forum&postId=2', 1, '2026-03-23 14:24:00', '2026-03-23 14:24:00');
 
 INSERT INTO message_center_system_notices (notice_id, title, body_text, cta_label, cta_url, status, created_at, updated_at) VALUES
-(1, 'Community review standards refreshed', 'Posts with clearer titles and final outcomes are now surfaced more prominently in the forum. Edit older threads if you want them to remain discoverable.', 'Open forum', 'http://127.0.0.1:5173/?view=forum', 'active', '2026-03-22 09:00:00', '2026-03-22 09:00:00'),
-(2, 'Media uploads now support audio and screenshots', 'You can attach screenshots, links, and audio clips inside personal messages and forum replies. Keep files relevant to the thread topic.', 'Open message center', 'http://127.0.0.1:5173/?view=messages', 'active', '2026-03-24 08:30:00', '2026-03-24 08:30:00');
+(1, 'Community review standards refreshed', 'Posts with clearer titles and final outcomes are now surfaced more prominently in the forum. Edit older threads if you want them to remain discoverable.', 'Open forum', 'http://127.0.0.1:8001/forum-project/dist/index.html?view=forum', 'active', '2026-03-22 09:00:00', '2026-03-22 09:00:00'),
+(2, 'Media uploads now support audio and screenshots', 'You can attach screenshots, links, and audio clips inside personal messages and forum replies. Keep files relevant to the thread topic.', 'Open message center', 'http://127.0.0.1:8001/message-center-project/dist/index.html', 'active', '2026-03-24 08:30:00', '2026-03-24 08:30:00');
+
+INSERT INTO announcements (id, title, content, author, is_pinned, status, view_count, created_at, updated_at) VALUES
+(1, 'Welcome to AcadBeat Forum!', 'Welcome to our new forum platform. Here you can discuss English learning topics, share resources, and connect with other students.', 'Admin', 1, 'published', 0, '2026-03-22 09:00:00', '2026-03-22 09:00:00'),
+(2, 'Forum Rules Update', 'Please read the updated forum rules. We have implemented new guidelines to maintain a positive community environment.', 'Admin', 0, 'published', 0, '2026-03-24 08:30:00', '2026-03-24 08:30:00'),
+(3, 'Upcoming Vocabulary Contest', 'Stay tuned for our upcoming vocabulary contest with exciting prizes!', 'Admin', 0, 'published', 0, '2026-03-25 11:15:00', '2026-03-25 11:15:00');
 
 INSERT INTO vocab_word_books (word_book_id, slug, title, description) VALUES
 (1, 'daily', 'Daily life & campus', '15 high-frequency words for lectures, assignments, study routines, and campus life.'),

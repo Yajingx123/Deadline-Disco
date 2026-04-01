@@ -28,6 +28,8 @@ DROP TABLE IF EXISTS challenge_team_public_listings;
 DROP TABLE IF EXISTS message_center_notice_reads;
 DROP TABLE IF EXISTS message_center_notifications;
 DROP TABLE IF EXISTS message_center_system_notices;
+DROP TABLE IF EXISTS announcement_reads;
+DROP TABLE IF EXISTS announcements;
 DROP TABLE IF EXISTS chat_message_media;
 DROP TABLE IF EXISTS chat_messages;
 DROP TABLE IF EXISTS chat_conversation_members;
@@ -1042,6 +1044,42 @@ CREATE TABLE message_center_notice_reads (
 
 
 -- =========================================
+-- 31. announcements
+-- =========================================
+CREATE TABLE announcements (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    author VARCHAR(100) NOT NULL,
+    is_pinned TINYINT(1) DEFAULT 0,
+    status ENUM('draft', 'published') DEFAULT 'published',
+    view_count INT DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+-- =========================================
+-- 32. announcement_reads
+-- =========================================
+CREATE TABLE announcement_reads (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    announcement_id INT NOT NULL,
+    user_id INT NOT NULL,
+    read_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT uq_announcement_reads_user_announcement
+        UNIQUE (user_id, announcement_id),
+
+    CONSTRAINT fk_announcement_reads_announcement
+        FOREIGN KEY (announcement_id)
+        REFERENCES announcements(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+
+-- =========================================
 -- Indexes
 -- =========================================
 
@@ -1143,6 +1181,15 @@ CREATE INDEX idx_message_center_system_notices_status
 
 CREATE INDEX idx_message_center_notice_reads_user_id
     ON message_center_notice_reads(user_id);
+
+CREATE INDEX idx_announcements_status
+    ON announcements(status);
+
+CREATE INDEX idx_announcements_is_pinned
+    ON announcements(is_pinned);
+
+CREATE INDEX idx_announcement_reads_user_id
+    ON announcement_reads(user_id);
 
 CREATE INDEX idx_checkin_partnerships_user_one_id
     ON checkin_partnerships(user_one_id);

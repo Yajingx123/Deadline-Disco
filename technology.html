@@ -6,6 +6,21 @@
     <title>AcadBeat | Technology Toolkits</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;1,700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./shared-nav.css">
+    <style>html.acadbeat-role-guard body{visibility:hidden}</style>
+    <script>
+        document.documentElement.classList.add('acadbeat-role-guard');
+        (async function guardAdminTechnology() {
+            try {
+                const response = await fetch('./Auth/backend/api/me.php', { credentials: 'include' });
+                const data = await response.json().catch(() => ({ status: 'error' }));
+                if (data.status === 'success' && data.user && String(data.user.role || '').toLowerCase() === 'admin') {
+                    window.location.replace('http://127.0.0.1:8001/admin_page/dist/index.html');
+                    return;
+                }
+            } catch (_err) {}
+            document.documentElement.classList.remove('acadbeat-role-guard');
+        })();
+    </script>
     <style>
         :root {
             --bg-color: #E4DFD8;
@@ -337,7 +352,8 @@
                 authApiBase: './Auth/backend/api',
                 homeUrl: './home.html',
                 ownerUrl: './owner.html',
-                adminUrl: 'http://127.0.0.1:5174/'
+                adminUrl: 'http://127.0.0.1:8001/admin_page/dist/index.html',
+                redirectAdmins: true
             });
         });
     </script>
