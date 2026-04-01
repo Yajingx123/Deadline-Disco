@@ -1,0 +1,393 @@
+/* 官方固定配色 —— 完全按你们的设计规范来 */
+:root {
+  --game-bg: #9a8c8f;
+  --game-panel: #b8a9ad;
+  --game-panel-2: #c7b9bc;
+  --game-surface: #d8cfd1;
+  --game-ink: #ffffff;
+  --game-shadow: #5c5054;
+  --game-dark: #2d2528;
+  --game-accent: #18d8e2;
+  --game-accent-2: #25a9ff;
+  --game-outline: #f6f3f4;
+  --game-muted: #eee8ea;
+}
+
+/* 全局像素渲染 + 重置 */
+* {
+  image-rendering: pixelated;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* 页面主体风格（修复类名，匹配HTML） */
+body[data-page="video-detail"] {
+  font-family: 'Press Start 2P', monospace;
+  background:
+    radial-gradient(circle at 16% 10%, rgba(255,255,255,0.12) 0 10%, transparent 10.5%),
+    radial-gradient(circle at 83% 23%, rgba(255,255,255,0.10) 0 8%, transparent 8.5%),
+    linear-gradient(180deg, #98898d 0%, #938589 100%);
+  color: var(--game-ink);
+  min-height: 100vh;
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* 背景装饰（和全局风格统一）*/
+body[data-page="video-detail"]::before,
+body[data-page="video-detail"]::after {
+  content: "";
+  position: fixed;
+  pointer-events: none;
+  z-index: -1;
+  border: 4px solid rgba(255,255,255,0.78);
+  border-radius: 999px;
+  opacity: 0.34;
+}
+body[data-page="video-detail"]::before {
+  width: 320px; height: 140px; right: 90px; top: 170px; transform: rotate(18deg);
+}
+body[data-page="video-detail"]::after {
+  width: 360px; height: 180px; left: -120px; top: -10px; transform: rotate(-24deg);
+}
+
+/* 页面容器 */
+.page-shell {
+  width: min(calc(100% - 56px), 1460px);
+  height: calc(100vh - 34px);
+  margin: 18px auto 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* 核心布局：左右分栏 */
+.study-workspace {
+  display: grid;
+  grid-template-columns: 1.4fr 0.7fr;
+  gap: 20px;
+  flex: 1;
+  height: 100%;
+}
+
+/* ========================= */
+/* 通用终端样式（视频面板+笔记面板共用） */
+/* ========================= */
+.game-terminal {
+  background: linear-gradient(180deg, var(--game-panel) 0%, var(--game-panel-2) 100%);
+  border: 4px solid var(--game-outline);
+  box-shadow: 8px 8px 0 0 var(--game-shadow);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+}
+
+.terminal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 12px;
+  border-bottom: 3px dotted var(--game-shadow);
+}
+
+.terminal-title-area {
+  text-align: center;
+  flex: 1;
+}
+
+.status-indicator.blink {
+  font-size: 0.6rem;
+  color: var(--game-accent);
+  animation: blink 1.1s infinite step-end;
+}
+
+.pixel-text-shadow {
+  font-size: 1.2rem;
+  color: var(--game-ink);
+  text-shadow: 2px 0 0 var(--game-accent-2), 4px 0 0 var(--game-accent);
+}
+
+.pixel-text-shadow-small {
+  font-size: 0.8rem;
+  color: var(--game-ink);
+  text-shadow: 1px 0 0 var(--game-accent-2), 2px 0 0 var(--game-accent);
+}
+
+/* 返回按钮（匹配全局back-fab样式） */
+.back-btn.back-fab {
+  width: 44px;
+  height: 44px;
+  border-radius: 0;
+  border: 4px solid var(--game-outline);
+  background: #b7c6d6;
+  color: var(--game-dark);
+  box-shadow: 4px 4px 0 0 var(--game-shadow);
+  font-size: 1rem;
+  font-family: 'Press Start 2P';
+  cursor: pointer;
+  transition: 0.1s ease;
+}
+.back-btn.back-fab:hover {
+  transform: translate(-1px, -1px);
+  background: #c8d5e2;
+  box-shadow: 6px 6px 0 0 var(--game-shadow);
+}
+
+/* ========================= */
+/* 视频监视器（修复扫描线类名） */
+/* ========================= */
+.video-monitor-wrapper {
+  position: relative;
+  background: #000;
+  border: 4px solid var(--game-outline);
+  box-shadow: 8px 8px 0 0 var(--game-shadow);
+  padding: 6px;
+  animation: monitorBreath 4s infinite ease-in-out;
+}
+
+.scanline {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(transparent 50%, rgba(0,0,0,0.2) 50%);
+  background-size: 100% 3px;
+  z-index: 10;
+  pointer-events: none;
+  animation: scrollScan 4s linear infinite;
+}
+
+.screen-glow {
+  position: absolute;
+  inset: 0;
+  box-shadow: 0 0 25px var(--game-accent);
+  opacity: 0.2;
+  z-index: 2;
+  animation: glowPulse 3s infinite alternate;
+  pointer-events: none;
+}
+
+#practiceVideo {
+  width: 100%;
+  display: block;
+  z-index: 1;
+  position: relative;
+}
+
+/* ========================= */
+/* 标签按钮（匹配全局btn-small样式） */
+/* ========================= */
+.detail-resource-tabs {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-small.detail-resource-tab {
+  flex: 1;
+  min-height: 42px;
+  font-family: 'Press Start 2P';
+  font-size: 0.62rem;
+  line-height: 1.35;
+  border-radius: 0;
+  border: 3px solid var(--game-outline);
+  background: rgba(132,116,121,0.72);
+  color: var(--game-ink);
+  box-shadow: 3px 3px 0 0 var(--game-shadow);
+  cursor: pointer;
+  transition: 0.1s;
+}
+
+.btn-small.detail-resource-tab.active {
+  background: var(--game-accent);
+  color: var(--game-dark);
+}
+
+.btn-small.detail-resource-tab:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 5px 5px 0 0 var(--game-shadow);
+  outline: none;
+}
+
+/* ========================= */
+/* 日志面板 */
+/* ========================= */
+.transcript-box {
+  background: var(--game-dark);
+  border: 3px solid var(--game-outline);
+  box-shadow: 4px 4px 0 0 var(--game-shadow);
+  padding: 14px;
+  min-height: 120px;
+  color: var(--game-accent);
+  font-size: 0.65rem;
+  line-height: 1.6;
+  font-family: 'Press Start 2P';
+}
+
+/* ========================= */
+/* 右侧笔记面板布局微调 + 输入框加大【只改这里】 */
+/* ========================= */
+.header-tools {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-small {
+  min-height: 42px;
+  font-family: 'Press Start 2P';
+  font-size: 0.62rem;
+  line-height: 1.35;
+  border-radius: 0;
+  border: 3px solid var(--game-outline);
+  background: rgba(132,116,121,0.72);
+  color: var(--game-ink);
+  box-shadow: 3px 3px 0 0 var(--game-shadow);
+  cursor: pointer;
+  transition: 0.1s;
+  padding: 8px 12px;
+}
+
+.btn-small:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 5px 5px 0 0 var(--game-shadow);
+  outline: none;
+}
+
+/* 笔记网格：自适应撑满，布局更协调 */
+.note-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 1;
+  justify-content: space-between;
+}
+
+.note-field-pixel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+}
+
+.note-field-pixel label {
+  font-size: 0.6rem;
+  color: var(--game-dark);
+  font-family: 'Press Start 2P';
+}
+
+/* 👉 三个输入框统一加高、更宽敞 */
+textarea {
+  width: 100%;
+  flex: 1;
+  min-height: 130px;
+  background: var(--game-dark);
+  border: 3px solid var(--game-outline);
+  color: var(--game-accent);
+  font-family: 'Press Start 2P';
+  font-size: 0.6rem;
+  padding: 12px;
+  resize: none;
+  box-shadow: inset 2px 2px 0 var(--game-shadow);
+}
+textarea:focus {
+  outline: none;
+  border-color: var(--game-accent);
+  background: #111;
+}
+
+/* ========================= */
+/* 操作区底部布局优化，更协调 */
+/* ========================= */
+.action-zone {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+  padding-top: 16px;
+  margin-top: 10px;
+  border-top: 3px dotted rgba(92,80,84,0.4);
+}
+
+.btn-primary-small.pulse-btn {
+  padding: 14px 20px;
+  font-family: 'Press Start 2P';
+  font-size: 0.7rem;
+  background: var(--game-accent);
+  color: var(--game-dark);
+  border: 3px solid var(--game-outline);
+  box-shadow: 4px 4px 0 0 var(--game-shadow);
+  cursor: pointer;
+  transition: 0.1s ease;
+  animation: pulse 1.2s infinite alternate;
+}
+
+.btn-primary-small.pulse-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 0 var(--game-shadow);
+}
+
+.note-record-error {
+  color: #ff4466;
+  font-size: 0.6rem;
+  text-shadow: 1px 1px 0 var(--game-shadow);
+}
+
+.note-record-feedback {
+  color: var(--game-accent);
+  font-size: 0.6rem;
+}
+
+.typewriter {
+  overflow: hidden;
+  border-right: 2px solid var(--game-accent);
+  white-space: nowrap;
+  animation: typewriter 3s steps(40) infinite, blinkCursor 0.7s step-end infinite;
+}
+
+/* ========================= */
+/* 通用工具类 */
+/* ========================= */
+.hidden {
+  display: none;
+}
+
+/* ========================= */
+/* 动画合集（完全保留不动） */
+/* ========================= */
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+@keyframes monitorBreath {
+  0%,100% { box-shadow: 0 0 6px var(--game-accent), 8px 8px 0 0 var(--game-shadow); }
+  50% { box-shadow: 0 0 22px var(--game-accent), 8px 8px 0 0 var(--game-shadow); }
+}
+
+@keyframes glowPulse {
+  from { opacity: 0.15; }
+  to { opacity: 0.35; }
+}
+
+@keyframes scrollScan {
+  from { background-position: 0 0; }
+  to { background-position: 0 3px; }
+}
+
+@keyframes float {
+  0%,100% { transform: translateY(0px); }
+  50% { transform: translateY(-22px); }
+}
+
+@keyframes pulse {
+  from { opacity: 0.7; transform: scale(0.98); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes typewriter {
+  from { width: 0; }
+  to { width: 100%; }
+}
+
+@keyframes blinkCursor {
+  50% { border-color: transparent; }
+}
