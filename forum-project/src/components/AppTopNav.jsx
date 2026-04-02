@@ -1,3 +1,6 @@
+import { useEffect, useState } from 'react'
+import { connectRealtime, fetchMessageCenter } from '../api/forumApi'
+
 export default function AppTopNav({ currentUser, activeMode = 'forum' }) {
   const userName = currentUser?.username || 'LOGIN'
   const userInitial = userName.slice(0, 2).toUpperCase()
@@ -67,11 +70,11 @@ export default function AppTopNav({ currentUser, activeMode = 'forum' }) {
       if (refreshTimer) {
         window.clearTimeout(refreshTimer)
       }
-        refreshTimer = window.setTimeout(async () => {
-          refreshTimer = null
-          try {
-            const data = await fetchMessageCenter(true)
-            setHasUnread(Number(data?.summary?.totalUnread || 0) > 0)
+      refreshTimer = window.setTimeout(async () => {
+        refreshTimer = null
+        try {
+          const data = await fetchMessageCenter(true)
+          setHasUnread(Number(data?.summary?.totalUnread || 0) > 0)
         } catch (_err) {
           // Keep current badge state on transient realtime failures.
         }

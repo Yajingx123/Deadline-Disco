@@ -1,4 +1,4 @@
-extends Node2D
+extends Area2D
 
 # 旋转速度（度/秒），可在编辑器里调整
 @export var rotate_speed: float = 50.0

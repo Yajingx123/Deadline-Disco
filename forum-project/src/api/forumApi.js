@@ -250,6 +250,15 @@ export function connectRealtime(onEvent, onStatusChange) {
     socket = new WebSocket(REALTIME_WS_URL)
 
     socket.addEventListener('open', () => {
+      // StrictMode 开发模式下卸载时会在 CONNECTING 阶段取消；若在 open 前调 close 会触发控制台黄条
+      if (closedManually) {
+        try {
+          socket.close()
+        } catch (_e) {
+          // ignore
+        }
+        return
+      }
       onStatusChange?.('connected')
     })
 
@@ -265,13 +274,14 @@ export function connectRealtime(onEvent, onStatusChange) {
     socket.addEventListener('close', () => {
       onStatusChange?.('disconnected')
       if (!closedManually) {
-        reconnectTimer = window.setTimeout(connect, 1200)
+        // 未启动 3001 时拉长重连间隔，减少控制台刷屏
+        reconnectTimer = window.setTimeout(connect, 5000)
       }
     })
 
     socket.addEventListener('error', () => {
       onStatusChange?.('error')
-      socket?.close()
+      // 不在此处 close：CONNECTING 时 close 易与浏览器告警；close 事件会随后触发
     })
   }
 
@@ -282,7 +292,11 @@ export function connectRealtime(onEvent, onStatusChange) {
     if (reconnectTimer) {
       window.clearTimeout(reconnectTimer)
     }
-    if (socket && socket.readyState <= 1) {
+    if (!socket) {
+      return
+    }
+    // OPEN：直接关。CONNECTING：等 open 回调里因 closedManually 再关，避免 “closed before established”
+    if (socket.readyState === WebSocket.OPEN) {
       socket.close()
     }
   }

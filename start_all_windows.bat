@@ -51,7 +51,7 @@ echo [started] admin http://127.0.0.1:5174
 :: ====================== 5. godot homepage (python 5500) ======================
 set NAME=godot_ui
 set PORT=5500
-set WORKDIR=%cd%\newUI\homepage\Release
+set WORKDIR=%cd%\gameUI_src\Release
 set LOG_OUT=%cd%\service_logs\%NAME%_%PORT%.out.log
 set LOG_ERR=%cd%\service_logs\%NAME%_%PORT%.err.log
 

@@ -88,5 +88,7 @@ func hide_and_disable():
 # 显示小人 + 恢复移动
 func show_and_enable():
 	visible = true
+	if animator:
+		animator.visible = true
 	set_process(true)
 	set_physics_process(true)

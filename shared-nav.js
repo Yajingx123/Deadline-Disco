@@ -83,9 +83,10 @@
     const authApiBase = options.authApiBase || `${basePath}Auth/backend/api`;
     const loginUrl = options.loginUrl || `${homeUrl}?login=1`;
     const ownerUrl = options.ownerUrl || `${basePath}owner.html`;
-    const adminUrl = options.adminUrl || 'http://127.0.0.1:8001/admin_page/dist/index.html';
-    const messageCenterUrl = options.messageCenterUrl || 'http://127.0.0.1:8001/message-center-project/dist/index.html';
-    const messageApiUrl = options.messageApiUrl || 'http://127.0.0.1:8001/forum-project/api/message-center.php?summaryOnly=1';
+    const L = typeof window !== 'undefined' && window.ACADBEAT_LOCAL ? window.ACADBEAT_LOCAL : null;
+    const adminUrl = options.adminUrl || (L && L.adminDistUrl) || 'http://127.0.0.1:8001/admin_page/dist/index.html';
+    const messageCenterUrl = options.messageCenterUrl || (L && L.messageCenterDistUrl) || 'http://127.0.0.1:8001/message-center-project/dist/index.html';
+    const messageApiUrl = options.messageApiUrl || (L && L.messageSummaryApiUrl) || 'http://127.0.0.1:8001/forum-project/api/message-center.php?summaryOnly=1';
     const active = String(options.active || '').toLowerCase();
     const showChallengeButton = Boolean(options.showChallengeButton);
     const challengeButtonLabel = options.challengeButtonLabel || 'CHALLENGE';

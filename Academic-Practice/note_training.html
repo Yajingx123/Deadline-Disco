@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../shared-nav.css">
+  <script src="../shared/acadbeat-local-config.js"></script>
   <style>html.acadbeat-role-guard body{visibility:hidden}</style>
   <script>
     document.documentElement.classList.add('acadbeat-role-guard');
@@ -16,7 +17,8 @@
         const response = await fetch('../Auth/backend/api/me.php', { credentials: 'include' });
         const data = await response.json().catch(() => ({ status: 'error' }));
         if (data.status === 'success' && data.user && String(data.user.role || '').toLowerCase() === 'admin') {
-          window.location.replace('http://127.0.0.1:8001/admin_page/dist/index.html');
+          const admin = (window.ACADBEAT_LOCAL && window.ACADBEAT_LOCAL.adminDistUrl) || 'http://127.0.0.1:8001/admin_page/dist/index.html';
+          window.location.replace(admin);
           return;
         }
       } catch (_err) {}
@@ -109,6 +111,14 @@
   <script src="practice-app.js"></script>
   <script>
     window.addEventListener('load', () => {
+      const uiGodot = (() => {
+        try {
+          if (new URLSearchParams(location.search).get('ui') === 'godot') return true;
+        } catch (_e) {}
+        return document.cookie.split('; ').some((c) => c.startsWith('ui_mode=godot'));
+      })();
+      const L = window.ACADBEAT_LOCAL || {};
+      const loginUrl = uiGodot ? (L.godotWebEntryUrl || 'http://127.0.0.1:5500/index.html?ui=godot') : '../home.html?login=1';
       window.initializeAcadBeatNav({
         mountId: 'acadbeatNav',
         basePath: '../',
@@ -116,7 +126,8 @@
         authApiBase: '../Auth/backend/api',
         homeUrl: '../home.html',
         ownerUrl: '../owner.html',
-        adminUrl: 'http://127.0.0.1:8001/admin_page/dist/index.html',
+        adminUrl: L.adminDistUrl || 'http://127.0.0.1:8001/admin_page/dist/index.html',
+        loginUrl,
         redirectAdmins: true
       });
     });
