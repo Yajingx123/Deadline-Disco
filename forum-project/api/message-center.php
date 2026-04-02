@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 require __DIR__ . '/bootstrap.php';
-require __DIR__ . '/challenge-lib.php';
+require __DIR__ . '/../../challenge/api/challenge-lib.php';
 
 $user = forum_require_user();
 $userId = (int)($user['user_id'] ?? 0);

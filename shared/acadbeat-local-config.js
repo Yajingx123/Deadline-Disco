@@ -9,7 +9,7 @@
   var MAIN = 'http://127.0.0.1:8001';
   g.ACADBEAT_LOCAL = {
     mainOrigin: MAIN,
-    challengeApiUrl: MAIN + '/forum-project/api/challenge.php',
+    challengeApiUrl: MAIN + '/challenge/api/challenge.php',
     /** 与 start_all_mac 中 voice-room-server 一致 */
     voiceRoomWsUrl: 'ws://127.0.0.1:3001/ws',
     adminDistUrl: MAIN + '/admin_page/dist/index.html',
