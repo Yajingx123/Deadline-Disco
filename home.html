@@ -10,6 +10,7 @@
         rel="stylesheet">
     <link rel="stylesheet" href="./challenge-home.css">
     <link rel="stylesheet" href="./shared-nav.css">
+    <script src="./shared/acadbeat-local-config.js"></script>
     <style>html.acadbeat-role-guard body{visibility:hidden}</style>
     <script>
         document.documentElement.classList.add('acadbeat-role-guard');
@@ -18,7 +19,8 @@
                 const response = await fetch('./Auth/backend/api/me.php', { credentials: 'include' });
                 const data = await response.json().catch(() => ({ status: 'error' }));
                 if (data.status === 'success' && data.user && String(data.user.role || '').toLowerCase() === 'admin') {
-                    window.location.replace('http://127.0.0.1:8001/admin_page/dist/index.html');
+                    const admin = (window.ACADBEAT_LOCAL && window.ACADBEAT_LOCAL.adminDistUrl) || 'http://127.0.0.1:8001/admin_page/dist/index.html';
+                    window.location.replace(admin);
                     return;
                 }
             } catch (_err) {}
@@ -133,6 +135,14 @@
         .nav-godot:hover {
             background: rgba(155, 183, 212, 0.55);
             opacity: 1;
+        }
+
+        /* Switch 插入 shared-nav 的 .user-group，勿用 fixed 盖住顶栏私信区 */
+        #acadbeatNav .nav-godot {
+            cursor: pointer;
+            border: none;
+            font: inherit;
+            font-family: inherit;
         }
 
         .user-section {
@@ -1023,7 +1033,7 @@
                 <div class="auth-message" id="authMessage"></div>
 
                 <div class="auth-actions">
-                    <button type="button" class="btn-small" onclick="closeAuthModal()">Cancel</button>
+                    <button type="button" class="btn-small" onclick="cancelAuthModal()">Cancel</button>
                     <button type="submit" class="btn-small btn-primary-small" id="authSubmitBtn">Login</button>
                 </div>
             </form>
@@ -1150,16 +1160,18 @@
     </div>
 
     <script>
+        const L = window.ACADBEAT_LOCAL || {};
         const HOME_URL = './home.html';
         const OWNER_URL = './owner.html';
-        const ADMIN_URL = 'http://127.0.0.1:8001/admin_page/dist/index.html';
+        const ADMIN_URL = L.adminDistUrl || 'http://127.0.0.1:8001/admin_page/dist/index.html';
         const VOCABULARY_URL = './vocba_prac/';
-        const FORUM_URL = 'http://127.0.0.1:5173/?view=chooser';
+        const FORUM_URL = L.forumDevChooserUrl || 'http://127.0.0.1:5173/forum-project/dist/?view=chooser';
         const TECHNOLOGY_URL = './technology.html';
         const ACADEMIC_PRACTICE_URL = './Academic-Practice/training.html';
         const AUTH_API_BASE = './Auth/backend/api';
         const authState = { user: null, mode: 'login' };
         let currentHomeModule = 'Insight';
+        let pendingGodotSwitch = false;
 
         function setUiMode(mode) {
             document.cookie = `ui_mode=${encodeURIComponent(mode)}; path=/; max-age=2592000`;
@@ -1168,8 +1180,49 @@
         function openGodotMode(event) {
             if (event) event.preventDefault();
             setUiMode('godot');
-            window.location.href = 'http://127.0.0.1:5500/index.html?ui=godot';
+            window.location.href = L.godotWebEntryUrl || 'http://127.0.0.1:5500/index.html?ui=godot';
             return false;
+        }
+
+        function requestSwitchToGodot() {
+            if (authState.user) {
+                openGodotMode(null);
+                return;
+            }
+            pendingGodotSwitch = true;
+            openAuthModal('login', '请先登录后再切换到 Godot 主页。');
+        }
+
+        function portalUrlForCurrentUser() {
+            if (authState.user && String(authState.user.role || '').toLowerCase() === 'admin') {
+                return ADMIN_URL;
+            }
+            return OWNER_URL;
+        }
+
+        function mountHomeGodotSwitchInNav() {
+            const nav = document.querySelector('#acadbeatNav .acadbeat-shared-nav');
+            const userGroup = nav && nav.querySelector('.user-group');
+            if (!userGroup) {
+                return;
+            }
+            const oldBtn = document.getElementById('homeGodotSwitchBtn');
+            if (oldBtn && oldBtn.parentNode) {
+                oldBtn.parentNode.removeChild(oldBtn);
+            }
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'nav-godot';
+            btn.id = 'homeGodotSwitchBtn';
+            btn.textContent = 'Switch';
+            btn.title = '切换到 Godot 动态主页（需先登录）';
+            btn.addEventListener('click', requestSwitchToGodot);
+            const userSection = userGroup.querySelector('.user-section');
+            if (userSection) {
+                userGroup.insertBefore(btn, userSection);
+            } else {
+                userGroup.appendChild(btn);
+            }
         }
 
         const data = {
@@ -1224,10 +1277,10 @@
                 authApiBase: './Auth/backend/api',
                 homeUrl: './home.html',
                 ownerUrl: './owner.html',
-                adminUrl: 'http://127.0.0.1:8001/admin_page/dist/index.html',
+                adminUrl: L.adminDistUrl || 'http://127.0.0.1:8001/admin_page/dist/index.html',
                 forumUrl: './home.html?module=Dialogue',
                 technologyUrl: './home.html?module=Method',
-                messageCenterUrl: 'http://127.0.0.1:8001/message-center-project/dist/index.html',
+                messageCenterUrl: L.messageCenterDistUrl || 'http://127.0.0.1:8001/message-center-project/dist/index.html',
                 redirectAdmins: true,
                 showChallengeButton: true,
                 challengeButtonLabel: 'CHALLENGE',
@@ -1235,6 +1288,7 @@
             });
             authState.user = (window.acadbeatNavState && window.acadbeatNavState.user) || authState.user;
             renderAuthUI();
+            mountHomeGodotSwitchInNav();
         }
 
         async function authFetch(path, options = {}) {
@@ -1266,6 +1320,11 @@
             document.getElementById('authModal').classList.remove('is-open');
             document.getElementById('authModal').setAttribute('aria-hidden', 'true');
             document.getElementById('authMessage').textContent = '';
+        }
+
+        function cancelAuthModal() {
+            pendingGodotSwitch = false;
+            closeAuthModal();
         }
 
         function openSiteModal(title, message, onConfirm) {
@@ -1335,10 +1394,19 @@
 
             authState.user = data.user || null;
             await refreshSharedNav();
-            closeAuthModal();
             if (authState.user && String(authState.user.role || '').toLowerCase() === 'admin') {
+                pendingGodotSwitch = false;
+                closeAuthModal();
                 window.location.href = ADMIN_URL;
+                return;
             }
+            if (pendingGodotSwitch && authState.user) {
+                pendingGodotSwitch = false;
+                closeAuthModal();
+                openGodotMode(null);
+                return;
+            }
+            closeAuthModal();
         }
 
         function handleUserAction() {
@@ -1360,8 +1428,20 @@
             return false;
         }
 
+        function isGodotUiMode() {
+            try {
+                const p = new URLSearchParams(window.location.search);
+                if (p.get('ui') === 'godot') return true;
+            } catch (_e) {}
+            return document.cookie.split('; ').some((c) => c.startsWith('ui_mode=godot'));
+        }
+
         function handleModuleAction(name) {
             if (!authState.user) {
+                if (isGodotUiMode()) {
+                    window.location.href = L.godotWebEntryUrl || 'http://127.0.0.1:5500/index.html?ui=godot';
+                    return;
+                }
                 openAuthModal('login', 'Please log in before using module actions.');
                 return;
             }
@@ -1617,9 +1697,3 @@
 </body>
 
 </html>
-        function portalUrlForCurrentUser() {
-            if (authState.user && String(authState.user.role || '').toLowerCase() === 'admin') {
-                return ADMIN_URL;
-            }
-            return OWNER_URL;
-        }

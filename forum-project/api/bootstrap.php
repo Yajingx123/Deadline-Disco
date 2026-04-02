@@ -36,7 +36,13 @@ function forum_normalize_local_url(string $url): string {
     if ($trimmed === '') {
         return '';
     }
-    $normalized = str_replace('http://127.0.0.1:5173/', forum_forum_url('?'), $trimmed);
+    // Vite dev server uses base /forum-project/dist/ — map to PHP-served dist index
+    $normalized = str_replace(
+        'http://127.0.0.1:5173/forum-project/dist/',
+        'http://127.0.0.1:8001/forum-project/dist/index.html',
+        $trimmed
+    );
+    $normalized = str_replace('http://127.0.0.1:5173/', forum_forum_url('?'), $normalized);
     $normalized = str_replace('http://127.0.0.1:5174/', forum_admin_url(), $normalized);
     $normalized = str_replace('http://127.0.0.1:5173?', forum_forum_url('?'), $normalized);
     $normalized = str_replace('http://127.0.0.1:8001/forum-project/dist/index.html?view=messages', forum_message_center_url(), $normalized);

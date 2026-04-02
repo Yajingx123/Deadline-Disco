@@ -93,7 +93,7 @@ offset_right = 268.00012
 offset_bottom = 622.0
 theme_override_fonts/font = ExtResource("6_4oxwx")
 theme_override_font_sizes/font_size = 80
-text = "GameStudio"
+text = "Vocabulary"
 
 [node name="Label2" type="Label" parent="." unique_id=307180924]
 visible = false
@@ -113,7 +113,7 @@ offset_right = 268.0
 offset_bottom = 622.0
 theme_override_fonts/font = ExtResource("6_4oxwx")
 theme_override_font_sizes/font_size = 80
-text = "Listening and Speak"
+text = "Listening and Respond"
 
 [node name="Label4" type="Label" parent="." unique_id=735366343]
 visible = false
@@ -133,3 +133,7 @@ text = "Pair Speaking Room"
 [connection signal="mouse_exited" from="Planet3" to="." method="_on_planet_3_mouse_exited"]
 [connection signal="mouse_entered" from="Planet4" to="." method="_on_planet_4_mouse_entered"]
 [connection signal="mouse_exited" from="Planet4" to="." method="_on_planet_4_mouse_exited"]
+[connection signal="gui_input" from="Planet1" to="." method="_on_planet_1_gui_input"]
+[connection signal="gui_input" from="Planet2" to="." method="_on_planet_2_gui_input"]
+[connection signal="gui_input" from="Planet3" to="." method="_on_planet_3_gui_input"]
+[connection signal="gui_input" from="Planet4" to="." method="_on_planet_4_gui_input"]

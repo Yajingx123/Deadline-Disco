@@ -2,9 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dvhrksd0i1cmj" path="res://Scripts/homepage/door.gd" id="1_mw28t"]
 [ext_resource type="FontFile" uid="uid://dj8m3ejixir1v" path="res://Assets/Fonts/Myfont-Regular.ttf" id="2_mw28t"]
-
-[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_mw28t"]
-load_path = "res://.godot/imported/door.png-14a3d21b1ebea2e01f41c9179e07af6b.ctex"
+[ext_resource type="Texture2D" uid="uid://dgpvlnhdkgc1n" path="res://Assets/Sprites/door.png" id="3_door"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_7mbvs"]
 size = Vector2(219.75, 330.25)
@@ -13,12 +11,14 @@ size = Vector2(219.75, 330.25)
 script = ExtResource("1_mw28t")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1981190869]
-texture = SubResource("CompressedTexture2D_mw28t")
+z_index = 0
+texture = ExtResource("3_door")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=356704593]
 shape = SubResource("RectangleShape2D_7mbvs")
 
 [node name="Tip" type="Label" parent="." unique_id=218024071]
+z_index = 24
 visible = false
 custom_minimum_size = Vector2(200, 0)
 anchors_preset = 5

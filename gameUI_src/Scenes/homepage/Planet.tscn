@@ -3,60 +3,69 @@
 [ext_resource type="Script" uid="uid://dhjav1xnk7ah" path="res://Scripts/homepage/planet.gd" id="1_vpe2g"]
 [ext_resource type="Texture2D" uid="uid://mo7uen62ikvq" path="res://Assets/Sprites/planet.png" id="1_xehyc"]
 [ext_resource type="PackedScene" uid="uid://3p4kvmyjo8rx" path="res://Scenes/homepage/Door.tscn" id="2_r86au"]
-[ext_resource type="Script" uid="uid://c2xyjmt8iuyt" path="res://Scripts/homepage/door_trainning.gd" id="3_7cdp5"]
+[ext_resource type="Script" uid="uid://c2xyjmt8iuyt" path="res://Scripts/homepage/door_academic.gd" id="3_7cdp5"]
 
 [node name="Planet" type="Area2D" unique_id=490313873]
 script = ExtResource("1_vpe2g")
 rotate_speed = 30.0
 
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1536433087]
+z_index = 0
+scale = Vector2(0.53, 0.53)
+texture = ExtResource("1_xehyc")
+
 [node name="Door1" parent="." unique_id=270785415 instance=ExtResource("2_r86au")]
+z_index = 4
 position = Vector2(-105, -339.00003)
 rotation = -0.24360807
 scale = Vector2(0.45, 0.45)
 script = ExtResource("3_7cdp5")
-tip_text = "Academic Training"
+tip_text = "Academic"
 
 [node name="Door2" parent="." unique_id=289938450 instance=ExtResource("2_r86au")]
+z_index = 4
 position = Vector2(328, -149.99998)
 rotation = 1.0471976
 scale = Vector2(0.457, 0.457)
 tip_text = "Game Studio"
 
 [node name="Door3" parent="." unique_id=40628788 instance=ExtResource("2_r86au")]
+z_index = 4
 position = Vector2(-311, -176.00002)
 rotation = -0.9673145
 scale = Vector2(0.472, 0.472)
 tip_text = "Technologies"
 
 [node name="Door4" parent="." unique_id=155672748 instance=ExtResource("2_r86au")]
+z_index = 4
 position = Vector2(209, -281)
 rotation = 0.6981317
 scale = Vector2(0.351, 0.351)
 tip_text = "Forum"
 
 [node name="Door5" parent="." unique_id=872164903 instance=ExtResource("2_r86au")]
+z_index = 4
 position = Vector2(117.000015, 355)
 rotation = -3.4424467
 scale = Vector2(0.45, 0.45)
 
 [node name="Door6" parent="." unique_id=551336010 instance=ExtResource("2_r86au")]
+z_index = 4
 position = Vector2(-325.99997, 146.99998)
 rotation = -2.0808854
 scale = Vector2(0.457, 0.457)
 
 [node name="Door7" parent="." unique_id=497984840 instance=ExtResource("2_r86au")]
+z_index = 4
 position = Vector2(341.00003, 162.00002)
 rotation = -4.161703
 scale = Vector2(0.507, 0.507)
 
 [node name="Door8" parent="." unique_id=1322085135 instance=ExtResource("2_r86au")]
+z_index = 4
 position = Vector2(-199.99997, 293)
 rotation = -2.4299512
 scale = Vector2(0.351, 0.351)
-
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1536433087]
-scale = Vector2(0.53, 0.53)
-texture = ExtResource("1_xehyc")
 
 [connection signal="body_entered" from="Door1" to="Door1" method="_on_body_entered"]
 [connection signal="body_exited" from="Door1" to="Door1" method="_on_body_exited"]

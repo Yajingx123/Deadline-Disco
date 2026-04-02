@@ -50,7 +50,7 @@ $services = [
         'name' => 'godot_ui',
         'host' => '127.0.0.1',
         'port' => 5500,
-        'workdir' => $root . '/newUI/homepage/Release',
+        'workdir' => $root . '/gameUI_src/Release',
         'command' => 'python3 serve.py',
     ],
 ];
@@ -102,8 +102,9 @@ echo "\nLogs are in .run\n";
 echo "Start command: php start_all_mac.php\n";
 echo "Auto-detect command: php start_all.php\n";
 
-echo "\n=== Entry URLs (open in browser) ===\n";
-echo "  Main homepage (default):     http://127.0.0.1:8001/home.html\n";
-echo "  (or via index redirect)      http://127.0.0.1:8001/\n";
-echo "  Godot animated UI:           http://127.0.0.1:5500/index.html\n";
-echo "  Tip: start from Main; use \"Animated Home\" in nav or Godot switch to swap.\n";
+echo "\n=== 浏览器入口（唯一推荐）===\n";
+echo "  http://127.0.0.1:8001/home.html\n";
+echo "  （或 http://127.0.0.1:8001/ 会跳转到主页）\n";
+echo "  在主页登录后，使用右上角 Switch 进入 Godot；不要单独把 5500 当主入口。\n";
+echo "\n（后台已启动：8001 主站、8002 词表、5173 Vite 论坛、5174 管理、3001 语音房、5500 Godot 静态导出）\n";
+echo "  论坛开发地址：http://127.0.0.1:5173/forum-project/dist/\n";

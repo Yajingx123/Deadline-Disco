@@ -4,9 +4,6 @@ extends CanvasLayer
 var normal_color : Color = Color(1, 1, 1)
 var hover_color : Color = Color(0.8, 0.8, 0.8)
 
-@onready var login_popup = $LoginPopup
-@onready var lock_bg = $LoginPopup/LockBg
-
 # ==========================
 # 切换按钮
 # ==========================
@@ -21,7 +18,7 @@ func _on_switch_mouse_exited() -> void:
 func _on_switch_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-			print("切换按钮点击！")
+			AutoTransition.change_scene("res://Scenes/homepage/homepage.tscn")
 
 # ==========================
 # 菜单按钮
@@ -99,12 +96,3 @@ func _on_message_mouse_exited() -> void:
 func _on_message_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
 		print("消息按钮点击！")
-
-# ==========================
-# 关闭弹窗
-# ==========================
-func _on_submit_btn_gui_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton && event.pressed && event.button_index == MOUSE_BUTTON_LEFT:
-		print("关闭登录窗口")
-		login_popup.visible = false
-		lock_bg.visible = false

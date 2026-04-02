@@ -3,33 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Video Selection | AcadBeat</title>
+  <title>Video Selection | AcadBeat Game Style</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@0,500;1,500&family=Press+Start+2P&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="acadbeat-global.css">
   <link rel="stylesheet" href="practice-style.css">
-  <script src="../shared/acadbeat-local-config.js"></script>
-  <script>
-    (function () {
-      var params = new URLSearchParams(window.location.search);
-      var cookiePair = document.cookie.split('; ').find(function (item) { return item.startsWith('ui_mode='); });
-      var cookieMode = cookiePair ? decodeURIComponent((cookiePair.split('=')[1] || '')) : '';
-      var uiMode = params.get('ui') || cookieMode;
-      if (uiMode !== 'godot') {
-        return;
-      }
-      document.cookie = 'ui_mode=godot; path=/; max-age=2592000';
-      var font = document.createElement('link');
-      font.rel = 'stylesheet';
-      font.href = 'https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap';
-      document.head.appendChild(font);
-      var theme = document.createElement('link');
-      theme.rel = 'stylesheet';
-      theme.href = '../newUI/static/game-listening-theme.css';
-      document.head.appendChild(theme);
-    })();
-  </script>
+  <link rel="stylesheet" href="game-listening-theme.css">
 </head>
 <body data-page="video-list">
   <main class="module-content page-shell">

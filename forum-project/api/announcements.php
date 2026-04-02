@@ -45,16 +45,34 @@ function getAnnouncements(): void {
     $page = (int)($_GET['page'] ?? 1);
     $limit = (int)($_GET['limit'] ?? 10);
     $offset = ($page - 1) * $limit;
-    
-    // 获取公告列表
-    $stmt = $pdo->prepare("SELECT * FROM forum_announcements WHERE is_active = 1 ORDER BY created_at DESC LIMIT ? OFFSET ?");
-    $stmt->execute([$limit, $offset]);
-    $announcements = $stmt->fetchAll();
-    
-    // 获取总数
-    $countStmt = $pdo->prepare("SELECT COUNT(*) as total FROM forum_announcements WHERE is_active = 1");
-    $countStmt->execute();
-    $total = (int)$countStmt->fetch()['total'];
+
+    try {
+        // 获取公告列表
+        $stmt = $pdo->prepare("SELECT * FROM forum_announcements WHERE is_active = 1 ORDER BY created_at DESC LIMIT ? OFFSET ?");
+        $stmt->execute([$limit, $offset]);
+        $announcements = $stmt->fetchAll();
+
+        // 获取总数
+        $countStmt = $pdo->prepare("SELECT COUNT(*) as total FROM forum_announcements WHERE is_active = 1");
+        $countStmt->execute();
+        $total = (int)$countStmt->fetch()['total'];
+    } catch (\PDOException $e) {
+        // 表未创建时仍返回合法 JSON，避免前端 “Invalid server response”
+        if (str_contains($e->getMessage(), 'forum_announcements')) {
+            forum_json([
+                'ok' => true,
+                'announcements' => [],
+                'pagination' => [
+                    'page' => $page,
+                    'limit' => $limit,
+                    'total' => 0,
+                    'pages' => 0,
+                ],
+            ]);
+            return;
+        }
+        throw $e;
+    }
     
     // 格式化返回数据
     $formatted = array_map(function ($row) {
@@ -86,17 +104,28 @@ function getAnnouncements(): void {
 
 function getAnnouncement(int $id): void {
     $pdo = forum_db();
-    
-    // 获取公告详情
-    $stmt = $pdo->prepare("SELECT * FROM forum_announcements WHERE announcement_id = ? AND is_active = 1");
-    $stmt->execute([$id]);
-    $announcement = $stmt->fetch();
-    
+
+    try {
+        $stmt = $pdo->prepare("SELECT * FROM forum_announcements WHERE announcement_id = ? AND is_active = 1");
+        $stmt->execute([$id]);
+        $announcement = $stmt->fetch();
+    } catch (\PDOException $e) {
+        if (str_contains($e->getMessage(), 'forum_announcements')) {
+            forum_json([
+                'ok' => false,
+                'message' => 'Announcements not configured.',
+            ], 404);
+            return;
+        }
+        throw $e;
+    }
+
     if (!$announcement) {
         forum_json([
             'ok' => false,
             'message' => 'Announcement not found.',
         ], 404);
+        return;
     }
     
     // 格式化返回数据

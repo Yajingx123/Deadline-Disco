@@ -21,6 +21,7 @@ func _process(delta: float) -> void:
 script = SubResource("GDScript_iqe81")
 
 [node name="bg" type="Sprite2D" parent="." unique_id=1524746762]
+z_index = -100
 texture = ExtResource("1_y3vd0")
 metadata/_edit_lock_ = true
 
@@ -29,6 +30,7 @@ zoom = Vector2(0.4, 0.4)
 metadata/_edit_lock_ = true
 
 [node name="Planet" parent="." unique_id=490313873 instance=ExtResource("2_6ft7j")]
+z_index = 0
 position = Vector2(-8, 1090.0001)
 scale = Vector2(2.785, 2.785)
 metadata/_edit_lock_ = true

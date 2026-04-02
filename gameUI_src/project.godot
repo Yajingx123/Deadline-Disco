@@ -1,3 +1,11 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
 config_version=5
 
 [application]
@@ -12,6 +20,7 @@ config/icon="res://icon.svg"
 GlobalUI="*uid://dt0h3ey77fr11"
 AutoTransition="*uid://degivfthkapbd"
 Player="*uid://sixtvjpu3ckb"
+WebEntryRouter="*res://Scripts/global/web_entry_router.gd"
 
 [display]
 

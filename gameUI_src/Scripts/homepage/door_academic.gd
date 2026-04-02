@@ -1,15 +1,9 @@
 extends Area2D
 
-# 外链门：除 Academic 门外，场景中均使用本脚本
-# 本地绝对 URL 与 shared/acadbeat-local-config.js 保持一致（改端口时两处同步）；见 docs/ARCHITECTURE.md
+# 唯一进入 Godot 内 academic.tscn 的门（原 training 门，文案统一为 Academic）
 
-@export var tip_text: String = "按 Enter 进门"
-@export var door_id: String = "door_default"
-
-const MAIN_FORUM_URL := "http://127.0.0.1:5173/forum-project/dist/?view=chooser&ui=godot"
-const MAIN_STUDIO_URL := "http://127.0.0.1:8001/Studio/studio.html?ui=godot"
-const MAIN_TECH_URL := "http://127.0.0.1:8001/technology.html?ui=godot"
-const MAIN_COMPETITION_URL := "http://127.0.0.1:8001/home.html?module=Studio&ui=godot"
+@export var tip_text: String = "Academic"
+@export var door_id: String = "door_academic"
 
 @onready var tip: Label = $Tip
 var player: CharacterBody2D
@@ -20,7 +14,8 @@ func _ready() -> void:
 	input_pickable = true
 	tip.visible = false
 	tip.text = tip_text
-	# body_entered / body_exited 在 Planet.tscn 里已连接，勿在此重复 connect，否则会报 Signal already connected
+	body_entered.connect(_on_body_entered)
+	body_exited.connect(_on_body_exited)
 	input_event.connect(_on_input_event)
 
 func _on_body_entered(body: Node2D) -> void:
@@ -50,12 +45,9 @@ func _unhandled_input(event: InputEvent) -> void:
 		_activate_door()
 
 func _activate_door() -> void:
-	var normalized_tip := String(tip_text).strip_edges().to_lower()
-	var target_url := _target_url_for_tip(normalized_tip)
-	if target_url != "":
-		ExternalLink.open(target_url)
-	else:
-		print("📝 暂无外链映射：", tip_text)
+	if player:
+		player.hide_and_disable()
+	AutoTransition.change_scene("res://Scenes/academic/Academic.tscn")
 
 func _is_player_body(body: Node2D) -> bool:
 	return body == player or body.is_in_group("Player")
@@ -67,16 +59,3 @@ func _is_activate_key_event(event: InputEvent) -> bool:
 			return false
 		return key_event.is_action_pressed("enter") or key_event.is_action_pressed("ui_accept") or key_event.keycode == KEY_ENTER or key_event.keycode == KEY_KP_ENTER
 	return event.is_action_pressed("enter") or event.is_action_pressed("ui_accept")
-
-func _target_url_for_tip(normalized_tip: String) -> String:
-	match normalized_tip:
-		"forum":
-			return MAIN_FORUM_URL
-		"game studio":
-			return MAIN_STUDIO_URL
-		"technic", "technologies":
-			return MAIN_TECH_URL
-		"team competition", "teamwork":
-			return MAIN_COMPETITION_URL
-		_:
-			return ""

@@ -39,7 +39,11 @@
     if (UI_MODE !== "godot") {
       return url;
     }
-    return url + (url.indexOf("?") === -1 ? "?" : "&") + "ui=godot";
+    var u = String(url);
+    if (u.indexOf("ui=godot") !== -1) {
+      return u;
+    }
+    return u + (u.indexOf("?") === -1 ? "?" : "&") + "ui=godot";
   }
 
   function buildAbsoluteProjectUrl(pathWithQuery) {
@@ -415,13 +419,16 @@
   }
 
   function goBack(target) {
+    // 有明确返回目标时不要用 history.back()：从 Godot 外链进来时上一页是 5500，会误回 Godot
+    if (target) {
+      window.location.href = withUiMode(target);
+      return;
+    }
     if (window.history.length > 1) {
       window.history.back();
       return;
     }
-    if (target) {
-      window.location.href = target;
-    }
+    window.location.href = withUiMode("index.html");
   }
 
   function buildOptions(values, selectEl) {
@@ -1118,6 +1125,18 @@
       return;
     }
 
+    var backList = qs(".back-btn");
+    if (backList) {
+      if (UI_MODE === "godot") {
+        var gAc =
+          (typeof window !== "undefined" && window.ACADBEAT_LOCAL && window.ACADBEAT_LOCAL.godotAcademicWebUrl) ||
+          "http://127.0.0.1:5500/index.html?ui=godot&scene=academic";
+        backList.dataset.backTarget = gAc;
+      } else {
+        backList.dataset.backTarget = "training.html";
+      }
+    }
+
     modeTitle.textContent = modeInfo.label;
 
     const modeVideos = data.videos.filter(function (video) {
@@ -1295,6 +1314,11 @@
     if (!video) {
       alert("Video not found. Please return to the previous page.");
       return;
+    }
+
+    const backBtnDetail = qs(".back-btn");
+    if (backBtnDetail) {
+      backBtnDetail.dataset.backTarget = "listening.html?mode=" + encodeURIComponent(mode);
     }
 
     const titleEl = qs("#detailTitle");
@@ -1558,6 +1582,11 @@
     if (!video) {
       alert("Video not found. Please return to the previous page.");
       return;
+    }
+
+    const backBtnRespond = qs(".back-btn");
+    if (backBtnRespond) {
+      backBtnRespond.dataset.backTarget = "listening.html?mode=" + encodeURIComponent(mode);
     }
 
     const titleEl = qs("#respondTitle");
