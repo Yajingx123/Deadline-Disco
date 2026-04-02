@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AcadBeat | Studio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;1,700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #E4DFD8;
+            --primary-color: #9BB7D4;
+            --secondary-color: #3A4E6B;
+            --white: #ffffff;
+            --card-bg: rgba(255, 255, 255, 0.68);
+            --panel-border: rgba(58, 78, 107, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background:
+                radial-gradient(circle at top, rgba(155, 183, 212, 0.16), transparent 28%),
+                var(--bg-color);
+            color: var(--secondary-color);
+            min-height: 100vh;
+            padding: 0 5% 48px;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            height: 80px;
+            margin: 0 calc(5% * -1);
+            padding: 0 5%;
+            border-bottom: 1px solid rgba(58, 78, 107, 0.1);
+            background-color: var(--bg-color);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        .logo span {
+            color: var(--primary-color);
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        .nav-item {
+            color: var(--secondary-color);
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            opacity: 0.5;
+            padding: 8px 0;
+            position: relative;
+            transition: 0.6s ease;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            opacity: 1;
+        }
+
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--secondary-color);
+        }
+
+        .user-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: 0.4s ease;
+        }
+
+        .user-section:hover {
+            opacity: 0.7;
+        }
+
+        .avatar {
+            width: 34px;
+            height: 34px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            border: 1px solid var(--secondary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.7rem;
+        }
+
+        .logout-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 34px;
+            padding: 0 12px;
+            border-radius: 999px;
+            border: 1px solid rgba(58, 78, 107, 0.18);
+            background: rgba(255, 255, 255, 0.72);
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-size: 0.72rem;
+            font-weight: 700;
+            transition: 0.25s ease;
+        }
+
+        .logout-link:hover {
+            transform: translateY(-1px);
+            background: rgba(255, 255, 255, 0.94);
+            border-color: rgba(58, 78, 107, 0.3);
+        }
+
+        .studio-hero {
+            max-width: 1180px;
+            margin: 116px auto 0;
+            padding: 30px;
+            border: 1px solid var(--panel-border);
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 20px;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 18px 44px rgba(58, 78, 107, 0.08);
+        }
+
+        .studio-hero h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            letter-spacing: -0.02em;
+        }
+
+        .studio-hero p {
+            color: rgba(58, 78, 107, 0.74);
+            max-width: 760px;
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            max-width: 1180px;
+            margin: 28px auto 0;
+        }
+
+        .game-card {
+            background: var(--card-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 18px;
+            padding: 26px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            min-height: 280px;
+        }
+
+        .game-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 36px rgba(58, 78, 107, 0.1);
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .game-icon {
+            width: 54px;
+            height: 54px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(155, 183, 212, 0.2);
+            color: var(--secondary-color);
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+
+        .game-name {
+            font-size: 1.45rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        .game-tag {
+            display: inline-flex;
+            width: fit-content;
+            border: 1px solid rgba(58, 78, 107, 0.2);
+            border-radius: 999px;
+            padding: 4px 10px;
+            font-size: 0.72rem;
+            letter-spacing: 0.08rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: rgba(58, 78, 107, 0.75);
+        }
+
+        .game-desc {
+            line-height: 1.65;
+            color: rgba(58, 78, 107, 0.74);
+            font-size: 0.9rem;
+            flex-grow: 1;
+        }
+
+        .game-link {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--primary-color);
+        }
+
+        .coming-soon {
+            opacity: 0.76;
+        }
+
+        @media (max-width: 900px) {
+            body {
+                padding: 0 16px 36px;
+            }
+
+            nav {
+                flex-wrap: wrap;
+                justify-content: center;
+                height: auto;
+                margin: 0 -16px;
+                padding: 14px 16px;
+            }
+
+            .nav-menu {
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 1rem 1.4rem;
+            }
+
+            .studio-hero {
+                margin-top: 152px;
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo" onclick="window.location.href='../home.html'">Acad<span>Beat</span></div>
+        <div class="nav-menu">
+            <div class="nav-item" onclick="window.location.href='../home.html?module=Insight'">Academic</div>
+            <div class="nav-item" onclick="window.location.href='../home.html?module=Dialogue'">Forum</div>
+            <div class="nav-item" onclick="window.location.href='../home.html?module=Method'">Technology</div>
+            <div class="nav-item active" onclick="window.location.href='./studio.html'">Studio</div>
+        </div>
+        <div class="user-group">
+            <div class="user-section" id="userSection" onclick="handleUserAction()">
+                <span id="userLabel" style="font-size: 0.75rem; font-weight: 700;">LOGIN</span>
+                <div class="avatar" id="userAvatar">IN</div>
+            </div>
+            <a href="#" class="logout-link" id="logoutLink" onclick="return handleLogout(event)" style="display:none;">Log out</a>
+        </div>
+    </nav>
+
+    <section class="studio-hero">
+        <h1>Studio</h1>
+        <p>Play educational mini-games designed for English learners. Start with Scrabble mode to practice vocabulary, spelling, and tactical decision-making against the computer.</p>
+    </section>
+
+    <section class="games-grid">
+        <article class="game-card" onclick="window.location.href='./Scrabble/scrabble.html'">
+            <div class="game-icon">SQ</div>
+            <div class="game-name">Scrabble</div>
+            <div class="game-tag">Single Player</div>
+            <p class="game-desc">
+                Classic 15x15 word game with premium squares, rack management, scoring bonuses, and AI opponent.
+            </p>
+            <div class="game-link">Start Playing →</div>
+        </article>
+
+        <article class="game-card coming-soon" onclick="alert('More games are coming soon in Studio!')">
+            <div class="game-icon">+</div>
+            <div class="game-name">More Games</div>
+            <div class="game-tag">Coming Soon</div>
+            <p class="game-desc">
+                New vocabulary and grammar games will be added in future iterations of the Studio module.
+            </p>
+            <div class="game-link">Stay Tuned →</div>
+        </article>
+    </section>
+
+    <script>
+        const AUTH_API_BASE = '../Auth/backend/api';
+        const authState = { user: null };
+
+        function initialsOf(name) {
+            const trimmed = String(name || '').trim();
+            if (!trimmed) return 'IN';
+            return trimmed.slice(0, 2).toUpperCase();
+        }
+
+        function renderAuthUI() {
+            const label = document.getElementById('userLabel');
+            const avatar = document.getElementById('userAvatar');
+            const logoutLink = document.getElementById('logoutLink');
+            if (!label || !avatar || !logoutLink) return;
+            if (authState.user) {
+                label.textContent = authState.user.username;
+                avatar.textContent = initialsOf(authState.user.username);
+                logoutLink.style.display = 'inline-flex';
+            } else {
+                label.textContent = 'LOGIN';
+                avatar.textContent = 'IN';
+                logoutLink.style.display = 'none';
+            }
+        }
+
+        async function authFetch(path, options = {}) {
+            const response = await fetch(`${AUTH_API_BASE}/${path}`, {
+                method: options.method || 'GET',
+                headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+                credentials: 'include',
+                body: options.body || undefined
+            });
+            return response.json().catch(() => ({ status: 'error', message: 'Invalid response' }));
+        }
+
+        async function loadAuthUser() {
+            const data = await authFetch('me.php');
+            authState.user = data.status === 'success' ? data.user : null;
+            renderAuthUI();
+        }
+
+        function handleUserAction() {
+            if (authState.user) {
+                window.location.href = '../owner.html';
+                return;
+            }
+            window.location.href = '../home.html?login=1';
+        }
+
+        async function handleLogout(event) {
+            if (event) event.preventDefault();
+            if (!authState.user) return false;
+            await authFetch('logout.php');
+            authState.user = null;
+            renderAuthUI();
+            window.location.href = '../home.html';
+            return false;
+        }
+
+        window.addEventListener('load', loadAuthUser);
+    </script>
+</body>
+</html>
