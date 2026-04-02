@@ -1331,10 +1331,8 @@
 
         function handleModuleAction(name) {
             if (!authState.user) {
-                if (isGodotUiMode()) {
-                    window.location.href = L.godotWebEntryUrl || 'http://127.0.0.1:5500/index.html?ui=godot';
-                    return;
-                }
+                // Keep module behavior consistent: unauthenticated users should login first.
+                // Do not force redirect to Godot just because ui_mode cookie is set.
                 openAuthModal('login', 'Please log in before using module actions.');
                 return;
             }

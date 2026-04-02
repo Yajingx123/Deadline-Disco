@@ -12,7 +12,8 @@
     challengeApiUrl: MAIN + '/challenge/api/challenge.php',
     /** 与 start_all_mac 中 voice-room-server 一致 */
     voiceRoomWsUrl: 'ws://127.0.0.1:3001/ws',
-    adminDistUrl: MAIN + '/admin_page/dist/index.html',
+    // Local reliable admin entry uses Vite dev server started by start_all*.php.
+    adminDistUrl: 'http://127.0.0.1:5174/admin_page/dist/',
     messageCenterDistUrl: MAIN + '/message-center-project/dist/index.html',
     messageSummaryApiUrl: MAIN + '/forum-project/api/message-center.php?summaryOnly=1',
     authMeUrl: MAIN + '/Auth/backend/api/me.php',

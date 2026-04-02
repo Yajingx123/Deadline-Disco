@@ -30,9 +30,7 @@
   <script>
     (function () {
       const params = new URLSearchParams(window.location.search);
-      const cookiePair = document.cookie.split('; ').find(item => item.startsWith('ui_mode='));
-      const cookieMode = cookiePair ? decodeURIComponent(cookiePair.split('=')[1] || '') : '';
-      const uiMode = params.get('ui') || cookieMode;
+      const uiMode = params.get('ui');
       if (uiMode !== 'godot') return;
       document.cookie = 'ui_mode=godot; path=/; max-age=2592000';
       const link = document.getElementById('practice-theme-style');
@@ -94,9 +92,9 @@
     window.addEventListener('load', () => {
       const uiGodot = (() => {
         try {
-          if (new URLSearchParams(location.search).get('ui') === 'godot') return true;
+          return new URLSearchParams(location.search).get('ui') === 'godot';
         } catch (_e) {}
-        return document.cookie.split('; ').some((c) => c.startsWith('ui_mode=godot'));
+        return false;
       })();
       const L = window.ACADBEAT_LOCAL || {};
       const loginUrl = uiGodot ? (L.godotWebEntryUrl || 'http://127.0.0.1:5500/index.html?ui=godot') : '../home.html?login=1';

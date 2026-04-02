@@ -33,7 +33,8 @@
     return pair ? decodeURIComponent(pair.slice(prefix.length)) : "";
   }
 
-  const UI_MODE = getParam("ui", "") || getCookie("ui_mode");
+  // Listening flows should stay in classic UI unless URL explicitly asks for godot.
+  const UI_MODE = getParam("ui", "");
 
   function withUiMode(url) {
     if (UI_MODE !== "godot") {

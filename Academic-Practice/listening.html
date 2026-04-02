@@ -13,9 +13,7 @@
   <script>
     (function () {
       var params = new URLSearchParams(window.location.search);
-      var cookiePair = document.cookie.split('; ').find(function (item) { return item.startsWith('ui_mode='); });
-      var cookieMode = cookiePair ? decodeURIComponent((cookiePair.split('=')[1] || '')) : '';
-      var uiMode = params.get('ui') || cookieMode;
+      var uiMode = params.get('ui');
       if (uiMode !== 'godot') {
         return;
       }

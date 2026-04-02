@@ -1,178 +1,1291 @@
-[Thu Apr  2 20:23:12 2026] PHP 8.5.1 Development Server (http://127.0.0.1:8001) started
-[Thu Apr  2 20:23:21 2026] 127.0.0.1:59936 Accepted
-[Thu Apr  2 20:23:21 2026] 127.0.0.1:59936 [200]: GET /home.html
-[Thu Apr  2 20:23:21 2026] 127.0.0.1:59936 Closing
-[Thu Apr  2 20:23:21 2026] 127.0.0.1:52789 Accepted
-[Thu Apr  2 20:23:21 2026] 127.0.0.1:59465 Accepted
-[Thu Apr  2 20:23:21 2026] 127.0.0.1:52789 [200]: GET /challenge/challenge-home.css
-[Thu Apr  2 20:23:21 2026] 127.0.0.1:52789 Closing
-[Thu Apr  2 20:23:21 2026] 127.0.0.1:59465 [200]: GET /shared-nav.css
-[Thu Apr  2 20:23:21 2026] 127.0.0.1:59465 Closing
-[Thu Apr  2 20:23:21 2026] 127.0.0.1:54354 Accepted
-[Thu Apr  2 20:23:21 2026] 127.0.0.1:59088 Accepted
-[Thu Apr  2 20:23:21 2026] 127.0.0.1:54354 [200]: GET /shared/acadbeat-local-config.js
-[Thu Apr  2 20:23:21 2026] 127.0.0.1:59088 [200]: GET /shared-nav.js
-[Thu Apr  2 20:23:21 2026] 127.0.0.1:54354 Closing
-[Thu Apr  2 20:23:21 2026] 127.0.0.1:59088 Closing
-[Thu Apr  2 20:23:21 2026] 127.0.0.1:54754 Accepted
-[Thu Apr  2 20:23:21 2026] 127.0.0.1:54754 [401]: GET /Auth/backend/api/me.php
-[Thu Apr  2 20:23:21 2026] 127.0.0.1:54754 Closing
-[Thu Apr  2 20:23:21 2026] 127.0.0.1:55849 Accepted
-[Thu Apr  2 20:23:21 2026] 127.0.0.1:52386 Accepted
-[Thu Apr  2 20:23:21 2026] 127.0.0.1:55849 [200]: GET /challenge/challenge-panel.html
-[Thu Apr  2 20:23:21 2026] 127.0.0.1:52386 [302]: GET /favicon.ico
-[Thu Apr  2 20:23:21 2026] 127.0.0.1:52386 Closing
-[Thu Apr  2 20:23:21 2026] 127.0.0.1:55849 Closing
-[Thu Apr  2 20:23:21 2026] 127.0.0.1:58828 Accepted
-[Thu Apr  2 20:23:21 2026] 127.0.0.1:58828 [200]: GET /home.html
-[Thu Apr  2 20:23:21 2026] 127.0.0.1:58828 Closing
-[Thu Apr  2 20:23:21 2026] 127.0.0.1:58249 Accepted
-[Thu Apr  2 20:23:21 2026] 127.0.0.1:58249 [200]: GET /challenge/challenge-home.js
-[Thu Apr  2 20:23:21 2026] 127.0.0.1:58249 Closing
-[Thu Apr  2 20:23:21 2026] 127.0.0.1:59714 Accepted
-[Thu Apr  2 20:23:21 2026] 127.0.0.1:59714 [401]: GET /Auth/backend/api/me.php
-[Thu Apr  2 20:23:21 2026] 127.0.0.1:59714 Closing
-[Thu Apr  2 20:23:24 2026] 127.0.0.1:58444 Accepted
-[Thu Apr  2 20:23:24 2026] 127.0.0.1:58444 [200]: GET /home.html?login=1
-[Thu Apr  2 20:23:24 2026] 127.0.0.1:58444 Closing
-[Thu Apr  2 20:23:24 2026] 127.0.0.1:51420 Accepted
-[Thu Apr  2 20:23:24 2026] 127.0.0.1:50863 Accepted
-[Thu Apr  2 20:23:24 2026] 127.0.0.1:51420 [200]: GET /challenge/challenge-home.css
-[Thu Apr  2 20:23:24 2026] 127.0.0.1:50863 [200]: GET /shared-nav.css
-[Thu Apr  2 20:23:24 2026] 127.0.0.1:51420 Closing
-[Thu Apr  2 20:23:24 2026] 127.0.0.1:50863 Closing
-[Thu Apr  2 20:23:24 2026] 127.0.0.1:51001 Accepted
-[Thu Apr  2 20:23:24 2026] 127.0.0.1:54515 Accepted
-[Thu Apr  2 20:23:24 2026] 127.0.0.1:51001 [200]: GET /shared/acadbeat-local-config.js
-[Thu Apr  2 20:23:24 2026] 127.0.0.1:54515 [200]: GET /shared-nav.js
-[Thu Apr  2 20:23:24 2026] 127.0.0.1:51001 Closing
-[Thu Apr  2 20:23:24 2026] 127.0.0.1:54515 Closing
-[Thu Apr  2 20:23:24 2026] 127.0.0.1:53367 Accepted
-[Thu Apr  2 20:23:24 2026] 127.0.0.1:53367 [401]: GET /Auth/backend/api/me.php
-[Thu Apr  2 20:23:24 2026] 127.0.0.1:53367 Closing
-[Thu Apr  2 20:23:24 2026] 127.0.0.1:53482 Accepted
-[Thu Apr  2 20:23:24 2026] 127.0.0.1:53482 [200]: GET /challenge/challenge-panel.html
-[Thu Apr  2 20:23:24 2026] 127.0.0.1:53482 Closing
-[Thu Apr  2 20:23:24 2026] 127.0.0.1:61028 Accepted
-[Thu Apr  2 20:23:24 2026] 127.0.0.1:61028 [302]: GET /favicon.ico
-[Thu Apr  2 20:23:24 2026] 127.0.0.1:61028 Closing
-[Thu Apr  2 20:23:24 2026] 127.0.0.1:64880 Accepted
-[Thu Apr  2 20:23:24 2026] 127.0.0.1:64880 [200]: GET /challenge/challenge-home.js
-[Thu Apr  2 20:23:24 2026] 127.0.0.1:64880 Closing
-[Thu Apr  2 20:23:24 2026] 127.0.0.1:56614 Accepted
-[Thu Apr  2 20:23:24 2026] 127.0.0.1:56614 [200]: GET /home.html
-[Thu Apr  2 20:23:24 2026] 127.0.0.1:56614 Closing
-[Thu Apr  2 20:23:24 2026] 127.0.0.1:60375 Accepted
-[Thu Apr  2 20:23:24 2026] 127.0.0.1:60375 [401]: GET /Auth/backend/api/me.php
-[Thu Apr  2 20:23:24 2026] 127.0.0.1:60375 Closing
-[Thu Apr  2 20:23:25 2026] 127.0.0.1:56418 Accepted
-[Thu Apr  2 20:23:25 2026] 127.0.0.1:56418 [401]: POST /Auth/backend/api/login.php
-[Thu Apr  2 20:23:25 2026] 127.0.0.1:56418 Closing
-[Thu Apr  2 20:23:30 2026] 127.0.0.1:61688 Accepted
-[Thu Apr  2 20:23:30 2026] 127.0.0.1:61688 [401]: POST /Auth/backend/api/login.php
-[Thu Apr  2 20:23:30 2026] 127.0.0.1:61688 Closing
-[Thu Apr  2 20:23:31 2026] 127.0.0.1:64490 Accepted
-[Thu Apr  2 20:23:31 2026] 127.0.0.1:64490 [401]: POST /Auth/backend/api/login.php
-[Thu Apr  2 20:23:31 2026] 127.0.0.1:64490 Closing
-[Thu Apr  2 20:23:31 2026] 127.0.0.1:51348 Accepted
-[Thu Apr  2 20:23:31 2026] 127.0.0.1:51348 [401]: POST /Auth/backend/api/login.php
-[Thu Apr  2 20:23:31 2026] 127.0.0.1:51348 Closing
-[Thu Apr  2 20:23:31 2026] 127.0.0.1:51553 Accepted
-[Thu Apr  2 20:23:31 2026] 127.0.0.1:51553 [401]: POST /Auth/backend/api/login.php
-[Thu Apr  2 20:23:31 2026] 127.0.0.1:51553 Closing
-[Thu Apr  2 20:23:40 2026] 127.0.0.1:50744 Accepted
-[Thu Apr  2 20:23:41 2026] 127.0.0.1:50744 [200]: POST /Auth/backend/api/register.php
-[Thu Apr  2 20:23:41 2026] 127.0.0.1:50744 Closing
-[Thu Apr  2 20:23:41 2026] 127.0.0.1:54499 Accepted
-[Thu Apr  2 20:23:41 2026] 127.0.0.1:54499 [200]: GET /Auth/backend/api/me.php
-[Thu Apr  2 20:23:41 2026] 127.0.0.1:54499 Closing
-[Thu Apr  2 20:23:41 2026] 127.0.0.1:57673 Accepted
-[Thu Apr  2 20:23:41 2026] 127.0.0.1:57673 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
-[Thu Apr  2 20:23:41 2026] 127.0.0.1:57673 Closing
-[Thu Apr  2 20:23:44 2026] 127.0.0.1:58892 Accepted
-[Thu Apr  2 20:23:44 2026] 127.0.0.1:58892 [200]: GET /challenge/api/challenge.php
-[Thu Apr  2 20:23:44 2026] 127.0.0.1:58892 Closing
-[Thu Apr  2 20:23:44 2026] 127.0.0.1:58993 Accepted
-[Thu Apr  2 20:23:44 2026] 127.0.0.1:58993 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
-[Thu Apr  2 20:23:44 2026] 127.0.0.1:58993 Closing
-[Thu Apr  2 20:23:47 2026] 127.0.0.1:62400 Accepted
-[Thu Apr  2 20:23:47 2026] 127.0.0.1:62400 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
-[Thu Apr  2 20:23:47 2026] 127.0.0.1:62400 Closing
-[Thu Apr  2 20:23:49 2026] 127.0.0.1:52074 Accepted
-[Thu Apr  2 20:23:49 2026] 127.0.0.1:52074 [200]: GET /challenge/api/challenge.php
-[Thu Apr  2 20:23:49 2026] 127.0.0.1:52074 Closing
-[Thu Apr  2 20:23:50 2026] 127.0.0.1:63923 Accepted
-[Thu Apr  2 20:23:50 2026] 127.0.0.1:63923 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
-[Thu Apr  2 20:23:50 2026] 127.0.0.1:63923 Closing
-[Thu Apr  2 20:23:53 2026] 127.0.0.1:60798 Accepted
-[Thu Apr  2 20:23:53 2026] 127.0.0.1:60798 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
-[Thu Apr  2 20:23:53 2026] 127.0.0.1:60798 Closing
-[Thu Apr  2 20:23:54 2026] 127.0.0.1:58237 Accepted
-[Thu Apr  2 20:23:54 2026] 127.0.0.1:58237 [200]: GET /challenge/api/challenge.php
-[Thu Apr  2 20:23:54 2026] 127.0.0.1:58237 Closing
-[Thu Apr  2 20:23:56 2026] 127.0.0.1:61031 Accepted
-[Thu Apr  2 20:23:56 2026] 127.0.0.1:61031 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
-[Thu Apr  2 20:23:56 2026] 127.0.0.1:61031 Closing
-[Thu Apr  2 20:23:59 2026] 127.0.0.1:51712 Accepted
-[Thu Apr  2 20:23:59 2026] 127.0.0.1:51712 [200]: GET /challenge/api/challenge.php
-[Thu Apr  2 20:23:59 2026] 127.0.0.1:51712 Closing
-[Thu Apr  2 20:23:59 2026] 127.0.0.1:51305 Accepted
-[Thu Apr  2 20:23:59 2026] 127.0.0.1:51305 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
-[Thu Apr  2 20:23:59 2026] 127.0.0.1:51305 Closing
-[Thu Apr  2 20:24:02 2026] 127.0.0.1:52862 Accepted
-[Thu Apr  2 20:24:02 2026] 127.0.0.1:52862 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
-[Thu Apr  2 20:24:02 2026] 127.0.0.1:52862 Closing
-[Thu Apr  2 20:24:04 2026] 127.0.0.1:64994 Accepted
-[Thu Apr  2 20:24:04 2026] 127.0.0.1:64994 [200]: GET /challenge/api/challenge.php
-[Thu Apr  2 20:24:04 2026] 127.0.0.1:64994 Closing
-[Thu Apr  2 20:24:05 2026] 127.0.0.1:49668 Accepted
-[Thu Apr  2 20:24:05 2026] 127.0.0.1:49668 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
-[Thu Apr  2 20:24:05 2026] 127.0.0.1:49668 Closing
-[Thu Apr  2 20:24:08 2026] 127.0.0.1:53488 Accepted
-[Thu Apr  2 20:24:08 2026] 127.0.0.1:53488 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
-[Thu Apr  2 20:24:08 2026] 127.0.0.1:53488 Closing
-[Thu Apr  2 20:24:09 2026] 127.0.0.1:56870 Accepted
-[Thu Apr  2 20:24:09 2026] 127.0.0.1:56870 [200]: GET /challenge/api/challenge.php
-[Thu Apr  2 20:24:09 2026] 127.0.0.1:56870 Closing
-[Thu Apr  2 20:24:11 2026] 127.0.0.1:64581 Accepted
-[Thu Apr  2 20:24:11 2026] 127.0.0.1:64581 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
-[Thu Apr  2 20:24:11 2026] 127.0.0.1:64581 Closing
-[Thu Apr  2 20:24:14 2026] 127.0.0.1:56414 Accepted
-[Thu Apr  2 20:24:14 2026] 127.0.0.1:56414 [200]: GET /challenge/api/challenge.php
-[Thu Apr  2 20:24:14 2026] 127.0.0.1:56414 Closing
-[Thu Apr  2 20:24:14 2026] 127.0.0.1:54960 Accepted
-[Thu Apr  2 20:24:14 2026] 127.0.0.1:54960 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
-[Thu Apr  2 20:24:14 2026] 127.0.0.1:54960 Closing
-[Thu Apr  2 20:24:17 2026] 127.0.0.1:57672 Accepted
-[Thu Apr  2 20:24:17 2026] 127.0.0.1:57672 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
-[Thu Apr  2 20:24:17 2026] 127.0.0.1:57672 Closing
-[Thu Apr  2 20:24:19 2026] 127.0.0.1:54893 Accepted
-[Thu Apr  2 20:24:19 2026] 127.0.0.1:54893 [200]: GET /challenge/api/challenge.php
-[Thu Apr  2 20:24:19 2026] 127.0.0.1:54893 Closing
-[Thu Apr  2 20:24:20 2026] 127.0.0.1:59382 Accepted
-[Thu Apr  2 20:24:20 2026] 127.0.0.1:59382 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
-[Thu Apr  2 20:24:20 2026] 127.0.0.1:59382 Closing
-[Thu Apr  2 20:24:23 2026] 127.0.0.1:55076 Accepted
-[Thu Apr  2 20:24:23 2026] 127.0.0.1:55076 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
-[Thu Apr  2 20:24:23 2026] 127.0.0.1:55076 Closing
-[Thu Apr  2 20:24:24 2026] 127.0.0.1:51946 Accepted
-[Thu Apr  2 20:24:24 2026] 127.0.0.1:51946 [200]: GET /challenge/api/challenge.php
-[Thu Apr  2 20:24:24 2026] 127.0.0.1:51946 Closing
-[Thu Apr  2 20:24:26 2026] 127.0.0.1:56067 Accepted
-[Thu Apr  2 20:24:26 2026] 127.0.0.1:56067 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
-[Thu Apr  2 20:24:26 2026] 127.0.0.1:56067 Closing
-[Thu Apr  2 20:24:29 2026] 127.0.0.1:55005 Accepted
-[Thu Apr  2 20:24:29 2026] 127.0.0.1:55005 [200]: GET /challenge/api/challenge.php
-[Thu Apr  2 20:24:29 2026] 127.0.0.1:55005 Closing
-[Thu Apr  2 20:24:29 2026] 127.0.0.1:49235 Accepted
-[Thu Apr  2 20:24:29 2026] 127.0.0.1:49235 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
-[Thu Apr  2 20:24:29 2026] 127.0.0.1:49235 Closing
-[Thu Apr  2 20:24:32 2026] 127.0.0.1:53677 Accepted
-[Thu Apr  2 20:24:32 2026] 127.0.0.1:53677 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
-[Thu Apr  2 20:24:32 2026] 127.0.0.1:53677 Closing
-[Thu Apr  2 20:24:34 2026] 127.0.0.1:60083 Accepted
-[Thu Apr  2 20:24:34 2026] 127.0.0.1:60083 [200]: GET /challenge/api/challenge.php
-[Thu Apr  2 20:24:34 2026] 127.0.0.1:60083 Closing
-[Thu Apr  2 20:24:35 2026] 127.0.0.1:52806 Accepted
-[Thu Apr  2 20:24:35 2026] 127.0.0.1:52806 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
-[Thu Apr  2 20:24:35 2026] 127.0.0.1:52806 Closing
+[Thu Apr  2 22:07:57 2026] PHP 8.5.1 Development Server (http://127.0.0.1:8001) started
+[Thu Apr  2 22:07:57 2026] 127.0.0.1:52453 Accepted
+[Thu Apr  2 22:07:57 2026] 127.0.0.1:52453 [200]: GET /home.html
+[Thu Apr  2 22:07:57 2026] 127.0.0.1:52453 Closing
+[Thu Apr  2 22:19:36 2026] 127.0.0.1:49233 Accepted
+[Thu Apr  2 22:19:36 2026] 127.0.0.1:49233 [204]: OPTIONS /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:19:36 2026] 127.0.0.1:49233 Closing
+[Thu Apr  2 22:19:36 2026] 127.0.0.1:63682 Accepted
+[Thu Apr  2 22:19:36 2026] 127.0.0.1:63682 [401]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:19:36 2026] 127.0.0.1:63682 Closing
+[Thu Apr  2 22:19:37 2026] 127.0.0.1:57047 Accepted
+[Thu Apr  2 22:19:37 2026] 127.0.0.1:57047 [401]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:19:37 2026] 127.0.0.1:57047 Closing
+[Thu Apr  2 22:19:39 2026] 127.0.0.1:52361 Accepted
+[Thu Apr  2 22:19:39 2026] 127.0.0.1:52361 [200]: GET /home.html
+[Thu Apr  2 22:19:39 2026] 127.0.0.1:64183 Accepted
+[Thu Apr  2 22:19:39 2026] 127.0.0.1:52361 Closing
+[Thu Apr  2 22:19:39 2026] 127.0.0.1:64183 [200]: GET /challenge/challenge-home.css
+[Thu Apr  2 22:19:39 2026] 127.0.0.1:64183 Closing
+[Thu Apr  2 22:19:39 2026] 127.0.0.1:61722 Accepted
+[Thu Apr  2 22:19:39 2026] 127.0.0.1:61722 [200]: GET /shared-nav.css
+[Thu Apr  2 22:19:39 2026] 127.0.0.1:61722 Closing
+[Thu Apr  2 22:19:39 2026] 127.0.0.1:51779 Accepted
+[Thu Apr  2 22:19:39 2026] 127.0.0.1:63392 Accepted
+[Thu Apr  2 22:19:39 2026] 127.0.0.1:51779 [200]: GET /shared/acadbeat-local-config.js
+[Thu Apr  2 22:19:39 2026] 127.0.0.1:63392 [200]: GET /shared-nav.js
+[Thu Apr  2 22:19:39 2026] 127.0.0.1:51779 Closing
+[Thu Apr  2 22:19:39 2026] 127.0.0.1:63392 Closing
+[Thu Apr  2 22:19:39 2026] 127.0.0.1:59589 Accepted
+[Thu Apr  2 22:19:39 2026] 127.0.0.1:59589 [401]: GET /Auth/backend/api/me.php
+[Thu Apr  2 22:19:39 2026] 127.0.0.1:59589 Closing
+[Thu Apr  2 22:19:39 2026] 127.0.0.1:59154 Accepted
+[Thu Apr  2 22:19:39 2026] 127.0.0.1:59154 [200]: GET /challenge/challenge-panel.html
+[Thu Apr  2 22:19:39 2026] 127.0.0.1:59154 Closing
+[Thu Apr  2 22:19:39 2026] 127.0.0.1:60235 Accepted
+[Thu Apr  2 22:19:39 2026] 127.0.0.1:60235 [302]: GET /favicon.ico
+[Thu Apr  2 22:19:39 2026] 127.0.0.1:60235 Closing
+[Thu Apr  2 22:19:39 2026] 127.0.0.1:50681 Accepted
+[Thu Apr  2 22:19:39 2026] 127.0.0.1:50681 [200]: GET /challenge/challenge-home.js
+[Thu Apr  2 22:19:39 2026] 127.0.0.1:50681 Closing
+[Thu Apr  2 22:19:39 2026] 127.0.0.1:61189 Accepted
+[Thu Apr  2 22:19:39 2026] 127.0.0.1:61189 [200]: GET /home.html
+[Thu Apr  2 22:19:39 2026] 127.0.0.1:61189 Closing
+[Thu Apr  2 22:19:39 2026] 127.0.0.1:51172 Accepted
+[Thu Apr  2 22:19:39 2026] 127.0.0.1:51172 [401]: GET /Auth/backend/api/me.php
+[Thu Apr  2 22:19:39 2026] 127.0.0.1:51172 Closing
+[Thu Apr  2 22:19:41 2026] 127.0.0.1:59128 Accepted
+[Thu Apr  2 22:19:41 2026] 127.0.0.1:59128 [200]: GET /home.html?module=Dialogue
+[Thu Apr  2 22:19:41 2026] 127.0.0.1:59128 Closing
+[Thu Apr  2 22:19:41 2026] 127.0.0.1:53240 Accepted
+[Thu Apr  2 22:19:41 2026] 127.0.0.1:50498 Accepted
+[Thu Apr  2 22:19:42 2026] 127.0.0.1:53240 [200]: GET /challenge/challenge-home.css
+[Thu Apr  2 22:19:42 2026] 127.0.0.1:53240 Closing
+[Thu Apr  2 22:19:42 2026] 127.0.0.1:50498 [200]: GET /shared-nav.css
+[Thu Apr  2 22:19:42 2026] 127.0.0.1:50498 Closing
+[Thu Apr  2 22:19:42 2026] 127.0.0.1:53082 Accepted
+[Thu Apr  2 22:19:42 2026] 127.0.0.1:53082 [200]: GET /shared/acadbeat-local-config.js
+[Thu Apr  2 22:19:42 2026] 127.0.0.1:53082 Closing
+[Thu Apr  2 22:19:42 2026] 127.0.0.1:57476 Accepted
+[Thu Apr  2 22:19:42 2026] 127.0.0.1:57476 [200]: GET /shared-nav.js
+[Thu Apr  2 22:19:42 2026] 127.0.0.1:57476 Closing
+[Thu Apr  2 22:19:42 2026] 127.0.0.1:49154 Accepted
+[Thu Apr  2 22:19:42 2026] 127.0.0.1:49154 [401]: GET /Auth/backend/api/me.php
+[Thu Apr  2 22:19:42 2026] 127.0.0.1:49154 Closing
+[Thu Apr  2 22:19:42 2026] 127.0.0.1:61755 Accepted
+[Thu Apr  2 22:19:42 2026] 127.0.0.1:54304 Accepted
+[Thu Apr  2 22:19:42 2026] 127.0.0.1:61755 [200]: GET /challenge/challenge-panel.html
+[Thu Apr  2 22:19:42 2026] 127.0.0.1:54304 [302]: GET /favicon.ico
+[Thu Apr  2 22:19:42 2026] 127.0.0.1:54304 Closing
+[Thu Apr  2 22:19:42 2026] 127.0.0.1:61755 Closing
+[Thu Apr  2 22:19:42 2026] 127.0.0.1:53996 Accepted
+[Thu Apr  2 22:19:42 2026] 127.0.0.1:53996 [200]: GET /home.html
+[Thu Apr  2 22:19:42 2026] 127.0.0.1:53996 Closing
+[Thu Apr  2 22:19:42 2026] 127.0.0.1:55388 Accepted
+[Thu Apr  2 22:19:42 2026] 127.0.0.1:55388 [200]: GET /challenge/challenge-home.js
+[Thu Apr  2 22:19:42 2026] 127.0.0.1:55388 Closing
+[Thu Apr  2 22:19:42 2026] 127.0.0.1:55779 Accepted
+[Thu Apr  2 22:19:42 2026] 127.0.0.1:55779 [401]: GET /Auth/backend/api/me.php
+[Thu Apr  2 22:19:42 2026] 127.0.0.1:55779 Closing
+[Thu Apr  2 22:19:44 2026] 127.0.0.1:60708 Accepted
+[Thu Apr  2 22:19:44 2026] 127.0.0.1:60708 [200]: GET /home.html?module=Insight
+[Thu Apr  2 22:19:44 2026] 127.0.0.1:60708 Closing
+[Thu Apr  2 22:19:44 2026] 127.0.0.1:54571 Accepted
+[Thu Apr  2 22:19:44 2026] 127.0.0.1:65314 Accepted
+[Thu Apr  2 22:19:44 2026] 127.0.0.1:54571 [200]: GET /challenge/challenge-home.css
+[Thu Apr  2 22:19:44 2026] 127.0.0.1:54571 Closing
+[Thu Apr  2 22:19:44 2026] 127.0.0.1:65314 [200]: GET /shared-nav.css
+[Thu Apr  2 22:19:44 2026] 127.0.0.1:65314 Closing
+[Thu Apr  2 22:19:44 2026] 127.0.0.1:57559 Accepted
+[Thu Apr  2 22:19:44 2026] 127.0.0.1:50874 Accepted
+[Thu Apr  2 22:19:44 2026] 127.0.0.1:57559 [200]: GET /shared/acadbeat-local-config.js
+[Thu Apr  2 22:19:44 2026] 127.0.0.1:50874 [200]: GET /shared-nav.js
+[Thu Apr  2 22:19:44 2026] 127.0.0.1:57559 Closing
+[Thu Apr  2 22:19:44 2026] 127.0.0.1:50874 Closing
+[Thu Apr  2 22:19:44 2026] 127.0.0.1:59345 Accepted
+[Thu Apr  2 22:19:44 2026] 127.0.0.1:59345 [401]: GET /Auth/backend/api/me.php
+[Thu Apr  2 22:19:44 2026] 127.0.0.1:59345 Closing
+[Thu Apr  2 22:19:44 2026] 127.0.0.1:60639 Accepted
+[Thu Apr  2 22:19:44 2026] 127.0.0.1:59065 Accepted
+[Thu Apr  2 22:19:44 2026] 127.0.0.1:60639 [200]: GET /challenge/challenge-panel.html
+[Thu Apr  2 22:19:44 2026] 127.0.0.1:59065 [302]: GET /favicon.ico
+[Thu Apr  2 22:19:44 2026] 127.0.0.1:59065 Closing
+[Thu Apr  2 22:19:44 2026] 127.0.0.1:60639 Closing
+[Thu Apr  2 22:19:44 2026] 127.0.0.1:56048 Accepted
+[Thu Apr  2 22:19:44 2026] 127.0.0.1:56048 [200]: GET /home.html
+[Thu Apr  2 22:19:44 2026] 127.0.0.1:56048 Closing
+[Thu Apr  2 22:19:44 2026] 127.0.0.1:63911 Accepted
+[Thu Apr  2 22:19:44 2026] 127.0.0.1:63911 [200]: GET /challenge/challenge-home.js
+[Thu Apr  2 22:19:44 2026] 127.0.0.1:63911 Closing
+[Thu Apr  2 22:19:44 2026] 127.0.0.1:62229 Accepted
+[Thu Apr  2 22:19:44 2026] 127.0.0.1:62229 [401]: GET /Auth/backend/api/me.php
+[Thu Apr  2 22:19:44 2026] 127.0.0.1:62229 Closing
+[Thu Apr  2 22:19:46 2026] 127.0.0.1:50766 Accepted
+[Thu Apr  2 22:19:46 2026] 127.0.0.1:50766 [200]: POST /Auth/backend/api/login.php
+[Thu Apr  2 22:19:46 2026] 127.0.0.1:50766 Closing
+[Thu Apr  2 22:19:46 2026] 127.0.0.1:58697 Accepted
+[Thu Apr  2 22:19:46 2026] 127.0.0.1:58697 [200]: GET /Auth/backend/api/me.php
+[Thu Apr  2 22:19:46 2026] 127.0.0.1:58697 Closing
+[Thu Apr  2 22:19:46 2026] 127.0.0.1:61982 Accepted
+[Thu Apr  2 22:19:46 2026] 127.0.0.1:61982 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:19:46 2026] 127.0.0.1:61982 Closing
+[Thu Apr  2 22:19:47 2026] 127.0.0.1:64229 Accepted
+[Thu Apr  2 22:19:47 2026] 127.0.0.1:64229 [200]: GET /Academic-Practice/training.html
+[Thu Apr  2 22:19:47 2026] 127.0.0.1:64229 Closing
+[Thu Apr  2 22:19:47 2026] 127.0.0.1:62804 Accepted
+[Thu Apr  2 22:19:47 2026] 127.0.0.1:54483 Accepted
+[Thu Apr  2 22:19:47 2026] 127.0.0.1:62804 [200]: GET /shared-nav.css
+[Thu Apr  2 22:19:47 2026] 127.0.0.1:62804 Closing
+[Thu Apr  2 22:19:47 2026] 127.0.0.1:50966 Accepted
+[Thu Apr  2 22:19:47 2026] 127.0.0.1:60697 Accepted
+[Thu Apr  2 22:19:47 2026] 127.0.0.1:54483 [200]: GET /shared/acadbeat-local-config.js
+[Thu Apr  2 22:19:47 2026] 127.0.0.1:50966 [200]: GET /Academic-Practice/acadbeat-global.css
+[Thu Apr  2 22:19:47 2026] 127.0.0.1:60697 [200]: GET /Academic-Practice/practice-style.css
+[Thu Apr  2 22:19:47 2026] 127.0.0.1:49261 Accepted
+[Thu Apr  2 22:19:47 2026] 127.0.0.1:54483 Closing
+[Thu Apr  2 22:19:47 2026] 127.0.0.1:50966 Closing
+[Thu Apr  2 22:19:47 2026] 127.0.0.1:60697 Closing
+[Thu Apr  2 22:19:47 2026] 127.0.0.1:49261 [200]: GET /Academic-Practice/practice-data.js
+[Thu Apr  2 22:19:47 2026] 127.0.0.1:49261 Closing
+[Thu Apr  2 22:19:47 2026] 127.0.0.1:49668 Accepted
+[Thu Apr  2 22:19:47 2026] 127.0.0.1:50823 Accepted
+[Thu Apr  2 22:19:47 2026] 127.0.0.1:49668 [200]: GET /Academic-Practice/practice-app.js
+[Thu Apr  2 22:19:47 2026] 127.0.0.1:50823 [200]: GET /shared-nav.js
+[Thu Apr  2 22:19:47 2026] 127.0.0.1:49668 Closing
+[Thu Apr  2 22:19:47 2026] 127.0.0.1:50823 Closing
+[Thu Apr  2 22:19:47 2026] 127.0.0.1:58021 Accepted
+[Thu Apr  2 22:19:47 2026] 127.0.0.1:58021 [200]: GET /Auth/backend/api/me.php
+[Thu Apr  2 22:19:47 2026] 127.0.0.1:58021 Closing
+[Thu Apr  2 22:19:47 2026] 127.0.0.1:50864 Accepted
+[Thu Apr  2 22:19:47 2026] 127.0.0.1:50864 [200]: GET /Auth/backend/api/me.php
+[Thu Apr  2 22:19:47 2026] 127.0.0.1:50864 Closing
+[Thu Apr  2 22:19:47 2026] 127.0.0.1:55525 Accepted
+[Thu Apr  2 22:19:47 2026] 127.0.0.1:55525 [302]: GET /favicon.ico
+[Thu Apr  2 22:19:47 2026] 127.0.0.1:55525 Closing
+[Thu Apr  2 22:19:47 2026] 127.0.0.1:60968 Accepted
+[Thu Apr  2 22:19:47 2026] 127.0.0.1:60968 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:19:47 2026] 127.0.0.1:60968 Closing
+[Thu Apr  2 22:19:47 2026] 127.0.0.1:57140 Accepted
+[Thu Apr  2 22:19:47 2026] 127.0.0.1:57140 [200]: GET /home.html
+[Thu Apr  2 22:19:47 2026] 127.0.0.1:57140 Closing
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:63458 Accepted
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:63458 [200]: GET /Academic-Practice/listening.html?mode=understand
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:56838 Accepted
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:63458 Closing
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:56838 [200]: GET /Academic-Practice/acadbeat-global.css
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:56838 Closing
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:61620 Accepted
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:61620 [200]: GET /Academic-Practice/practice-style.css
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:55287 Accepted
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:61620 Closing
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:63184 Accepted
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:55287 [200]: GET /shared/acadbeat-local-config.js
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:63184 [200]: GET /Academic-Practice/practice-data.js
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:55287 Closing
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:63184 Closing
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:60561 Accepted
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:60561 [200]: GET /Academic-Practice/practice-app.js
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:60561 Closing
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:61240 Accepted
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:64616 Accepted
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:61240 [200]: GET /Academic-Practice/flags/flags/de.png
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:64616 [200]: GET /Academic-Practice/flags/flags/us.png
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:55814 Accepted
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:61240 Closing
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:64616 Closing
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:62696 Accepted
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:55814 [200]: GET /Academic-Practice/flags/flags/au.png
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:62696 [200]: GET /Academic-Practice/flags/flags/ca.png
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:55814 Closing
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:62696 Closing
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:59815 Accepted
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:59815 [200]: GET /Academic-Practice/flags/flags/gb.png
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:64342 Accepted
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:59815 Closing
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:57535 Accepted
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:65276 Accepted
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:64342 [200]: GET /Academic-Practice/flags/flags/nz.png
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:57535 [200]: GET /Academic-Practice/flags/flags/ie.png
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:65276 [200]: GET /Academic-Practice/cover/1.png
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:64342 Closing
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:57535 Closing
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:55969 Accepted
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:55969 [200]: GET /Academic-Practice/cover/2.png
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:65276 Closing
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:55969 Closing
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:62489 Accepted
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:54467 Accepted
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:62489 [200]: GET /Academic-Practice/cover/3.png
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:54467 [200]: GET /Academic-Practice/cover/4.png
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:57599 Accepted
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:57033 Accepted
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:57599 [200]: GET /Academic-Practice/cover/5.png
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:57033 [200]: GET /Academic-Practice/cover/6.png
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:62489 Closing
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:60323 Accepted
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:62158 Accepted
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:54467 Closing
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:60323 [200]: GET /Academic-Practice/cover/7.png
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:62158 [200]: GET /Academic-Practice/cover/8.png
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:57599 Closing
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:57033 Closing
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:51701 Accepted
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:51701 [200]: GET /Academic-Practice/cover/9.png
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:51701 Closing
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:60323 Closing
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:58359 Accepted
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:58359 [200]: GET /Academic-Practice/cover/10.png
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:62158 Closing
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:61769 Accepted
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:61769 [200]: GET /Academic-Practice/cover/11.png
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:58359 Closing
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:49668 Accepted
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:49668 [200]: GET /Academic-Practice/cover/12.png
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:61769 Closing
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:49668 Closing
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:51771 Accepted
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:51771 [302]: GET /favicon.ico
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:51771 Closing
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:59036 Accepted
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:59036 [200]: GET /home.html
+[Thu Apr  2 22:19:49 2026] 127.0.0.1:59036 Closing
+[Thu Apr  2 22:19:51 2026] 127.0.0.1:64096 Accepted
+[Thu Apr  2 22:19:51 2026] 127.0.0.1:64096 [200]: GET /Academic-Practice/note_training.html?mode=understand&videoId=u1
+[Thu Apr  2 22:19:51 2026] 127.0.0.1:64096 Closing
+[Thu Apr  2 22:19:51 2026] 127.0.0.1:50238 Accepted
+[Thu Apr  2 22:19:51 2026] 127.0.0.1:53866 Accepted
+[Thu Apr  2 22:19:51 2026] 127.0.0.1:50238 [200]: GET /shared-nav.css
+[Thu Apr  2 22:19:51 2026] 127.0.0.1:50238 Closing
+[Thu Apr  2 22:19:51 2026] 127.0.0.1:57396 Accepted
+[Thu Apr  2 22:19:52 2026] 127.0.0.1:63531 Accepted
+[Thu Apr  2 22:19:52 2026] 127.0.0.1:52734 Accepted
+[Thu Apr  2 22:19:52 2026] 127.0.0.1:53866 [200]: GET /shared/acadbeat-local-config.js
+[Thu Apr  2 22:19:52 2026] 127.0.0.1:57396 [200]: GET /Academic-Practice/acadbeat-global.css
+[Thu Apr  2 22:19:52 2026] 127.0.0.1:63531 [200]: GET /Academic-Practice/practice-style.css
+[Thu Apr  2 22:19:52 2026] 127.0.0.1:61059 Accepted
+[Thu Apr  2 22:19:52 2026] 127.0.0.1:53866 Closing
+[Thu Apr  2 22:19:52 2026] 127.0.0.1:59412 Accepted
+[Thu Apr  2 22:19:52 2026] 127.0.0.1:52734 [200]: GET /Academic-Practice/practice-data.js
+[Thu Apr  2 22:19:52 2026] 127.0.0.1:57396 Closing
+[Thu Apr  2 22:19:52 2026] 127.0.0.1:63531 Closing
+[Thu Apr  2 22:19:52 2026] 127.0.0.1:61059 [200]: GET /Academic-Practice/practice-app.js
+[Thu Apr  2 22:19:52 2026] 127.0.0.1:59412 [200]: GET /shared-nav.js
+[Thu Apr  2 22:19:52 2026] 127.0.0.1:52734 Closing
+[Thu Apr  2 22:19:52 2026] 127.0.0.1:61059 Closing
+[Thu Apr  2 22:19:52 2026] 127.0.0.1:59412 Closing
+[Thu Apr  2 22:19:52 2026] 127.0.0.1:60292 Accepted
+[Thu Apr  2 22:19:52 2026] 127.0.0.1:60292 [200]: GET /Auth/backend/api/me.php
+[Thu Apr  2 22:19:52 2026] 127.0.0.1:60292 Closing
+[Thu Apr  2 22:19:52 2026] 127.0.0.1:64609 Accepted
+[Thu Apr  2 22:19:52 2026] 127.0.0.1:64609 [200]: GET /Academic-Practice/flags/flags/de.png
+[Thu Apr  2 22:19:52 2026] 127.0.0.1:64609 Closing
+[Thu Apr  2 22:19:52 2026] 127.0.0.1:52941 Accepted
+[Thu Apr  2 22:19:52 2026] 127.0.0.1:52941 [200]: GET /Academic-Practice/material/1.mp4
+[Thu Apr  2 22:19:52 2026] 127.0.0.1:52941 Closing
+[Thu Apr  2 22:19:52 2026] 127.0.0.1:60238 Accepted
+[Thu Apr  2 22:19:52 2026] 127.0.0.1:60238 [200]: GET /Auth/backend/api/me.php
+[Thu Apr  2 22:19:52 2026] 127.0.0.1:60238 Closing
+[Thu Apr  2 22:19:52 2026] 127.0.0.1:59617 Accepted
+[Thu Apr  2 22:19:52 2026] 127.0.0.1:59617 [302]: GET /favicon.ico
+[Thu Apr  2 22:19:52 2026] 127.0.0.1:59617 Closing
+[Thu Apr  2 22:19:52 2026] 127.0.0.1:61043 Accepted
+[Thu Apr  2 22:19:52 2026] 127.0.0.1:61043 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:19:52 2026] 127.0.0.1:61043 Closing
+[Thu Apr  2 22:19:52 2026] 127.0.0.1:50215 Accepted
+[Thu Apr  2 22:19:52 2026] 127.0.0.1:50215 [200]: GET /home.html
+[Thu Apr  2 22:19:52 2026] 127.0.0.1:50215 Closing
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:61009 Accepted
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:61009 [200]: GET /Academic-Practice/listening.html?mode=understand
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:61009 Closing
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:65257 Accepted
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:65257 [200]: GET /Academic-Practice/acadbeat-global.css
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:65257 Closing
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:56388 Accepted
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:56388 [200]: GET /Academic-Practice/practice-style.css
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:51828 Accepted
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:56388 Closing
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:59342 Accepted
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:51828 [200]: GET /shared/acadbeat-local-config.js
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:59342 [200]: GET /Academic-Practice/practice-data.js
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:51828 Closing
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:59342 Closing
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:56505 Accepted
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:56505 [200]: GET /Academic-Practice/practice-app.js
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:56505 Closing
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:50535 Accepted
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:50535 [200]: GET /Academic-Practice/flags/flags/de.png
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:65146 Accepted
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:50535 Closing
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:54353 Accepted
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:65146 [200]: GET /Academic-Practice/flags/flags/us.png
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:54353 [200]: GET /Academic-Practice/flags/flags/au.png
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:65146 Closing
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:54353 Closing
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:62957 Accepted
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:62412 Accepted
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:59829 Accepted
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:52558 Accepted
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:62957 [200]: GET /Academic-Practice/flags/flags/ca.png
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:62412 [200]: GET /Academic-Practice/flags/flags/gb.png
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:59829 [200]: GET /Academic-Practice/flags/flags/nz.png
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:52558 [200]: GET /Academic-Practice/flags/flags/ie.png
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:62957 Closing
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:62412 Closing
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:59829 Closing
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:52558 Closing
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:62292 Accepted
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:53815 Accepted
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:62292 [200]: GET /Academic-Practice/cover/1.png
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:53815 [200]: GET /Academic-Practice/cover/2.png
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:55899 Accepted
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:62096 Accepted
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:55899 [200]: GET /Academic-Practice/cover/3.png
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:52941 Accepted
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:53564 Accepted
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:62096 [200]: GET /Academic-Practice/cover/4.png
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:62292 Closing
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:53815 Closing
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:52941 [200]: GET /Academic-Practice/cover/5.png
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:53564 [200]: GET /Academic-Practice/cover/6.png
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:55899 Closing
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:50608 Accepted
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:63185 Accepted
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:62096 Closing
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:53564 Closing
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:50608 [200]: GET /Academic-Practice/cover/7.png
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:63185 [200]: GET /Academic-Practice/cover/8.png
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:52941 Closing
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:50608 Closing
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:63185 Closing
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:52749 Accepted
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:52749 [200]: GET /Academic-Practice/cover/9.png
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:52749 Closing
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:65138 Accepted
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:55612 Accepted
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:65138 [200]: GET /Academic-Practice/cover/10.png
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:55612 [200]: GET /Academic-Practice/cover/11.png
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:59096 Accepted
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:65138 Closing
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:59096 [200]: GET /Academic-Practice/cover/12.png
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:59096 Closing
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:55612 Closing
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:56200 Accepted
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:56200 [302]: GET /favicon.ico
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:56200 Closing
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:60949 Accepted
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:60949 [200]: GET /home.html
+[Thu Apr  2 22:19:54 2026] 127.0.0.1:60949 Closing
+[Thu Apr  2 22:19:55 2026] 127.0.0.1:64108 Accepted
+[Thu Apr  2 22:19:55 2026] 127.0.0.1:64108 [200]: GET /Academic-Practice/training.html
+[Thu Apr  2 22:19:55 2026] 127.0.0.1:64108 Closing
+[Thu Apr  2 22:19:55 2026] 127.0.0.1:64771 Accepted
+[Thu Apr  2 22:19:55 2026] 127.0.0.1:49668 Accepted
+[Thu Apr  2 22:19:55 2026] 127.0.0.1:49668 [200]: GET /shared-nav.css
+[Thu Apr  2 22:19:55 2026] 127.0.0.1:49668 Closing
+[Thu Apr  2 22:19:55 2026] 127.0.0.1:64771 [200]: GET /shared/acadbeat-local-config.js
+[Thu Apr  2 22:19:55 2026] 127.0.0.1:64771 Closing
+[Thu Apr  2 22:19:55 2026] 127.0.0.1:64021 Accepted
+[Thu Apr  2 22:19:55 2026] 127.0.0.1:64021 [200]: GET /Academic-Practice/acadbeat-global.css
+[Thu Apr  2 22:19:55 2026] 127.0.0.1:64021 Closing
+[Thu Apr  2 22:19:55 2026] 127.0.0.1:49839 Accepted
+[Thu Apr  2 22:19:55 2026] 127.0.0.1:52089 Accepted
+[Thu Apr  2 22:19:55 2026] 127.0.0.1:52542 Accepted
+[Thu Apr  2 22:19:55 2026] 127.0.0.1:49839 [200]: GET /Academic-Practice/practice-style.css
+[Thu Apr  2 22:19:55 2026] 127.0.0.1:52089 [200]: GET /Academic-Practice/practice-data.js
+[Thu Apr  2 22:19:55 2026] 127.0.0.1:52542 [200]: GET /Academic-Practice/practice-app.js
+[Thu Apr  2 22:19:55 2026] 127.0.0.1:49839 Closing
+[Thu Apr  2 22:19:55 2026] 127.0.0.1:52089 Closing
+[Thu Apr  2 22:19:55 2026] 127.0.0.1:52542 Closing
+[Thu Apr  2 22:19:55 2026] 127.0.0.1:63175 Accepted
+[Thu Apr  2 22:19:55 2026] 127.0.0.1:63175 [200]: GET /shared-nav.js
+[Thu Apr  2 22:19:55 2026] 127.0.0.1:63175 Closing
+[Thu Apr  2 22:19:55 2026] 127.0.0.1:58308 Accepted
+[Thu Apr  2 22:19:55 2026] 127.0.0.1:58308 [200]: GET /Auth/backend/api/me.php
+[Thu Apr  2 22:19:55 2026] 127.0.0.1:58308 Closing
+[Thu Apr  2 22:19:55 2026] 127.0.0.1:53202 Accepted
+[Thu Apr  2 22:19:55 2026] 127.0.0.1:53202 [200]: GET /Auth/backend/api/me.php
+[Thu Apr  2 22:19:55 2026] 127.0.0.1:53202 Closing
+[Thu Apr  2 22:19:55 2026] 127.0.0.1:65245 Accepted
+[Thu Apr  2 22:19:55 2026] 127.0.0.1:65245 [302]: GET /favicon.ico
+[Thu Apr  2 22:19:55 2026] 127.0.0.1:65245 Closing
+[Thu Apr  2 22:19:55 2026] 127.0.0.1:56350 Accepted
+[Thu Apr  2 22:19:55 2026] 127.0.0.1:56350 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:19:55 2026] 127.0.0.1:56350 Closing
+[Thu Apr  2 22:19:55 2026] 127.0.0.1:50470 Accepted
+[Thu Apr  2 22:19:55 2026] 127.0.0.1:50470 [200]: GET /home.html
+[Thu Apr  2 22:19:55 2026] 127.0.0.1:50470 Closing
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:49360 Accepted
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:49360 [200]: GET /Academic-Practice/listening.html?mode=respond
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:49360 Closing
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:57692 Accepted
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:50872 Accepted
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:57692 [200]: GET /Academic-Practice/acadbeat-global.css
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:57692 Closing
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:50872 [200]: GET /Academic-Practice/practice-style.css
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:50872 Closing
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:55627 Accepted
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:62827 Accepted
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:55627 [200]: GET /shared/acadbeat-local-config.js
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:62827 [200]: GET /Academic-Practice/practice-data.js
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:64891 Accepted
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:55627 Closing
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:64891 [200]: GET /Academic-Practice/practice-app.js
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:62827 Closing
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:64891 Closing
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:52335 Accepted
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:57693 Accepted
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:52335 [200]: GET /Academic-Practice/flags/flags/gb.png
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:56847 Accepted
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:57693 [200]: GET /Academic-Practice/flags/flags/ca.png
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:56847 [200]: GET /Academic-Practice/flags/flags/au.png
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:52335 Closing
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:57693 Closing
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:56847 Closing
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:62003 Accepted
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:62003 [200]: GET /Academic-Practice/flags/flags/us.png
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:62003 Closing
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:64711 Accepted
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:57719 Accepted
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:64711 [200]: GET /Academic-Practice/flags/flags/ie.png
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:57719 [200]: GET /Academic-Practice/flags/flags/nz.png
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:64711 Closing
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:49296 Accepted
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:57719 Closing
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:49296 [200]: GET /Academic-Practice/flags/flags/de.png
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:49296 Closing
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:57146 Accepted
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:57146 [200]: GET /Academic-Practice/flags/flags/th.png
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:57146 Closing
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:57515 Accepted
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:57220 Accepted
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:64683 Accepted
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:60826 Accepted
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:57515 [200]: GET /Academic-Practice/flags/flags/jp.png
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:57220 [200]: GET /Academic-Practice/flags/flags/sg.png
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:64683 [200]: GET /Academic-Practice/flags/flags/fr.png
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:60826 [200]: GET /Academic-Practice/cover2/13.png
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:50799 Accepted
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:57515 Closing
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:50799 [200]: GET /Academic-Practice/cover2/14.png
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:57220 Closing
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:64683 Closing
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:60826 Closing
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:57282 Accepted
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:57282 [200]: GET /Academic-Practice/cover2/15.png
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:62774 Accepted
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:50799 Closing
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:62774 [200]: GET /Academic-Practice/cover2/16.png
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:51829 Accepted
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:60649 Accepted
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:54364 Accepted
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:51829 [200]: GET /Academic-Practice/cover2/18.png
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:60649 [200]: GET /Academic-Practice/cover2/17.png
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:54364 [200]: GET /Academic-Practice/cover2/19.png
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:51829 Closing
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:51882 Accepted
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:62774 Closing
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:51882 [200]: GET /Academic-Practice/cover2/20.png
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:51882 Closing
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:54364 Closing
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:57282 Closing
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:58161 Accepted
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:55036 Accepted
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:60649 Closing
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:61213 Accepted
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:58161 [200]: GET /Academic-Practice/cover2/21.png
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:55036 [200]: GET /Academic-Practice/cover2/22.png
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:61213 [200]: GET /Academic-Practice/cover2/23.png
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:58161 Closing
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:61213 Closing
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:55036 Closing
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:49668 Accepted
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:49668 [200]: GET /Academic-Practice/cover2/24.png
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:49668 Closing
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:56625 Accepted
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:56625 [302]: GET /favicon.ico
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:56625 Closing
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:53134 Accepted
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:53134 [200]: GET /home.html
+[Thu Apr  2 22:19:57 2026] 127.0.0.1:53134 Closing
+[Thu Apr  2 22:19:59 2026] 127.0.0.1:51032 Accepted
+[Thu Apr  2 22:19:59 2026] 127.0.0.1:51032 [200]: GET /Academic-Practice/respond_training.html?mode=respond&videoId=s1
+[Thu Apr  2 22:19:59 2026] 127.0.0.1:51032 Closing
+[Thu Apr  2 22:19:59 2026] 127.0.0.1:62973 Accepted
+[Thu Apr  2 22:19:59 2026] 127.0.0.1:57327 Accepted
+[Thu Apr  2 22:19:59 2026] 127.0.0.1:62973 [200]: GET /shared-nav.css
+[Thu Apr  2 22:19:59 2026] 127.0.0.1:62973 Closing
+[Thu Apr  2 22:19:59 2026] 127.0.0.1:57327 [200]: GET /shared/acadbeat-local-config.js
+[Thu Apr  2 22:19:59 2026] 127.0.0.1:57327 Closing
+[Thu Apr  2 22:19:59 2026] 127.0.0.1:50544 Accepted
+[Thu Apr  2 22:19:59 2026] 127.0.0.1:58271 Accepted
+[Thu Apr  2 22:19:59 2026] 127.0.0.1:50544 [200]: GET /Academic-Practice/acadbeat-global.css
+[Thu Apr  2 22:19:59 2026] 127.0.0.1:58271 [200]: GET /Academic-Practice/practice-style.css
+[Thu Apr  2 22:19:59 2026] 127.0.0.1:50544 Closing
+[Thu Apr  2 22:19:59 2026] 127.0.0.1:58271 Closing
+[Thu Apr  2 22:19:59 2026] 127.0.0.1:57781 Accepted
+[Thu Apr  2 22:19:59 2026] 127.0.0.1:57781 [200]: GET /Academic-Practice/practice-data.js
+[Thu Apr  2 22:19:59 2026] 127.0.0.1:57781 Closing
+[Thu Apr  2 22:19:59 2026] 127.0.0.1:59158 Accepted
+[Thu Apr  2 22:19:59 2026] 127.0.0.1:62020 Accepted
+[Thu Apr  2 22:19:59 2026] 127.0.0.1:59158 [200]: GET /Academic-Practice/practice-app.js
+[Thu Apr  2 22:19:59 2026] 127.0.0.1:62020 [200]: GET /shared-nav.js
+[Thu Apr  2 22:19:59 2026] 127.0.0.1:59158 Closing
+[Thu Apr  2 22:19:59 2026] 127.0.0.1:62020 Closing
+[Thu Apr  2 22:19:59 2026] 127.0.0.1:52450 Accepted
+[Thu Apr  2 22:19:59 2026] 127.0.0.1:52450 [200]: GET /Auth/backend/api/me.php
+[Thu Apr  2 22:19:59 2026] 127.0.0.1:52450 Closing
+[Thu Apr  2 22:19:59 2026] 127.0.0.1:49668 Accepted
+[Thu Apr  2 22:19:59 2026] 127.0.0.1:63962 Accepted
+[Thu Apr  2 22:19:59 2026] 127.0.0.1:49668 [200]: GET /Academic-Practice/flags/flags/th.png
+[Thu Apr  2 22:19:59 2026] 127.0.0.1:63962 [200]: GET /Academic-Practice/material/2.mp4
+[Thu Apr  2 22:19:59 2026] 127.0.0.1:49668 Closing
+[Thu Apr  2 22:19:59 2026] 127.0.0.1:63962 Closing
+[Thu Apr  2 22:19:59 2026] 127.0.0.1:60649 Accepted
+[Thu Apr  2 22:19:59 2026] 127.0.0.1:60649 [200]: GET /Auth/backend/api/me.php
+[Thu Apr  2 22:19:59 2026] 127.0.0.1:60649 Closing
+[Thu Apr  2 22:19:59 2026] 127.0.0.1:57013 Accepted
+[Thu Apr  2 22:19:59 2026] 127.0.0.1:57013 [302]: GET /favicon.ico
+[Thu Apr  2 22:19:59 2026] 127.0.0.1:57013 Closing
+[Thu Apr  2 22:19:59 2026] 127.0.0.1:53847 Accepted
+[Thu Apr  2 22:19:59 2026] 127.0.0.1:53847 [200]: GET /home.html
+[Thu Apr  2 22:19:59 2026] 127.0.0.1:53847 Closing
+[Thu Apr  2 22:19:59 2026] 127.0.0.1:62992 Accepted
+[Thu Apr  2 22:19:59 2026] 127.0.0.1:62992 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:19:59 2026] 127.0.0.1:62992 Closing
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:61894 Accepted
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:61894 [200]: GET /Academic-Practice/listening.html?mode=respond
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:61894 Closing
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:58616 Accepted
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:50053 Accepted
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:58616 [200]: GET /Academic-Practice/acadbeat-global.css
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:58616 Closing
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:50053 [200]: GET /Academic-Practice/practice-style.css
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:50053 Closing
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:51875 Accepted
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:55136 Accepted
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:51875 [200]: GET /shared/acadbeat-local-config.js
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:55136 [200]: GET /Academic-Practice/practice-data.js
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:63061 Accepted
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:51875 Closing
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:63061 [200]: GET /Academic-Practice/practice-app.js
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:55136 Closing
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:63061 Closing
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:53967 Accepted
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:49668 Accepted
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:53967 [200]: GET /Academic-Practice/flags/flags/th.png
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:49668 [200]: GET /Academic-Practice/flags/flags/gb.png
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:54668 Accepted
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:54668 [200]: GET /Academic-Practice/flags/flags/ca.png
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:53967 Closing
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:49668 Closing
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:54668 Closing
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:64634 Accepted
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:56294 Accepted
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:49362 Accepted
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:64634 [200]: GET /Academic-Practice/flags/flags/au.png
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:56294 [200]: GET /Academic-Practice/flags/flags/us.png
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:49362 [200]: GET /Academic-Practice/flags/flags/ie.png
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:61179 Accepted
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:61179 [200]: GET /Academic-Practice/flags/flags/nz.png
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:64634 Closing
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:56294 Closing
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:49362 Closing
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:51856 Accepted
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:61179 Closing
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:51856 [200]: GET /Academic-Practice/flags/flags/de.png
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:51856 Closing
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:61090 Accepted
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:64288 Accepted
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:61090 [200]: GET /Academic-Practice/flags/flags/jp.png
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:51729 Accepted
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:61090 Closing
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:64288 [200]: GET /Academic-Practice/flags/flags/sg.png
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:64507 Accepted
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:64288 Closing
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:56004 Accepted
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:51729 [200]: GET /Academic-Practice/flags/flags/fr.png
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:64507 [200]: GET /Academic-Practice/cover2/13.png
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:56004 [200]: GET /Academic-Practice/cover2/14.png
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:51729 Closing
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:64507 Closing
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:63591 Accepted
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:64484 Accepted
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:54075 Accepted
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:64114 Accepted
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:63591 [200]: GET /Academic-Practice/cover2/15.png
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:64484 [200]: GET /Academic-Practice/cover2/16.png
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:54075 [200]: GET /Academic-Practice/cover2/17.png
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:64114 [200]: GET /Academic-Practice/cover2/18.png
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:56004 Closing
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:59747 Accepted
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:64484 Closing
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:63591 Closing
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:61220 Accepted
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:64114 Closing
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:59747 [200]: GET /Academic-Practice/cover2/19.png
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:54075 Closing
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:61220 [200]: GET /Academic-Practice/cover2/20.png
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:61220 Closing
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:59747 Closing
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:61666 Accepted
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:56782 Accepted
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:55881 Accepted
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:61666 [200]: GET /Academic-Practice/cover2/21.png
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:56782 [200]: GET /Academic-Practice/cover2/22.png
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:55881 [200]: GET /Academic-Practice/cover2/23.png
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:61666 Closing
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:55881 Closing
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:56782 Closing
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:49197 Accepted
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:49197 [200]: GET /Academic-Practice/cover2/24.png
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:49197 Closing
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:53855 Accepted
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:53855 [302]: GET /favicon.ico
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:53855 Closing
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:52186 Accepted
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:52186 [200]: GET /home.html
+[Thu Apr  2 22:20:01 2026] 127.0.0.1:52186 Closing
+[Thu Apr  2 22:20:02 2026] 127.0.0.1:58379 Accepted
+[Thu Apr  2 22:20:02 2026] 127.0.0.1:58379 [200]: GET /Academic-Practice/training.html
+[Thu Apr  2 22:20:02 2026] 127.0.0.1:58379 Closing
+[Thu Apr  2 22:20:02 2026] 127.0.0.1:49713 Accepted
+[Thu Apr  2 22:20:02 2026] 127.0.0.1:65277 Accepted
+[Thu Apr  2 22:20:02 2026] 127.0.0.1:49713 [200]: GET /shared-nav.css
+[Thu Apr  2 22:20:02 2026] 127.0.0.1:49713 Closing
+[Thu Apr  2 22:20:02 2026] 127.0.0.1:50061 Accepted
+[Thu Apr  2 22:20:02 2026] 127.0.0.1:65277 [200]: GET /shared/acadbeat-local-config.js
+[Thu Apr  2 22:20:02 2026] 127.0.0.1:50061 [200]: GET /Academic-Practice/acadbeat-global.css
+[Thu Apr  2 22:20:02 2026] 127.0.0.1:65277 Closing
+[Thu Apr  2 22:20:02 2026] 127.0.0.1:63659 Accepted
+[Thu Apr  2 22:20:02 2026] 127.0.0.1:50061 Closing
+[Thu Apr  2 22:20:02 2026] 127.0.0.1:63659 [200]: GET /Academic-Practice/practice-style.css
+[Thu Apr  2 22:20:02 2026] 127.0.0.1:63659 Closing
+[Thu Apr  2 22:20:02 2026] 127.0.0.1:50227 Accepted
+[Thu Apr  2 22:20:02 2026] 127.0.0.1:50227 [200]: GET /Academic-Practice/practice-data.js
+[Thu Apr  2 22:20:02 2026] 127.0.0.1:50227 Closing
+[Thu Apr  2 22:20:02 2026] 127.0.0.1:56986 Accepted
+[Thu Apr  2 22:20:02 2026] 127.0.0.1:50738 Accepted
+[Thu Apr  2 22:20:02 2026] 127.0.0.1:56986 [200]: GET /Academic-Practice/practice-app.js
+[Thu Apr  2 22:20:02 2026] 127.0.0.1:50738 [200]: GET /shared-nav.js
+[Thu Apr  2 22:20:02 2026] 127.0.0.1:56986 Closing
+[Thu Apr  2 22:20:02 2026] 127.0.0.1:50738 Closing
+[Thu Apr  2 22:20:02 2026] 127.0.0.1:58960 Accepted
+[Thu Apr  2 22:20:02 2026] 127.0.0.1:58960 [200]: GET /Auth/backend/api/me.php
+[Thu Apr  2 22:20:02 2026] 127.0.0.1:58960 Closing
+[Thu Apr  2 22:20:02 2026] 127.0.0.1:61931 Accepted
+[Thu Apr  2 22:20:02 2026] 127.0.0.1:61931 [302]: GET /favicon.ico
+[Thu Apr  2 22:20:02 2026] 127.0.0.1:61931 Closing
+[Thu Apr  2 22:20:02 2026] 127.0.0.1:53109 Accepted
+[Thu Apr  2 22:20:02 2026] 127.0.0.1:53109 [200]: GET /Auth/backend/api/me.php
+[Thu Apr  2 22:20:02 2026] 127.0.0.1:53109 Closing
+[Thu Apr  2 22:20:02 2026] 127.0.0.1:57920 Accepted
+[Thu Apr  2 22:20:02 2026] 127.0.0.1:57920 [200]: GET /home.html
+[Thu Apr  2 22:20:02 2026] 127.0.0.1:57920 Closing
+[Thu Apr  2 22:20:02 2026] 127.0.0.1:64827 Accepted
+[Thu Apr  2 22:20:02 2026] 127.0.0.1:64827 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:20:02 2026] 127.0.0.1:64827 Closing
+[Thu Apr  2 22:20:05 2026] 127.0.0.1:63185 Accepted
+[Thu Apr  2 22:20:05 2026] 127.0.0.1:63185 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:20:05 2026] 127.0.0.1:63185 Closing
+[Thu Apr  2 22:20:06 2026] 127.0.0.1:56103 Accepted
+[Thu Apr  2 22:20:06 2026] 127.0.0.1:56103 [200]: GET /owner.html
+[Thu Apr  2 22:20:06 2026] 127.0.0.1:56103 Closing
+[Thu Apr  2 22:20:06 2026] 127.0.0.1:50560 Accepted
+[Thu Apr  2 22:20:06 2026] 127.0.0.1:55843 Accepted
+[Thu Apr  2 22:20:06 2026] 127.0.0.1:50560 [200]: GET /shared-nav.css
+[Thu Apr  2 22:20:06 2026] 127.0.0.1:50560 Closing
+[Thu Apr  2 22:20:06 2026] 127.0.0.1:55843 [200]: GET /shared/acadbeat-local-config.js
+[Thu Apr  2 22:20:06 2026] 127.0.0.1:55843 Closing
+[Thu Apr  2 22:20:06 2026] 127.0.0.1:54043 Accepted
+[Thu Apr  2 22:20:06 2026] 127.0.0.1:54043 [200]: GET /shared-nav.js
+[Thu Apr  2 22:20:06 2026] 127.0.0.1:54043 Closing
+[Thu Apr  2 22:20:06 2026] 127.0.0.1:62169 Accepted
+[Thu Apr  2 22:20:06 2026] 127.0.0.1:62169 [200]: GET /Auth/backend/api/me.php
+[Thu Apr  2 22:20:06 2026] 127.0.0.1:62169 Closing
+[Thu Apr  2 22:20:06 2026] 127.0.0.1:58356 Accepted
+[Thu Apr  2 22:20:06 2026] 127.0.0.1:58356 [200]: GET /Auth/backend/api/me.php
+[Thu Apr  2 22:20:06 2026] 127.0.0.1:58356 Closing
+[Thu Apr  2 22:20:06 2026] 127.0.0.1:50397 Accepted
+[Thu Apr  2 22:20:06 2026] 127.0.0.1:50397 [302]: GET /favicon.ico
+[Thu Apr  2 22:20:06 2026] 127.0.0.1:50397 Closing
+[Thu Apr  2 22:20:06 2026] 127.0.0.1:57631 Accepted
+[Thu Apr  2 22:20:06 2026] 127.0.0.1:57631 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:20:06 2026] 127.0.0.1:57631 Closing
+[Thu Apr  2 22:20:06 2026] 127.0.0.1:52524 Accepted
+[Thu Apr  2 22:20:06 2026] 127.0.0.1:52524 [200]: GET /home.html
+[Thu Apr  2 22:20:06 2026] 127.0.0.1:52524 Closing
+[Thu Apr  2 22:20:06 2026] 127.0.0.1:55727 Accepted
+[Thu Apr  2 22:20:06 2026] 127.0.0.1:55727 [200]: GET /vocba_prac/api/owner-vocabulary.php
+[Thu Apr  2 22:20:06 2026] 127.0.0.1:55727 Closing
+[Thu Apr  2 22:20:06 2026] 127.0.0.1:51278 Accepted
+[Thu Apr  2 22:20:06 2026] 127.0.0.1:51278 [200]: GET /Academic-Practice/api/records.php
+[Thu Apr  2 22:20:06 2026] 127.0.0.1:51278 Closing
+[Thu Apr  2 22:20:06 2026] 127.0.0.1:52370 Accepted
+[Thu Apr  2 22:20:06 2026] 127.0.0.1:52370 [200]: GET /Academic-Practice/api/integrated-records.php
+[Thu Apr  2 22:20:06 2026] 127.0.0.1:52370 Closing
+[Thu Apr  2 22:20:09 2026] 127.0.0.1:62539 Accepted
+[Thu Apr  2 22:20:09 2026] 127.0.0.1:62539 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:20:09 2026] 127.0.0.1:62539 Closing
+[Thu Apr  2 22:20:09 2026] 127.0.0.1:62347 Accepted
+[Thu Apr  2 22:20:09 2026] 127.0.0.1:62347 [200]: GET /home.html?module=Insight
+[Thu Apr  2 22:20:09 2026] 127.0.0.1:62347 Closing
+[Thu Apr  2 22:20:09 2026] 127.0.0.1:59229 Accepted
+[Thu Apr  2 22:20:09 2026] 127.0.0.1:53808 Accepted
+[Thu Apr  2 22:20:09 2026] 127.0.0.1:59229 [200]: GET /challenge/challenge-home.css
+[Thu Apr  2 22:20:09 2026] 127.0.0.1:59229 Closing
+[Thu Apr  2 22:20:09 2026] 127.0.0.1:53808 [200]: GET /shared-nav.css
+[Thu Apr  2 22:20:09 2026] 127.0.0.1:53808 Closing
+[Thu Apr  2 22:20:09 2026] 127.0.0.1:56404 Accepted
+[Thu Apr  2 22:20:09 2026] 127.0.0.1:56404 [200]: GET /shared/acadbeat-local-config.js
+[Thu Apr  2 22:20:09 2026] 127.0.0.1:55913 Accepted
+[Thu Apr  2 22:20:09 2026] 127.0.0.1:56404 Closing
+[Thu Apr  2 22:20:09 2026] 127.0.0.1:55913 [200]: GET /shared-nav.js
+[Thu Apr  2 22:20:09 2026] 127.0.0.1:55913 Closing
+[Thu Apr  2 22:20:09 2026] 127.0.0.1:56756 Accepted
+[Thu Apr  2 22:20:09 2026] 127.0.0.1:56756 [200]: GET /Auth/backend/api/me.php
+[Thu Apr  2 22:20:09 2026] 127.0.0.1:56756 Closing
+[Thu Apr  2 22:20:09 2026] 127.0.0.1:58566 Accepted
+[Thu Apr  2 22:20:09 2026] 127.0.0.1:58566 [200]: GET /challenge/challenge-panel.html
+[Thu Apr  2 22:20:09 2026] 127.0.0.1:58566 Closing
+[Thu Apr  2 22:20:09 2026] 127.0.0.1:49668 Accepted
+[Thu Apr  2 22:20:09 2026] 127.0.0.1:49668 [302]: GET /favicon.ico
+[Thu Apr  2 22:20:09 2026] 127.0.0.1:49668 Closing
+[Thu Apr  2 22:20:09 2026] 127.0.0.1:65508 Accepted
+[Thu Apr  2 22:20:09 2026] 127.0.0.1:65508 [200]: GET /challenge/challenge-home.js
+[Thu Apr  2 22:20:09 2026] 127.0.0.1:65508 Closing
+[Thu Apr  2 22:20:09 2026] 127.0.0.1:52760 Accepted
+[Thu Apr  2 22:20:09 2026] 127.0.0.1:52760 [200]: GET /home.html
+[Thu Apr  2 22:20:09 2026] 127.0.0.1:52760 Closing
+[Thu Apr  2 22:20:09 2026] 127.0.0.1:60886 Accepted
+[Thu Apr  2 22:20:09 2026] 127.0.0.1:60886 [200]: GET /Auth/backend/api/me.php
+[Thu Apr  2 22:20:09 2026] 127.0.0.1:60886 Closing
+[Thu Apr  2 22:20:09 2026] 127.0.0.1:62088 Accepted
+[Thu Apr  2 22:20:09 2026] 127.0.0.1:62088 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:20:09 2026] 127.0.0.1:62088 Closing
+[Thu Apr  2 22:20:12 2026] 127.0.0.1:56085 Accepted
+[Thu Apr  2 22:20:12 2026] 127.0.0.1:56085 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:20:12 2026] 127.0.0.1:56085 Closing
+[Thu Apr  2 22:20:15 2026] 127.0.0.1:50571 Accepted
+[Thu Apr  2 22:20:15 2026] 127.0.0.1:50571 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:20:15 2026] 127.0.0.1:50571 Closing
+[Thu Apr  2 22:20:18 2026] 127.0.0.1:58219 Accepted
+[Thu Apr  2 22:20:18 2026] 127.0.0.1:58219 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:20:18 2026] 127.0.0.1:58219 Closing
+[Thu Apr  2 22:20:19 2026] 127.0.0.1:55290 Accepted
+[Thu Apr  2 22:20:19 2026] 127.0.0.1:55290 [200]: GET /home.html?module=Dialogue
+[Thu Apr  2 22:20:19 2026] 127.0.0.1:55290 Closing
+[Thu Apr  2 22:20:19 2026] 127.0.0.1:61778 Accepted
+[Thu Apr  2 22:20:19 2026] 127.0.0.1:61778 [200]: GET /challenge/challenge-home.css
+[Thu Apr  2 22:20:19 2026] 127.0.0.1:61778 Closing
+[Thu Apr  2 22:20:19 2026] 127.0.0.1:63984 Accepted
+[Thu Apr  2 22:20:19 2026] 127.0.0.1:55025 Accepted
+[Thu Apr  2 22:20:19 2026] 127.0.0.1:63984 [200]: GET /shared-nav.css
+[Thu Apr  2 22:20:19 2026] 127.0.0.1:63984 Closing
+[Thu Apr  2 22:20:19 2026] 127.0.0.1:49785 Accepted
+[Thu Apr  2 22:20:19 2026] 127.0.0.1:55025 [200]: GET /shared/acadbeat-local-config.js
+[Thu Apr  2 22:20:19 2026] 127.0.0.1:49785 [200]: GET /shared-nav.js
+[Thu Apr  2 22:20:19 2026] 127.0.0.1:55025 Closing
+[Thu Apr  2 22:20:19 2026] 127.0.0.1:49785 Closing
+[Thu Apr  2 22:20:19 2026] 127.0.0.1:60470 Accepted
+[Thu Apr  2 22:20:19 2026] 127.0.0.1:60470 [200]: GET /Auth/backend/api/me.php
+[Thu Apr  2 22:20:19 2026] 127.0.0.1:60470 Closing
+[Thu Apr  2 22:20:19 2026] 127.0.0.1:50966 Accepted
+[Thu Apr  2 22:20:19 2026] 127.0.0.1:52540 Accepted
+[Thu Apr  2 22:20:19 2026] 127.0.0.1:50966 [200]: GET /challenge/challenge-panel.html
+[Thu Apr  2 22:20:19 2026] 127.0.0.1:52540 [302]: GET /favicon.ico
+[Thu Apr  2 22:20:19 2026] 127.0.0.1:52540 Closing
+[Thu Apr  2 22:20:19 2026] 127.0.0.1:50966 Closing
+[Thu Apr  2 22:20:19 2026] 127.0.0.1:57652 Accepted
+[Thu Apr  2 22:20:19 2026] 127.0.0.1:57652 [200]: GET /home.html
+[Thu Apr  2 22:20:19 2026] 127.0.0.1:57652 Closing
+[Thu Apr  2 22:20:19 2026] 127.0.0.1:63543 Accepted
+[Thu Apr  2 22:20:19 2026] 127.0.0.1:63543 [200]: GET /challenge/challenge-home.js
+[Thu Apr  2 22:20:19 2026] 127.0.0.1:63543 Closing
+[Thu Apr  2 22:20:19 2026] 127.0.0.1:60158 Accepted
+[Thu Apr  2 22:20:19 2026] 127.0.0.1:60158 [200]: GET /Auth/backend/api/me.php
+[Thu Apr  2 22:20:19 2026] 127.0.0.1:60158 Closing
+[Thu Apr  2 22:20:19 2026] 127.0.0.1:63763 Accepted
+[Thu Apr  2 22:20:19 2026] 127.0.0.1:63763 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:20:19 2026] 127.0.0.1:63763 Closing
+[Thu Apr  2 22:20:21 2026] 127.0.0.1:61591 Accepted
+[Thu Apr  2 22:20:21 2026] 127.0.0.1:61591 [200]: GET /shared/acadbeat-local-config.js
+[Thu Apr  2 22:20:21 2026] 127.0.0.1:61591 Closing
+[Thu Apr  2 22:20:21 2026] 127.0.0.1:62063 Accepted
+[Thu Apr  2 22:20:21 2026] 127.0.0.1:62063 [200]: GET /Auth/backend/api/me.php
+[Thu Apr  2 22:20:21 2026] 127.0.0.1:62063 Closing
+[Thu Apr  2 22:20:21 2026] 127.0.0.1:58472 Accepted
+[Thu Apr  2 22:20:21 2026] 127.0.0.1:58472 [204]: OPTIONS /forum-project/api/announcements.php?limit=5
+[Thu Apr  2 22:20:21 2026] 127.0.0.1:58472 Closing
+[Thu Apr  2 22:20:21 2026] 127.0.0.1:54107 Accepted
+[Thu Apr  2 22:20:21 2026] 127.0.0.1:59620 Accepted
+[Thu Apr  2 22:20:21 2026] 127.0.0.1:54107 [204]: OPTIONS /forum-project/api/labels.php
+[Thu Apr  2 22:20:21 2026] 127.0.0.1:54107 Closing
+[Thu Apr  2 22:20:21 2026] 127.0.0.1:49668 Accepted
+[Thu Apr  2 22:20:21 2026] 127.0.0.1:59620 [204]: OPTIONS /forum-project/api/posts.php?sort=latest_reply
+[Thu Apr  2 22:20:21 2026] 127.0.0.1:59620 Closing
+[Thu Apr  2 22:20:21 2026] 127.0.0.1:63321 Accepted
+[Thu Apr  2 22:20:21 2026] 127.0.0.1:49668 [204]: OPTIONS /forum-project/api/labels.php
+[Thu Apr  2 22:20:21 2026] 127.0.0.1:49668 Closing
+[Thu Apr  2 22:20:21 2026] 127.0.0.1:55861 Accepted
+[Thu Apr  2 22:20:21 2026] 127.0.0.1:63321 [200]: GET /forum-project/api/announcements.php?limit=5
+[Thu Apr  2 22:20:21 2026] 127.0.0.1:63321 Closing
+[Thu Apr  2 22:20:21 2026] 127.0.0.1:59665 Accepted
+[Thu Apr  2 22:20:21 2026] 127.0.0.1:55861 [200]: GET /forum-project/api/labels.php
+[Thu Apr  2 22:20:21 2026] 127.0.0.1:55861 Closing
+[Thu Apr  2 22:20:21 2026] 127.0.0.1:58175 Accepted
+[Thu Apr  2 22:20:21 2026] 127.0.0.1:59665 [200]: GET /forum-project/api/posts.php?sort=latest_reply
+[Thu Apr  2 22:20:21 2026] 127.0.0.1:59665 Closing
+[Thu Apr  2 22:20:21 2026] 127.0.0.1:60440 Accepted
+[Thu Apr  2 22:20:21 2026] 127.0.0.1:58175 [200]: GET /forum-project/api/announcements.php?limit=5
+[Thu Apr  2 22:20:21 2026] 127.0.0.1:58175 Closing
+[Thu Apr  2 22:20:21 2026] 127.0.0.1:62649 Accepted
+[Thu Apr  2 22:20:21 2026] 127.0.0.1:60440 [200]: GET /forum-project/api/labels.php
+[Thu Apr  2 22:20:21 2026] 127.0.0.1:60440 Closing
+[Thu Apr  2 22:20:21 2026] 127.0.0.1:56223 Accepted
+[Thu Apr  2 22:20:21 2026] 127.0.0.1:62649 [200]: GET /forum-project/api/posts.php?sort=latest_reply
+[Thu Apr  2 22:20:21 2026] 127.0.0.1:62649 Closing
+[Thu Apr  2 22:20:21 2026] 127.0.0.1:56223 [204]: OPTIONS /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:20:21 2026] 127.0.0.1:56223 Closing
+[Thu Apr  2 22:20:21 2026] 127.0.0.1:62257 Accepted
+[Thu Apr  2 22:20:21 2026] 127.0.0.1:62257 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:20:21 2026] 127.0.0.1:62257 Closing
+[Thu Apr  2 22:20:21 2026] 127.0.0.1:54079 Accepted
+[Thu Apr  2 22:20:21 2026] 127.0.0.1:54079 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:20:21 2026] 127.0.0.1:54079 Closing
+[Thu Apr  2 22:20:24 2026] 127.0.0.1:54373 Accepted
+[Thu Apr  2 22:20:24 2026] 127.0.0.1:54373 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:20:24 2026] 127.0.0.1:54373 Closing
+[Thu Apr  2 22:20:27 2026] 127.0.0.1:62165 Accepted
+[Thu Apr  2 22:20:27 2026] 127.0.0.1:62165 [204]: OPTIONS /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:20:27 2026] 127.0.0.1:62165 Closing
+[Thu Apr  2 22:20:27 2026] 127.0.0.1:60153 Accepted
+[Thu Apr  2 22:20:27 2026] 127.0.0.1:60153 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:20:27 2026] 127.0.0.1:60153 Closing
+[Thu Apr  2 22:20:29 2026] 127.0.0.1:59938 Accepted
+[Thu Apr  2 22:20:29 2026] 127.0.0.1:59938 [200]: GET /message-center-project/dist/index.html?from=http%3A%2F%2F127.0.0.1%3A5173%2Fforum-project%2Fdist%2F%3Fview%3Dchooser
+[Thu Apr  2 22:20:29 2026] 127.0.0.1:59938 Closing
+[Thu Apr  2 22:20:29 2026] 127.0.0.1:58312 Accepted
+[Thu Apr  2 22:20:29 2026] 127.0.0.1:65436 Accepted
+[Thu Apr  2 22:20:29 2026] 127.0.0.1:58312 [200]: GET /shared/acadbeat-local-config.js
+[Thu Apr  2 22:20:29 2026] 127.0.0.1:58312 Closing
+[Thu Apr  2 22:20:29 2026] 127.0.0.1:61549 Accepted
+[Thu Apr  2 22:20:29 2026] 127.0.0.1:65436 [200]: GET /message-center-project/dist/assets/index-CDtplpAf.js
+[Thu Apr  2 22:20:29 2026] 127.0.0.1:61549 [200]: GET /message-center-project/dist/assets/index-BfSG0Ya-.css
+[Thu Apr  2 22:20:29 2026] 127.0.0.1:65436 Closing
+[Thu Apr  2 22:20:29 2026] 127.0.0.1:61549 Closing
+[Thu Apr  2 22:20:29 2026] 127.0.0.1:53140 Accepted
+[Thu Apr  2 22:20:29 2026] 127.0.0.1:53140 [200]: GET /Auth/backend/api/me.php
+[Thu Apr  2 22:20:29 2026] 127.0.0.1:53140 Closing
+[Thu Apr  2 22:20:29 2026] 127.0.0.1:56604 Accepted
+[Thu Apr  2 22:20:29 2026] 127.0.0.1:63836 Accepted
+[Thu Apr  2 22:20:29 2026] 127.0.0.1:56604 [200]: GET /Auth/backend/api/me.php
+[Thu Apr  2 22:20:29 2026] 127.0.0.1:56604 Closing
+[Thu Apr  2 22:20:29 2026] 127.0.0.1:61528 Accepted
+[Thu Apr  2 22:20:29 2026] 127.0.0.1:63836 [200]: GET /forum-project/api/message-center.php
+[Thu Apr  2 22:20:29 2026] 127.0.0.1:63836 Closing
+[Thu Apr  2 22:20:29 2026] 127.0.0.1:61528 [302]: GET /favicon.ico
+[Thu Apr  2 22:20:29 2026] 127.0.0.1:61528 Closing
+[Thu Apr  2 22:20:29 2026] 127.0.0.1:61081 Accepted
+[Thu Apr  2 22:20:29 2026] 127.0.0.1:55432 Accepted
+[Thu Apr  2 22:20:29 2026] 127.0.0.1:61081 [200]: GET /forum-project/api/chat-conversations.php
+[Thu Apr  2 22:20:29 2026] 127.0.0.1:61081 Closing
+[Thu Apr  2 22:20:29 2026] 127.0.0.1:59943 Accepted
+[Thu Apr  2 22:20:29 2026] 127.0.0.1:55432 [200]: GET /Auth/backend/api/me.php
+[Thu Apr  2 22:20:29 2026] 127.0.0.1:55432 Closing
+[Thu Apr  2 22:20:29 2026] 127.0.0.1:59943 [200]: GET /home.html
+[Thu Apr  2 22:20:29 2026] 127.0.0.1:59943 Closing
+[Thu Apr  2 22:20:31 2026] 127.0.0.1:50974 Accepted
+[Thu Apr  2 22:20:31 2026] 127.0.0.1:50974 [200]: GET /home.html?module=Dialogue
+[Thu Apr  2 22:20:31 2026] 127.0.0.1:50974 Closing
+[Thu Apr  2 22:20:31 2026] 127.0.0.1:54895 Accepted
+[Thu Apr  2 22:20:31 2026] 127.0.0.1:52820 Accepted
+[Thu Apr  2 22:20:31 2026] 127.0.0.1:54895 [200]: GET /challenge/challenge-home.css
+[Thu Apr  2 22:20:31 2026] 127.0.0.1:54895 Closing
+[Thu Apr  2 22:20:31 2026] 127.0.0.1:52820 [200]: GET /shared-nav.css
+[Thu Apr  2 22:20:31 2026] 127.0.0.1:52820 Closing
+[Thu Apr  2 22:20:31 2026] 127.0.0.1:59121 Accepted
+[Thu Apr  2 22:20:31 2026] 127.0.0.1:57191 Accepted
+[Thu Apr  2 22:20:31 2026] 127.0.0.1:59121 [200]: GET /shared/acadbeat-local-config.js
+[Thu Apr  2 22:20:31 2026] 127.0.0.1:57191 [200]: GET /shared-nav.js
+[Thu Apr  2 22:20:31 2026] 127.0.0.1:59121 Closing
+[Thu Apr  2 22:20:31 2026] 127.0.0.1:57191 Closing
+[Thu Apr  2 22:20:31 2026] 127.0.0.1:54523 Accepted
+[Thu Apr  2 22:20:31 2026] 127.0.0.1:54523 [200]: GET /Auth/backend/api/me.php
+[Thu Apr  2 22:20:31 2026] 127.0.0.1:54523 Closing
+[Thu Apr  2 22:20:31 2026] 127.0.0.1:56132 Accepted
+[Thu Apr  2 22:20:31 2026] 127.0.0.1:56132 [200]: GET /challenge/challenge-panel.html
+[Thu Apr  2 22:20:31 2026] 127.0.0.1:56132 Closing
+[Thu Apr  2 22:20:31 2026] 127.0.0.1:58187 Accepted
+[Thu Apr  2 22:20:31 2026] 127.0.0.1:58187 [302]: GET /favicon.ico
+[Thu Apr  2 22:20:31 2026] 127.0.0.1:58187 Closing
+[Thu Apr  2 22:20:31 2026] 127.0.0.1:53169 Accepted
+[Thu Apr  2 22:20:31 2026] 127.0.0.1:61587 Accepted
+[Thu Apr  2 22:20:31 2026] 127.0.0.1:53169 [200]: GET /home.html
+[Thu Apr  2 22:20:31 2026] 127.0.0.1:61587 [200]: GET /challenge/challenge-home.js
+[Thu Apr  2 22:20:31 2026] 127.0.0.1:53169 Closing
+[Thu Apr  2 22:20:31 2026] 127.0.0.1:61587 Closing
+[Thu Apr  2 22:20:31 2026] 127.0.0.1:55542 Accepted
+[Thu Apr  2 22:20:31 2026] 127.0.0.1:55542 [200]: GET /Auth/backend/api/me.php
+[Thu Apr  2 22:20:31 2026] 127.0.0.1:55542 Closing
+[Thu Apr  2 22:20:31 2026] 127.0.0.1:58249 Accepted
+[Thu Apr  2 22:20:31 2026] 127.0.0.1:58249 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:20:31 2026] 127.0.0.1:58249 Closing
+[Thu Apr  2 22:20:34 2026] 127.0.0.1:56539 Accepted
+[Thu Apr  2 22:20:34 2026] 127.0.0.1:56539 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:20:34 2026] 127.0.0.1:56539 Closing
+[Thu Apr  2 22:20:37 2026] 127.0.0.1:52642 Accepted
+[Thu Apr  2 22:20:37 2026] 127.0.0.1:52642 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:20:37 2026] 127.0.0.1:52642 Closing
+[Thu Apr  2 22:20:40 2026] 127.0.0.1:53853 Accepted
+[Thu Apr  2 22:20:40 2026] 127.0.0.1:53853 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:20:40 2026] 127.0.0.1:53853 Closing
+[Thu Apr  2 22:20:43 2026] 127.0.0.1:51056 Accepted
+[Thu Apr  2 22:20:43 2026] 127.0.0.1:51056 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:20:43 2026] 127.0.0.1:51056 Closing
+[Thu Apr  2 22:20:46 2026] 127.0.0.1:56772 Accepted
+[Thu Apr  2 22:20:46 2026] 127.0.0.1:56772 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:20:46 2026] 127.0.0.1:56772 Closing
+[Thu Apr  2 22:20:49 2026] 127.0.0.1:63633 Accepted
+[Thu Apr  2 22:20:49 2026] 127.0.0.1:63633 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:20:49 2026] 127.0.0.1:63633 Closing
+[Thu Apr  2 22:20:52 2026] 127.0.0.1:50981 Accepted
+[Thu Apr  2 22:20:52 2026] 127.0.0.1:50981 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:20:52 2026] 127.0.0.1:50981 Closing
+[Thu Apr  2 22:20:55 2026] 127.0.0.1:60499 Accepted
+[Thu Apr  2 22:20:55 2026] 127.0.0.1:60499 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:20:55 2026] 127.0.0.1:60499 Closing
+[Thu Apr  2 22:20:58 2026] 127.0.0.1:56628 Accepted
+[Thu Apr  2 22:20:58 2026] 127.0.0.1:56628 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:20:58 2026] 127.0.0.1:56628 Closing
+[Thu Apr  2 22:21:01 2026] 127.0.0.1:64095 Accepted
+[Thu Apr  2 22:21:01 2026] 127.0.0.1:64095 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:21:01 2026] 127.0.0.1:64095 Closing
+[Thu Apr  2 22:21:03 2026] 127.0.0.1:50839 Accepted
+[Thu Apr  2 22:21:03 2026] 127.0.0.1:50839 [200]: GET /message-center-project/dist/index.html?from=http%3A%2F%2F127.0.0.1%3A8001%2Fhome.html%3Fmodule%3DDialogue
+[Thu Apr  2 22:21:03 2026] 127.0.0.1:50839 Closing
+[Thu Apr  2 22:21:03 2026] 127.0.0.1:51368 Accepted
+[Thu Apr  2 22:21:03 2026] 127.0.0.1:64568 Accepted
+[Thu Apr  2 22:21:03 2026] 127.0.0.1:51368 [200]: GET /shared/acadbeat-local-config.js
+[Thu Apr  2 22:21:03 2026] 127.0.0.1:51368 Closing
+[Thu Apr  2 22:21:03 2026] 127.0.0.1:54313 Accepted
+[Thu Apr  2 22:21:03 2026] 127.0.0.1:64568 [200]: GET /message-center-project/dist/assets/index-CDtplpAf.js
+[Thu Apr  2 22:21:03 2026] 127.0.0.1:54313 [200]: GET /message-center-project/dist/assets/index-BfSG0Ya-.css
+[Thu Apr  2 22:21:03 2026] 127.0.0.1:64568 Closing
+[Thu Apr  2 22:21:03 2026] 127.0.0.1:54313 Closing
+[Thu Apr  2 22:21:03 2026] 127.0.0.1:62666 Accepted
+[Thu Apr  2 22:21:03 2026] 127.0.0.1:62666 [200]: GET /Auth/backend/api/me.php
+[Thu Apr  2 22:21:03 2026] 127.0.0.1:62666 Closing
+[Thu Apr  2 22:21:03 2026] 127.0.0.1:62300 Accepted
+[Thu Apr  2 22:21:03 2026] 127.0.0.1:62300 [200]: GET /Auth/backend/api/me.php
+[Thu Apr  2 22:21:03 2026] 127.0.0.1:62300 Closing
+[Thu Apr  2 22:21:03 2026] 127.0.0.1:56376 Accepted
+[Thu Apr  2 22:21:03 2026] 127.0.0.1:55502 Accepted
+[Thu Apr  2 22:21:03 2026] 127.0.0.1:56376 [200]: GET /forum-project/api/message-center.php
+[Thu Apr  2 22:21:03 2026] 127.0.0.1:56376 Closing
+[Thu Apr  2 22:21:03 2026] 127.0.0.1:55502 [302]: GET /favicon.ico
+[Thu Apr  2 22:21:03 2026] 127.0.0.1:55502 Closing
+[Thu Apr  2 22:21:03 2026] 127.0.0.1:57307 Accepted
+[Thu Apr  2 22:21:03 2026] 127.0.0.1:58243 Accepted
+[Thu Apr  2 22:21:03 2026] 127.0.0.1:57307 [200]: GET /forum-project/api/chat-conversations.php
+[Thu Apr  2 22:21:03 2026] 127.0.0.1:57307 Closing
+[Thu Apr  2 22:21:03 2026] 127.0.0.1:57351 Accepted
+[Thu Apr  2 22:21:03 2026] 127.0.0.1:58243 [200]: GET /Auth/backend/api/me.php
+[Thu Apr  2 22:21:03 2026] 127.0.0.1:58243 Closing
+[Thu Apr  2 22:21:03 2026] 127.0.0.1:57351 [200]: GET /home.html
+[Thu Apr  2 22:21:03 2026] 127.0.0.1:57351 Closing
+[Thu Apr  2 22:21:06 2026] 127.0.0.1:53938 Accepted
+[Thu Apr  2 22:21:06 2026] 127.0.0.1:53938 [200]: POST /forum-project/api/message-center.php
+[Thu Apr  2 22:21:06 2026] 127.0.0.1:53938 Closing
+[Thu Apr  2 22:21:06 2026] 127.0.0.1:60478 Accepted
+[Thu Apr  2 22:21:06 2026] 127.0.0.1:63739 Accepted
+[Thu Apr  2 22:21:06 2026] 127.0.0.1:60478 [200]: GET /Auth/backend/api/me.php
+[Thu Apr  2 22:21:06 2026] 127.0.0.1:60478 Closing
+[Thu Apr  2 22:21:06 2026] 127.0.0.1:63739 [200]: GET /forum-project/api/message-center.php
+[Thu Apr  2 22:21:06 2026] 127.0.0.1:63739 Closing
+[Thu Apr  2 22:21:06 2026] 127.0.0.1:53352 Accepted
+[Thu Apr  2 22:21:06 2026] 127.0.0.1:53352 [200]: POST /forum-project/api/message-center.php
+[Thu Apr  2 22:21:06 2026] 127.0.0.1:53352 Closing
+[Thu Apr  2 22:21:09 2026] 127.0.0.1:60576 Accepted
+[Thu Apr  2 22:21:09 2026] 127.0.0.1:52450 Accepted
+[Thu Apr  2 22:21:09 2026] 127.0.0.1:60576 [200]: GET /Auth/backend/api/me.php
+[Thu Apr  2 22:21:09 2026] 127.0.0.1:60576 Closing
+[Thu Apr  2 22:21:09 2026] 127.0.0.1:52450 [200]: GET /forum-project/api/message-center.php
+[Thu Apr  2 22:21:09 2026] 127.0.0.1:52450 Closing
+[Thu Apr  2 22:21:09 2026] 127.0.0.1:64920 Accepted
+[Thu Apr  2 22:21:09 2026] 127.0.0.1:64920 [200]: POST /forum-project/api/message-center.php
+[Thu Apr  2 22:21:09 2026] 127.0.0.1:64920 Closing
+[Thu Apr  2 22:21:09 2026] 127.0.0.1:55470 Accepted
+[Thu Apr  2 22:21:09 2026] 127.0.0.1:55470 [200]: GET /message-center-project/dist/index.html
+[Thu Apr  2 22:21:09 2026] 127.0.0.1:55470 Closing
+[Thu Apr  2 22:21:09 2026] 127.0.0.1:57065 Accepted
+[Thu Apr  2 22:21:09 2026] 127.0.0.1:52237 Accepted
+[Thu Apr  2 22:21:09 2026] 127.0.0.1:57065 [200]: GET /shared/acadbeat-local-config.js
+[Thu Apr  2 22:21:09 2026] 127.0.0.1:57065 Closing
+[Thu Apr  2 22:21:09 2026] 127.0.0.1:53750 Accepted
+[Thu Apr  2 22:21:09 2026] 127.0.0.1:52237 [200]: GET /message-center-project/dist/assets/index-CDtplpAf.js
+[Thu Apr  2 22:21:09 2026] 127.0.0.1:53750 [200]: GET /message-center-project/dist/assets/index-BfSG0Ya-.css
+[Thu Apr  2 22:21:09 2026] 127.0.0.1:52237 Closing
+[Thu Apr  2 22:21:09 2026] 127.0.0.1:53750 Closing
+[Thu Apr  2 22:21:09 2026] 127.0.0.1:64622 Accepted
+[Thu Apr  2 22:21:09 2026] 127.0.0.1:64622 [200]: GET /Auth/backend/api/me.php
+[Thu Apr  2 22:21:09 2026] 127.0.0.1:64622 Closing
+[Thu Apr  2 22:21:09 2026] 127.0.0.1:53919 Accepted
+[Thu Apr  2 22:21:09 2026] 127.0.0.1:64358 Accepted
+[Thu Apr  2 22:21:09 2026] 127.0.0.1:53919 [200]: GET /forum-project/api/message-center.php
+[Thu Apr  2 22:21:09 2026] 127.0.0.1:53919 Closing
+[Thu Apr  2 22:21:09 2026] 127.0.0.1:53561 Accepted
+[Thu Apr  2 22:21:09 2026] 127.0.0.1:64358 [302]: GET /favicon.ico
+[Thu Apr  2 22:21:09 2026] 127.0.0.1:64358 Closing
+[Thu Apr  2 22:21:09 2026] 127.0.0.1:53561 [200]: GET /Auth/backend/api/me.php
+[Thu Apr  2 22:21:09 2026] 127.0.0.1:53561 Closing
+[Thu Apr  2 22:21:09 2026] 127.0.0.1:62361 Accepted
+[Thu Apr  2 22:21:09 2026] 127.0.0.1:62361 [200]: GET /home.html
+[Thu Apr  2 22:21:09 2026] 127.0.0.1:62361 Closing
+[Thu Apr  2 22:21:09 2026] 127.0.0.1:61696 Accepted
+[Thu Apr  2 22:21:09 2026] 127.0.0.1:55114 Accepted
+[Thu Apr  2 22:21:09 2026] 127.0.0.1:61696 [200]: GET /forum-project/api/chat-conversations.php
+[Thu Apr  2 22:21:09 2026] 127.0.0.1:61696 Closing
+[Thu Apr  2 22:21:09 2026] 127.0.0.1:55114 [200]: GET /Auth/backend/api/me.php
+[Thu Apr  2 22:21:09 2026] 127.0.0.1:55114 Closing
+[Thu Apr  2 22:21:10 2026] 127.0.0.1:63359 Accepted
+[Thu Apr  2 22:21:10 2026] 127.0.0.1:63359 [200]: POST /forum-project/api/message-center.php
+[Thu Apr  2 22:21:10 2026] 127.0.0.1:63359 Closing
+[Thu Apr  2 22:21:11 2026] 127.0.0.1:49668 Accepted
+[Thu Apr  2 22:21:11 2026] 127.0.0.1:49668 [200]: POST /forum-project/api/message-center.php
+[Thu Apr  2 22:21:11 2026] 127.0.0.1:49668 Closing
+[Thu Apr  2 22:21:12 2026] 127.0.0.1:55106 Accepted
+[Thu Apr  2 22:21:12 2026] 127.0.0.1:49668 Accepted
+[Thu Apr  2 22:21:12 2026] 127.0.0.1:55106 [200]: GET /forum-project/api/chat-conversations.php
+[Thu Apr  2 22:21:12 2026] 127.0.0.1:55106 Closing
+[Thu Apr  2 22:21:12 2026] 127.0.0.1:49668 [200]: GET /Auth/backend/api/me.php
+[Thu Apr  2 22:21:12 2026] 127.0.0.1:49668 Closing
+[Thu Apr  2 22:21:12 2026] 127.0.0.1:54402 Accepted
+[Thu Apr  2 22:21:12 2026] 127.0.0.1:61427 Accepted
+[Thu Apr  2 22:21:12 2026] 127.0.0.1:54402 [200]: GET /Auth/backend/api/me.php
+[Thu Apr  2 22:21:12 2026] 127.0.0.1:54402 Closing
+[Thu Apr  2 22:21:12 2026] 127.0.0.1:61427 [200]: GET /forum-project/api/message-center.php
+[Thu Apr  2 22:21:12 2026] 127.0.0.1:61427 Closing
+[Thu Apr  2 22:21:14 2026] 127.0.0.1:63666 Accepted
+[Thu Apr  2 22:21:14 2026] 127.0.0.1:63666 [200]: POST /forum-project/api/message-center.php
+[Thu Apr  2 22:21:14 2026] 127.0.0.1:63666 Closing
+[Thu Apr  2 22:21:14 2026] 127.0.0.1:60833 Accepted
+[Thu Apr  2 22:21:14 2026] 127.0.0.1:60833 [200]: GET /forum-project/dist/index.html?view=forum
+[Thu Apr  2 22:21:14 2026] 127.0.0.1:60833 Closing
+[Thu Apr  2 22:21:14 2026] 127.0.0.1:59178 Accepted
+[Thu Apr  2 22:21:14 2026] 127.0.0.1:55592 Accepted
+[Thu Apr  2 22:21:14 2026] 127.0.0.1:59178 [200]: GET /forum-project/dist/assets/index-DcSwJ4as.js
+[Thu Apr  2 22:21:14 2026] 127.0.0.1:59178 Closing
+[Thu Apr  2 22:21:14 2026] 127.0.0.1:55592 [200]: GET /forum-project/dist/assets/index-DbbCEDHE.css
+[Thu Apr  2 22:21:14 2026] 127.0.0.1:61379 Accepted
+[Thu Apr  2 22:21:14 2026] 127.0.0.1:55592 Closing
+[Thu Apr  2 22:21:14 2026] 127.0.0.1:61379 [200]: GET /Auth/backend/api/me.php
+[Thu Apr  2 22:21:14 2026] 127.0.0.1:61379 Closing
+[Thu Apr  2 22:21:14 2026] 127.0.0.1:55824 Accepted
+[Thu Apr  2 22:21:14 2026] 127.0.0.1:56019 Accepted
+[Thu Apr  2 22:21:14 2026] 127.0.0.1:51192 Accepted
+[Thu Apr  2 22:21:14 2026] 127.0.0.1:55824 [200]: GET /forum-project/api/announcements.php?limit=5
+[Thu Apr  2 22:21:14 2026] 127.0.0.1:55824 Closing
+[Thu Apr  2 22:21:14 2026] 127.0.0.1:52178 Accepted
+[Thu Apr  2 22:21:14 2026] 127.0.0.1:56019 [200]: GET /forum-project/api/labels.php
+[Thu Apr  2 22:21:14 2026] 127.0.0.1:56019 Closing
+[Thu Apr  2 22:21:14 2026] 127.0.0.1:51192 [200]: GET /forum-project/api/posts.php?sort=latest_reply
+[Thu Apr  2 22:21:14 2026] 127.0.0.1:51192 Closing
+[Thu Apr  2 22:21:14 2026] 127.0.0.1:52178 [302]: GET /favicon.ico
+[Thu Apr  2 22:21:14 2026] 127.0.0.1:52178 Closing
+[Thu Apr  2 22:21:14 2026] 127.0.0.1:58695 Accepted
+[Thu Apr  2 22:21:14 2026] 127.0.0.1:58695 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:21:14 2026] 127.0.0.1:58695 Closing
+[Thu Apr  2 22:21:14 2026] 127.0.0.1:52132 Accepted
+[Thu Apr  2 22:21:14 2026] 127.0.0.1:52132 [200]: GET /home.html
+[Thu Apr  2 22:21:14 2026] 127.0.0.1:52132 Closing
+[Thu Apr  2 22:21:16 2026] 127.0.0.1:57589 Accepted
+[Thu Apr  2 22:21:16 2026] 127.0.0.1:57589 [200]: POST /forum-project/api/view.php
+[Thu Apr  2 22:21:16 2026] 127.0.0.1:57589 Closing
+[Thu Apr  2 22:21:16 2026] 127.0.0.1:63288 Accepted
+[Thu Apr  2 22:21:16 2026] 127.0.0.1:63288 [200]: GET /forum-project/api/post.php?id=4
+[Thu Apr  2 22:21:16 2026] 127.0.0.1:63288 Closing
+[Thu Apr  2 22:21:16 2026] 127.0.0.1:50347 Accepted
+[Thu Apr  2 22:21:16 2026] 127.0.0.1:50347 [302]: GET /favicon.ico
+[Thu Apr  2 22:21:16 2026] 127.0.0.1:50347 Closing
+[Thu Apr  2 22:21:16 2026] 127.0.0.1:57613 Accepted
+[Thu Apr  2 22:21:16 2026] 127.0.0.1:57613 [200]: GET /home.html
+[Thu Apr  2 22:21:16 2026] 127.0.0.1:57613 Closing
+[Thu Apr  2 22:21:25 2026] 127.0.0.1:62378 Accepted
+[Thu Apr  2 22:21:25 2026] 127.0.0.1:62378 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:21:25 2026] 127.0.0.1:62378 Closing
+[Thu Apr  2 22:21:25 2026] 127.0.0.1:58370 Accepted
+[Thu Apr  2 22:21:25 2026] 127.0.0.1:63991 Accepted
+[Thu Apr  2 22:21:25 2026] 127.0.0.1:58370 [200]: GET /forum-project/api/announcements.php?limit=5
+[Thu Apr  2 22:21:25 2026] 127.0.0.1:58370 Closing
+[Thu Apr  2 22:21:25 2026] 127.0.0.1:63991 [302]: GET /favicon.ico
+[Thu Apr  2 22:21:25 2026] 127.0.0.1:63991 Closing
+[Thu Apr  2 22:21:25 2026] 127.0.0.1:49668 Accepted
+[Thu Apr  2 22:21:25 2026] 127.0.0.1:49668 [200]: GET /home.html
+[Thu Apr  2 22:21:25 2026] 127.0.0.1:49668 Closing
+[Thu Apr  2 22:21:26 2026] 127.0.0.1:50170 Accepted
+[Thu Apr  2 22:21:26 2026] 127.0.0.1:50170 [200]: GET /owner.html
+[Thu Apr  2 22:21:26 2026] 127.0.0.1:50170 Closing
+[Thu Apr  2 22:21:26 2026] 127.0.0.1:56229 Accepted
+[Thu Apr  2 22:21:26 2026] 127.0.0.1:58267 Accepted
+[Thu Apr  2 22:21:26 2026] 127.0.0.1:56229 [200]: GET /shared-nav.css
+[Thu Apr  2 22:21:26 2026] 127.0.0.1:56229 Closing
+[Thu Apr  2 22:21:26 2026] 127.0.0.1:53520 Accepted
+[Thu Apr  2 22:21:26 2026] 127.0.0.1:58267 [200]: GET /shared/acadbeat-local-config.js
+[Thu Apr  2 22:21:26 2026] 127.0.0.1:53520 [200]: GET /shared-nav.js
+[Thu Apr  2 22:21:26 2026] 127.0.0.1:58267 Closing
+[Thu Apr  2 22:21:26 2026] 127.0.0.1:53520 Closing
+[Thu Apr  2 22:21:26 2026] 127.0.0.1:60604 Accepted
+[Thu Apr  2 22:21:26 2026] 127.0.0.1:60604 [200]: GET /Auth/backend/api/me.php
+[Thu Apr  2 22:21:26 2026] 127.0.0.1:60604 Closing
+[Thu Apr  2 22:21:26 2026] 127.0.0.1:64219 Accepted
+[Thu Apr  2 22:21:26 2026] 127.0.0.1:64219 [302]: GET /favicon.ico
+[Thu Apr  2 22:21:26 2026] 127.0.0.1:64219 Closing
+[Thu Apr  2 22:21:26 2026] 127.0.0.1:58645 Accepted
+[Thu Apr  2 22:21:26 2026] 127.0.0.1:58645 [200]: GET /Auth/backend/api/me.php
+[Thu Apr  2 22:21:26 2026] 127.0.0.1:58645 Closing
+[Thu Apr  2 22:21:26 2026] 127.0.0.1:65229 Accepted
+[Thu Apr  2 22:21:26 2026] 127.0.0.1:65229 [200]: GET /home.html
+[Thu Apr  2 22:21:26 2026] 127.0.0.1:65229 Closing
+[Thu Apr  2 22:21:26 2026] 127.0.0.1:65309 Accepted
+[Thu Apr  2 22:21:26 2026] 127.0.0.1:65309 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:21:26 2026] 127.0.0.1:65309 Closing
+[Thu Apr  2 22:21:26 2026] 127.0.0.1:57857 Accepted
+[Thu Apr  2 22:21:26 2026] 127.0.0.1:57857 [200]: GET /vocba_prac/api/owner-vocabulary.php
+[Thu Apr  2 22:21:26 2026] 127.0.0.1:57857 Closing
+[Thu Apr  2 22:21:26 2026] 127.0.0.1:56748 Accepted
+[Thu Apr  2 22:21:26 2026] 127.0.0.1:56748 [200]: GET /Academic-Practice/api/records.php
+[Thu Apr  2 22:21:26 2026] 127.0.0.1:56748 Closing
+[Thu Apr  2 22:21:26 2026] 127.0.0.1:65337 Accepted
+[Thu Apr  2 22:21:26 2026] 127.0.0.1:65337 [200]: GET /Academic-Practice/api/integrated-records.php
+[Thu Apr  2 22:21:26 2026] 127.0.0.1:65337 Closing
+[Thu Apr  2 22:21:29 2026] 127.0.0.1:63208 Accepted
+[Thu Apr  2 22:21:29 2026] 127.0.0.1:63208 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:21:29 2026] 127.0.0.1:63208 Closing
+[Thu Apr  2 22:21:32 2026] 127.0.0.1:63027 Accepted
+[Thu Apr  2 22:21:32 2026] 127.0.0.1:63027 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:21:32 2026] 127.0.0.1:63027 Closing
+[Thu Apr  2 22:21:35 2026] 127.0.0.1:51311 Accepted
+[Thu Apr  2 22:21:35 2026] 127.0.0.1:51311 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:21:35 2026] 127.0.0.1:51311 Closing
+[Thu Apr  2 22:21:38 2026] 127.0.0.1:60560 Accepted
+[Thu Apr  2 22:21:38 2026] 127.0.0.1:60560 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:21:38 2026] 127.0.0.1:60560 Closing
+[Thu Apr  2 22:21:41 2026] 127.0.0.1:63215 Accepted
+[Thu Apr  2 22:21:41 2026] 127.0.0.1:63215 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:21:41 2026] 127.0.0.1:63215 Closing
+[Thu Apr  2 22:21:44 2026] 127.0.0.1:54596 Accepted
+[Thu Apr  2 22:21:44 2026] 127.0.0.1:54596 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:21:44 2026] 127.0.0.1:54596 Closing
+[Thu Apr  2 22:21:47 2026] 127.0.0.1:53079 Accepted
+[Thu Apr  2 22:21:47 2026] 127.0.0.1:53079 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:21:47 2026] 127.0.0.1:53079 Closing
+[Thu Apr  2 22:21:50 2026] 127.0.0.1:51528 Accepted
+[Thu Apr  2 22:21:50 2026] 127.0.0.1:51528 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:21:50 2026] 127.0.0.1:51528 Closing
+[Thu Apr  2 22:21:53 2026] 127.0.0.1:58738 Accepted
+[Thu Apr  2 22:21:53 2026] 127.0.0.1:58738 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:21:53 2026] 127.0.0.1:58738 Closing
+[Thu Apr  2 22:21:56 2026] 127.0.0.1:52974 Accepted
+[Thu Apr  2 22:21:56 2026] 127.0.0.1:52974 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:21:56 2026] 127.0.0.1:52974 Closing
+[Thu Apr  2 22:21:59 2026] 127.0.0.1:52134 Accepted
+[Thu Apr  2 22:21:59 2026] 127.0.0.1:52134 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:21:59 2026] 127.0.0.1:52134 Closing
+[Thu Apr  2 22:22:02 2026] 127.0.0.1:49999 Accepted
+[Thu Apr  2 22:22:02 2026] 127.0.0.1:49999 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:22:02 2026] 127.0.0.1:49999 Closing
+[Thu Apr  2 22:22:05 2026] 127.0.0.1:52649 Accepted
+[Thu Apr  2 22:22:05 2026] 127.0.0.1:52649 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:22:05 2026] 127.0.0.1:52649 Closing
+[Thu Apr  2 22:22:08 2026] 127.0.0.1:63365 Accepted
+[Thu Apr  2 22:22:08 2026] 127.0.0.1:63365 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:22:08 2026] 127.0.0.1:63365 Closing
+[Thu Apr  2 22:22:11 2026] 127.0.0.1:53212 Accepted
+[Thu Apr  2 22:22:11 2026] 127.0.0.1:53212 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:22:11 2026] 127.0.0.1:53212 Closing
+[Thu Apr  2 22:22:14 2026] 127.0.0.1:51110 Accepted
+[Thu Apr  2 22:22:14 2026] 127.0.0.1:51110 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:22:14 2026] 127.0.0.1:51110 Closing
+[Thu Apr  2 22:22:17 2026] 127.0.0.1:52465 Accepted
+[Thu Apr  2 22:22:17 2026] 127.0.0.1:52465 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:22:17 2026] 127.0.0.1:52465 Closing
+[Thu Apr  2 22:22:20 2026] 127.0.0.1:60933 Accepted
+[Thu Apr  2 22:22:20 2026] 127.0.0.1:60933 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:22:20 2026] 127.0.0.1:60933 Closing
+[Thu Apr  2 22:22:23 2026] 127.0.0.1:57953 Accepted
+[Thu Apr  2 22:22:23 2026] 127.0.0.1:57953 [200]: GET /home.html?module=Insight
+[Thu Apr  2 22:22:23 2026] 127.0.0.1:57953 Closing
+[Thu Apr  2 22:22:23 2026] 127.0.0.1:64511 Accepted
+[Thu Apr  2 22:22:23 2026] 127.0.0.1:51123 Accepted
+[Thu Apr  2 22:22:23 2026] 127.0.0.1:64511 [200]: GET /challenge/challenge-home.css
+[Thu Apr  2 22:22:23 2026] 127.0.0.1:64511 Closing
+[Thu Apr  2 22:22:23 2026] 127.0.0.1:51123 [200]: GET /shared-nav.css
+[Thu Apr  2 22:22:23 2026] 127.0.0.1:51123 Closing
+[Thu Apr  2 22:22:23 2026] 127.0.0.1:54523 Accepted
+[Thu Apr  2 22:22:23 2026] 127.0.0.1:52171 Accepted
+[Thu Apr  2 22:22:23 2026] 127.0.0.1:54523 [200]: GET /shared/acadbeat-local-config.js
+[Thu Apr  2 22:22:23 2026] 127.0.0.1:52171 [200]: GET /shared-nav.js
+[Thu Apr  2 22:22:23 2026] 127.0.0.1:54523 Closing
+[Thu Apr  2 22:22:23 2026] 127.0.0.1:52171 Closing
+[Thu Apr  2 22:22:23 2026] 127.0.0.1:57565 Accepted
+[Thu Apr  2 22:22:23 2026] 127.0.0.1:57565 [200]: GET /Auth/backend/api/me.php
+[Thu Apr  2 22:22:23 2026] 127.0.0.1:57565 Closing
+[Thu Apr  2 22:22:23 2026] 127.0.0.1:63314 Accepted
+[Thu Apr  2 22:22:23 2026] 127.0.0.1:63314 [200]: GET /challenge/challenge-panel.html
+[Thu Apr  2 22:22:23 2026] 127.0.0.1:63314 Closing
+[Thu Apr  2 22:22:23 2026] 127.0.0.1:59211 Accepted
+[Thu Apr  2 22:22:23 2026] 127.0.0.1:59211 [302]: GET /favicon.ico
+[Thu Apr  2 22:22:23 2026] 127.0.0.1:59211 Closing
+[Thu Apr  2 22:22:23 2026] 127.0.0.1:56225 Accepted
+[Thu Apr  2 22:22:23 2026] 127.0.0.1:56225 [200]: GET /challenge/challenge-home.js
+[Thu Apr  2 22:22:23 2026] 127.0.0.1:56225 Closing
+[Thu Apr  2 22:22:23 2026] 127.0.0.1:56076 Accepted
+[Thu Apr  2 22:22:23 2026] 127.0.0.1:56076 [200]: GET /home.html
+[Thu Apr  2 22:22:23 2026] 127.0.0.1:56076 Closing
+[Thu Apr  2 22:22:23 2026] 127.0.0.1:53670 Accepted
+[Thu Apr  2 22:22:23 2026] 127.0.0.1:53670 [200]: GET /Auth/backend/api/me.php
+[Thu Apr  2 22:22:23 2026] 127.0.0.1:53670 Closing
+[Thu Apr  2 22:22:23 2026] 127.0.0.1:49975 Accepted
+[Thu Apr  2 22:22:23 2026] 127.0.0.1:49975 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:22:23 2026] 127.0.0.1:49975 Closing
+[Thu Apr  2 22:22:24 2026] 127.0.0.1:56642 Accepted
+[Thu Apr  2 22:22:25 2026] 127.0.0.1:56642 [200]: GET /home.html?module=Dialogue
+[Thu Apr  2 22:22:25 2026] 127.0.0.1:56642 Closing
+[Thu Apr  2 22:22:25 2026] 127.0.0.1:61991 Accepted
+[Thu Apr  2 22:22:25 2026] 127.0.0.1:52241 Accepted
+[Thu Apr  2 22:22:25 2026] 127.0.0.1:52241 [200]: GET /challenge/challenge-home.css
+[Thu Apr  2 22:22:25 2026] 127.0.0.1:52241 Closing
+[Thu Apr  2 22:22:25 2026] 127.0.0.1:61991 [200]: GET /shared-nav.css
+[Thu Apr  2 22:22:25 2026] 127.0.0.1:63493 Accepted
+[Thu Apr  2 22:22:25 2026] 127.0.0.1:52373 Accepted
+[Thu Apr  2 22:22:25 2026] 127.0.0.1:63493 [200]: GET /shared/acadbeat-local-config.js
+[Thu Apr  2 22:22:25 2026] 127.0.0.1:52373 [200]: GET /shared-nav.js
+[Thu Apr  2 22:22:25 2026] 127.0.0.1:61991 Closing
+[Thu Apr  2 22:22:25 2026] 127.0.0.1:63493 Closing
+[Thu Apr  2 22:22:25 2026] 127.0.0.1:52373 Closing
+[Thu Apr  2 22:22:25 2026] 127.0.0.1:53243 Accepted
+[Thu Apr  2 22:22:25 2026] 127.0.0.1:53243 [200]: GET /Auth/backend/api/me.php
+[Thu Apr  2 22:22:25 2026] 127.0.0.1:53243 Closing
+[Thu Apr  2 22:22:25 2026] 127.0.0.1:50382 Accepted
+[Thu Apr  2 22:22:25 2026] 127.0.0.1:57984 Accepted
+[Thu Apr  2 22:22:25 2026] 127.0.0.1:50382 [200]: GET /challenge/challenge-panel.html
+[Thu Apr  2 22:22:25 2026] 127.0.0.1:57984 [302]: GET /favicon.ico
+[Thu Apr  2 22:22:25 2026] 127.0.0.1:57984 Closing
+[Thu Apr  2 22:22:25 2026] 127.0.0.1:50382 Closing
+[Thu Apr  2 22:22:25 2026] 127.0.0.1:60437 Accepted
+[Thu Apr  2 22:22:25 2026] 127.0.0.1:60437 [200]: GET /home.html
+[Thu Apr  2 22:22:25 2026] 127.0.0.1:60437 Closing
+[Thu Apr  2 22:22:25 2026] 127.0.0.1:51267 Accepted
+[Thu Apr  2 22:22:25 2026] 127.0.0.1:51267 [200]: GET /challenge/challenge-home.js
+[Thu Apr  2 22:22:25 2026] 127.0.0.1:51267 Closing
+[Thu Apr  2 22:22:25 2026] 127.0.0.1:52292 Accepted
+[Thu Apr  2 22:22:25 2026] 127.0.0.1:52292 [200]: GET /Auth/backend/api/me.php
+[Thu Apr  2 22:22:25 2026] 127.0.0.1:52292 Closing
+[Thu Apr  2 22:22:25 2026] 127.0.0.1:53726 Accepted
+[Thu Apr  2 22:22:25 2026] 127.0.0.1:53726 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:22:25 2026] 127.0.0.1:53726 Closing
+[Thu Apr  2 22:22:28 2026] 127.0.0.1:64885 Accepted
+[Thu Apr  2 22:22:28 2026] 127.0.0.1:64885 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:22:28 2026] 127.0.0.1:64885 Closing
+[Thu Apr  2 22:22:31 2026] 127.0.0.1:53735 Accepted
+[Thu Apr  2 22:22:31 2026] 127.0.0.1:53735 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:22:31 2026] 127.0.0.1:53735 Closing
+[Thu Apr  2 22:22:34 2026] 127.0.0.1:55419 Accepted
+[Thu Apr  2 22:22:34 2026] 127.0.0.1:55419 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:22:34 2026] 127.0.0.1:55419 Closing
+[Thu Apr  2 22:22:37 2026] 127.0.0.1:49187 Accepted
+[Thu Apr  2 22:22:37 2026] 127.0.0.1:49187 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:22:37 2026] 127.0.0.1:49187 Closing
+[Thu Apr  2 22:22:40 2026] 127.0.0.1:56275 Accepted
+[Thu Apr  2 22:22:40 2026] 127.0.0.1:56275 [200]: GET /forum-project/api/message-center.php?summaryOnly=1
+[Thu Apr  2 22:22:40 2026] 127.0.0.1:56275 Closing
