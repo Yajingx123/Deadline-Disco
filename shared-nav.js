@@ -26,7 +26,10 @@
   function withMessageCenterSource(url) {
     try {
       const next = new URL(url, window.location.origin);
-      next.searchParams.set('from', window.location.href);
+      const current = new URL(window.location.href, window.location.origin);
+      // Prevent stale login prompts when returning from message center.
+      current.searchParams.delete('login');
+      next.searchParams.set('from', current.toString());
       return next.toString();
     } catch (_err) {
       return url;

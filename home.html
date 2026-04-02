@@ -1452,7 +1452,7 @@
             const moduleName = resolveModuleName(params.get('module'));
             loadModule(moduleName);
             await refreshSharedNav();
-            if (params.get('login') === '1') {
+            if (params.get('login') === '1' && !authState.user) {
                 openAuthModal('login', 'Please log in first.');
             }
             if (window.challengeHome && typeof window.challengeHome.handleInitialRoute === 'function') {
