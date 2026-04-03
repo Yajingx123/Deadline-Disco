@@ -14,17 +14,17 @@ $frontendBuilds = [
     [
         'name' => 'forum-static',
         'workdir' => $root . '/forum-project',
-        'command' => $npm . ' run build',
+        'command' => $npm . ' install && ' . $npm . ' run build',
     ],
     [
         'name' => 'admin-static',
         'workdir' => $root . '/admin_page',
-        'command' => $npm . ' run build',
+        'command' => $npm . ' install && ' . $npm . ' run build',
     ],
     [
         'name' => 'message-center-static',
         'workdir' => $root . '/message-center-project',
-        'command' => $npm . ' run build',
+        'command' => $npm . ' install && ' . $npm . ' run build',
     ],
 ];
 

@@ -15,6 +15,11 @@ If this `README.md` conflicts with `docs/ARCHITECTURE.md`, treat `docs/ARCHITECT
 
 ## Current Quick Start (Recommended)
 
+### 0) Environment config
+
+- Copy `.env.example` to `.env.local` (or `.env`) and adjust values when needed.
+- For production, use `.env.prod.example` as the template.
+
 ### 1) Start database
 
 - Ensure MySQL is running.
@@ -39,6 +44,10 @@ Or run full bootstrap flow (import SQL + restart services):
 ```bash
 php run_everything.php
 ```
+
+Production deployment (Alibaba Cloud Linux 4):
+
+- See `DEPLOY_ALIYUN_LINUX4.md`
 
 ### 3) Verify key pages
 
