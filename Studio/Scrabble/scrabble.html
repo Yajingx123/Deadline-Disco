@@ -613,7 +613,7 @@
                 document.getElementById("match-status").textContent = "Connected. Finding opponent…";
             });
             s.on("connect_error", () => {
-                document.getElementById("match-status").textContent = "Cannot reach match server. Start it: cd Studio/scrabble-server && npm start";
+                document.getElementById("match-status").textContent = "Cannot reach match server. Start: cd Studio/Scrabble/match-server then npm install && npm start";
             });
             s.on("match:waiting", () => {
                 document.getElementById("match-status").textContent = "Waiting for another player…";
