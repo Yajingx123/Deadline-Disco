@@ -7,25 +7,13 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared-nav.css">
+  <script src="../shared/acadbeat-local-config.js"></script>
   <link rel="stylesheet" href="acadbeat-global.css">
   <link rel="stylesheet" href="practice-style.css">
 </head>
 <body data-page="training-home">
-  <nav>
-    <a class="logo" href="../home.html">Acad<span>Beat</span></a>
-    <div class="nav-menu">
-      <a class="nav-item active" href="../home.html?module=Insight">Academic</a>
-      <a class="nav-item" href="../home.html?module=Dialogue">Forum</a>
-      <a class="nav-item" href="../home.html?module=Method">Technology</a>
-    </div>
-    <div class="user-group">
-      <div class="user-section" id="userSection" onclick="handleUserAction()">
-        <span id="userLabel" class="user-label">LOGIN</span>
-        <div class="avatar" id="userAvatar">IN</div>
-      </div>
-      <a href="#" class="logout-link" id="logoutLink" onclick="return handleLogout(event)" style="display:none;">Log out</a>
-    </div>
-  </nav>
+  <div id="acadbeatNav"></div>
 
   <main class="module-content page-shell">
     <section class="section-block training-clean">
@@ -102,67 +90,28 @@
   <script src="practice-data.js"></script>
   <script src="practice-app.js"></script>
   <script>
-    const AUTH_API_BASE = '../Auth/backend/api';
-    const authState = { user: null };
-
-    function initialsOf(name) {
-      const trimmed = String(name || '').trim();
-      if (!trimmed) return 'IN';
-      return trimmed.slice(0, 2).toUpperCase();
-    }
-
-    function renderAuthUI() {
-      const label = document.getElementById('userLabel');
-      const avatar = document.getElementById('userAvatar');
-      const logoutLink = document.getElementById('logoutLink');
-      if (!label || !avatar || !logoutLink) return;
-
-      if (authState.user) {
-        label.textContent = authState.user.username;
-        avatar.textContent = initialsOf(authState.user.username);
-        logoutLink.style.display = 'inline-flex';
-      } else {
-        label.textContent = 'LOGIN';
-        avatar.textContent = 'IN';
-        logoutLink.style.display = 'none';
-      }
-    }
-
-    async function authFetch(path, options = {}) {
-      const response = await fetch(`${AUTH_API_BASE}/${path}`, {
-        method: options.method || 'GET',
-        headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
-        credentials: 'include',
-        body: options.body || undefined
+    window.addEventListener('load', () => {
+      const uiGodot = (() => {
+        try {
+          if (new URLSearchParams(location.search).get('ui') === 'godot') return true;
+        } catch (_e) {}
+        return document.cookie.split('; ').some((c) => c.startsWith('ui_mode=godot'));
+      })();
+      const L = window.ACADBEAT_LOCAL || {};
+      const loginUrl = uiGodot ? (L.godotWebEntryUrl || 'http://127.0.0.1:5500/index.html?ui=godot') : '../home.html?login=1';
+      window.initializeAcadBeatNav({
+        mountId: 'acadbeatNav',
+        basePath: '../',
+        active: 'academic',
+        authApiBase: '../Auth/backend/api',
+        homeUrl: '../home.html',
+        ownerUrl: '../owner.html',
+        adminUrl: L.adminDistUrl || 'http://127.0.0.1:8001/admin_page/dist/index.html',
+        loginUrl,
+        redirectAdmins: false
       });
-      return response.json().catch(() => ({ status: 'error' }));
-    }
-
-    async function loadAuthUser() {
-      const data = await authFetch('me.php');
-      authState.user = data.status === 'success' ? data.user : null;
-      renderAuthUI();
-    }
-
-    function handleUserAction() {
-      if (authState.user) {
-        window.location.href = '../owner.html';
-        return;
-      }
-      window.location.href = '../home.html?login=1';
-    }
-
-    async function handleLogout(event) {
-      if (event) event.preventDefault();
-      if (!authState.user) return false;
-      await authFetch('logout.php');
-      authState.user = null;
-      renderAuthUI();
-      window.location.href = '../home.html';
-      return false;
-    }
-
-    loadAuthUser();
+    });
   </script>
+  <script src="../shared-nav.js"></script>
 </body>
 </html>

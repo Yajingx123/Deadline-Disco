@@ -8,6 +8,24 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700;800&family=Playfair+Display:ital,wght@0,500;1,700&display=swap"
         rel="stylesheet">
+    <link rel="stylesheet" href="./shared-nav.css">
+    <script src="./shared/acadbeat-local-config.js"></script>
+    <style>html.acadbeat-role-guard body{visibility:hidden}</style>
+    <script>
+        document.documentElement.classList.add('acadbeat-role-guard');
+        (async function guardAdminOwner() {
+            try {
+                const response = await fetch('./Auth/backend/api/me.php', { credentials: 'include' });
+                const data = await response.json().catch(() => ({ status: 'error' }));
+                if (data.status === 'success' && data.user && String(data.user.role || '').toLowerCase() === 'admin') {
+                    const admin = (window.ACADBEAT_LOCAL && window.ACADBEAT_LOCAL.adminDistUrl) || 'http://127.0.0.1:8001/admin_page/dist/index.html';
+                    window.location.replace(admin);
+                    return;
+                }
+            } catch (_err) {}
+            document.documentElement.classList.remove('acadbeat-role-guard');
+        })();
+    </script>
 
     <style>
         :root {
@@ -171,19 +189,6 @@
             z-index: 1000;
         }
 
-        .nav-left-cluster {
-            display: flex;
-            align-items: center;
-            gap: 18px;
-        }
-
-        .nav-title {
-            font-size: 1rem;
-            letter-spacing: 0.14em;
-            font-weight: 700;
-            opacity: 0.6;
-        }
-
         .logo {
             font-size: 1.4rem;
             font-weight: 800;
@@ -195,14 +200,173 @@
             color: var(--primary-color);
         }
 
+        .nav-menu {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        .nav-item {
+            text-decoration: none;
+            color: var(--secondary-color);
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            padding: 8px 0;
+            position: relative;
+            transition: 0.6s ease;
+            opacity: 0.5;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            opacity: 1;
+        }
+
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--secondary-color);
+        }
+
+        .user-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .message-link {
+            position: relative;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid rgba(58, 78, 107, 0.16);
+            background: rgba(255, 255, 255, 0.74);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--secondary-color);
+            text-decoration: none;
+            box-shadow: 0 8px 20px rgba(58, 78, 107, 0.08);
+            transition: 0.25s ease;
+        }
+
+        .message-link:hover {
+            background: rgba(155, 183, 212, 0.22);
+            transform: translateY(-1px);
+        }
+
+        .message-link[hidden] {
+            display: none !important;
+        }
+
+        .message-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            min-width: 18px;
+            height: 18px;
+            padding: 0 5px;
+            border-radius: 999px;
+            background: #ef4444;
+            color: #fff;
+            font-size: 0.64rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: 0.4s ease;
+        }
+
+        .user-section:hover {
+            opacity: 0.7;
+        }
+
+        .avatar {
+            width: 34px;
+            height: 34px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            border: 1px solid var(--secondary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.7rem;
+        }
+
+        .logout-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 34px;
+            padding: 0 12px;
+            border-radius: 999px;
+            border: 1px solid rgba(58, 78, 107, 0.18);
+            background: rgba(255, 255, 255, 0.72);
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-size: 0.72rem;
+            font-weight: 700;
+            transition: 0.25s ease;
+        }
+
+        .logout-link:hover {
+            transform: translateY(-1px);
+            background: rgba(255, 255, 255, 0.94);
+            border-color: rgba(58, 78, 107, 0.3);
+        }
+
         /* 布局 */
         .dashboard-container {
             display: grid;
             grid-template-columns: 280px 1fr;
             gap: 60px;
             max-width: 1400px;
-            margin: 140px auto 50px;
+            margin: 112px auto 50px;
             padding: 0 5%;
+        }
+
+        .owner-return {
+            width: min(1400px, 100%);
+            margin: 26px auto 0;
+            padding: 0 5%;
+        }
+
+        .owner-return__btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 38px;
+            padding: 0 16px;
+            border-radius: 999px;
+            border: 1px solid rgba(58, 78, 107, 0.18);
+            background: rgba(255, 255, 255, 0.72);
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            transition: var(--transition-fast);
+        }
+
+        .owner-return__btn:hover {
+            transform: translateY(-1px);
+            background: rgba(255, 255, 255, 0.94);
+            border-color: rgba(58, 78, 107, 0.28);
         }
 
         .sidebar {
@@ -285,118 +449,6 @@
             background: var(--accent-red);
             border-radius: 50%;
             animation: pulseDot 2s infinite;
-        }
-
-        /* --- 同桌板块 --- */
-        .peer-chamber {
-            display: flex;
-            align-items: center;
-            gap: 4rem;
-            min-height: 280px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .resonance-visual {
-            width: 200px;
-            height: 200px;
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .res-ring {
-            position: absolute;
-            border: 1px solid var(--primary-color);
-            border-radius: 50%;
-            transition: var(--transition-slow);
-        }
-
-        .ring-outer {
-            width: 180px;
-            height: 180px;
-            border-style: dashed;
-            animation: rotateCW 15s linear infinite;
-            opacity: 0.4;
-        }
-
-        .ring-inner {
-            width: 120px;
-            height: 120px;
-            animation: rotateCCW 10s linear infinite;
-            opacity: 0.6;
-        }
-
-        .avatar-nodes {
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 5;
-        }
-
-        .peer-node {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background: var(--white);
-            border: 1.5px solid var(--primary-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800;
-            font-size: 0.9rem;
-            transition: 0.4s;
-            position: relative;
-        }
-
-        .peer-node.checked::after {
-            content: "✓";
-            position: absolute;
-            bottom: -5px;
-            right: -5px;
-            width: 20px;
-            height: 20px;
-            background: var(--primary-color);
-            color: white;
-            border-radius: 50%;
-            font-size: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .peer-info-wrap {
-            flex: 1;
-            text-align: left;
-        }
-
-        .peer-input-alt {
-            background: transparent;
-            border: none;
-            border-bottom: 1px solid var(--secondary-color);
-            font-size: 1.2rem;
-            font-family: 'Playfair Display', serif;
-            padding: 10px 0;
-            width: 100%;
-            outline: none;
-            margin-bottom: 2rem;
-            color: var(--secondary-color);
-        }
-
-        .request-panel {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: var(--bg-color);
-            z-index: 20;
-            padding: 2.5rem 3.5rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
         }
 
         /* 日历样式保持 */
@@ -520,12 +572,7 @@
 </head>
 
 <body>
-
-    <nav>
-        <div class="logo">Acad<span>Beat</span></div>
-        <div class="nav-title">THE SANCTUARY</div>
-        <button class="btn-small" onclick="window.location.href='home.html'">Return Home</button>
-    </nav>
+    <div id="acadbeatNav"></div>
 
     <div class="dashboard-container">
         <aside class="sidebar">
@@ -572,56 +619,6 @@
                     <div class="calendar-grid" id="calendar-days"></div>
                 </div>
 
-                <span class="module-label">Resonance Chamber</span>
-                <div class="daily-focus-card peer-chamber">
-                    <div class="resonance-visual">
-                        <div class="res-ring ring-outer"></div>
-                        <div class="res-ring ring-inner"></div>
-                        <div class="avatar-nodes">
-                            <div class="peer-node checked" id="ownerAvatarNode" style="margin-right:-15px; z-index:2;">AR</div>
-                            <div class="peer-node" id="peer-avat">?</div>
-                        </div>
-                    </div>
-
-                    <div class="peer-info-wrap" id="peer-init">
-                        <h3 style="font-family:'Playfair Display'; font-size:1.5rem; margin-bottom:0.5rem;">Peer
-                            Resonance</h3>
-                        <p style="font-size:0.8rem; opacity:0.5; margin-bottom:1.2rem;">Invite another user by
-                            username to form a resonance team. The bond becomes active after they accept.</p>
-                        <input type="text" class="peer-input-alt" id="peer-id-in" placeholder="Resonate with username...">
-                        <p id="peer-pending-note" style="font-size:0.72rem; opacity:0.58; margin:0 0 1.2rem;"></p>
-                        <div style="display:flex; gap:20px;">
-                            <button class="btn-small" onclick="invitePeer()">Form Bond</button>
-                            <button class="btn-small" style="border-style:dashed; opacity:0.6;"
-                                onclick="toggleRequests(true)">
-                                <span id="peer-request-btn-label">View Requests (0)</span>
-                                <div class="notification-dot hidden" id="peer-request-dot"></div>
-                            </button>
-                        </div>
-                    </div>
-
-                    <div class="peer-info-wrap hidden" id="peer-bound">
-                        <h3 id="peer-bound-name" style="font-family:'Playfair Display'; font-size:1.5rem; margin-bottom:0.5rem;">Peer
-                        </h3>
-                        <p id="peer-bound-status"
-                            style="font-size:0.75rem; letter-spacing:2px; color:var(--primary-color); font-weight:700; margin-bottom:1.5rem;">
-                            STATUS: 0 DAYS OF RESONANCE</p>
-                        <div style="display:flex; gap:10px;" id="peer-progress-bars">
-                            <div id="peer-progress-self" style="flex:1; height:3px; background:rgba(58,78,107,0.1);"></div>
-                            <div id="peer-progress-partner" style="flex:1; height:3px; background:rgba(58,78,107,0.1);"></div>
-                        </div>
-                        <p id="peer-bound-note" style="font-size:0.7rem; opacity:0.5; margin-top:12px;">Awaiting synchronicity.</p>
-                    </div>
-
-                    <div id="request-panel" class="request-panel hidden">
-                        <div
-                            style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem;">
-                            <span class="module-label" style="margin:0;">Connection Requests</span>
-                            <span style="cursor:pointer; font-weight:800;" onclick="toggleRequests(false)">✕</span>
-                        </div>
-                        <div id="request-panel-list"></div>
-                    </div>
-                </div>
             </div>
 
             <div id="list-sec" class="hidden">
@@ -652,10 +649,12 @@
 
     <script>
         const AUTH_API_BASE = './Auth/backend/api';
+        const OWNER_URL = './owner.html';
+        const L = window.ACADBEAT_LOCAL || {};
+        const ADMIN_URL = L.adminDistUrl || 'http://127.0.0.1:8001/admin_page/dist/index.html';
         const OWNER_VOCAB_API = './vocba_prac/api/owner-vocabulary.php';
         const OWNER_LISTENING_API = './Academic-Practice/api/records.php';
         const OWNER_INTEGRATED_API = './Academic-Practice/api/integrated-records.php';
-        const PEER_API_BASE = './peer-resonance/api';
         let viewDate = new Date();
         const today = new Date();
         let checkedDays = ["2026-3-1", "2026-3-2", "2026-3-5", "2026-3-10", "2026-3-18"];
@@ -664,7 +663,6 @@
         let ownerListeningRecords = [];
         let ownerIntegratedRecords = [];
         let ownerAuthUser = null;
-        let peerResonanceState = { activeTeam: null, incomingInvites: [], outgoingInvites: [], myCheckinDates: [] };
 
         function initialsOf(name) {
             const trimmed = String(name || '').trim();
@@ -693,30 +691,33 @@
             return data;
         }
 
-        async function peerFetch(path, options = {}) {
-            const response = await fetch(`${PEER_API_BASE}/${path}`, {
-                method: options.method || 'GET',
-                headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
-                credentials: 'include',
-                body: options.body || undefined
-            });
-            const data = await response.json().catch(() => ({ ok: false, message: 'Invalid response' }));
-            if (!response.ok || data.ok === false) {
-                throw new Error(data.message || 'Peer Resonance request failed.');
-            }
-            return data;
-        }
-
         function applyOwnerUser(user) {
             ownerAuthUser = user;
             const display = document.getElementById('ownerNameDisplay');
-            const avatar = document.getElementById('ownerAvatarNode');
             if (display) {
                 display.innerHTML = `${escapeHtml(String(user.username || 'User'))} <b>Owner</b>`;
             }
-            if (avatar) {
-                avatar.textContent = initialsOf(user.username);
+        }
+
+        function getPortalUrl(user) {
+            return user && String(user.role || '').toLowerCase() === 'admin' ? ADMIN_URL : OWNER_URL;
+        }
+
+        function handleUserAction() {
+            if (!ownerAuthUser) {
+                window.location.href = './home.html?login=1';
+                return;
             }
+            window.location.href = getPortalUrl(ownerAuthUser);
+        }
+
+        async function handleLogout(event) {
+            if (event) event.preventDefault();
+            if (!ownerAuthUser) return false;
+            await authFetch('logout.php', { method: 'POST' });
+            ownerAuthUser = null;
+            window.location.href = './home.html';
+            return false;
         }
 
         function openSiteModal(title, message, onConfirm, allowHtml = false) {
@@ -741,7 +742,8 @@
         }
 
         async function ensureAuthenticated() {
-            const data = await authFetch('me.php');
+            const navUser = window.acadbeatNavState && window.acadbeatNavState.user;
+            const data = navUser ? { status: 'success', user: navUser } : await authFetch('me.php');
             if (data.status !== 'success' || !data.user) {
                 openSiteModal('Login required', 'Please log in first.', function () {
                     window.location.href = 'home.html?login=1';
@@ -750,145 +752,6 @@
             }
             applyOwnerUser(data.user);
             return true;
-        }
-
-        function setPeerRequestCount(count) {
-            const label = document.getElementById('peer-request-btn-label');
-            const dot = document.getElementById('peer-request-dot');
-            if (label) label.textContent = `View Requests (${count})`;
-            if (dot) dot.classList.toggle('hidden', count <= 0);
-        }
-
-        function renderPeerRequests(incomingInvites) {
-            const container = document.getElementById('request-panel-list');
-            if (!container) return;
-
-            if (!incomingInvites.length) {
-                container.innerHTML = `
-                    <p style="font-size:0.78rem; opacity:0.52;">No incoming requests right now. When another user invites you, it will appear here.</p>
-                `;
-                return;
-            }
-
-            container.innerHTML = incomingInvites.map((invite) => `
-                <div style="display:flex; justify-content:space-between; align-items:center; gap:18px; padding:14px 0; border-top:1px solid rgba(58,78,107,0.08);">
-                    <div>
-                        <p style="font-weight:700; font-size:0.9rem;">${escapeHtml(invite.fromDisplayName)}</p>
-                        <p style="font-size:0.72rem; opacity:0.5;">@${escapeHtml(invite.fromUsername)} wants to form a resonance team.</p>
-                    </div>
-                    <div style="display:flex; gap:15px; flex-wrap:wrap;">
-                        <button class="btn-small" style="padding:8px 20px; border-color:var(--primary-color); color:var(--primary-color);" onclick="respondToPeerInvite(${invite.inviteId}, 'accept')">Accept</button>
-                        <button class="btn-small" style="padding:8px 20px; opacity:0.55;" onclick="respondToPeerInvite(${invite.inviteId}, 'decline')">Decline</button>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function renderPeerState(state) {
-            peerResonanceState = state || { activeTeam: null, incomingInvites: [], outgoingInvites: [], myCheckinDates: [] };
-            const activeTeam = peerResonanceState.activeTeam;
-            const incomingInvites = peerResonanceState.incomingInvites || [];
-            const outgoingInvites = peerResonanceState.outgoingInvites || [];
-
-            setPeerRequestCount(incomingInvites.length);
-            renderPeerRequests(incomingInvites);
-
-            const initWrap = document.getElementById('peer-init');
-            const boundWrap = document.getElementById('peer-bound');
-            const peerAvatar = document.getElementById('peer-avat');
-            const pendingNote = document.getElementById('peer-pending-note');
-
-            if (activeTeam) {
-                initWrap.classList.add('hidden');
-                boundWrap.classList.remove('hidden');
-                const partner = activeTeam.partner || {};
-                document.getElementById('peer-bound-name').textContent = partner.displayName || 'Peer';
-                document.getElementById('peer-bound-status').textContent = `STATUS: ${activeTeam.currentStreakDays} DAYS OF RESONANCE`;
-                document.getElementById('peer-bound-note').textContent = activeTeam.partnerCommittedToday
-                    ? `${partner.displayName || 'Your peer'} has committed today. The resonance is aligned.`
-                    : `${partner.displayName || 'Your peer'} has not committed today yet. Awaiting synchronicity.`;
-                document.getElementById('peer-progress-self').style.background = activeTeam.currentUserCommittedToday ? 'var(--primary-color)' : 'rgba(58,78,107,0.1)';
-                document.getElementById('peer-progress-partner').style.background = activeTeam.partnerCommittedToday ? 'var(--primary-color)' : 'rgba(58,78,107,0.1)';
-                peerAvatar.innerText = partner.initials || '?';
-                peerAvatar.style.backgroundColor = 'var(--primary-color)';
-                peerAvatar.style.color = 'white';
-                document.querySelector('.ring-outer').style.animation = 'rotateCW 5s linear infinite';
-                if (pendingNote) pendingNote.textContent = '';
-            } else {
-                initWrap.classList.remove('hidden');
-                boundWrap.classList.add('hidden');
-                peerAvatar.innerText = '?';
-                peerAvatar.style.backgroundColor = 'transparent';
-                peerAvatar.style.color = 'var(--secondary-color)';
-                document.querySelector('.ring-outer').style.animation = '';
-                if (pendingNote) {
-                    if (outgoingInvites.length) {
-                        const invite = outgoingInvites[0];
-                        pendingNote.innerHTML = `Pending invite sent to <strong>@${escapeHtml(invite.toUsername)}</strong>. <button class="btn-small" style="padding:8px 16px; margin-left:10px;" onclick="cancelPeerInvite(${invite.inviteId})">Cancel</button>`;
-                    } else {
-                        pendingNote.textContent = 'No active bond yet. Invite another user to start.';
-                    }
-                }
-            }
-
-            if (Array.isArray(peerResonanceState.myCheckinDates) && peerResonanceState.myCheckinDates.length) {
-                checkedDays = peerResonanceState.myCheckinDates.map((value) => {
-                    const [year, month, day] = String(value).split('-');
-                    return `${Number(year)}-${Number(month)}-${Number(day)}`;
-                });
-                renderCalendar();
-            }
-        }
-
-        async function loadPeerResonanceState() {
-            const data = await peerFetch('status.php');
-            renderPeerState(data.state || {});
-        }
-
-        async function invitePeer() {
-            const input = document.getElementById('peer-id-in');
-            const username = String(input?.value || '').trim();
-            if (!username) {
-                openSiteModal('Username required', 'Enter another user\'s username first.');
-                return;
-            }
-
-            try {
-                const data = await peerFetch('invite.php', {
-                    method: 'POST',
-                    body: JSON.stringify({ username })
-                });
-                if (input) input.value = '';
-                renderPeerState(data.state || {});
-                openSiteModal('Invite sent', `Your resonance invite to @${username} is now pending.`);
-            } catch (error) {
-                openSiteModal('Unable to send invite', error.message || 'Please try again.');
-            }
-        }
-
-        async function respondToPeerInvite(inviteId, action) {
-            try {
-                const data = await peerFetch('respond.php', {
-                    method: 'POST',
-                    body: JSON.stringify({ inviteId, action })
-                });
-                renderPeerState(data.state || {});
-                toggleRequests(false);
-            } catch (error) {
-                openSiteModal('Request failed', error.message || 'Please try again.');
-            }
-        }
-
-        async function cancelPeerInvite(inviteId) {
-            try {
-                const data = await peerFetch('cancel.php', {
-                    method: 'POST',
-                    body: JSON.stringify({ inviteId })
-                });
-                renderPeerState(data.state || {});
-            } catch (error) {
-                openSiteModal('Cancel failed', error.message || 'Please try again.');
-            }
         }
 
         async function loadOwnerVocabularyData() {
@@ -1183,21 +1046,7 @@
                 btn.innerText = "Committed"; btn.style.opacity = "0.5"; btn.disabled = true;
                 document.getElementById('streak-txt').innerText = "Current Streak: 13 Days";
             }
-
-            if (peerResonanceState.activeTeam) {
-                try {
-                    const data = await peerFetch('commit.php', {
-                        method: 'POST',
-                        body: JSON.stringify({})
-                    });
-                    renderPeerState(data.state || {});
-                } catch (error) {
-                    openSiteModal('Commit sync failed', error.message || 'Your personal check-in was marked, but the peer sync failed.');
-                }
-            }
         }
-
-        function toggleRequests(show) { document.getElementById('request-panel').classList.toggle('hidden', !show); }
 
         function showSection(type) {
             document.querySelectorAll('.side-item').forEach(el => el.classList.remove('active'));
@@ -1236,16 +1085,30 @@
             renderVocabularyFavorites();
         }
 
+        window.addEventListener('acadbeat:nav-user', (event) => {
+            ownerAuthUser = event?.detail?.user || null;
+        });
+
         window.onload = async () => {
+            await window.initializeAcadBeatNav({
+                mountId: 'acadbeatNav',
+                basePath: './',
+                active: '',
+                authApiBase: './Auth/backend/api',
+                homeUrl: './home.html',
+                ownerUrl: './owner.html',
+                adminUrl: L.adminDistUrl || 'http://127.0.0.1:8001/admin_page/dist/index.html',
+                redirectAdmins: true
+            });
             const ok = await ensureAuthenticated();
             if (!ok) return;
             await loadOwnerVocabularyData();
             await loadOwnerListeningData();
             await loadOwnerIntegratedData();
-            await loadPeerResonanceState();
             renderCalendar();
         };
     </script>
+    <script src="./shared-nav.js"></script>
 
 </body>
 

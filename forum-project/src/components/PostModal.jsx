@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import './PostModal.css';
 import { uploadForumAsset } from '../api/forumApi';
+import { FORUM_ANNOUNCEMENT_LABEL_NAME } from '../constants/forumLabels';
 
 function formatRecordingDuration(totalSeconds) {
   const minutes = Math.floor(totalSeconds / 60);
@@ -386,7 +387,11 @@ const PostModal = ({
               <div className="post-modal-tags-section">
                 <label className="tags-label">Select labels (max 3)</label>
                 <div className="tags-container">
-                  {labelOptions.map(tag => (
+                  {(
+                    (currentUser?.role || '').toLowerCase() === 'admin'
+                      ? labelOptions.filter((tag) => tag.name === FORUM_ANNOUNCEMENT_LABEL_NAME)
+                      : labelOptions.filter((tag) => tag.name !== FORUM_ANNOUNCEMENT_LABEL_NAME)
+                  ).map(tag => (
                     <button
                       key={tag.id}
                       type="button"

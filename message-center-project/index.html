@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Message Center</title>
+    <link rel="stylesheet" href="http://127.0.0.1:8001/shared-nav.css" />
+    <script src="http://127.0.0.1:8001/shared/acadbeat-local-config.js"></script>
+    <style>html.acadbeat-role-guard body{visibility:hidden}</style>
+    <script>
+      document.documentElement.classList.add('acadbeat-role-guard');
+      (async function guardAdminMessageCenter() {
+        try {
+          const me = (window.ACADBEAT_LOCAL && window.ACADBEAT_LOCAL.authMeUrl) || 'http://127.0.0.1:8001/Auth/backend/api/me.php';
+          const response = await fetch(me, { credentials: 'include' });
+          const data = await response.json().catch(() => ({ status: 'error' }));
+          if (data.status === 'success' && data.user && String(data.user.role || '').toLowerCase() === 'admin') {
+            const admin = (window.ACADBEAT_LOCAL && window.ACADBEAT_LOCAL.adminDistUrl) || 'http://127.0.0.1:8001/admin_page/dist/index.html';
+            window.location.replace(admin);
+            return;
+          }
+        } catch (_err) {}
+        document.documentElement.classList.remove('acadbeat-role-guard');
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="acadbeatNav"></div>
+    <div id="root"></div>
+    <script src="http://127.0.0.1:8001/shared-nav.js"></script>
+    <script>
+      (function initMessageCenterSharedNav() {
+        var L = window.ACADBEAT_LOCAL || {};
+        var MAIN = L.mainOrigin || 'http://127.0.0.1:8001';
+        function boot() {
+          if (typeof window.initializeAcadBeatNav !== 'function') return;
+          window.initializeAcadBeatNav({
+            mountId: 'acadbeatNav',
+            basePath: MAIN + '/',
+            homeUrl: MAIN + '/home.html',
+            ownerUrl: MAIN + '/owner.html',
+            authApiBase: MAIN + '/Auth/backend/api',
+            forumUrl: MAIN + '/home.html?module=Dialogue',
+            technologyUrl: MAIN + '/home.html?module=Method',
+            studioUrl: MAIN + '/Studio/studio.html',
+            messageCenterUrl: L.messageCenterDistUrl,
+            adminUrl: L.adminDistUrl,
+            messageApiUrl: L.messageSummaryApiUrl,
+            loginUrl: MAIN + '/home.html?login=1',
+            active: 'messages',
+            redirectAdmins: true,
+            showChallengeButton: false,
+          });
+        }
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+        else boot();
+      })();
+    </script>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

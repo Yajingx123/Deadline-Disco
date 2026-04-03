@@ -21,13 +21,14 @@ $pdo = forum_db();
 $pdo->beginTransaction();
 try {
     $postCheck = $pdo->prepare("
-        SELECT post_id
+        SELECT post_id, user_id, title
         FROM forum_posts
         WHERE post_id = ? AND status = 'active'
         LIMIT 1
     ");
     $postCheck->execute([$postId]);
-    if (!$postCheck->fetch()) {
+    $postRow = $postCheck->fetch();
+    if (!$postRow) {
         forum_json(['ok' => false, 'message' => 'Post not found.'], 404);
     }
 
@@ -51,6 +52,19 @@ try {
 
     $commentId = (int)$pdo->lastInsertId();
 
+    $parentCommentRow = null;
+    if ($parentCommentId > 0) {
+        $parentStmt = $pdo->prepare("
+            SELECT c.comment_id, c.user_id, c.content_text, u.username
+            FROM forum_comments c
+            JOIN users u ON u.user_id = c.user_id
+            WHERE c.comment_id = ? AND c.post_id = ? AND c.status = 'active'
+            LIMIT 1
+        ");
+        $parentStmt->execute([$parentCommentId, $postId]);
+        $parentCommentRow = $parentStmt->fetch() ?: null;
+    }
+
     $mediaRows = forum_extract_media_rows($content);
     if ($mediaRows) {
         try {
@@ -63,6 +77,78 @@ try {
             }
         } catch (Throwable $mediaError) {
             error_log('[forum comments media] ' . $mediaError->getMessage());
+        }
+    }
+
+    $postOwnerId = (int)($postRow['user_id'] ?? 0);
+    if ($postOwnerId > 0 && $postOwnerId !== (int)$user['user_id']) {
+        try {
+            $notificationStmt = $pdo->prepare("
+                INSERT INTO message_center_notifications (
+                    recipient_user_id,
+                    actor_user_id,
+                    notification_type,
+                    post_id,
+                    comment_id,
+                    title,
+                    body_text,
+                    cta_label,
+                    cta_url,
+                    is_read,
+                    created_at,
+                    updated_at
+                )
+                VALUES (?, ?, 'reply', ?, ?, ?, ?, 'Reply', ?, 0, NOW(), NOW())
+            ");
+            $notificationStmt->execute([
+                $postOwnerId,
+                (int)$user['user_id'],
+                $postId,
+                $commentId,
+                sprintf('%s replied to your post', (string)($user['username'] ?? 'Someone')),
+                forum_plain_text_preview($content, 180),
+                sprintf('http://127.0.0.1:8001/forum-project/dist/index.html?view=forum&postId=%d', $postId),
+            ]);
+        } catch (Throwable $notificationError) {
+            error_log('[forum comment notification] ' . $notificationError->getMessage());
+        }
+    }
+
+    $parentOwnerId = (int)($parentCommentRow['user_id'] ?? 0);
+    if (
+        $parentOwnerId > 0
+        && $parentOwnerId !== (int)$user['user_id']
+        && $parentOwnerId !== $postOwnerId
+    ) {
+        try {
+            $notificationStmt = $pdo->prepare("
+                INSERT INTO message_center_notifications (
+                    recipient_user_id,
+                    actor_user_id,
+                    notification_type,
+                    post_id,
+                    comment_id,
+                    title,
+                    body_text,
+                    cta_label,
+                    cta_url,
+                    is_read,
+                    created_at,
+                    updated_at
+                )
+                VALUES (?, ?, 'reply', ?, ?, ?, ?, 'Reply', ?, 0, NOW(), NOW())
+            ");
+            $notificationStmt->execute([
+                $parentOwnerId,
+                (int)$user['user_id'],
+                $postId,
+                $commentId,
+                sprintf('%s replied to your comment', (string)($user['username'] ?? 'Someone')),
+                forum_plain_text_preview($content, 180),
+                sprintf('http://127.0.0.1:8001/forum-project/dist/index.html?view=forum&postId=%d', $postId),
+            ]);
+        } catch (Throwable $notificationError) {
+            error_log('[forum comment parent notification] ' . $notificationError->getMessage());
         }
     }
 
@@ -88,6 +174,14 @@ try {
     $stmt->execute([$commentId]);
     $row = $stmt->fetch();
     if (!$row) {
+        forum_realtime_publish('forum.comment.created', [
+            'postId' => $postId,
+            'commentId' => $commentId,
+        ]);
+        forum_realtime_publish('message-center.updated', [
+            'recipientUserId' => (int)($postRow['user_id'] ?? 0),
+            'category' => 'replies',
+        ]);
         forum_json([
             'ok' => true,
             'comment' => [
@@ -100,6 +194,27 @@ try {
                 'replyTo' => null,
             ],
         ], 201);
+    }
+
+    forum_realtime_publish('forum.comment.created', [
+        'postId' => $postId,
+        'commentId' => $commentId,
+    ]);
+    if ((int)($postRow['user_id'] ?? 0) > 0 && (int)($postRow['user_id'] ?? 0) !== (int)$user['user_id']) {
+        forum_realtime_publish('message-center.updated', [
+            'recipientUserId' => (int)$postRow['user_id'],
+            'category' => 'replies',
+        ]);
+    }
+    if (
+        (int)($parentCommentRow['user_id'] ?? 0) > 0
+        && (int)($parentCommentRow['user_id'] ?? 0) !== (int)$user['user_id']
+        && (int)($parentCommentRow['user_id'] ?? 0) !== (int)($postRow['user_id'] ?? 0)
+    ) {
+        forum_realtime_publish('message-center.updated', [
+            'recipientUserId' => (int)$parentCommentRow['user_id'],
+            'category' => 'replies',
+        ]);
     }
 
     forum_json([

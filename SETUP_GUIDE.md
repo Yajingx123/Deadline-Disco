@@ -49,9 +49,11 @@ net start MySQL80
 
 ### 词汇练习模块（数据库：acadbeat）
 
+优先使用新的统一目录 `database/bootstrap/`（仍兼容旧根目录 SQL）：
+
 ```bash
-mysql -u root -p123456 < 101_acadbeat_all_tables.sql
-mysql -u root -p123456 < 102_acadbeat_all_data.sql
+mysql -u root -p123456 < database/bootstrap/101_acadbeat_all_tables.sql
+mysql -u root -p123456 < database/bootstrap/102_acadbeat_all_data.sql
 ```
 
 ### 听力考试模块（数据库：my_test_schema）
@@ -80,7 +82,7 @@ mysql -u root -p123456 -e "SHOW DATABASES;"
 
 > **Windows PowerShell 用户注意**：如果管道 `<` 报错，请使用以下格式：
 > ```powershell
-> cmd /c 'mysql -u root -p123456 < 101_acadbeat_all_tables.sql'
+> cmd /c 'mysql -u root -p123456 < database/bootstrap/101_acadbeat_all_tables.sql'
 > ```
 
 ---

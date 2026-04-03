@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mission Detail | AcadBeat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared-nav.css">
+  <script src="../shared/acadbeat-local-config.js"></script>
+  <style>html.acadbeat-role-guard body{visibility:hidden}</style>
+  <script>
+    document.documentElement.classList.add('acadbeat-role-guard');
+    (async function guardAdminPixelDetail() {
+      try {
+        const response = await fetch('../Auth/backend/api/me.php', { credentials: 'include' });
+        const data = await response.json().catch(() => ({ status: 'error' }));
+        if (data.status === 'success' && data.user && String(data.user.role || '').toLowerCase() === 'admin') {
+          const admin = (window.ACADBEAT_LOCAL && window.ACADBEAT_LOCAL.adminDistUrl) || 'http://127.0.0.1:8001/admin_page/dist/index.html';
+          window.location.replace(admin);
+          return;
+        }
+      } catch (_err) {}
+      document.documentElement.classList.remove('acadbeat-role-guard');
+    })();
+  </script>
+  <link rel="stylesheet" href="acadbeat-global.css">
+  <link rel="stylesheet" href="practice-detail-pixel.css">
+</head>
+<body data-page="video-detail">
+  <div id="acadbeatNav"></div>
+  <div class="bg-decorations">
+    <div class="ring-decor"></div>
+  </div>
+
+  <main class="page-shell">
+    <div id="studyWorkspace" class="study-workspace">
+      
+      <section class="detail-layout">
+        <div class="video-panel game-terminal">
+          <div class="terminal-header">
+            <button class="back-btn back-fab" data-back-target="listening.html" title="Back">←</button>
+            <div class="terminal-title-area">
+              <span class="status-indicator blink">● LIVE_FEED</span>
+              <h2 id="detailTitle" class="pixel-text-shadow">LOADING_DATA...</h2>
+            </div>
+          </div>
+          
+          <div class="video-monitor-wrapper">
+            <div class="scanline"></div> <video id="practiceVideo" controls preload="metadata"></video>
+          </div>
+
+          <div class="detail-resource-tabs">
+            <button class="btn-small detail-resource-tab active" id="transcriptToggleBtn">TRANSCRIPT</button>
+            <button class="btn-small detail-resource-tab hidden" id="sampleNotesToggleBtn">S_NOTES</button>
+          </div>
+          
+          <aside class="transcript-box hidden" id="transcriptPanel">
+            <div class="transcript-content" id="transcriptContent"></div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="detail-note-layout">
+        <aside class="note-panel game-terminal">
+          <div class="terminal-header">
+            <h3 class="pixel-text-shadow-small">DATA_ENTRY</h3>
+            <div class="header-tools">
+              <button class="btn-small" id="noteShareBtn">SHARE</button>
+              <button class="btn-small" id="noteDockToggleBtn">FOLD</button>
+            </div>
+          </div>
+
+          <div class="note-grid">
+            <div class="note-field-pixel">
+              <label># MAIN_CONTENT</label>
+              <textarea id="noteMainContent" placeholder="WAITING FOR INPUT..."></textarea>
+            </div>
+            <div class="note-field-pixel">
+              <label># KEY_WORDS</label>
+              <textarea id="noteKeyWord" placeholder="IDENTIFYING..."></textarea>
+            </div>
+            <div class="note-field-pixel">
+              <label># PERSONAL_VIEW</label>
+              <textarea id="notePersonalView" placeholder="ANALYZING..."></textarea>
+            </div>
+          </div>
+
+          <div class="action-zone">
+            <button class="btn-primary-small pulse-btn" id="recordAnswerBtn">UPLOAD_RECORD</button>
+            <p class="note-record-error hidden" id="recordAnswerError">! ERROR: BLANK_FIELDS</p>
+            <div class="note-record-feedback hidden" id="recordAnswerFeedback">
+              <span class="typewriter">>> SAVED_TO_MEMORY_CORE</span>
+            </div>
+          </div>
+        </aside>
+      </section>
+    </div>
+  </main>
+
+  <script src="practice-data.js"></script>
+  <script src="practice-data-api.js"></script>
+  <script src="practice-app-api.js"></script>
+  <script>
+    window.addEventListener('load', () => {
+      const L = window.ACADBEAT_LOCAL || {};
+      window.initializeAcadBeatNav({
+        mountId: 'acadbeatNav',
+        basePath: '../',
+        active: 'academic',
+        authApiBase: '../Auth/backend/api',
+        homeUrl: '../home.html',
+        ownerUrl: '../owner.html',
+        forumUrl: '../home.html?module=Dialogue',
+        technologyUrl: '../home.html?module=Method',
+        studioUrl: '../Studio/studio.html',
+        messageCenterUrl: L.messageCenterDistUrl,
+        adminUrl: L.adminDistUrl || 'http://127.0.0.1:8001/admin_page/dist/index.html',
+        messageApiUrl: L.messageSummaryApiUrl,
+        loginUrl: '../home.html?login=1',
+        redirectAdmins: true,
+        showChallengeButton: false
+      });
+    });
+  </script>
+  <script src="../shared-nav.js"></script>
+</body>
+</html>

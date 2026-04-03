@@ -13,10 +13,47 @@ if (session_status() === PHP_SESSION_NONE) {
 
 $config = require __DIR__ . '/../../Auth/backend/config/config.php';
 
+/** Canonical forum_labels.name for admin-managed announcements (must match 102_acadbeat_all_data.sql). */
+if (!defined('FORUM_ANNOUNCEMENT_LABEL_NAME')) {
+    define('FORUM_ANNOUNCEMENT_LABEL_NAME', 'Announcement');
+}
+
 $allowedOrigins = [
     'http://127.0.0.1:5173',
+    'http://127.0.0.1:5174',
     'http://127.0.0.1:8001',
 ];
+
+function forum_admin_url(): string {
+    return 'http://127.0.0.1:8001/admin_page/dist/index.html';
+}
+
+function forum_forum_url(string $suffix = ''): string {
+    return 'http://127.0.0.1:8001/forum-project/dist/index.html' . $suffix;
+}
+
+function forum_message_center_url(): string {
+    return 'http://127.0.0.1:8001/message-center-project/dist/index.html';
+}
+
+function forum_normalize_local_url(string $url): string {
+    $trimmed = trim($url);
+    if ($trimmed === '') {
+        return '';
+    }
+    // Vite dev server uses base /forum-project/dist/ — map to PHP-served dist index
+    $normalized = str_replace(
+        'http://127.0.0.1:5173/forum-project/dist/',
+        'http://127.0.0.1:8001/forum-project/dist/index.html',
+        $trimmed
+    );
+    $normalized = str_replace('http://127.0.0.1:5173/', forum_forum_url('?'), $normalized);
+    $normalized = str_replace('http://127.0.0.1:5174/', forum_admin_url(), $normalized);
+    $normalized = str_replace('http://127.0.0.1:5173?', forum_forum_url('?'), $normalized);
+    $normalized = str_replace('http://127.0.0.1:8001/forum-project/dist/index.html?view=messages', forum_message_center_url(), $normalized);
+    $normalized = str_replace('http://127.0.0.1:8001/forum-project/dist/message-center.html', forum_message_center_url(), $normalized);
+    return $normalized;
+}
 
 $origin = (string)($_SERVER['HTTP_ORIGIN'] ?? '');
 if (in_array($origin, $allowedOrigins, true)) {
@@ -86,12 +123,41 @@ function forum_require_user(): array {
     return $user;
 }
 
+function forum_is_admin(?array $user): bool {
+    return is_array($user) && (string)($user['role'] ?? 'user') === 'admin';
+}
+
+function forum_require_admin(): array {
+    $user = forum_require_user();
+    if (!forum_is_admin($user)) {
+        forum_json([
+            'ok' => false,
+            'message' => 'Admin access required.',
+        ], 403);
+    }
+    return $user;
+}
+
 function forum_format_datetime(?string $value): string {
     if (!$value) {
         return '';
     }
     $ts = strtotime($value);
     return $ts ? date('Y-m-d H:i', $ts) : $value;
+}
+
+function forum_avatar_letters(string $value): string {
+    $trimmed = trim($value);
+    if ($trimmed === '') {
+        return 'U';
+    }
+    $parts = preg_split('/\s+/', $trimmed) ?: [];
+    if (count($parts) >= 2) {
+        $first = strtoupper(substr((string)$parts[0], 0, 1));
+        $second = strtoupper(substr((string)$parts[1], 0, 1));
+        return trim($first . $second) ?: 'U';
+    }
+    return strtoupper(substr($trimmed, 0, min(strlen($trimmed), 2)));
 }
 
 function forum_extract_media_rows(string $content): array {
@@ -122,6 +188,123 @@ function forum_extract_media_rows(string $content): array {
     return $rows;
 }
 
+function forum_ensure_forum_post_announcement_schema(PDO $pdo): void {
+    static $ensured = false;
+    if ($ensured) {
+        return;
+    }
+
+    $columnStmt = $pdo->query("SHOW COLUMNS FROM forum_posts LIKE 'is_pinned'");
+    if (!$columnStmt->fetch()) {
+        $pdo->exec("
+            ALTER TABLE forum_posts
+            ADD COLUMN is_pinned TINYINT(1) NOT NULL DEFAULT 0 AFTER status
+        ");
+    }
+
+    forum_consolidate_duplicate_announcement_labels($pdo);
+
+    $canonical = FORUM_ANNOUNCEMENT_LABEL_NAME;
+    $labelStmt = $pdo->prepare("
+        INSERT INTO forum_labels (name, created_at)
+        SELECT '{$canonical}', NOW()
+        FROM DUAL
+        WHERE NOT EXISTS (
+            SELECT 1 FROM forum_labels WHERE BINARY name = '{$canonical}'
+        )
+    ");
+    $labelStmt->execute();
+
+    $ensured = true;
+}
+
+/**
+ * Merge mistaken `announcement` (all-lowercase) rows into canonical `Announcement`.
+ * Uses BINARY comparisons because utf8mb4_unicode_ci treats those strings as equal for `=`.
+ */
+function forum_consolidate_duplicate_announcement_labels(PDO $pdo): void {
+    try {
+        $pdo->beginTransaction();
+
+        $canonical = FORUM_ANNOUNCEMENT_LABEL_NAME;
+        $legacy = 'announcement';
+
+        // Case A: only a lowercase row exists — rename in place (same label_id, no orphaned links).
+        $pdo->exec("
+            UPDATE forum_labels
+            SET name = '{$canonical}'
+            WHERE name = BINARY '{$legacy}'
+              AND NOT EXISTS (
+                  SELECT 1
+                  FROM (
+                      SELECT 1 FROM forum_labels WHERE BINARY name = '{$canonical}'
+                  ) AS announce_exists
+              )
+        ");
+
+        // Case B: two rows (legacy + canonical) — merge into canonical, then drop duplicate name.
+        $pdo->exec("
+            INSERT INTO forum_labels (name, created_at)
+            SELECT '{$canonical}', NOW()
+            FROM DUAL
+            WHERE NOT EXISTS (SELECT 1 FROM forum_labels WHERE BINARY name = '{$canonical}')
+        ");
+        $pdo->exec("
+            DELETE fpl
+            FROM forum_post_labels fpl
+            JOIN forum_labels fl ON fl.label_id = fpl.label_id AND fl.name = BINARY '{$legacy}'
+            JOIN forum_post_labels fpl2 ON fpl2.post_id = fpl.post_id
+            JOIN forum_labels fl2 ON fl2.label_id = fpl2.label_id AND BINARY fl2.name = BINARY '{$canonical}'
+        ");
+        $pdo->exec("
+            UPDATE forum_post_labels fpl
+            JOIN forum_labels fl ON fl.label_id = fpl.label_id AND fl.name = BINARY '{$legacy}'
+            JOIN forum_labels fl2 ON BINARY fl2.name = BINARY '{$canonical}'
+            SET fpl.label_id = fl2.label_id
+        ");
+        $pdo->exec("DELETE FROM forum_labels WHERE BINARY name = BINARY '{$legacy}'");
+
+        $pdo->commit();
+    } catch (Throwable $e) {
+        if ($pdo->inTransaction()) {
+            $pdo->rollBack();
+        }
+        error_log('forum_consolidate_duplicate_announcement_labels: ' . $e->getMessage());
+    }
+}
+
+function forum_announcement_label_id(PDO $pdo): int {
+    forum_ensure_forum_post_announcement_schema($pdo);
+    $stmt = $pdo->prepare('SELECT label_id FROM forum_labels WHERE BINARY name = ? LIMIT 1');
+    $stmt->execute([FORUM_ANNOUNCEMENT_LABEL_NAME]);
+    return (int)($stmt->fetchColumn() ?: 0);
+}
+
+function forum_plain_text_preview(?string $content, int $maxLength = 120): string {
+    $text = trim((string)$content);
+    if ($text === '') {
+        return '';
+    }
+
+    $text = preg_replace('/!\[audio:(.*?)\]\((.*?)\)/', '[Audio]', $text) ?? $text;
+    $text = preg_replace('/!\[(.*?)\]\((.*?)\)/', '[Image]', $text) ?? $text;
+    $text = preg_replace('/\[(.*?)\]\((https?:\/\/[^\s)]+)\)/', '$1', $text) ?? $text;
+    $text = preg_replace('/\*\*(.+?)\*\*/', '$1', $text) ?? $text;
+    $text = preg_replace('/\*(.+?)\*/', '$1', $text) ?? $text;
+    $text = preg_replace('/<u>(.*?)<\/u>/', '$1', $text) ?? $text;
+    $text = preg_replace('/\s+/', ' ', html_entity_decode($text, ENT_QUOTES | ENT_HTML5, 'UTF-8')) ?? $text;
+    $text = trim($text);
+
+    $textLength = function_exists('mb_strlen') ? mb_strlen($text) : strlen($text);
+    if ($textLength > $maxLength) {
+        $slice = function_exists('mb_substr')
+            ? mb_substr($text, 0, $maxLength - 1)
+            : substr($text, 0, $maxLength - 1);
+        return rtrim((string)$slice) . '…';
+    }
+    return $text;
+}
+
 function forum_post_row_to_payload(array $row): array {
     $labels = array_values(array_filter(array_map('trim', explode('||', (string)($row['labels'] ?? '')))));
     return [
@@ -133,10 +316,287 @@ function forum_post_row_to_payload(array $row): array {
         'authorInitial' => strtoupper(substr((string)($row['author_name'] ?? 'U'), 0, 1)),
         'views' => (int)($row['view_count'] ?? 0),
         'commentCount' => (int)($row['comment_count'] ?? 0),
+        'likeCount' => (int)($row['like_count'] ?? 0),
+        'favoriteCount' => (int)($row['favorite_count'] ?? 0),
+        'status' => (string)($row['status'] ?? 'Under review'),
+        'isPinned' => ((int)($row['is_pinned'] ?? 0) === 1),
+        'is_pinned' => ((int)($row['is_pinned'] ?? 0) === 1),
         'publishTime' => forum_format_datetime((string)($row['created_at'] ?? '')),
         'mediaType' => (string)($row['media_type'] ?? 'text'),
         'labels' => $labels,
     ];
+}
+
+function forum_user_payload(array $row): array {
+    $username = (string)($row['username'] ?? 'Unknown');
+    return [
+        'id' => (int)($row['user_id'] ?? 0),
+        'username' => $username,
+        'email' => (string)($row['email'] ?? ''),
+        'avatar' => forum_avatar_letters($username),
+    ];
+}
+
+function forum_chat_member_payload(array $row, int $currentUserId): array {
+    $payload = forum_user_payload($row);
+    $payload['role'] = (string)($row['member_role'] ?? 'member');
+    $payload['isSelf'] = $payload['id'] === $currentUserId;
+    return $payload;
+}
+
+function forum_chat_title(array $conversation, array $members, int $currentUserId): string {
+    $conversationType = (string)($conversation['conversation_type'] ?? 'direct');
+    $explicitTitle = trim((string)($conversation['title'] ?? ''));
+    if ($conversationType === 'group') {
+        if ($explicitTitle !== '') {
+            return $explicitTitle;
+        }
+        $names = array_values(array_filter(array_map(
+            static fn(array $member): string => trim((string)($member['username'] ?? '')),
+            $members
+        )));
+        return $names ? implode(' ', array_slice($names, 0, 9)) : 'Group chat';
+    }
+
+    foreach ($members as $member) {
+        if ((int)($member['id'] ?? 0) !== $currentUserId) {
+            return (string)($member['username'] ?? 'Direct message');
+        }
+    }
+    return 'Direct message';
+}
+
+function forum_chat_conversation_payload(array $conversation, array $members, int $currentUserId): array {
+    $title = forum_chat_title($conversation, $members, $currentUserId);
+    $otherMembers = array_values(array_filter($members, static fn(array $member): bool => !(bool)($member['isSelf'] ?? false)));
+    $cover = $otherMembers[0] ?? ($members[0] ?? ['avatar' => 'U']);
+
+    return [
+        'id' => (int)($conversation['conversation_id'] ?? 0),
+        'type' => (string)($conversation['conversation_type'] ?? 'direct'),
+        'title' => $title,
+        'customTitle' => trim((string)($conversation['title'] ?? '')),
+        'avatar' => (string)($cover['avatar'] ?? 'U'),
+        'memberCount' => count($members),
+        'members' => $members,
+        'lastMessageAt' => (string)($conversation['last_message_at'] ?? ''),
+        'lastMessagePreview' => forum_plain_text_preview((string)($conversation['last_message_text'] ?? '')),
+        'lastMessageAuthor' => (string)($conversation['last_message_author'] ?? ''),
+        'unreadCount' => max(0, (int)($conversation['unread_count'] ?? 0)),
+    ];
+}
+
+function forum_chat_message_payload(array $row, int $currentUserId): array {
+    $username = (string)($row['author_name'] ?? $row['username'] ?? 'Unknown');
+    $userId = (int)($row['user_id'] ?? $row['author_user_id'] ?? 0);
+    return [
+        'id' => (int)($row['message_id'] ?? 0),
+        'conversationId' => (int)($row['conversation_id'] ?? 0),
+        'content' => (string)($row['content_text'] ?? ''),
+        'createdAt' => (string)($row['created_at'] ?? ''),
+        'displayTime' => forum_format_datetime((string)($row['created_at'] ?? '')),
+        'author' => [
+            'id' => $userId,
+            'username' => $username,
+            'email' => (string)($row['email'] ?? ''),
+            'avatar' => forum_avatar_letters($username),
+            'isSelf' => $userId === $currentUserId,
+        ],
+    ];
+}
+
+function forum_sync_message_center_notifications(PDO $pdo, int $recipientUserId): void {
+    if ($recipientUserId <= 0) {
+        return;
+    }
+
+    $replyPostStmt = $pdo->prepare("
+        INSERT INTO message_center_notifications (
+            recipient_user_id,
+            actor_user_id,
+            notification_type,
+            post_id,
+            comment_id,
+            title,
+            body_text,
+            cta_label,
+            cta_url,
+            is_read,
+            created_at,
+            updated_at
+        )
+        SELECT
+            ? AS recipient_user_id,
+            fc.user_id AS actor_user_id,
+            'reply' AS notification_type,
+            fc.post_id,
+            fc.comment_id,
+            CONCAT(u.username, ' replied to your post') AS title,
+            LEFT(TRIM(fc.content_text), 180) AS body_text,
+            'Reply' AS cta_label,
+            CONCAT('http://127.0.0.1:8001/forum-project/dist/index.html?view=forum&postId=', fc.post_id) AS cta_url,
+            0 AS is_read,
+            fc.created_at,
+            fc.updated_at
+        FROM forum_comments fc
+        JOIN forum_posts fp ON fp.post_id = fc.post_id
+        JOIN users u ON u.user_id = fc.user_id
+        LEFT JOIN message_center_notifications n
+          ON n.recipient_user_id = ?
+         AND n.notification_type = 'reply'
+         AND n.comment_id = fc.comment_id
+        WHERE fp.user_id = ?
+          AND fc.user_id <> ?
+          AND fc.status = 'active'
+          AND n.notification_id IS NULL
+    ");
+    $replyPostStmt->execute([$recipientUserId, $recipientUserId, $recipientUserId, $recipientUserId]);
+
+    $replyCommentStmt = $pdo->prepare("
+        INSERT INTO message_center_notifications (
+            recipient_user_id,
+            actor_user_id,
+            notification_type,
+            post_id,
+            comment_id,
+            title,
+            body_text,
+            cta_label,
+            cta_url,
+            is_read,
+            created_at,
+            updated_at
+        )
+        SELECT
+            ? AS recipient_user_id,
+            child.user_id AS actor_user_id,
+            'reply' AS notification_type,
+            child.post_id,
+            child.comment_id,
+            CONCAT(u.username, ' replied to your comment') AS title,
+            LEFT(TRIM(child.content_text), 180) AS body_text,
+            'Reply' AS cta_label,
+            CONCAT('http://127.0.0.1:8001/forum-project/dist/index.html?view=forum&postId=', child.post_id) AS cta_url,
+            0 AS is_read,
+            child.created_at,
+            child.updated_at
+        FROM forum_comments child
+        JOIN forum_comments parent ON parent.comment_id = child.parent_comment_id
+        JOIN users u ON u.user_id = child.user_id
+        LEFT JOIN message_center_notifications n
+          ON n.recipient_user_id = ?
+         AND n.notification_type = 'reply'
+         AND n.comment_id = child.comment_id
+        WHERE parent.user_id = ?
+          AND child.user_id <> ?
+          AND child.status = 'active'
+          AND n.notification_id IS NULL
+    ");
+    $replyCommentStmt->execute([$recipientUserId, $recipientUserId, $recipientUserId, $recipientUserId]);
+
+    $likeStmt = $pdo->prepare("
+        INSERT INTO message_center_notifications (
+            recipient_user_id,
+            actor_user_id,
+            notification_type,
+            post_id,
+            title,
+            body_text,
+            cta_label,
+            cta_url,
+            is_read,
+            created_at,
+            updated_at
+        )
+        SELECT
+            ? AS recipient_user_id,
+            l.user_id AS actor_user_id,
+            'like' AS notification_type,
+            l.post_id,
+            CONCAT(u.username, ' liked your post') AS title,
+            fp.title AS body_text,
+            'View post' AS cta_label,
+            CONCAT('http://127.0.0.1:8001/forum-project/dist/index.html?view=forum&postId=', l.post_id) AS cta_url,
+            0 AS is_read,
+            l.created_at,
+            l.created_at
+        FROM forum_post_likes l
+        JOIN forum_posts fp ON fp.post_id = l.post_id
+        JOIN users u ON u.user_id = l.user_id
+        LEFT JOIN message_center_notifications n
+          ON n.recipient_user_id = ?
+         AND n.notification_type = 'like'
+         AND n.post_id = l.post_id
+         AND n.actor_user_id = l.user_id
+        WHERE fp.user_id = ?
+          AND l.user_id <> ?
+          AND n.notification_id IS NULL
+    ");
+    $likeStmt->execute([$recipientUserId, $recipientUserId, $recipientUserId, $recipientUserId]);
+
+    $favoriteStmt = $pdo->prepare("
+        INSERT INTO message_center_notifications (
+            recipient_user_id,
+            actor_user_id,
+            notification_type,
+            post_id,
+            title,
+            body_text,
+            cta_label,
+            cta_url,
+            is_read,
+            created_at,
+            updated_at
+        )
+        SELECT
+            ? AS recipient_user_id,
+            f.user_id AS actor_user_id,
+            'favorite' AS notification_type,
+            f.post_id,
+            CONCAT(u.username, ' favorited your post') AS title,
+            fp.title AS body_text,
+            'View post' AS cta_label,
+            CONCAT('http://127.0.0.1:8001/forum-project/dist/index.html?view=forum&postId=', f.post_id) AS cta_url,
+            0 AS is_read,
+            f.created_at,
+            f.created_at
+        FROM forum_post_favorites f
+        JOIN forum_posts fp ON fp.post_id = f.post_id
+        JOIN users u ON u.user_id = f.user_id
+        LEFT JOIN message_center_notifications n
+          ON n.recipient_user_id = ?
+         AND n.notification_type = 'favorite'
+         AND n.post_id = f.post_id
+         AND n.actor_user_id = f.user_id
+        WHERE fp.user_id = ?
+          AND f.user_id <> ?
+          AND n.notification_id IS NULL
+    ");
+    $favoriteStmt->execute([$recipientUserId, $recipientUserId, $recipientUserId, $recipientUserId]);
+
+    $deleteStaleLikes = $pdo->prepare("
+        DELETE n
+        FROM message_center_notifications n
+        LEFT JOIN forum_post_likes l
+          ON l.post_id = n.post_id
+         AND l.user_id = n.actor_user_id
+        WHERE n.recipient_user_id = ?
+          AND n.notification_type = 'like'
+          AND l.like_id IS NULL
+    ");
+    $deleteStaleLikes->execute([$recipientUserId]);
+
+    $deleteStaleFavorites = $pdo->prepare("
+        DELETE n
+        FROM message_center_notifications n
+        LEFT JOIN forum_post_favorites f
+          ON f.post_id = n.post_id
+         AND f.user_id = n.actor_user_id
+        WHERE n.recipient_user_id = ?
+          AND n.notification_type = 'favorite'
+          AND f.favorite_id IS NULL
+    ");
+    $deleteStaleFavorites->execute([$recipientUserId]);
 }
 
 function forum_public_base_url(): string {
@@ -205,5 +665,32 @@ function forum_delete_uploaded_files(array $urls): void {
         if (is_file($path)) {
             @unlink($path);
         }
+    }
+}
+
+function forum_realtime_publish(string $type, array $data = []): void {
+    $payload = json_encode([
+        'type' => $type,
+        'data' => $data,
+    ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+
+    if ($payload === false) {
+        return;
+    }
+
+    $context = stream_context_create([
+        'http' => [
+            'method' => 'POST',
+            'header' => "Content-Type: application/json\r\nConnection: close\r\n",
+            'content' => $payload,
+            'timeout' => 0.6,
+            'ignore_errors' => true,
+        ],
+    ]);
+
+    try {
+        @file_get_contents('http://127.0.0.1:3001/publish', false, $context);
+    } catch (Throwable $_e) {
+        // Ignore realtime relay failures. Primary requests must still succeed.
     }
 }

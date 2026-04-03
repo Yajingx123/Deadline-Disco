@@ -8,13 +8,34 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,500;1,700&family=Inter:wght@300;400;600;800&display=swap"
         rel="stylesheet">
+    <link rel="stylesheet" href="./challenge/challenge-home.css">
+    <link rel="stylesheet" href="./shared-nav.css">
+    <script src="./shared/acadbeat-local-config.js"></script>
+    <style>html.acadbeat-role-guard body{visibility:hidden}</style>
+    <script>
+        document.documentElement.classList.add('acadbeat-role-guard');
+        (async function guardAdminHome() {
+            try {
+                const response = await fetch('./Auth/backend/api/me.php', { credentials: 'include' });
+                const data = await response.json().catch(() => ({ status: 'error' }));
+                if (data.status === 'success' && data.user && String(data.user.role || '').toLowerCase() === 'admin') {
+                    const admin = (window.ACADBEAT_LOCAL && window.ACADBEAT_LOCAL.adminDistUrl) || 'http://127.0.0.1:8001/admin_page/dist/index.html';
+                    window.location.replace(admin);
+                    return;
+                }
+            } catch (_err) {}
+            document.documentElement.classList.remove('acadbeat-role-guard');
+        })();
+    </script>
     <style>
         :root {
             --bg-color: #E4DFD8;
             --primary-color: #9BB7D4;
             --secondary-color: #3A4E6B;
+            --accent-gold: #C5A059; /* 增加金色用于排名 */
             --white: #ffffff;
             --transition-slow: all 2.2s cubic-bezier(0.16, 1, 0.3, 1);
+            --transition-fast: all 0.4s ease;
         }
 
         * {
@@ -89,6 +110,39 @@
             width: 100%;
             height: 2px;
             background-color: var(--secondary-color);
+        }
+
+        /* Godot animated homepage (serve.py on 127.0.0.1:5500) */
+        .nav-godot {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1.25rem;
+            padding: 0.45rem 0.9rem;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: var(--secondary-color);
+            background: rgba(155, 183, 212, 0.35);
+            border: 1px solid var(--primary-color);
+            border-radius: 6px;
+            transition: var(--transition-fast);
+            white-space: nowrap;
+        }
+
+        .nav-godot:hover {
+            background: rgba(155, 183, 212, 0.55);
+            opacity: 1;
+        }
+
+        /* Switch 插入 shared-nav 的 .user-group，勿用 fixed 盖住顶栏私信区 */
+        #acadbeatNav .nav-godot {
+            cursor: pointer;
+            border: none;
+            font: inherit;
+            font-family: inherit;
         }
 
         .user-section {
@@ -641,6 +695,226 @@
             box-shadow: 0 12px 28px rgba(58, 78, 107, 0.12);
         }
 
+        /* --- 醒目的 TEAM 入口 --- */
+        .challenge-btn {
+            background: var(--secondary-color);
+            color: var(--bg-color);
+            padding: 10px 24px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 800;
+            letter-spacing: 3px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            border: none;
+            box-shadow: 0 0 0 rgba(58, 78, 107, 0);
+            animation: pulseGlow 3s infinite;
+        }
+
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 0 0 rgba(58, 78, 107, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(58, 78, 107, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(58, 78, 107, 0); }
+        }
+
+        .challenge-btn:hover {
+            transform: scale(1.05) translateY(-2px);
+            background: #2A3B54;
+        }
+
+        .user-group { display: flex; align-items: center; gap: 30px; }
+
+        /* --- TEAM MODAL --- */
+        .modal-overlay {
+            position: fixed; inset: 0; background: rgba(34, 41, 55, 0.3);
+            backdrop-filter: blur(20px); display: none; justify-content: center; align-items: center; z-index: 4000;
+        }
+        .modal-overlay.is-open { display: flex; }
+
+        .team-modal {
+            width: 90vw; max-width: 1150px; height: 82vh; background: var(--bg-color);
+            display: grid; grid-template-columns: 1fr 340px; position: relative;
+            box-shadow: 0 50px 120px rgba(0,0,0,0.15); animation: moduleReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden; border-radius: 4px;
+        }
+
+        /* 成功参赛的激昂状态 */
+        .team-modal.is-ready {
+            background: linear-gradient(135deg, #E4DFD8 0%, #D8E0E4 100%);
+            border: 2px solid var(--primary-color);
+        }
+
+        .team-main { padding: 4rem; display: flex; flex-direction: column; }
+
+        /* 排行榜样式升级 */
+        .leaderboard-aside {
+            background: #3A4E6B; color: #E4DFD8; padding: 3.5rem 2rem;
+            display: flex; flex-direction: column; box-shadow: -10px 0 30px rgba(0,0,0,0.1);
+        }
+
+        .rank-item {
+            display: flex; align-items: center; justify-content: space-between;
+            padding: 18px 0; border-bottom: 1px solid rgba(228, 223, 216, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .rank-item:hover { transform: translateX(-5px); }
+
+        .rank-badge {
+            font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700;
+            margin-right: 15px; width: 30px;
+        }
+        .gold { color: var(--accent-gold); }
+        .silver { color: #A8A8A8; }
+        .bronze { color: #AD8A60; }
+
+        .rank-info { flex: 1; text-align: left; }
+        .rank-name { font-size: 0.85rem; font-weight: 700; letter-spacing: 1px; }
+        .rank-pts { font-family: 'Playfair Display', serif; font-size: 1.1rem; opacity: 0.8; }
+
+        /* 席位样式 */
+        .slots-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin: 3rem 0; }
+        .slot-card {
+            aspect-ratio: 1/1.2; background: rgba(255,255,255,0.4); border: 1px solid rgba(58, 78, 107, 0.1);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: var(--transition-fast); position: relative;
+        }
+        .slot-empty { border: 1px dashed var(--secondary-color); cursor: pointer; opacity: 0.5; }
+        .slot-empty:hover { opacity: 1; background: #fff; }
+
+        /* 成功动画层 */
+        .success-overlay {
+            position: absolute; inset: 0; background: var(--secondary-color); color: var(--bg-color);
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 500; text-align: center; animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+        /* 通用类 */
+        .module-label { font-size: 0.7rem; letter-spacing: 4px; text-transform: uppercase; opacity: 0.5; margin-bottom: 1rem; }
+        .quote-text { font-family: 'Playfair Display', serif; font-size: 2.4rem; font-style: italic; }
+        
+        .search-layer {
+            position: absolute; inset: 0; background: var(--bg-color); z-index: 100;
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+        }
+
+        /* -------------------------- 新增：队伍广场功能样式 -------------------------- */
+        .team-float-actions {
+          margin-top: 2rem;
+          display: flex;
+          gap: 14px;
+        }
+        .btn-publish {
+          padding: 12px 26px;
+          border-radius: 4px;
+          background: var(--secondary-color);
+          color: var(--bg-color);
+          font-size: 0.75rem;
+          font-weight: 800;
+          letter-spacing: 1px;
+          text-transform: uppercase;
+          border: none;
+          cursor: pointer;
+          transition: 0.3s ease;
+        }
+        .btn-publish:hover {
+          background: #2a3b54;
+          transform: translateY(-2px);
+        }
+        .btn-publish:disabled {
+          opacity: 0.4;
+          cursor: not-allowed;
+          transform: none;
+        }
+
+        /* 广场弹窗 */
+        .lobby-modal {
+          position: fixed;
+          inset: 0;
+          z-index: 4500;
+          background: rgba(34, 41, 55, 0.35);
+          backdrop-filter: blur(16px);
+          display: none;
+          align-items: center;
+          justify-content: center;
+          padding: 20px;
+        }
+        .lobby-modal.is-open {
+          display: flex;
+        }
+        .lobby-card {
+          width: min(900px, 100%);
+          max-height: 85vh;
+          background: var(--bg-color);
+          border-radius: 6px;
+          box-shadow: 0 40px 100px rgba(0,0,0,0.15);
+          padding: 3rem;
+          animation: moduleReveal 0.8s cubic-bezier(0.16,1,0.3,1);
+          overflow-y: auto;
+        }
+        .lobby-title {
+          font-family: 'Playfair Display', serif;
+          font-style: italic;
+          font-size: 2.2rem;
+          margin-bottom: 2rem;
+        }
+        .lobby-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+          gap: 18px;
+        }
+        .lobby-team-card {
+          background: rgba(255,255,255,0.4);
+          border: 1px solid rgba(58,78,107,0.12);
+          border-radius: 6px;
+          padding: 20px;
+          transition: 0.25s ease;
+        }
+        .lobby-team-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 10px 30px rgba(58,78,107,0.08);
+        }
+        .lobby-team-name {
+          font-family: 'Playfair Display', serif;
+          font-size: 1.2rem;
+          font-style: italic;
+          margin-bottom: 8px;
+        }
+        .lobby-team-count {
+          font-size: 0.75rem;
+          opacity: 0.6;
+          margin-bottom: 14px;
+          letter-spacing: 0.5px;
+        }
+        .lobby-join-btn {
+          width: 100%;
+          padding: 10px;
+          border-radius: 4px;
+          background: var(--primary-color);
+          color: var(--secondary-color);
+          font-weight: 700;
+          font-size: 0.75rem;
+          border: none;
+          cursor: pointer;
+          transition: 0.2s ease;
+        }
+        .lobby-join-btn:disabled {
+          background: #ccc;
+          color: #666;
+          cursor: not-allowed;
+        }
+        .close-lobby {
+          position: absolute;
+          top: 26px;
+          right: 26px;
+          background: none;
+          border: none;
+          font-size: 1.6rem;
+          opacity: 0.4;
+          cursor: pointer;
+        }
+
         /* --- ANIMATIONS --- */
         @keyframes moduleReveal {
             from {
@@ -716,21 +990,7 @@
 
 <body>
 
-    <nav>
-        <div class="logo">Acad<span>Beat</span></div>
-        <div class="nav-menu">
-            <div class="nav-item active" onclick="loadModule('Insight', this)">Academic</div>
-            <div class="nav-item" onclick="loadModule('Dialogue', this)">Forum</div>
-            <div class="nav-item" onclick="loadModule('Method', this)">Technology</div>
-        </div>
-        <div class="user-group">
-            <div class="user-section" id="userSection" onclick="handleUserAction()">
-                <span id="userLabel" style="font-size: 0.75rem; font-weight: 700;">LOGIN</span>
-                <div class="avatar" id="userAvatar">IN</div>
-            </div>
-            <a href="#" class="logout-link" id="logoutLink" onclick="return handleLogout(event)" style="display:none;">Log out</a>
-        </div>
-    </nav>
+    <div id="acadbeatNav"></div>
 
     <main id="app-viewport"></main>
 
@@ -773,7 +1033,7 @@
                 <div class="auth-message" id="authMessage"></div>
 
                 <div class="auth-actions">
-                    <button type="button" class="btn-small" onclick="closeAuthModal()">Cancel</button>
+                    <button type="button" class="btn-small" onclick="cancelAuthModal()">Cancel</button>
                     <button type="submit" class="btn-small btn-primary-small" id="authSubmitBtn">Login</button>
                 </div>
             </form>
@@ -790,13 +1050,73 @@
         </div>
     </div>
 
+    <div id="challengeMount"></div>
+
     <script>
+        const L = window.ACADBEAT_LOCAL || {};
+        const HOME_URL = './home.html';
+        const OWNER_URL = './owner.html';
+        const ADMIN_URL = L.adminDistUrl || 'http://127.0.0.1:8001/admin_page/dist/index.html';
         const VOCABULARY_URL = './vocba_prac/';
-        const FORUM_URL = 'http://127.0.0.1:5173/';
+        const FORUM_URL = L.forumDevChooserUrl || 'http://127.0.0.1:8001/forum-project/dist/index.html?view=forum';
         const TECHNOLOGY_URL = './technology.html';
         const ACADEMIC_PRACTICE_URL = './Academic-Practice/training.html';
         const AUTH_API_BASE = './Auth/backend/api';
         const authState = { user: null, mode: 'login' };
+        let currentHomeModule = 'Insight';
+        let pendingGodotSwitch = false;
+
+        function setUiMode(mode) {
+            document.cookie = `ui_mode=${encodeURIComponent(mode)}; path=/; max-age=2592000`;
+        }
+
+        function openGodotMode(event) {
+            if (event) event.preventDefault();
+            setUiMode('godot');
+            window.location.href = L.godotWebEntryUrl || 'http://127.0.0.1:5500/index.html?ui=godot';
+            return false;
+        }
+
+        function requestSwitchToGodot() {
+            if (authState.user) {
+                openGodotMode(null);
+                return;
+            }
+            pendingGodotSwitch = true;
+            openAuthModal('login', '请先登录后再切换到 Godot 主页。');
+        }
+
+        function portalUrlForCurrentUser() {
+            if (authState.user && String(authState.user.role || '').toLowerCase() === 'admin') {
+                return ADMIN_URL;
+            }
+            return OWNER_URL;
+        }
+
+        function mountHomeGodotSwitchInNav() {
+            const nav = document.querySelector('#acadbeatNav .acadbeat-shared-nav');
+            const userGroup = nav && nav.querySelector('.user-group');
+            if (!userGroup) {
+                return;
+            }
+            const oldBtn = document.getElementById('homeGodotSwitchBtn');
+            if (oldBtn && oldBtn.parentNode) {
+                oldBtn.parentNode.removeChild(oldBtn);
+            }
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'nav-godot';
+            btn.id = 'homeGodotSwitchBtn';
+            btn.textContent = 'Switch';
+            btn.title = '切换到 Godot 动态主页（需先登录）';
+            btn.addEventListener('click', requestSwitchToGodot);
+            const userSection = userGroup.querySelector('.user-section');
+            if (userSection) {
+                userGroup.insertBefore(btn, userSection);
+            } else {
+                userGroup.appendChild(btn);
+            }
+        }
 
         const data = {
             // 修复点 2: 统一 Lexis 的按钮数据结构，确保 btn 存在
@@ -806,14 +1126,25 @@
             Method: { label: "Section IV — Technical Support", id: "04", topic: "Workflow Optimization: Academic Toolkit", btn: "Get Support" }
         };
 
-        function navElementFor(name) {
+        function navActiveForModule(name) {
+            if (name === 'Dialogue') return 'forum';
+            if (name === 'Method') return 'technology';
+            return 'academic';
+        }
+
+        function resolveModuleName(rawName) {
+            const key = String(rawName || '').trim().toLowerCase();
             const map = {
-                Lexis: '.nav-item:nth-child(1)',
-                Insight: '.nav-item:nth-child(1)',
-                Dialogue: '.nav-item:nth-child(2)',
-                Method: '.nav-item:nth-child(3)'
+                lexis: 'Lexis',
+                vocabulary: 'Lexis',
+                insight: 'Insight',
+                academic: 'Insight',
+                dialogue: 'Dialogue',
+                forum: 'Dialogue',
+                method: 'Method',
+                technology: 'Method'
             };
-            return document.querySelector(map[name] || map.Insight);
+            return map[key] || 'Insight';
         }
 
         function initialsOf(name) {
@@ -823,19 +1154,35 @@
         }
 
         function renderAuthUI() {
-            const label = document.getElementById('userLabel');
-            const avatar = document.getElementById('userAvatar');
-            const logoutLink = document.getElementById('logoutLink');
-            if (!label || !avatar || !logoutLink) return;
-            if (authState.user) {
-                label.textContent = authState.user.username;
-                avatar.textContent = initialsOf(authState.user.username);
-                logoutLink.style.display = 'inline-flex';
-            } else {
-                label.textContent = 'LOGIN';
-                avatar.textContent = 'IN';
-                logoutLink.style.display = 'none';
+            if (window.challengeHome && typeof window.challengeHome.syncAccess === 'function') {
+                window.challengeHome.syncAccess(authState.user);
             }
+        }
+
+        async function refreshSharedNav() {
+            if (typeof window.initializeAcadBeatNav !== 'function') {
+                return;
+            }
+            await window.initializeAcadBeatNav({
+                mountId: 'acadbeatNav',
+                basePath: './',
+                active: navActiveForModule(currentHomeModule),
+                authApiBase: './Auth/backend/api',
+                homeUrl: './home.html',
+                ownerUrl: './owner.html',
+                adminUrl: L.adminDistUrl || 'http://127.0.0.1:8001/admin_page/dist/index.html',
+                forumUrl: './home.html?module=Dialogue',
+                technologyUrl: './home.html?module=Method',
+                studioUrl: './Studio/studio.html',
+                messageCenterUrl: L.messageCenterDistUrl || 'http://127.0.0.1:8001/message-center-project/dist/index.html',
+                redirectAdmins: true,
+                showChallengeButton: true,
+                challengeButtonLabel: 'CHALLENGE',
+                onChallengeClick: () => toggleTeamModal(true)
+            });
+            authState.user = (window.acadbeatNavState && window.acadbeatNavState.user) || authState.user;
+            renderAuthUI();
+            mountHomeGodotSwitchInNav();
         }
 
         async function authFetch(path, options = {}) {
@@ -853,6 +1200,7 @@
             const data = await authFetch('me.php');
             authState.user = data.status === 'success' ? data.user : null;
             renderAuthUI();
+            await refreshSharedNav();
         }
 
         function openAuthModal(mode = 'login', message = '') {
@@ -866,6 +1214,11 @@
             document.getElementById('authModal').classList.remove('is-open');
             document.getElementById('authModal').setAttribute('aria-hidden', 'true');
             document.getElementById('authMessage').textContent = '';
+        }
+
+        function cancelAuthModal() {
+            pendingGodotSwitch = false;
+            closeAuthModal();
         }
 
         function openSiteModal(title, message, onConfirm) {
@@ -934,13 +1287,40 @@
             }
 
             authState.user = data.user || null;
-            renderAuthUI();
+            await refreshSharedNav();
+            if (authState.user && String(authState.user.role || '').toLowerCase() === 'admin') {
+                pendingGodotSwitch = false;
+                closeAuthModal();
+                window.location.href = ADMIN_URL;
+                return;
+            }
+            if (pendingGodotSwitch && authState.user) {
+                pendingGodotSwitch = false;
+                closeAuthModal();
+                openGodotMode(null);
+                return;
+            }
+            if (authState.user) {
+                try {
+                    const p = new URLSearchParams(window.location.search);
+                    const raw = p.get('from');
+                    if (raw) {
+                        const decoded = decodeURIComponent(raw);
+                        const u = new URL(decoded, window.location.origin);
+                        if (u.origin === window.location.origin) {
+                            closeAuthModal();
+                            window.location.replace(u.toString());
+                            return;
+                        }
+                    }
+                } catch (_err) {}
+            }
             closeAuthModal();
         }
 
         function handleUserAction() {
             if (authState.user) {
-                window.location.href = 'owner.html';
+                window.location.href = portalUrlForCurrentUser();
                 return;
             }
             openAuthModal('login');
@@ -951,14 +1331,24 @@
             if (!authState.user) return false;
             await authFetch('logout.php');
             authState.user = null;
-            renderAuthUI();
+            await refreshSharedNav();
             closeAuthModal();
-            loadModule('Insight', navElementFor('Insight'));
+            loadModule('Insight');
             return false;
+        }
+
+        function isGodotUiMode() {
+            try {
+                const p = new URLSearchParams(window.location.search);
+                if (p.get('ui') === 'godot') return true;
+            } catch (_e) {}
+            return document.cookie.split('; ').some((c) => c.startsWith('ui_mode=godot'));
         }
 
         function handleModuleAction(name) {
             if (!authState.user) {
+                // Keep module behavior consistent: unauthenticated users should login first.
+                // Do not force redirect to Godot just because ui_mode cookie is set.
                 openAuthModal('login', 'Please log in before using module actions.');
                 return;
             }
@@ -981,10 +1371,8 @@
             openSiteModal('Not connected yet', 'This module action has not been connected yet.');
         }
 
-        function loadModule(name, el) {
-            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-            if (el) el.classList.add('active');
-
+        function loadModule(name) {
+            currentHomeModule = name;
             const viewport = document.getElementById('app-viewport');
             const m = data[name];
 
@@ -1031,7 +1419,6 @@
                             </div>
                         </div>`;
             }
-
             if (name !== 'Lexis') {
                 html += `<div class="daily-focus-card">
                             <div class="card-number">${m.id}</div>
@@ -1051,20 +1438,53 @@
             viewport.innerHTML = html;
         }
 
+        async function loadChallengeBundle() {
+            const mount = document.getElementById('challengeMount');
+            if (!mount) return;
+            const response = await fetch('./challenge/challenge-panel.html');
+            if (!response.ok) {
+                throw new Error('Failed to load challenge panel.');
+            }
+            mount.innerHTML = await response.text();
+            await new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = './challenge/challenge-home.js';
+                script.onload = resolve;
+                script.onerror = () => reject(new Error('Failed to load challenge script.'));
+                document.body.appendChild(script);
+            });
+        }
+
         // 初始化加载
         window.onload = async () => {
+            try {
+                await loadChallengeBundle();
+            } catch (error) {
+                console.error(error);
+            }
             const params = new URLSearchParams(window.location.search);
-            const requestedModule = params.get('module');
-            const moduleName = requestedModule === 'Lexis'
-                ? 'Insight'
-                : (data[requestedModule] ? requestedModule : 'Insight');
-            loadModule(moduleName, navElementFor(moduleName));
-            await loadAuthUser();
-            if (params.get('login') === '1') {
+            const moduleName = resolveModuleName(params.get('module'));
+            loadModule(moduleName);
+            await refreshSharedNav();
+            if (authState.user && params.get('login') === '1' && params.get('from')) {
+                try {
+                    const decoded = decodeURIComponent(params.get('from'));
+                    const u = new URL(decoded, window.location.origin);
+                    if (u.origin === window.location.origin) {
+                        window.location.replace(u.toString());
+                        return;
+                    }
+                } catch (_err) {}
+            }
+            if (params.get('login') === '1' && !authState.user) {
                 openAuthModal('login', 'Please log in first.');
+            }
+            if (window.challengeHome && typeof window.challengeHome.handleInitialRoute === 'function') {
+                window.challengeHome.handleInitialRoute(params);
             }
         };
     </script>
+    <script src="./shared-nav.js"></script>
 </body>
 
 </html>
