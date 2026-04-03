@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AcadBeat Studio | Scrabble</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="http://127.0.0.1:8001/shared-nav.css" />
     <style>
         :root {
             --bg-color: #E4DFD8;
@@ -31,8 +30,52 @@
                 var(--bg-color);
             color: var(--secondary-color);
             min-height: 100vh;
-            padding-top: 80px;
             padding-bottom: 28px;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            height: 80px;
+            padding: 0 5%;
+            border-bottom: 1px solid rgba(58, 78, 107, 0.1);
+            background: rgba(228, 223, 216, 0.95);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(8px);
+        }
+
+        .logo { font-size: 1.4rem; font-weight: 800; text-transform: uppercase; cursor: pointer; }
+        .logo span { color: var(--primary-color); }
+
+        .nav-menu { display: flex; gap: 2.2rem; }
+
+        .nav-item {
+            color: var(--secondary-color);
+            font-weight: 600;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            opacity: 0.5;
+            padding: 8px 0;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .nav-item.active,
+        .nav-item:hover { opacity: 1; }
+
+        .nav-item.active::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 2px;
+            background: var(--secondary-color);
         }
 
         .layout {
@@ -310,7 +353,7 @@
         .mode-overlay {
             position: fixed;
             inset: 0;
-            z-index: 1100;
+            z-index: 200;
             background:
                 radial-gradient(circle at top, rgba(155, 183, 212, 0.2), transparent 32%),
                 rgba(228, 223, 216, 0.96);
@@ -369,7 +412,6 @@
     </style>
 </head>
 <body>
-    <div id="acadbeatNav"></div>
     <div id="mode-overlay" class="mode-overlay">
         <div class="mode-card">
             <h2>Scrabble</h2>
@@ -388,6 +430,16 @@
             <p class="server-hint" id="server-hint"></p>
         </div>
     </div>
+    <nav>
+        <div class="logo" onclick="window.location.href='../../home.html'">Acad<span>Beat</span></div>
+        <div class="nav-menu">
+            <div class="nav-item" onclick="window.location.href='../../home.html?module=Insight'">Academic</div>
+            <div class="nav-item" onclick="window.location.href='../../home.html?module=Dialogue'">Forum</div>
+            <div class="nav-item" onclick="window.location.href='../../home.html?module=Method'">Technology</div>
+            <div class="nav-item active" onclick="window.location.href='../studio.html'">Studio</div>
+        </div>
+        <div></div>
+    </nav>
 
     <div id="game-root" class="game-root hidden">
     <div class="layout">
@@ -561,7 +613,7 @@
                 document.getElementById("match-status").textContent = "Connected. Finding opponent…";
             });
             s.on("connect_error", () => {
-                document.getElementById("match-status").textContent = "Cannot reach match server. Start: cd Studio/Scrabble/match-server then npm install && npm start";
+                document.getElementById("match-status").textContent = "Cannot reach match server. Start it: cd Studio/scrabble-server && npm start";
             });
             s.on("match:waiting", () => {
                 document.getElementById("match-status").textContent = "Waiting for another player…";
@@ -1715,37 +1767,6 @@
         }
 
         loadDictionary();
-    </script>
-    <script src="http://127.0.0.1:8001/shared/acadbeat-local-config.js"></script>
-    <script src="http://127.0.0.1:8001/shared-nav.js"></script>
-    <script>
-      (function initScrabbleSharedNav() {
-        var L = window.ACADBEAT_LOCAL || {};
-        var MAIN = L.mainOrigin || 'http://127.0.0.1:8001';
-        function boot() {
-          if (typeof window.initializeAcadBeatNav !== 'function') return;
-          window.initializeAcadBeatNav({
-            mountId: 'acadbeatNav',
-            basePath: MAIN + '/',
-            homeUrl: MAIN + '/home.html',
-            ownerUrl: MAIN + '/owner.html',
-            authApiBase: MAIN + '/Auth/backend/api',
-            forumUrl: MAIN + '/home.html?module=Dialogue',
-            technologyUrl: MAIN + '/home.html?module=Method',
-            studioUrl: MAIN + '/Studio/studio.html',
-            messageCenterUrl: L.messageCenterDistUrl,
-            adminUrl: L.adminDistUrl,
-            messageApiUrl: L.messageSummaryApiUrl,
-            loginUrl: MAIN + '/home.html?login=1',
-            active: 'studio',
-            redirectAdmins: false,
-            showChallengeButton: false,
-            requireLogin: true,
-          });
-        }
-        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
-        else boot();
-      })();
     </script>
 </body>
 </html>
