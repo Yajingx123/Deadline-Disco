@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AcadBeat | Studio</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;1,700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="http://127.0.0.1:8001/shared-nav.css" />
     <style>
         :root {
             --bg-color: #E4DFD8;
@@ -29,12 +28,126 @@
                 var(--bg-color);
             color: var(--secondary-color);
             min-height: 100vh;
-            padding: 80px 5% 48px;
+            padding: 0 5% 48px;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            height: 80px;
+            margin: 0 calc(5% * -1);
+            padding: 0 5%;
+            border-bottom: 1px solid rgba(58, 78, 107, 0.1);
+            background-color: var(--bg-color);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        .logo span {
+            color: var(--primary-color);
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2.5rem;
+        }
+
+        .nav-item {
+            color: var(--secondary-color);
+            font-weight: 600;
+            font-size: 0.8rem;
+            cursor: pointer;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            opacity: 0.5;
+            padding: 8px 0;
+            position: relative;
+            transition: 0.6s ease;
+        }
+
+        .nav-item:hover,
+        .nav-item.active {
+            opacity: 1;
+        }
+
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--secondary-color);
+        }
+
+        .user-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: 0.4s ease;
+        }
+
+        .user-section:hover {
+            opacity: 0.7;
+        }
+
+        .avatar {
+            width: 34px;
+            height: 34px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            border: 1px solid var(--secondary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.7rem;
+        }
+
+        .logout-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 34px;
+            padding: 0 12px;
+            border-radius: 999px;
+            border: 1px solid rgba(58, 78, 107, 0.18);
+            background: rgba(255, 255, 255, 0.72);
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-size: 0.72rem;
+            font-weight: 700;
+            transition: 0.25s ease;
+        }
+
+        .logout-link:hover {
+            transform: translateY(-1px);
+            background: rgba(255, 255, 255, 0.94);
+            border-color: rgba(58, 78, 107, 0.3);
         }
 
         .studio-hero {
             max-width: 1180px;
-            margin: 36px auto 0;
+            margin: 116px auto 0;
             padding: 30px;
             border: 1px solid var(--panel-border);
             background: rgba(255, 255, 255, 0.6);
@@ -137,18 +250,48 @@
 
         @media (max-width: 900px) {
             body {
-                padding: 80px 16px 36px;
+                padding: 0 16px 36px;
+            }
+
+            nav {
+                flex-wrap: wrap;
+                justify-content: center;
+                height: auto;
+                margin: 0 -16px;
+                padding: 14px 16px;
+            }
+
+            .nav-menu {
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 1rem 1.4rem;
             }
 
             .studio-hero {
-                margin-top: 24px;
+                margin-top: 152px;
                 padding: 24px;
             }
         }
     </style>
 </head>
 <body>
-    <div id="acadbeatNav"></div>
+    <nav>
+        <div class="logo" onclick="window.location.href='../home.html'">Acad<span>Beat</span></div>
+        <div class="nav-menu">
+            <div class="nav-item" onclick="window.location.href='../home.html?module=Insight'">Academic</div>
+            <div class="nav-item" onclick="window.location.href='../home.html?module=Dialogue'">Forum</div>
+            <div class="nav-item" onclick="window.location.href='../home.html?module=Method'">Technology</div>
+            <div class="nav-item active" onclick="window.location.href='./studio.html'">Studio</div>
+        </div>
+        <div class="user-group">
+            <div class="user-section" id="userSection" onclick="handleUserAction()">
+                <span id="userLabel" style="font-size: 0.75rem; font-weight: 700;">LOGIN</span>
+                <div class="avatar" id="userAvatar">IN</div>
+            </div>
+            <a href="#" class="logout-link" id="logoutLink" onclick="return handleLogout(event)" style="display:none;">Log out</a>
+        </div>
+    </nav>
 
     <section class="studio-hero">
         <h1>Studio</h1>
@@ -177,36 +320,67 @@
         </article>
     </section>
 
-    <script src="http://127.0.0.1:8001/shared/acadbeat-local-config.js"></script>
-    <script src="http://127.0.0.1:8001/shared-nav.js"></script>
     <script>
-      (function initStudioSharedNav() {
-        var L = window.ACADBEAT_LOCAL || {};
-        var MAIN = L.mainOrigin || 'http://127.0.0.1:8001';
-        function boot() {
-          if (typeof window.initializeAcadBeatNav !== 'function') return;
-          window.initializeAcadBeatNav({
-            mountId: 'acadbeatNav',
-            basePath: MAIN + '/',
-            homeUrl: MAIN + '/home.html',
-            ownerUrl: MAIN + '/owner.html',
-            authApiBase: MAIN + '/Auth/backend/api',
-            forumUrl: MAIN + '/home.html?module=Dialogue',
-            technologyUrl: MAIN + '/home.html?module=Method',
-            studioUrl: MAIN + '/Studio/studio.html',
-            messageCenterUrl: L.messageCenterDistUrl,
-            adminUrl: L.adminDistUrl,
-            messageApiUrl: L.messageSummaryApiUrl,
-            loginUrl: MAIN + '/home.html?login=1',
-            active: 'studio',
-            redirectAdmins: false,
-            showChallengeButton: false,
-            requireLogin: true,
-          });
+        const AUTH_API_BASE = '../Auth/backend/api';
+        const authState = { user: null };
+
+        function initialsOf(name) {
+            const trimmed = String(name || '').trim();
+            if (!trimmed) return 'IN';
+            return trimmed.slice(0, 2).toUpperCase();
         }
-        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
-        else boot();
-      })();
+
+        function renderAuthUI() {
+            const label = document.getElementById('userLabel');
+            const avatar = document.getElementById('userAvatar');
+            const logoutLink = document.getElementById('logoutLink');
+            if (!label || !avatar || !logoutLink) return;
+            if (authState.user) {
+                label.textContent = authState.user.username;
+                avatar.textContent = initialsOf(authState.user.username);
+                logoutLink.style.display = 'inline-flex';
+            } else {
+                label.textContent = 'LOGIN';
+                avatar.textContent = 'IN';
+                logoutLink.style.display = 'none';
+            }
+        }
+
+        async function authFetch(path, options = {}) {
+            const response = await fetch(`${AUTH_API_BASE}/${path}`, {
+                method: options.method || 'GET',
+                headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+                credentials: 'include',
+                body: options.body || undefined
+            });
+            return response.json().catch(() => ({ status: 'error', message: 'Invalid response' }));
+        }
+
+        async function loadAuthUser() {
+            const data = await authFetch('me.php');
+            authState.user = data.status === 'success' ? data.user : null;
+            renderAuthUI();
+        }
+
+        function handleUserAction() {
+            if (authState.user) {
+                window.location.href = '../owner.html';
+                return;
+            }
+            window.location.href = '../home.html?login=1';
+        }
+
+        async function handleLogout(event) {
+            if (event) event.preventDefault();
+            if (!authState.user) return false;
+            await authFetch('logout.php');
+            authState.user = null;
+            renderAuthUI();
+            window.location.href = '../home.html';
+            return false;
+        }
+
+        window.addEventListener('load', loadAuthUser);
     </script>
 </body>
 </html>

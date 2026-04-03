@@ -7,6 +7,7 @@ const { Server } = require("socket.io");
 const engine = require("./gameEngine.cjs");
 
 const PORT = Number(process.env.SCRABBLE_PORT || 9000);
+const MAX_FULL_ROUNDS = 20;
 const ENABLE_PATH = process.env.SCRABBLE_DICT || path.join(__dirname, "..", "enable.txt");
 
 function loadDictionary() {
@@ -52,6 +53,7 @@ function initGame() {
     turnNumber: 1,
     gameOver: false,
     winnerSeat: null,
+    endReason: null,
     log: []
   };
 }
@@ -92,6 +94,7 @@ function snapshotFor(room, socketId) {
     passStreak: g.passStreak,
     gameOver: g.gameOver,
     winnerSeat: g.winnerSeat,
+    endReason: g.gameOver ? g.endReason : null,
     log: [...g.log]
   };
 }
@@ -105,9 +108,32 @@ function broadcastRoom(room) {
   });
 }
 
+function checkRoundLimit(room) {
+  const g = room.game;
+  if (g.gameOver) return;
+  if (g.turnNumber < 1 + MAX_FULL_ROUNDS * 2) return;
+  finalizeGameRoundLimit(room);
+}
+
+function finalizeGameRoundLimit(room) {
+  const g = room.game;
+  if (g.gameOver) return;
+  g.gameOver = true;
+  g.endReason = "round_limit";
+  const w0 = g.scores[0];
+  const w1 = g.scores[1];
+  let winnerSeat = null;
+  if (w0 > w1) winnerSeat = 0;
+  else if (w1 > w0) winnerSeat = 1;
+  g.winnerSeat = winnerSeat;
+  addLog(room.game, `Game over — ${MAX_FULL_ROUNDS} rounds. Scores P1 ${w0} — P2 ${w1}.`);
+  broadcastRoom(room);
+}
+
 function finalizeGame(room, emptiedSeat) {
   const g = room.game;
   if (g.gameOver) return;
+  g.endReason = emptiedSeat >= 0 ? "empty_rack" : "pass_streak";
   let bonus = 0;
   g.scores.forEach((sc, idx) => {
     const left = g.racks[idx].reduce((sum, ch) => sum + engine.letterScore(ch), 0);
@@ -244,8 +270,8 @@ io.on("connection", (socket) => {
     g.turnNumber += 1;
     g.current = 1 - seat;
     checkGameOverAfterPlay(room);
-    if (!g.gameOver) broadcastRoom(room);
-    else broadcastRoom(room);
+    if (!g.gameOver) checkRoundLimit(room);
+    broadcastRoom(room);
   });
 
   socket.on("game:pass", () => {
@@ -267,6 +293,7 @@ io.on("connection", (socket) => {
     }
     g.turnNumber += 1;
     g.current = 1 - seat;
+    if (!g.gameOver) checkRoundLimit(room);
     broadcastRoom(room);
   });
 
@@ -308,6 +335,7 @@ io.on("connection", (socket) => {
     addLog(g, `Player ${seat + 1} exchanged ${removed.length} tile(s).`);
     g.turnNumber += 1;
     g.current = 1 - seat;
+    if (!g.gameOver) checkRoundLimit(room);
     broadcastRoom(room);
   });
 

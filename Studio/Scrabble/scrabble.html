@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AcadBeat Studio | Scrabble</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="http://127.0.0.1:8001/shared-nav.css" />
     <style>
         :root {
             --bg-color: #E4DFD8;
@@ -31,8 +30,52 @@
                 var(--bg-color);
             color: var(--secondary-color);
             min-height: 100vh;
-            padding-top: 80px;
             padding-bottom: 28px;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            height: 80px;
+            padding: 0 5%;
+            border-bottom: 1px solid rgba(58, 78, 107, 0.1);
+            background: rgba(228, 223, 216, 0.95);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(8px);
+        }
+
+        .logo { font-size: 1.4rem; font-weight: 800; text-transform: uppercase; cursor: pointer; }
+        .logo span { color: var(--primary-color); }
+
+        .nav-menu { display: flex; gap: 2.2rem; }
+
+        .nav-item {
+            color: var(--secondary-color);
+            font-weight: 600;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            opacity: 0.5;
+            padding: 8px 0;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .nav-item.active,
+        .nav-item:hover { opacity: 1; }
+
+        .nav-item.active::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 2px;
+            background: var(--secondary-color);
         }
 
         .layout {
@@ -310,7 +353,7 @@
         .mode-overlay {
             position: fixed;
             inset: 0;
-            z-index: 1100;
+            z-index: 200;
             background:
                 radial-gradient(circle at top, rgba(155, 183, 212, 0.2), transparent 32%),
                 rgba(228, 223, 216, 0.96);
@@ -366,10 +409,197 @@
             margin-top: 14px;
             word-break: break-all;
         }
+
+        .nav-rules {
+            font-family: inherit;
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 8px 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(58, 78, 107, 0.25);
+            background: rgba(255, 255, 255, 0.55);
+            color: var(--secondary-color);
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        .nav-rules:hover {
+            background: rgba(155, 183, 212, 0.35);
+        }
+
+        .game-progress {
+            width: 100%;
+            max-width: min(92vw, 720px);
+            margin: 0 auto 16px;
+            padding: 0;
+            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.88) 100%);
+            border: 1px solid var(--border);
+            box-shadow:
+                0 4px 24px rgba(58, 78, 107, 0.07),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            overflow: hidden;
+        }
+        .game-progress.game-progress--done {
+            opacity: 0.88;
+            filter: saturate(0.92);
+        }
+        .game-progress__inner {
+            display: flex;
+            align-items: stretch;
+            min-height: 72px;
+        }
+        .game-progress__stat {
+            flex: 1;
+            padding: 14px 18px 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 6px;
+            min-width: 0;
+        }
+        .game-progress__stat--round {
+            background: linear-gradient(180deg, rgba(155, 183, 212, 0.12) 0%, transparent 100%);
+        }
+        .game-progress__stat--bag {
+            background: linear-gradient(180deg, rgba(58, 78, 107, 0.04) 0%, transparent 100%);
+        }
+        .game-progress__divider {
+            width: 1px;
+            align-self: stretch;
+            margin: 12px 0;
+            background: linear-gradient(180deg, transparent, rgba(58, 78, 107, 0.12), transparent);
+            flex-shrink: 0;
+        }
+        .game-progress__label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--secondary-color);
+            opacity: 0.55;
+        }
+        .game-progress__value {
+            font-size: 1.55rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: var(--secondary-color);
+            line-height: 1.1;
+        }
+        .game-progress__max {
+            font-size: 0.95rem;
+            font-weight: 600;
+            opacity: 0.38;
+            margin-left: 2px;
+        }
+        .game-progress__hint {
+            font-size: 0.72rem;
+            font-weight: 500;
+            color: var(--secondary-color);
+            opacity: 0.45;
+        }
+        .game-progress__bar {
+            height: 5px;
+            border-radius: 999px;
+            background: rgba(58, 78, 107, 0.08);
+            overflow: hidden;
+            margin-top: 2px;
+        }
+        .game-progress__bar-fill {
+            height: 100%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, var(--primary-color), #7a9ab8);
+            box-shadow: 0 0 12px rgba(155, 183, 212, 0.45);
+            transition: width 0.35s ease;
+        }
+        @media (max-width: 560px) {
+            .game-progress__inner { flex-direction: column; min-height: 0; }
+            .game-progress__divider {
+                width: auto;
+                height: 1px;
+                margin: 0 14px;
+                background: linear-gradient(90deg, transparent, rgba(58, 78, 107, 0.1), transparent);
+            }
+            .game-progress__stat { padding: 12px 16px; }
+            .game-progress__value { font-size: 1.35rem; }
+        }
+
+        .rules-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 3000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+        .rules-modal.hidden { display: none; }
+        .rules-modal__backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(30, 40, 55, 0.45);
+            cursor: pointer;
+        }
+        .rules-modal__panel {
+            position: relative;
+            z-index: 1;
+            max-width: 560px;
+            max-height: min(82vh, 640px);
+            width: 100%;
+            background: #fdfcfa;
+            border-radius: 16px;
+            box-shadow: 0 20px 50px rgba(58, 78, 107, 0.2);
+            border: 1px solid rgba(58, 78, 107, 0.12);
+            display: flex;
+            flex-direction: column;
+        }
+        .rules-modal__head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 18px 10px;
+            border-bottom: 1px solid rgba(58, 78, 107, 0.1);
+        }
+        .rules-modal__head h2 {
+            margin: 0;
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--secondary-color);
+        }
+        .rules-modal__close {
+            border: none;
+            background: transparent;
+            font-size: 1.6rem;
+            line-height: 1;
+            cursor: pointer;
+            color: var(--secondary-color);
+            opacity: 0.65;
+            padding: 4px 8px;
+            border-radius: 8px;
+        }
+        .rules-modal__close:hover { opacity: 1; background: rgba(0,0,0,0.05); }
+        .rules-modal__body {
+            padding: 14px 20px 20px;
+            overflow-y: auto;
+            font-size: 0.84rem;
+            line-height: 1.55;
+            color: #2f3a4a;
+        }
+        .rules-modal__body h3 {
+            margin: 14px 0 6px;
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--secondary-color);
+            opacity: 0.85;
+        }
+        .rules-modal__body p { margin: 0 0 10px; }
+        .rules-modal__body ul { margin: 0 0 10px 1.1rem; padding: 0; }
+        .rules-modal__body li { margin-bottom: 4px; }
     </style>
 </head>
 <body>
-    <div id="acadbeatNav"></div>
     <div id="mode-overlay" class="mode-overlay">
         <div class="mode-card">
             <h2>Scrabble</h2>
@@ -388,10 +618,21 @@
             <p class="server-hint" id="server-hint"></p>
         </div>
     </div>
+    <nav>
+        <div class="logo" onclick="window.location.href='../../home.html'">Acad<span>Beat</span></div>
+        <div class="nav-menu">
+            <div class="nav-item" onclick="window.location.href='../../home.html?module=Insight'">Academic</div>
+            <div class="nav-item" onclick="window.location.href='../../home.html?module=Dialogue'">Forum</div>
+            <div class="nav-item" onclick="window.location.href='../../home.html?module=Method'">Technology</div>
+            <div class="nav-item active" onclick="window.location.href='../studio.html'">Studio</div>
+        </div>
+        <button type="button" class="nav-rules" onclick="openRulesModal()">Rules</button>
+    </nav>
 
     <div id="game-root" class="game-root hidden">
     <div class="layout">
         <section class="board-panel">
+            <div class="game-progress" id="game-progress" aria-live="polite"></div>
             <div class="board-wrap">
                 <div id="board" class="board"></div>
             </div>
@@ -417,7 +658,7 @@
 
             <div class="meta">
                 <span id="bag-count">Bag: 100</span>
-                <span id="turn-count">Turn: 1</span>
+                <span id="turn-count">Round: 1 / 20</span>
             </div>
 
             <div class="rack-box">
@@ -438,6 +679,39 @@
             <div class="log-box" id="log-box"></div>
         </aside>
     </div>
+    </div>
+
+    <div id="rules-modal" class="rules-modal hidden" role="dialog" aria-modal="true" aria-labelledby="rules-title">
+        <div class="rules-modal__backdrop" onclick="closeRulesModal()"></div>
+        <div class="rules-modal__panel" onclick="event.stopPropagation()">
+            <div class="rules-modal__head">
+                <h2 id="rules-title">How to Play</h2>
+                <button type="button" class="rules-modal__close" onclick="closeRulesModal()" aria-label="Close">&times;</button>
+            </div>
+            <div class="rules-modal__body">
+                <h3>Goal</h3>
+                <p>Score more points than your opponent by forming valid English words on the 15×15 board. This version uses the ENABLE word list for validation.</p>
+                <h3>Setup</h3>
+                <p>Each player draws seven letter tiles from the bag. The first word must cover the center star (H8). Later words must touch existing letters.</p>
+                <h3>Your turn</h3>
+                <ul>
+                    <li><strong>Play:</strong> Place one or more tiles from your rack in a single row or column with no gaps, then press <strong>Play</strong>.</li>
+                    <li><strong>Blank (*):</strong> Choose any A–Z letter; it scores 0 but counts as that letter.</li>
+                    <li><strong>Pass:</strong> Skip your turn (contributes to a possible four-pass end).</li>
+                    <li><strong>Exchange:</strong> Turn on <strong>Exchange Mode</strong>, select rack tiles, then <strong>Exchange Selected</strong> (only while at least seven tiles remain in the bag).</li>
+                </ul>
+                <h3>Scoring</h3>
+                <p>Letter values are printed on tiles. Premium squares apply only when a tile is first placed there: DL/TL multiply the letter; DW/TW multiply the whole word. Using all seven tiles in one play adds a 50-point bingo bonus.</p>
+                <h3>Winning</h3>
+                <ul>
+                    <li><strong>Classic:</strong> When the bag is empty, the first player to use every tile ends the game; remaining tile values are subtracted and (usually) added to the player who went out.</li>
+                    <li><strong>Stalemate:</strong> If both players pass twice in a row (four consecutive passes), the game ends and rack penalties are applied.</li>
+                    <li><strong>Round limit:</strong> A <strong>round</strong> is one move by each player (play, pass, or exchange). After <strong>20</strong> full rounds, the game ends immediately and the higher score wins (ties are draws). Rack penalties are not applied for this ending.</li>
+                </ul>
+                <h3>Online play</h3>
+                <p>Start the match server, choose <strong>Online match</strong>, and join the queue with a second browser or friend. The server keeps the official board, scores, and bag.</p>
+            </div>
+        </div>
     </div>
 
     <script src="https://cdn.socket.io/4.7.5/socket.io.min.js" crossorigin="anonymous"></script>
@@ -478,6 +752,7 @@
 
         const params = new URLSearchParams(window.location.search);
         const SCRABBLE_SERVER = params.get("server") || "http://127.0.0.1:9000";
+        const MAX_ROUNDS = 20;
 
         const state = {
             mode: "pick",
@@ -501,8 +776,59 @@
             dictReady: false,
             onlineSocket: null,
             mySeat: 0,
-            isMyTurn: true
+            isMyTurn: true,
+            endReason: null
         };
+
+        function openRulesModal() {
+            const el = document.getElementById("rules-modal");
+            if (!el) return;
+            el.classList.remove("hidden");
+        }
+
+        function closeRulesModal() {
+            const el = document.getElementById("rules-modal");
+            if (!el) return;
+            el.classList.add("hidden");
+        }
+
+        function getDisplayRound() {
+            if (isOnline()) {
+                const tn = state.turn || 1;
+                return Math.min(Math.floor((tn - 1) / 2) + 1, MAX_ROUNDS);
+            }
+            return Math.min(state.turn, MAX_ROUNDS);
+        }
+
+        function renderGameProgress() {
+            const el = document.getElementById("game-progress");
+            if (!el) return;
+            if (document.getElementById("game-root")?.classList.contains("hidden")) {
+                el.textContent = "";
+                el.classList.remove("game-progress--done");
+                return;
+            }
+            const bag = state.bag.length;
+            const round = getDisplayRound();
+            const pct = Math.min(100, Math.max(0, (round / MAX_ROUNDS) * 100));
+            el.classList.toggle("game-progress--done", !!state.gameOver);
+            el.innerHTML = `
+                <div class="game-progress__inner">
+                    <div class="game-progress__stat game-progress__stat--round">
+                        <span class="game-progress__label">Round</span>
+                        <span class="game-progress__value">${round}<span class="game-progress__max">/${MAX_ROUNDS}</span></span>
+                        <div class="game-progress__bar" role="progressbar" aria-valuenow="${round}" aria-valuemin="0" aria-valuemax="${MAX_ROUNDS}" aria-label="Round progress">
+                            <div class="game-progress__bar-fill" style="width:${pct}%"></div>
+                        </div>
+                    </div>
+                    <div class="game-progress__divider" aria-hidden="true"></div>
+                    <div class="game-progress__stat game-progress__stat--bag">
+                        <span class="game-progress__label">Letter pool</span>
+                        <span class="game-progress__value">${bag}</span>
+                        <span class="game-progress__hint">tiles remaining in bag</span>
+                    </div>
+                </div>`;
+        }
 
         function isOnline() {
             return state.mode === "online";
@@ -652,6 +978,7 @@
             state.turn = snap.turnNumber || 1;
             state.passStreak = snap.passStreak || 0;
             state.gameOver = !!snap.gameOver;
+            state.endReason = snap.endReason || null;
             state.temp.clear();
             state.selectedRack = -1;
             state.exchangeMode = false;
@@ -662,6 +989,9 @@
             }
             if (state.gameOver) {
                 let msg = `Game over. Scores You ${state.players[HUMAN].score} — Opponent ${state.players[AI].score}.`;
+                if (snap.endReason === "round_limit") {
+                    msg = `Game over (${MAX_ROUNDS} rounds). Scores You ${state.players[HUMAN].score} — Opponent ${state.players[AI].score}.`;
+                }
                 if (snap.winnerSeat === seat) msg = `You win! ${msg}`;
                 else if (snap.winnerSeat === 1 - seat) msg = `Opponent wins. ${msg}`;
                 else if (snap.winnerSeat === null) msg = `Draw. ${msg}`;
@@ -812,6 +1142,7 @@
             state.exchangeSet.clear();
             state.logs = [];
             state.gameOver = false;
+            state.endReason = null;
             state.previewEval = null;
             state.previewHighlight = new Set();
             pushLog("Game started. Your move.");
@@ -1080,7 +1411,13 @@
             if (isOnline()) return;
             if (checkGameOverByEmptyRack()) return;
             state.current = state.current === HUMAN ? AI : HUMAN;
-            if (state.current === HUMAN) state.turn += 1;
+            if (state.current === HUMAN) {
+                state.turn += 1;
+                if (state.turn > MAX_ROUNDS) {
+                    finalizeGameRoundLimit();
+                    return;
+                }
+            }
             render();
             if (state.current === AI && !state.gameOver) {
                 setStatus("Computer is thinking...");
@@ -1115,6 +1452,19 @@
             const winner = you === ai ? "Draw game." : (you > ai ? "You win!" : "Computer wins.");
             pushLog(`Game over. ${winner} Final score You ${you} : Computer ${ai}.`);
             setStatus(`Game over. ${winner}`);
+            render();
+        }
+
+        function finalizeGameRoundLimit() {
+            if (state.gameOver) return;
+            state.gameOver = true;
+            state.endReason = "round_limit";
+            const you = state.players[HUMAN].score;
+            const opp = state.players[AI].score;
+            const oppName = state.players[AI].name;
+            const winner = you === opp ? "Draw." : (you > opp ? "You win!" : `${oppName} wins!`);
+            pushLog(`Game over (${MAX_ROUNDS} rounds). ${winner} Final score You ${you} : ${opp}.`);
+            setStatus(`Game over — ${MAX_ROUNDS} rounds. ${winner}`);
             render();
         }
 
@@ -1697,7 +2047,7 @@
             document.getElementById("score-you").classList.toggle("active", myTurnUi && !state.gameOver);
             document.getElementById("score-ai").classList.toggle("active", !myTurnUi && !state.gameOver);
             document.getElementById("bag-count").textContent = `Bag: ${state.bag.length}`;
-            document.getElementById("turn-count").textContent = `Turn: ${state.turn}`;
+            document.getElementById("turn-count").textContent = `Round: ${getDisplayRound()} / ${MAX_ROUNDS}`;
         }
 
         function renderLogs() {
@@ -1710,42 +2060,16 @@
             renderBoard();
             renderRack();
             renderScores();
+            renderGameProgress();
             renderLogs();
             document.getElementById("exchange-toggle").textContent = state.exchangeMode ? "Exit Exchange Mode" : "Exchange Mode";
         }
 
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") closeRulesModal();
+        });
+
         loadDictionary();
-    </script>
-    <script src="http://127.0.0.1:8001/shared/acadbeat-local-config.js"></script>
-    <script src="http://127.0.0.1:8001/shared-nav.js"></script>
-    <script>
-      (function initScrabbleSharedNav() {
-        var L = window.ACADBEAT_LOCAL || {};
-        var MAIN = L.mainOrigin || 'http://127.0.0.1:8001';
-        function boot() {
-          if (typeof window.initializeAcadBeatNav !== 'function') return;
-          window.initializeAcadBeatNav({
-            mountId: 'acadbeatNav',
-            basePath: MAIN + '/',
-            homeUrl: MAIN + '/home.html',
-            ownerUrl: MAIN + '/owner.html',
-            authApiBase: MAIN + '/Auth/backend/api',
-            forumUrl: MAIN + '/home.html?module=Dialogue',
-            technologyUrl: MAIN + '/home.html?module=Method',
-            studioUrl: MAIN + '/Studio/studio.html',
-            messageCenterUrl: L.messageCenterDistUrl,
-            adminUrl: L.adminDistUrl,
-            messageApiUrl: L.messageSummaryApiUrl,
-            loginUrl: MAIN + '/home.html?login=1',
-            active: 'studio',
-            redirectAdmins: false,
-            showChallengeButton: false,
-            requireLogin: true,
-          });
-        }
-        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
-        else boot();
-      })();
     </script>
 </body>
 </html>
