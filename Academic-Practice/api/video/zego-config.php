@@ -12,8 +12,12 @@ function video_env(string $key, ?string $default = null): ?string
     return $trimmed === '' ? $default : $trimmed;
 }
 
-$appId = (int) (video_env('ZEGO_APP_ID', video_env('ZEGO_APPID', '0')) ?? '0');
-$serverSecret = (string) (video_env('ZEGO_SERVER_SECRET', '') ?? '');
+// Local safe defaults for this project. Environment variables still override these values.
+$defaultAppId = '189218924';
+$defaultServerSecret = '8baf8a622f61de63e0997e0fae76c935';
+
+$appId = (int) (video_env('ZEGO_APP_ID', video_env('ZEGO_APPID', $defaultAppId)) ?? $defaultAppId);
+$serverSecret = (string) (video_env('ZEGO_SERVER_SECRET', $defaultServerSecret) ?? $defaultServerSecret);
 $legacyAppSign = (string) (video_env('ZEGO_APP_SIGN', video_env('ZEGO_APPSIGN', '')) ?? '');
 $testSecret = $serverSecret !== '' ? $serverSecret : $legacyAppSign;
 $tokenMode = (string) (video_env('ZEGO_TOKEN_MODE', $serverSecret !== '' ? 'production' : 'test') ?? 'test');

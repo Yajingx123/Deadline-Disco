@@ -154,10 +154,12 @@ CREATE TABLE IF NOT EXISTS peer_video_sessions (
         CHECK (status IN ('matched', 'connecting', 'active', 'ended', 'cancelled', 'expired')),
 
     CONSTRAINT chk_peer_video_sessions_end_reason
-        CHECK (ended_reason IS NULL OR ended_reason IN ('user_left', 'cancelled', 'timeout', 'system')),
+        CHECK (ended_reason IS NULL OR ended_reason IN ('user_left', 'cancelled', 'timeout', 'system'))
 
-    CONSTRAINT chk_peer_video_sessions_users_distinct
-        CHECK (user_one_id <> user_two_id)
+    -- NOTE:
+    -- MySQL 8.0 can reject CHECK constraints on columns that are also used
+    -- in FK referential actions in some server variants/configurations.
+    -- Keep this rule enforced at application level for compatibility.
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS peer_video_match_queue (

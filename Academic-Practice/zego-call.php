@@ -45,6 +45,9 @@ if ($tokenMode === 'test') {
             --success: #4a7860;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Inter", sans-serif; }
+        html, body {
+            height: auto;
+        }
         body {
             min-height: 100dvh;
             background:
@@ -52,9 +55,10 @@ if ($tokenMode === 'test') {
                 radial-gradient(circle at bottom right, rgba(51,69,95,0.10), transparent 36%),
                 var(--bg);
             color: var(--ink);
-            overflow: hidden;
+            overflow-x: hidden;
+            overflow-y: auto;
         }
-        .layout { min-height: 100dvh; display: grid; grid-template-columns: minmax(220px, 290px) minmax(0, 1fr); }
+        .layout { min-height: 100dvh; display: grid; grid-template-columns: minmax(220px, 290px) minmax(0, 1fr); align-items: start; }
         .sidebar {
             padding: 26px 22px;
             border-right: 1px solid var(--line);
@@ -111,7 +115,7 @@ if ($tokenMode === 'test') {
         }
         .btn.primary { background: rgba(145,171,200,0.9); border-color: rgba(145,171,200,0.9); }
         .btn.danger { color: var(--danger); border-color: var(--danger); }
-        .stage { padding: 10px; min-height: 0; }
+        .stage { padding: 10px; min-height: 0; overflow: visible; }
         .shell {
             width: 100%;
             height: calc(100dvh - 20px);

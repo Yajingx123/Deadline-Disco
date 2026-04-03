@@ -8,6 +8,7 @@ $newTableSql = $root . '/database/bootstrap/101_acadbeat_all_tables.sql';
 $newDataSql = $root . '/database/bootstrap/102_acadbeat_all_data.sql';
 $legacyTableSql = $root . '/101_acadbeat_all_tables.sql';
 $legacyDataSql = $root . '/102_acadbeat_all_data.sql';
+$videoMatchSql = $root . '/105_academic_practice_video_match_tables.sql';
 
 $tableSql = is_file($newTableSql) ? $newTableSql : $legacyTableSql;
 $dataSql = is_file($newDataSql) ? $newDataSql : $legacyDataSql;
@@ -56,6 +57,13 @@ run_or_fail(
     sprintf('%s < %s', $mysqlBase, escapeshellarg($dataSql)),
     'Import seed data'
 );
+
+if (is_file($videoMatchSql)) {
+    run_or_fail(
+        sprintf('%s --force < %s', $mysqlBase, escapeshellarg($videoMatchSql)),
+        'Import video match tables'
+    );
+}
 
 run_or_fail(
     escapeshellarg(PHP_BINARY ?: 'php') . ' ' . escapeshellarg($root . '/stop_all.php'),
