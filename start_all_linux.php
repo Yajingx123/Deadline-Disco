@@ -120,7 +120,7 @@ $services = [
     ],
 ];
 
-echo "=== Start Services (macOS) ===\n\n";
+echo "=== Start Services (Linux) ===\n\n";
 
 echo "=== Build Static Frontends ===\n";
 foreach ($frontendBuilds as $build) {
@@ -152,6 +152,6 @@ foreach ($services as $service) {
 }
 
 echo "\nLogs are in .run\n";
-echo "Start command: php start_all_mac.php\n";
+echo "Start command: php start_all_linux.php\n";
 echo "Auto-detect command: php start_all.php\n";
 echo "\nHome: http://127.0.0.1:8001/home.html\n";

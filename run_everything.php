@@ -26,6 +26,13 @@ $mysqlPort = (string)($config['db_port'] ?? '3306');
 $mysqlUser = (string)($config['db_user'] ?? 'root');
 $mysqlPass = (string)($config['db_pass'] ?? '');
 
+function cli_quote(string $value): string {
+    if (PHP_OS_FAMILY === 'Windows') {
+        return '"' . str_replace('"', '""', $value) . '"';
+    }
+    return escapeshellarg($value);
+}
+
 function run_or_fail(string $command, string $label): void {
     echo "[run] {$label}\n";
     passthru($command, $exitCode);
@@ -36,31 +43,40 @@ function run_or_fail(string $command, string $label): void {
     echo "[done] {$label}\n\n";
 }
 
-$mysqlBase = sprintf(
-    'mysql -h %s -P %s -u %s %s',
-    escapeshellarg($mysqlHost),
-    escapeshellarg($mysqlPort),
-    escapeshellarg($mysqlUser),
-    $mysqlPass !== '' ? '-p' . escapeshellarg($mysqlPass) : ''
-);
+function mysql_import_command(string $host, string $port, string $user, string $pass, string $sqlFile, bool $force = false): string {
+    $parts = [
+        'mysql',
+        '--host=' . cli_quote($host),
+        '--port=' . cli_quote($port),
+        '--user=' . cli_quote($user),
+    ];
+    if ($pass !== '') {
+        $parts[] = '--password=' . cli_quote($pass);
+    }
+    if ($force) {
+        $parts[] = '--force';
+    }
+
+    return implode(' ', $parts) . ' < ' . cli_quote($sqlFile);
+}
 
 echo "=== AcadBeat Full Bootstrap ===\n\n";
 echo "[info] Using table SQL: {$tableSql}\n";
 echo "[info] Using data SQL:  {$dataSql}\n\n";
 
 run_or_fail(
-    sprintf('%s < %s', $mysqlBase, escapeshellarg($tableSql)),
+    mysql_import_command($mysqlHost, $mysqlPort, $mysqlUser, $mysqlPass, $tableSql),
     'Import tables'
 );
 
 run_or_fail(
-    sprintf('%s < %s', $mysqlBase, escapeshellarg($dataSql)),
+    mysql_import_command($mysqlHost, $mysqlPort, $mysqlUser, $mysqlPass, $dataSql),
     'Import seed data'
 );
 
 if (is_file($videoMatchSql)) {
     run_or_fail(
-        sprintf('%s --force < %s', $mysqlBase, escapeshellarg($videoMatchSql)),
+        mysql_import_command($mysqlHost, $mysqlPort, $mysqlUser, $mysqlPass, $videoMatchSql, true),
         'Import video match tables'
     );
 }
