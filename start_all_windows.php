@@ -74,12 +74,16 @@ $services = [
 ];
 
 function startWindowsDetached(string $title, string $workdir, string $command, string $stdoutLog, string $stderrLog): void {
-    $cmd = 'start "' . $title . '" /min cmd /c "cd /d "' . $workdir . '" && ' . $command . ' > "' . $stdoutLog . '" 2> "' . $stderrLog . '"';
+    global $runDir;
+    $npmCache = $runDir . '\\npm-cache';
+    $cmd = 'start "' . $title . '" /min cmd /c "cd /d "' . $workdir . '" && set "npm_config_cache=' . $npmCache . '" && ' . $command . ' > "' . $stdoutLog . '" 2> "' . $stderrLog . '"';
     pclose(popen($cmd, 'r'));
 }
 
 function runWindowsBuild(string $workdir, string $command): void {
-    $fullCommand = 'cmd /c "cd /d "' . $workdir . '" && ' . $command . '"';
+    global $runDir;
+    $npmCache = $runDir . '\\npm-cache';
+    $fullCommand = 'cmd /c "cd /d "' . $workdir . '" && set "npm_config_cache=' . $npmCache . '" && ' . $command . '"';
     passthru($fullCommand, $exitCode);
     if ($exitCode !== 0) {
         throw new RuntimeException("Build failed with exit code {$exitCode}.");
