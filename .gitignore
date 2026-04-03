@@ -9,7 +9,6 @@ package-lock.json
 forum-project/dist/
 admin_page/dist/
 message-center-project/dist/
-.env
 .env.local
 .env.production
 .env.prod
