@@ -16,6 +16,10 @@ import {
 import { enhanceRenderedAudioPlayers, getSummary, renderFormattedText } from '../utils/formatText'
 import './PersonalHub.css'
 
+const MAIN_ORIGIN =
+  (typeof window !== 'undefined' && window.ACADBEAT_LOCAL && window.ACADBEAT_LOCAL.mainOrigin)
+  || (typeof window !== 'undefined' ? window.location.origin : 'http://127.0.0.1:8001')
+
 function upsertConversation(conversations, nextConversation) {
   const nextId = Number(nextConversation?.id || 0)
   if (!nextId) {
@@ -150,7 +154,7 @@ export default function PersonalHub({ onBackToChooser, embedded = false }) {
 
     const nextCurrentUser = sessionData.user || conversationData.currentUser || null
     if ((nextCurrentUser?.role || '').toLowerCase() === 'admin') {
-      window.location.replace('http://127.0.0.1:8001/admin_page/dist/index.html')
+      window.location.replace(`${MAIN_ORIGIN}/admin_page/dist/index.html`)
       return
     }
     setCurrentUser(nextCurrentUser)
@@ -179,7 +183,7 @@ export default function PersonalHub({ onBackToChooser, embedded = false }) {
 
         if (cancelled) return
         if (((sessionData.user || conversationData.currentUser || {}).role || '').toLowerCase() === 'admin') {
-          window.location.replace('http://127.0.0.1:8001/admin_page/dist/index.html')
+          window.location.replace(`${MAIN_ORIGIN}/admin_page/dist/index.html`)
           return
         }
 
@@ -190,7 +194,7 @@ export default function PersonalHub({ onBackToChooser, embedded = false }) {
         }
       } catch (err) {
         if ((err.message || '').toLowerCase().includes('login required') || (err.message || '').toLowerCase().includes('not logged in')) {
-          window.location.href = 'http://127.0.0.1:8001/home.html?login=1'
+          window.location.href = `${MAIN_ORIGIN}/home.html?login=1`
           return
         }
         if (!cancelled) {

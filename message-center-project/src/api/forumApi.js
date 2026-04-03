@@ -1,5 +1,10 @@
-const API_BASE = 'http://127.0.0.1:8001/forum-project/api';
-const REALTIME_WS_URL = 'ws://127.0.0.1:3001/ws'
+const MAIN_ORIGIN =
+  (typeof window !== 'undefined' && window.ACADBEAT_LOCAL && window.ACADBEAT_LOCAL.mainOrigin)
+  || (typeof window !== 'undefined' ? window.location.origin : 'http://127.0.0.1:8001')
+const API_BASE = `${MAIN_ORIGIN}/forum-project/api`
+const REALTIME_WS_URL =
+  (typeof window !== 'undefined' && window.ACADBEAT_LOCAL && window.ACADBEAT_LOCAL.voiceRoomWsUrl)
+  || `${(typeof window !== 'undefined' && window.location.protocol === 'https:') ? 'wss' : 'ws'}://${(typeof window !== 'undefined' ? window.location.host : '127.0.0.1:3001')}/ws`
 
 async function forumFetch(path, options = {}) {
   const response = await fetch(`${API_BASE}${path}`, {
@@ -203,7 +208,7 @@ export async function sendChatMessage(conversationId, content) {
 }
 
 export async function fetchSessionUser() {
-  const response = await fetch('http://127.0.0.1:8001/Auth/backend/api/me.php', {
+  const response = await fetch(`${MAIN_ORIGIN}/Auth/backend/api/me.php`, {
     credentials: 'include',
   });
 

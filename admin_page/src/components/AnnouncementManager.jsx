@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { adminFetch } from '../api'
 
-const API_ORIGIN = 'http://127.0.0.1:8001'
+const API_ORIGIN =
+  (typeof window !== 'undefined' && window.ACADBEAT_LOCAL && window.ACADBEAT_LOCAL.mainOrigin)
+  || (typeof window !== 'undefined' ? window.location.origin : 'http://127.0.0.1:8001')
 
 function formatRecordingDuration(totalSeconds) {
   const minutes = Math.floor(totalSeconds / 60)
