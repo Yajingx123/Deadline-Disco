@@ -23,6 +23,16 @@
     document.documentElement.classList.remove('acadbeat-role-guard');
   }
 
+  function loginUrlWithReturn(loginUrl, returnTo) {
+    try {
+      const u = new URL(loginUrl, window.location.href);
+      u.searchParams.set('from', String(returnTo || '').trim() || window.location.href.split('#')[0]);
+      return u.toString();
+    } catch (_err) {
+      return loginUrl;
+    }
+  }
+
   function withMessageCenterSource(url) {
     try {
       const next = new URL(url, window.location.origin);
@@ -35,6 +45,31 @@
       return url;
     }
   }
+
+  function applyNavActive(navRoot, activeKey) {
+    if (!navRoot) return;
+    const key = String(activeKey || '').toLowerCase();
+    navRoot.querySelectorAll('.nav-item[data-nav]').forEach((el) => {
+      el.classList.remove('active');
+    });
+    navRoot.querySelectorAll('.nav-item[data-nav]').forEach((el) => {
+      const itemKey = el.getAttribute('data-nav');
+      let on = false;
+      if (itemKey === 'forum') {
+        on = key === 'forum' || key === 'messages';
+      } else {
+        on = key === itemKey;
+      }
+      if (on) el.classList.add('active');
+    });
+  }
+
+  window.setAcadBeatNavActive = function setAcadBeatNavActive(activeKey) {
+    const navRoot =
+      document.querySelector('#acadbeatNav .acadbeat-shared-nav') ||
+      document.querySelector('.acadbeat-shared-nav');
+    applyNavActive(navRoot, activeKey);
+  };
 
   async function loadMessageSummary(messageApiUrl, user, badgeEl) {
       if (!badgeEl || !user) {
@@ -83,6 +118,7 @@
     const homeUrl = options.homeUrl || `${basePath}home.html`;
     const forumUrl = options.forumUrl || `${homeUrl}?module=Dialogue`;
     const technologyUrl = options.technologyUrl || `${homeUrl}?module=Method`;
+    const studioUrl = options.studioUrl || `${basePath}Studio/studio.html`;
     const authApiBase = options.authApiBase || `${basePath}Auth/backend/api`;
     const loginUrl = options.loginUrl || `${homeUrl}?login=1`;
     const ownerUrl = options.ownerUrl || `${basePath}owner.html`;
@@ -94,14 +130,21 @@
     const showChallengeButton = Boolean(options.showChallengeButton);
     const challengeButtonLabel = options.challengeButtonLabel || 'CHALLENGE';
     const redirectAdmins = Boolean(options.redirectAdmins);
+    const requireLogin = Boolean(options.requireLogin);
+    const loginReturnUrl = String(options.loginReturnUrl || '').trim();
+
+    if (requireLogin) {
+      document.documentElement.classList.add('acadbeat-login-guard');
+    }
 
     mount.innerHTML = `
       <nav class="acadbeat-shared-nav">
         <a class="logo" href="${homeUrl}">Acad<span>Beat</span></a>
         <div class="nav-menu">
-          <a class="nav-item ${active === 'academic' ? 'active' : ''}" href="${homeUrl}?module=Insight">Academic</a>
-          <a class="nav-item ${active === 'forum' || active === 'messages' ? 'active' : ''}" href="${homeUrl}?module=Dialogue">Forum</a>
-          <a class="nav-item ${active === 'technology' ? 'active' : ''}" href="${homeUrl}?module=Method">Technology</a>
+          <a class="nav-item" data-nav="academic" href="${homeUrl}?module=Insight">Academic</a>
+          <a class="nav-item" data-nav="forum" href="${forumUrl}">Forum</a>
+          <a class="nav-item" data-nav="technology" href="${technologyUrl}">Technology</a>
+          <a class="nav-item" data-nav="studio" href="${studioUrl}">Studio</a>
         </div>
         <div class="user-group">
           ${showChallengeButton ? `<button type="button" class="nav-utility-btn" id="sharedChallengeBtn">${challengeButtonLabel}</button>` : ''}
@@ -117,6 +160,8 @@
         </div>
       </nav>
     `;
+
+    applyNavActive(mount.querySelector('.acadbeat-shared-nav'), active);
 
     const userLabel = mount.querySelector('#userLabel');
     const userAvatar = mount.querySelector('#userAvatar');
@@ -179,8 +224,17 @@
     const data = await authFetch(authApiBase, 'me.php');
     authUser = data.status === 'success' ? data.user : null;
     if (redirectAdmins && authUser && String(authUser.role || '').toLowerCase() === 'admin') {
+      if (requireLogin) {
+        document.documentElement.classList.remove('acadbeat-login-guard');
+      }
       window.location.replace(adminUrl);
       return authUser;
+    }
+    if (requireLogin && !authUser) {
+      document.documentElement.classList.remove('acadbeat-login-guard');
+      const ret = loginReturnUrl || window.location.href.split('#')[0];
+      window.location.replace(loginUrlWithReturn(loginUrl, ret));
+      return null;
     }
     window.acadbeatNavState = { user: authUser };
     window.dispatchEvent(new CustomEvent('acadbeat:nav-user', { detail: { user: authUser } }));
@@ -219,6 +273,12 @@
     }
 
     releaseRoleGuard();
+
+    if (requireLogin) {
+      document.documentElement.classList.remove('acadbeat-login-guard');
+    }
+
+    window.dispatchEvent(new CustomEvent('acadbeat:nav-mounted', { detail: { active } }));
 
     mount.__acadbeatCleanup = function cleanupAcadbeatNav() {
       window.removeEventListener('acadbeat:message-summary', handleSummaryEvent);

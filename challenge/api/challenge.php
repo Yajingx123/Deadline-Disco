@@ -303,9 +303,14 @@ $weekStartDate = (string)$cycle['weekStartDate'];
 
 if ($action === 'signup') {
     challenge_upsert_signup($pdo, $userId, $weekStartDate);
+    challenge_notify_signup($pdo, $userId, $cycle);
     challenge_publish_update('signup', [
         'weekStartDate' => $weekStartDate,
         'userIds' => [$userId],
+    ]);
+    forum_realtime_publish('message-center.updated', [
+        'recipientUserId' => $userId,
+        'scope' => 'challenge',
     ]);
     forum_json([
         'ok' => true,
@@ -539,7 +544,7 @@ if ($action === 'respond_invite') {
         ");
         $closeOtherStmt->execute([$userId, $weekStartDate, $inviteId]);
 
-        challenge_lock_team_if_full($pdo, (int)$invite['team_id'], $weekStartDate);
+        $teamLocked = challenge_lock_team_if_full($pdo, (int)$invite['team_id'], $weekStartDate);
         $pdo->commit();
 
         challenge_publish_update('invite_accepted', [
@@ -547,6 +552,11 @@ if ($action === 'respond_invite') {
             'weekStartDate' => $weekStartDate,
             'userIds' => [$userId],
         ]);
+        if ($teamLocked) {
+            forum_realtime_publish('message-center.updated', [
+                'scope' => 'challenge',
+            ]);
+        }
         forum_json([
             'ok' => true,
             'message' => sprintf('You joined "%s".', (string)$invite['team_name']),
@@ -683,7 +693,7 @@ if ($action === 'join_public_team') {
         ");
         $inviteCloseStmt->execute([$userId, $weekStartDate]);
 
-        challenge_lock_team_if_full($pdo, $teamId, $weekStartDate);
+        $teamLocked = challenge_lock_team_if_full($pdo, $teamId, $weekStartDate);
         $pdo->commit();
 
         challenge_publish_update('public_joined', [
@@ -691,6 +701,11 @@ if ($action === 'join_public_team') {
             'weekStartDate' => $weekStartDate,
             'userIds' => [$userId, (int)$target['captain_user_id']],
         ]);
+        if ($teamLocked) {
+            forum_realtime_publish('message-center.updated', [
+                'scope' => 'challenge',
+            ]);
+        }
         forum_json([
             'ok' => true,
             'message' => sprintf('You joined "%s".', (string)$target['team_name']),

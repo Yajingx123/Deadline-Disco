@@ -21,7 +21,7 @@
 | `newUI/static/` | Godot/经典共用的**补充样式与静态片段**（如像素风 CSS） |
 | `gameUI_src/` | Godot 工程；Web 玩法则导出到 `gameUI_src/Release` 并由 `serve.py` 提供 |
 | `shared/` | **跨页面共享**：`acadbeat-local-config.js`（本地绝对 URL 单一真相） |
-| `shared-nav.js` / `shared-nav.css`（仓库根） | 顶栏导航组件；在引入 `shared/acadbeat-local-config.js` 后会自动使用其中的管理端/消息中心/摘要 API URL（未引入时仍有内置回退） |
+| `shared-nav.js` / `shared-nav.css`（仓库根） | 顶栏导航组件（Academic / Forum / Technology / **Studio** → `Studio/studio.html`）；在引入 `shared/acadbeat-local-config.js` 后会自动使用其中的管理端/消息中心/摘要 API URL（未引入时仍有内置回退） |
 | `docs/` | 架构与约定（本文件） |
 
 ## 本地 URL 单一配置

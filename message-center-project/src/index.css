@@ -22,6 +22,11 @@ body {
   color: var(--secondary-color);
 }
 
+.app-container--with-shared-nav {
+  padding-top: 80px;
+  box-sizing: border-box;
+}
+
 .forum-container {
   min-height: 100vh;
   padding-bottom: 48px;

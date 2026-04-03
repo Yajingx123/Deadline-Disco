@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Message Center</title>
+    <link rel="stylesheet" href="http://127.0.0.1:8001/shared-nav.css" />
     <script src="http://127.0.0.1:8001/shared/acadbeat-local-config.js"></script>
     <style>html.acadbeat-role-guard body{visibility:hidden}</style>
     <script>
@@ -22,10 +23,40 @@
         document.documentElement.classList.remove('acadbeat-role-guard');
       })();
     </script>
-    <script type="module" crossorigin src="/message-center-project/dist/assets/index-CDtplpAf.js"></script>
-    <link rel="stylesheet" crossorigin href="/message-center-project/dist/assets/index-BfSG0Ya-.css">
+    <script type="module" crossorigin src="/message-center-project/dist/assets/index-BOx3IbgI.js"></script>
+    <link rel="stylesheet" crossorigin href="/message-center-project/dist/assets/index-CkhqooO-.css">
   </head>
   <body>
-    <div id="root"></div>
+    <div id="acadbeatNav"></div>
+    <div id="root"></div>
+    <script src="http://127.0.0.1:8001/shared-nav.js"></script>
+    <script>
+      (function initMessageCenterSharedNav() {
+        var L = window.ACADBEAT_LOCAL || {};
+        var MAIN = L.mainOrigin || 'http://127.0.0.1:8001';
+        function boot() {
+          if (typeof window.initializeAcadBeatNav !== 'function') return;
+          window.initializeAcadBeatNav({
+            mountId: 'acadbeatNav',
+            basePath: MAIN + '/',
+            homeUrl: MAIN + '/home.html',
+            ownerUrl: MAIN + '/owner.html',
+            authApiBase: MAIN + '/Auth/backend/api',
+            forumUrl: MAIN + '/home.html?module=Dialogue',
+            technologyUrl: MAIN + '/home.html?module=Method',
+            studioUrl: MAIN + '/Studio/studio.html',
+            messageCenterUrl: L.messageCenterDistUrl,
+            adminUrl: L.adminDistUrl,
+            messageApiUrl: L.messageSummaryApiUrl,
+            loginUrl: MAIN + '/home.html?login=1',
+            active: 'messages',
+            redirectAdmins: true,
+            showChallengeButton: false,
+          });
+        }
+        if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
+        else boot();
+      })();
+    </script>
   </body>
 </html>

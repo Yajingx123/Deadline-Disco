@@ -10,6 +10,24 @@ if (!is_dir($runDir)) {
 $php = PHP_BINARY ?: 'php';
 $npm = 'npm.cmd';
 
+$frontendBuilds = [
+    [
+        'name' => 'forum-static',
+        'workdir' => $root . '/forum-project',
+        'command' => $npm . ' run build',
+    ],
+    [
+        'name' => 'admin-static',
+        'workdir' => $root . '/admin_page',
+        'command' => $npm . ' run build',
+    ],
+    [
+        'name' => 'message-center-static',
+        'workdir' => $root . '/message-center-project',
+        'command' => $npm . ' run build',
+    ],
+];
+
 $services = [
     [
         'name' => 'main',
@@ -60,7 +78,27 @@ function startWindowsDetached(string $title, string $workdir, string $command, s
     pclose(popen($cmd, 'r'));
 }
 
+function runWindowsBuild(string $workdir, string $command): void {
+    $fullCommand = 'cmd /c "cd /d "' . $workdir . '" && ' . $command . '"';
+    passthru($fullCommand, $exitCode);
+    if ($exitCode !== 0) {
+        throw new RuntimeException("Build failed with exit code {$exitCode}.");
+    }
+}
+
 echo "=== Start Services (Windows) ===\n\n";
+
+echo "=== Build Static Frontends ===\n";
+foreach ($frontendBuilds as $build) {
+    try {
+        echo "[build] {$build['name']}\n";
+        runWindowsBuild($build['workdir'], $build['command']);
+        echo "[done] {$build['name']}\n";
+    } catch (Throwable $e) {
+        echo "[failed] {$build['name']}: {$e->getMessage()}\n";
+    }
+}
+echo "\n";
 
 foreach ($services as $service) {
     $name = $service['name'];

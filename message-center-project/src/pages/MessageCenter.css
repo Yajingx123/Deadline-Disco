@@ -33,7 +33,7 @@
   display: grid;
   grid-template-columns: 248px minmax(0, 1fr);
   gap: 0;
-  height: calc(100vh - 92px);
+  height: calc(100vh - 80px - 92px);
   min-height: 0;
   border: 1px solid #e5e7eb;
   border-radius: 24px;

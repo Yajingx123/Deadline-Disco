@@ -33,6 +33,15 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
               AND notification_type = 'challenge_reset'
         ");
         $stmt->execute([$noticeId, $userId]);
+    } elseif ($category === 'notice' && $noticeId > 0 && $noticeKind === 'notification') {
+        $stmt = $pdo->prepare("
+            UPDATE message_center_notifications
+            SET is_read = 1, updated_at = NOW()
+            WHERE notification_id = ?
+              AND recipient_user_id = ?
+              AND notification_type = 'system'
+        ");
+        $stmt->execute([$noticeId, $userId]);
     } elseif ($category === 'replies') {
         $stmt = $pdo->prepare("
             UPDATE message_center_notifications
@@ -74,7 +83,7 @@ foreach ($countStmt->fetchAll() as $row) {
         $replyUnread += $count;
     } elseif ($type === 'like' || $type === 'favorite') {
         $reactionUnread += $count;
-    } elseif ($type === 'challenge_reset') {
+    } elseif ($type === 'challenge_reset' || $type === 'system') {
         $challengeUnread += $count;
     }
 }
@@ -202,6 +211,22 @@ $challengeNoticeStmt = $pdo->prepare("
 ");
 $challengeNoticeStmt->execute([$userId]);
 
+$userSystemNoticeStmt = $pdo->prepare("
+    SELECT
+        notification_id,
+        title,
+        body_text,
+        cta_label,
+        cta_url,
+        is_read,
+        created_at
+    FROM message_center_notifications
+    WHERE recipient_user_id = ?
+      AND notification_type = 'system'
+    ORDER BY created_at DESC, notification_id DESC
+");
+$userSystemNoticeStmt->execute([$userId]);
+
 $replies = array_map(static function(array $row): array {
     return [
         'id' => (int)$row['notification_id'],
@@ -262,7 +287,20 @@ $challengeNotices = array_map(static function(array $row): array {
     ];
 }, $challengeNoticeStmt->fetchAll());
 
-$notices = array_merge($challengeNotices, $systemNotices);
+$userSystemNotices = array_map(static function(array $row): array {
+    return [
+        'id' => (int)$row['notification_id'],
+        'kind' => 'notification',
+        'title' => (string)($row['title'] ?? ''),
+        'body' => (string)($row['body_text'] ?? ''),
+        'ctaLabel' => (string)($row['cta_label'] ?? ''),
+        'ctaUrl' => forum_normalize_local_url((string)($row['cta_url'] ?? '')),
+        'isRead' => (bool)($row['is_read'] ?? false),
+        'createdAt' => (string)($row['created_at'] ?? ''),
+    ];
+}, $userSystemNoticeStmt->fetchAll());
+
+$notices = array_merge($challengeNotices, $userSystemNotices, $systemNotices);
 usort($notices, static function (array $a, array $b): int {
     return strcmp((string)($b['createdAt'] ?? ''), (string)($a['createdAt'] ?? ''));
 });

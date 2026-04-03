@@ -4,6 +4,10 @@
   --acad-nav-text: #3A4E6B;
 }
 
+html.acadbeat-login-guard body {
+  visibility: hidden;
+}
+
 .acadbeat-shared-nav {
   display: flex;
   justify-content: space-between;

@@ -1058,7 +1058,7 @@
         const OWNER_URL = './owner.html';
         const ADMIN_URL = L.adminDistUrl || 'http://127.0.0.1:8001/admin_page/dist/index.html';
         const VOCABULARY_URL = './vocba_prac/';
-        const FORUM_URL = L.forumDevChooserUrl || 'http://127.0.0.1:5173/forum-project/dist/?view=chooser';
+        const FORUM_URL = L.forumDevChooserUrl || 'http://127.0.0.1:8001/forum-project/dist/index.html?view=forum';
         const TECHNOLOGY_URL = './technology.html';
         const ACADEMIC_PRACTICE_URL = './Academic-Practice/training.html';
         const AUTH_API_BASE = './Auth/backend/api';
@@ -1173,6 +1173,7 @@
                 adminUrl: L.adminDistUrl || 'http://127.0.0.1:8001/admin_page/dist/index.html',
                 forumUrl: './home.html?module=Dialogue',
                 technologyUrl: './home.html?module=Method',
+                studioUrl: './Studio/studio.html',
                 messageCenterUrl: L.messageCenterDistUrl || 'http://127.0.0.1:8001/message-center-project/dist/index.html',
                 redirectAdmins: true,
                 showChallengeButton: true,
@@ -1298,6 +1299,21 @@
                 closeAuthModal();
                 openGodotMode(null);
                 return;
+            }
+            if (authState.user) {
+                try {
+                    const p = new URLSearchParams(window.location.search);
+                    const raw = p.get('from');
+                    if (raw) {
+                        const decoded = decodeURIComponent(raw);
+                        const u = new URL(decoded, window.location.origin);
+                        if (u.origin === window.location.origin) {
+                            closeAuthModal();
+                            window.location.replace(u.toString());
+                            return;
+                        }
+                    }
+                } catch (_err) {}
             }
             closeAuthModal();
         }
@@ -1450,6 +1466,16 @@
             const moduleName = resolveModuleName(params.get('module'));
             loadModule(moduleName);
             await refreshSharedNav();
+            if (authState.user && params.get('login') === '1' && params.get('from')) {
+                try {
+                    const decoded = decodeURIComponent(params.get('from'));
+                    const u = new URL(decoded, window.location.origin);
+                    if (u.origin === window.location.origin) {
+                        window.location.replace(u.toString());
+                        return;
+                    }
+                } catch (_err) {}
+            }
             if (params.get('login') === '1' && !authState.user) {
                 openAuthModal('login', 'Please log in first.');
             }

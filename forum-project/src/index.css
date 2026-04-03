@@ -99,6 +99,52 @@ body {
   gap: 12px;
 }
 
+.forum-topnav__messageLink {
+  position: relative;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(58, 78, 107, 0.16);
+  background: rgba(255, 255, 255, 0.74);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--secondary-color);
+  text-decoration: none;
+  box-shadow: 0 8px 20px rgba(58, 78, 107, 0.08);
+  transition: 0.25s ease;
+}
+
+.forum-topnav__messageLink:hover,
+.forum-topnav__messageLink.is-active {
+  background: rgba(155, 183, 212, 0.22);
+  transform: translateY(-1px);
+}
+
+.forum-topnav__messageIcon {
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
+.forum-topnav__messageBadge {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  width: 10px;
+  min-width: 10px;
+  height: 10px;
+  padding: 0;
+  border-radius: 999px;
+  background: #ef4444;
+  color: transparent;
+  font-size: 0;
+  border: 2px solid #f7f3eb;
+  box-shadow: 0 0 0 1px rgba(58, 78, 107, 0.08);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .forum-topnav__switch {
   min-height: 34px;
   padding: 0 12px;
@@ -356,6 +402,19 @@ body {
   box-shadow: 0 18px 44px rgba(58, 78, 107, 0.06);
 }
 
+.pinned-posts {
+  margin-bottom: 8px;
+}
+
+.pinned-posts__header {
+  padding: 10px 8px 14px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.18rem;
+  text-transform: uppercase;
+  color: rgba(58, 78, 107, 0.72);
+}
+
 .post-item {
   background: transparent;
   padding: 18px 12px 18px 8px;
@@ -373,6 +432,15 @@ body {
 
 .main-content > .post-item:first-child {
   padding-top: 10px;
+}
+
+.post-item--pinned {
+  background: linear-gradient(180deg, rgba(227, 217, 193, 0.4), rgba(255, 255, 255, 0));
+}
+
+.post-status--pinned {
+  background: rgba(214, 170, 63, 0.18);
+  color: #8a6515;
 }
 
 .favorites-container {
@@ -659,4 +727,15 @@ body {
   .forum-hero__title {
     font-size: 2.6rem;
   }
+}
+
+.app-container {
+  padding-top: 80px;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.forum-container--personal:not(.forum-container--embedded) {
+  height: calc(100vh - 80px);
+  min-height: calc(100vh - 80px);
 }

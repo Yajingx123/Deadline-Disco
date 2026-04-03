@@ -10,6 +10,24 @@ if (!is_dir($runDir)) {
 $php = PHP_BINARY ?: 'php';
 $npm = 'npm';
 
+$frontendBuilds = [
+    [
+        'name' => 'forum-static',
+        'workdir' => $root . '/forum-project',
+        'command' => escapeshellarg($npm) . ' run build',
+    ],
+    [
+        'name' => 'admin-static',
+        'workdir' => $root . '/admin_page',
+        'command' => escapeshellarg($npm) . ' run build',
+    ],
+    [
+        'name' => 'message-center-static',
+        'workdir' => $root . '/message-center-project',
+        'command' => escapeshellarg($npm) . ' run build',
+    ],
+];
+
 $services = [
     [
         'name' => 'main',
@@ -74,7 +92,27 @@ function startMacProcess(string $command, string $workdir, string $stdoutLog, st
     return $pid;
 }
 
+function runForegroundBuild(string $command, string $workdir): void {
+    $shellCommand = sprintf('cd %s && %s 2>&1', escapeshellarg($workdir), $command);
+    passthru($shellCommand, $exitCode);
+    if ($exitCode !== 0) {
+        throw new RuntimeException("Build failed with exit code {$exitCode}.");
+    }
+}
+
 echo "=== Start Services (macOS) ===\n\n";
+
+echo "=== Build Static Frontends ===\n";
+foreach ($frontendBuilds as $build) {
+    try {
+        echo "[build] {$build['name']}\n";
+        runForegroundBuild($build['command'], $build['workdir']);
+        echo "[done] {$build['name']}\n";
+    } catch (Throwable $e) {
+        echo "[failed] {$build['name']}: {$e->getMessage()}\n";
+    }
+}
+echo "\n";
 
 foreach ($services as $service) {
     $name = $service['name'];

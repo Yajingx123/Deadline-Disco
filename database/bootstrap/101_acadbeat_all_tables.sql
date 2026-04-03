@@ -224,6 +224,7 @@ CREATE TABLE forum_posts (
     favorite_count INT NOT NULL DEFAULT 0,
     last_commented_at DATETIME NULL,
     status VARCHAR(20) NOT NULL DEFAULT 'active',
+    is_pinned TINYINT(1) NOT NULL DEFAULT 0,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
@@ -818,7 +819,7 @@ CREATE TABLE message_center_notifications (
     notification_id BIGINT PRIMARY KEY AUTO_INCREMENT,
     recipient_user_id BIGINT NOT NULL,
     actor_user_id BIGINT NULL,
-    notification_type ENUM('reply', 'like', 'favorite', 'challenge_reset') NOT NULL,
+    notification_type ENUM('reply', 'like', 'favorite', 'challenge_reset', 'system') NOT NULL,
     post_id BIGINT NULL,
     comment_id BIGINT NULL,
     title VARCHAR(255) NOT NULL DEFAULT '',

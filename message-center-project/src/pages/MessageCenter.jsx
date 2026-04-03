@@ -309,7 +309,9 @@ export default function MessageCenter() {
       {data.notices.map((item) => (
         <article key={`${item.kind || 'system'}-${item.id}`} className="notice-card">
           {!item.isRead && <div className="notice-card__dot" />}
-          <div className="notice-card__tag">{item.kind === 'challenge' ? 'Challenge Update' : 'System Notice'}</div>
+          <div className="notice-card__tag">
+            {item.kind === 'challenge' ? 'Challenge Update' : item.kind === 'notification' ? 'Moderation Update' : 'System Notice'}
+          </div>
           <h3>{item.title}</h3>
           <p>{item.body}</p>
           <div className="notice-card__footer">

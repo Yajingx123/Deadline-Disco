@@ -9,22 +9,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../shared-nav.css">
   <script src="../shared/acadbeat-local-config.js"></script>
-  <style>html.acadbeat-role-guard body{visibility:hidden}</style>
-  <script>
-    document.documentElement.classList.add('acadbeat-role-guard');
-    (async function guardAdminTraining() {
-      try {
-        const response = await fetch('../Auth/backend/api/me.php', { credentials: 'include' });
-        const data = await response.json().catch(() => ({ status: 'error' }));
-        if (data.status === 'success' && data.user && String(data.user.role || '').toLowerCase() === 'admin') {
-          const admin = (window.ACADBEAT_LOCAL && window.ACADBEAT_LOCAL.adminDistUrl) || 'http://127.0.0.1:8001/admin_page/dist/index.html';
-          window.location.replace(admin);
-          return;
-        }
-      } catch (_err) {}
-      document.documentElement.classList.remove('acadbeat-role-guard');
-    })();
-  </script>
   <link rel="stylesheet" href="acadbeat-global.css">
   <link rel="stylesheet" href="practice-style.css">
 </head>
@@ -124,7 +108,7 @@
         ownerUrl: '../owner.html',
         adminUrl: L.adminDistUrl || 'http://127.0.0.1:8001/admin_page/dist/index.html',
         loginUrl,
-        redirectAdmins: true
+        redirectAdmins: false
       });
     });
   </script>

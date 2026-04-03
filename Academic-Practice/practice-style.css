@@ -1075,6 +1075,25 @@ body[data-page="video-list"] .results-scroll-region {
   max-width: 100%;
 }
 
+/* 优化国旗在国家标签内的显示 */
+.video-country-pill {
+  min-width: 40px;
+}
+
+.video-country-pill .country-inline {
+  gap: 4px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.video-country-pill .country-flag-icon {
+  width: 16px;
+  height: 12px;
+  border: none;
+  box-shadow: none;
+  flex: 0 0 auto;
+}
+
 .video-person-line {
   display: flex;
   flex-wrap: wrap;
@@ -1241,18 +1260,20 @@ body[data-page="video-list"] .results-scroll-region {
 }
 
 .video-meta-pill {
-  padding: 2px 7px;
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 8px;
   border-radius: 999px;
   background: rgba(58, 78, 107, 0.1);
   border: 1px solid rgba(58, 78, 107, 0.14);
   color: rgba(58, 78, 107, 0.86);
   font-size: 0.68rem;
-  line-height: 1.25;
+  line-height: 1.4;
 }
 
 /* Draft2: make labels lighter and cover area more dominant */
 body[data-page="video-list"] .video-card {
-  min-height: 340px;
+  /* 移除固定最小高度，让卡片根据内容自适应 */
 }
 
 body[data-page="video-list"] .video-cover-box {

@@ -96,6 +96,94 @@ function challenge_upsert_signup(PDO $pdo, int $userId, string $weekStartDate): 
     $stmt->execute([$weekStartDate, $userId]);
 }
 
+function challenge_insert_user_notification(PDO $pdo, int $recipientUserId, string $type, string $title, string $body, string $ctaLabel = 'Open challenge', string $ctaUrl = 'http://127.0.0.1:8001/home.html?challenge=1'): void {
+    if ($recipientUserId <= 0) {
+        return;
+    }
+
+    $stmt = $pdo->prepare("
+        INSERT INTO message_center_notifications (
+            recipient_user_id,
+            actor_user_id,
+            notification_type,
+            post_id,
+            comment_id,
+            title,
+            body_text,
+            cta_label,
+            cta_url,
+            is_read,
+            created_at,
+            updated_at
+        ) VALUES (?, NULL, ?, NULL, NULL, ?, ?, ?, ?, 0, NOW(), NOW())
+    ");
+    $stmt->execute([$recipientUserId, $type, $title, $body, $ctaLabel, $ctaUrl]);
+}
+
+function challenge_notify_signup(PDO $pdo, int $userId, array $cycle): void {
+    challenge_insert_user_notification(
+        $pdo,
+        $userId,
+        'system',
+        'Challenge sign-up confirmed',
+        sprintf('You have successfully signed up for the weekly challenge cycle %s.', (string)($cycle['label'] ?? '')),
+    );
+}
+
+function challenge_notify_team_locked(PDO $pdo, int $teamId, string $weekStartDate): void {
+    $stmt = $pdo->prepare("
+        SELECT
+            ct.team_name,
+            u.user_id
+        FROM challenge_teams ct
+        JOIN challenge_team_members ctm
+          ON ctm.team_id = ct.team_id
+         AND ctm.membership_status = 'active'
+        JOIN users u
+          ON u.user_id = ctm.user_id
+        WHERE ct.team_id = ?
+          AND ct.week_start_date = ?
+    ");
+    $stmt->execute([$teamId, $weekStartDate]);
+
+    foreach ($stmt->fetchAll() as $row) {
+        challenge_insert_user_notification(
+            $pdo,
+            (int)($row['user_id'] ?? 0),
+            'system',
+            'Challenge team formed successfully',
+            sprintf('Your team "%s" is now complete with 4 members and has been locked in for this week.', (string)($row['team_name'] ?? 'Your team')),
+        );
+    }
+}
+
+function challenge_notify_team_expired(PDO $pdo, int $teamId, string $weekStartDate): void {
+    $stmt = $pdo->prepare("
+        SELECT
+            ct.team_name,
+            u.user_id
+        FROM challenge_teams ct
+        JOIN challenge_team_members ctm
+          ON ctm.team_id = ct.team_id
+         AND ctm.membership_status = 'active'
+        JOIN users u
+          ON u.user_id = ctm.user_id
+        WHERE ct.team_id = ?
+          AND ct.week_start_date = ?
+    ");
+    $stmt->execute([$teamId, $weekStartDate]);
+
+    foreach ($stmt->fetchAll() as $row) {
+        challenge_insert_user_notification(
+            $pdo,
+            (int)($row['user_id'] ?? 0),
+            'system',
+            'Challenge team formation failed',
+            sprintf('Your team "%s" did not reach 4 members within 1 hour, so the team has expired.', (string)($row['team_name'] ?? 'Your team')),
+        );
+    }
+}
+
 function challenge_find_team_for_user(PDO $pdo, int $userId, string $weekStartDate): ?array {
     $stmt = $pdo->prepare("
         SELECT
@@ -332,7 +420,12 @@ function challenge_lock_team_if_full(PDO $pdo, int $teamId, string $weekStartDat
     ");
     $stmt->execute([$teamId]);
 
+    if ($stmt->rowCount() === 0) {
+        return false;
+    }
+
     challenge_close_team_side_effects($pdo, $teamId, $weekStartDate, 'expired');
+    challenge_notify_team_locked($pdo, $teamId, $weekStartDate);
     return true;
 }
 
@@ -348,6 +441,7 @@ function challenge_cleanup_expired_forming_teams(PDO $pdo, string $weekStartDate
     $teamIds = array_map(static fn(array $row): int => (int)$row['team_id'], $stmt->fetchAll());
 
     foreach ($teamIds as $teamId) {
+        challenge_notify_team_expired($pdo, $teamId, $weekStartDate);
         challenge_archive_team($pdo, $teamId, 'expired', $weekStartDate);
     }
 
@@ -356,6 +450,9 @@ function challenge_cleanup_expired_forming_teams(PDO $pdo, string $weekStartDate
             'reason' => 'forming_expired',
             'scope' => 'global',
             'weekStartDate' => $weekStartDate,
+        ]);
+        forum_realtime_publish('message-center.updated', [
+            'scope' => 'challenge',
         ]);
     }
 }
@@ -493,6 +590,9 @@ function challenge_maintain_weekly_cycle(PDO $pdo): array {
                 'reason' => 'weekly_reset',
                 'scope' => 'global',
                 'weekStartDate' => $currentWeekStart,
+            ]);
+            forum_realtime_publish('message-center.updated', [
+                'scope' => 'challenge',
             ]);
         } catch (Throwable $e) {
             if ($pdo->inTransaction()) {

@@ -12,13 +12,13 @@
     challengeApiUrl: MAIN + '/challenge/api/challenge.php',
     /** 与 start_all_mac 中 voice-room-server 一致 */
     voiceRoomWsUrl: 'ws://127.0.0.1:3001/ws',
-    // Local reliable admin entry uses Vite dev server started by start_all*.php.
-    adminDistUrl: 'http://127.0.0.1:5174/admin_page/dist/',
+    // Default to PHP-served static builds so the app still opens even when Vite dev servers are not running.
+    adminDistUrl: MAIN + '/admin_page/dist/index.html',
     messageCenterDistUrl: MAIN + '/message-center-project/dist/index.html',
     messageSummaryApiUrl: MAIN + '/forum-project/api/message-center.php?summaryOnly=1',
     authMeUrl: MAIN + '/Auth/backend/api/me.php',
-    /** 与 forum-project/vite.config.js 的 base 一致 */
-    forumDevChooserUrl: 'http://127.0.0.1:5173/forum-project/dist/?view=chooser',
+    /** 对应 forum-project build 后由 8001 主站托管的静态入口（直接进入论坛，不再经过 chooser 门户） */
+    forumDevChooserUrl: MAIN + '/forum-project/dist/index.html?view=forum',
     forumProdIndexUrl: MAIN + '/forum-project/dist/index.html',
     godotWebEntryUrl: 'http://127.0.0.1:5500/index.html?ui=godot',
     /** Web 导出读 ?scene=academic 进入学术星球；听力页 Godot 模式返回用 */
