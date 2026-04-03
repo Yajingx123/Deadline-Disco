@@ -13,6 +13,11 @@ if (session_status() === PHP_SESSION_NONE) {
 
 $config = require __DIR__ . '/../../Auth/backend/config/config.php';
 
+/** Canonical forum_labels.name for admin-managed announcements (must match 102_acadbeat_all_data.sql). */
+if (!defined('FORUM_ANNOUNCEMENT_LABEL_NAME')) {
+    define('FORUM_ANNOUNCEMENT_LABEL_NAME', 'Announcement');
+}
+
 $allowedOrigins = [
     'http://127.0.0.1:5173',
     'http://127.0.0.1:5174',
@@ -183,6 +188,98 @@ function forum_extract_media_rows(string $content): array {
     return $rows;
 }
 
+function forum_ensure_forum_post_announcement_schema(PDO $pdo): void {
+    static $ensured = false;
+    if ($ensured) {
+        return;
+    }
+
+    $columnStmt = $pdo->query("SHOW COLUMNS FROM forum_posts LIKE 'is_pinned'");
+    if (!$columnStmt->fetch()) {
+        $pdo->exec("
+            ALTER TABLE forum_posts
+            ADD COLUMN is_pinned TINYINT(1) NOT NULL DEFAULT 0 AFTER status
+        ");
+    }
+
+    forum_consolidate_duplicate_announcement_labels($pdo);
+
+    $canonical = FORUM_ANNOUNCEMENT_LABEL_NAME;
+    $labelStmt = $pdo->prepare("
+        INSERT INTO forum_labels (name, created_at)
+        SELECT '{$canonical}', NOW()
+        FROM DUAL
+        WHERE NOT EXISTS (
+            SELECT 1 FROM forum_labels WHERE BINARY name = '{$canonical}'
+        )
+    ");
+    $labelStmt->execute();
+
+    $ensured = true;
+}
+
+/**
+ * Merge mistaken `announcement` (all-lowercase) rows into canonical `Announcement`.
+ * Uses BINARY comparisons because utf8mb4_unicode_ci treats those strings as equal for `=`.
+ */
+function forum_consolidate_duplicate_announcement_labels(PDO $pdo): void {
+    try {
+        $pdo->beginTransaction();
+
+        $canonical = FORUM_ANNOUNCEMENT_LABEL_NAME;
+        $legacy = 'announcement';
+
+        // Case A: only a lowercase row exists — rename in place (same label_id, no orphaned links).
+        $pdo->exec("
+            UPDATE forum_labels
+            SET name = '{$canonical}'
+            WHERE name = BINARY '{$legacy}'
+              AND NOT EXISTS (
+                  SELECT 1
+                  FROM (
+                      SELECT 1 FROM forum_labels WHERE BINARY name = '{$canonical}'
+                  ) AS announce_exists
+              )
+        ");
+
+        // Case B: two rows (legacy + canonical) — merge into canonical, then drop duplicate name.
+        $pdo->exec("
+            INSERT INTO forum_labels (name, created_at)
+            SELECT '{$canonical}', NOW()
+            FROM DUAL
+            WHERE NOT EXISTS (SELECT 1 FROM forum_labels WHERE BINARY name = '{$canonical}')
+        ");
+        $pdo->exec("
+            DELETE fpl
+            FROM forum_post_labels fpl
+            JOIN forum_labels fl ON fl.label_id = fpl.label_id AND fl.name = BINARY '{$legacy}'
+            JOIN forum_post_labels fpl2 ON fpl2.post_id = fpl.post_id
+            JOIN forum_labels fl2 ON fl2.label_id = fpl2.label_id AND BINARY fl2.name = BINARY '{$canonical}'
+        ");
+        $pdo->exec("
+            UPDATE forum_post_labels fpl
+            JOIN forum_labels fl ON fl.label_id = fpl.label_id AND fl.name = BINARY '{$legacy}'
+            JOIN forum_labels fl2 ON BINARY fl2.name = BINARY '{$canonical}'
+            SET fpl.label_id = fl2.label_id
+        ");
+        $pdo->exec("DELETE FROM forum_labels WHERE BINARY name = BINARY '{$legacy}'");
+
+        $pdo->commit();
+    } catch (Throwable $e) {
+        if ($pdo->inTransaction()) {
+            $pdo->rollBack();
+        }
+        error_log('forum_consolidate_duplicate_announcement_labels: ' . $e->getMessage());
+    }
+}
+
+function forum_announcement_label_id(PDO $pdo): int {
+    forum_ensure_forum_post_announcement_schema($pdo);
+    $stmt = $pdo->prepare('SELECT label_id FROM forum_labels WHERE BINARY name = ? LIMIT 1');
+    $stmt->execute([FORUM_ANNOUNCEMENT_LABEL_NAME]);
+    return (int)($stmt->fetchColumn() ?: 0);
+}
+
 function forum_plain_text_preview(?string $content, int $maxLength = 120): string {
     $text = trim((string)$content);
     if ($text === '') {
@@ -198,8 +295,12 @@ function forum_plain_text_preview(?string $content, int $maxLength = 120): strin
     $text = preg_replace('/\s+/', ' ', html_entity_decode($text, ENT_QUOTES | ENT_HTML5, 'UTF-8')) ?? $text;
     $text = trim($text);
 
-    if (mb_strlen($text) > $maxLength) {
-        return rtrim(mb_substr($text, 0, $maxLength - 1)) . '…';
+    $textLength = function_exists('mb_strlen') ? mb_strlen($text) : strlen($text);
+    if ($textLength > $maxLength) {
+        $slice = function_exists('mb_substr')
+            ? mb_substr($text, 0, $maxLength - 1)
+            : substr($text, 0, $maxLength - 1);
+        return rtrim((string)$slice) . '…';
     }
     return $text;
 }
@@ -218,6 +319,8 @@ function forum_post_row_to_payload(array $row): array {
         'likeCount' => (int)($row['like_count'] ?? 0),
         'favoriteCount' => (int)($row['favorite_count'] ?? 0),
         'status' => (string)($row['status'] ?? 'Under review'),
+        'isPinned' => ((int)($row['is_pinned'] ?? 0) === 1),
+        'is_pinned' => ((int)($row['is_pinned'] ?? 0) === 1),
         'publishTime' => forum_format_datetime((string)($row['created_at'] ?? '')),
         'mediaType' => (string)($row['media_type'] ?? 'text'),
         'labels' => $labels,

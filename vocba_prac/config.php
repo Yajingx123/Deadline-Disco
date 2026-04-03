@@ -34,6 +34,8 @@ define('DB_NAME', 'acadbeat');
 define('DB_USER', 'root');
 define('APP_HOME_URL', 'http://127.0.0.1:8001/home.html');
 define('APP_OWNER_URL', 'http://127.0.0.1:8001/owner.html');
+/** 主站静态资源根（shared-nav.js / shared-nav.css），与 APP_HOME_URL 同主机 */
+define('ACADBEAT_MAIN_ORIGIN', preg_replace('#/home\\.html$#i', '', APP_HOME_URL));
 define('APP_VOCAB_ROOT_PATH', '/vocba_prac/');
 
 // 为避免把密码写进仓库：优先从环境变量读取；本地没有就填这里

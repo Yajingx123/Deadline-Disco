@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import AppTopNav from '../components/AppTopNav'
 import MessageComposer from '../components/MessageComposer'
 import {
   connectRealtime,
@@ -722,7 +721,6 @@ export default function PersonalHub({ onBackToChooser, embedded = false }) {
 
   return (
     <div className={`forum-container forum-container--personal ${embedded ? 'forum-container--embedded' : ''}`}>
-      {!embedded && <AppTopNav currentUser={currentUser} activeMode="messages" />}
       {workspace}
 
       {groupModalOpen && (

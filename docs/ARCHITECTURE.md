@@ -5,6 +5,7 @@
 - **一个项目、一套账号与数据**：登录后 Session 在 `Auth/backend`，各模块读同一用户。
 - **经典模式（原版）**：以 `home.html` 为浏览器入口，必须保证**所有模块可完整跑通**（验收标准）。
 - **Godot 模式**：同一业务链路的**换壳入口**（`5500` Web 导出 + `ui_mode=godot` / `ui=godot`）。部分页面可仍用经典样式或尚未接 newUI，**允许未全部接完**。
+- **结构整理路线**：见 `docs/REPO_REORG_PLAN.md`（仅做低风险、可回滚的分阶段重组）。
 
 ## 目录职责
 
@@ -20,7 +21,7 @@
 | `newUI/static/` | Godot/经典共用的**补充样式与静态片段**（如像素风 CSS） |
 | `gameUI_src/` | Godot 工程；Web 玩法则导出到 `gameUI_src/Release` 并由 `serve.py` 提供 |
 | `shared/` | **跨页面共享**：`acadbeat-local-config.js`（本地绝对 URL 单一真相） |
-| `shared-nav.js` / `shared-nav.css`（仓库根） | 顶栏导航组件；在引入 `shared/acadbeat-local-config.js` 后会自动使用其中的管理端/消息中心/摘要 API URL（未引入时仍有内置回退） |
+| `shared-nav.js` / `shared-nav.css`（仓库根） | 顶栏导航组件（Academic / Forum / Technology / **Studio** → `Studio/studio.html`）；在引入 `shared/acadbeat-local-config.js` 后会自动使用其中的管理端/消息中心/摘要 API URL（未引入时仍有内置回退） |
 | `docs/` | 架构与约定（本文件） |
 
 ## 本地 URL 单一配置

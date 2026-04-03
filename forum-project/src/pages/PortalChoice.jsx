@@ -1,11 +1,8 @@
-import AppTopNav from '../components/AppTopNav'
 import './PersonalHub.css'
 
 export default function PortalChoice({ onChoose }) {
   return (
     <div className="forum-container">
-      <AppTopNav currentUser={null} activeMode="chooser" />
-
       <section className="portal-choice">
         <div className="portal-choice__eyebrow">Section III — Collective Intellect</div>
         <h1 className="portal-choice__title">Choose Your Space</h1>

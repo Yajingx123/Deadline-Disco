@@ -1,7 +1,15 @@
 import { useEffect, useMemo, useState } from 'react'
 import ForumHome from './pages/ForumHome'
 import PersonalHub from './pages/PersonalHub'
-import PortalChoice from './pages/PortalChoice'
+
+function syncForumSharedNavActive(view) {
+  if (typeof window.setAcadBeatNavActive !== 'function') return
+  if (view === 'personal') {
+    window.setAcadBeatNavActive('messages')
+  } else {
+    window.setAcadBeatNavActive('forum')
+  }
+}
 
 function resolveInitialView() {
   const params = new URLSearchParams(window.location.search)
@@ -19,6 +27,7 @@ function resolveInitialView() {
 function App() {
   const [view, setView] = useState(resolveInitialView)
 
+  // 与旧版一致：?view=chooser 仍解析为 URL，但界面直接进论坛列表（不显示 Portal 门户页）
   const normalizedView = useMemo(() => {
     if (view === 'forum' || view === 'personal') {
       return view
@@ -43,13 +52,18 @@ function App() {
     return () => window.removeEventListener('popstate', handlePopState)
   }, [])
 
+  useEffect(() => {
+    const run = () => syncForumSharedNavActive(view)
+    run()
+    window.addEventListener('acadbeat:nav-mounted', run)
+    return () => window.removeEventListener('acadbeat:nav-mounted', run)
+  }, [view])
+
   let content = null
   if (normalizedView === 'forum') {
     content = <ForumHome />
   } else if (normalizedView === 'personal') {
     content = <PersonalHub onBackToChooser={() => handleNavigate('forum')} />
-  } else {
-    content = <PortalChoice onChoose={handleNavigate} />
   }
 
   return (

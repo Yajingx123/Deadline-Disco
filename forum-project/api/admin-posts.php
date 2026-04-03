@@ -7,6 +7,107 @@ $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 $pdo = forum_db();
 forum_require_admin();
 
+function admin_posts_ensure_notification_type(PDO $pdo): void {
+    static $ensured = false;
+    if ($ensured) {
+        return;
+    }
+
+    $stmt = $pdo->query("SHOW COLUMNS FROM message_center_notifications LIKE 'notification_type'");
+    $column = $stmt->fetch();
+    $typeDefinition = strtolower((string)($column['Type'] ?? ''));
+    if (!str_contains($typeDefinition, "'system'")) {
+        $pdo->exec("
+            ALTER TABLE message_center_notifications
+            MODIFY notification_type ENUM('reply', 'like', 'favorite', 'challenge_reset', 'system') NOT NULL
+        ");
+    }
+
+    $ensured = true;
+}
+
+function admin_posts_action_label(string $action): string {
+    return match ($action) {
+        'approve' => 'approved',
+        'reject' => 'declined',
+        'delete' => 'deleted',
+        'reset' => 'returned to review',
+        default => 'updated',
+    };
+}
+
+function admin_posts_notification_copy(string $action, string $postTitle): array {
+    $safeTitle = trim($postTitle) !== '' ? $postTitle : 'your post';
+
+    return match ($action) {
+        'approve' => [
+            'title' => 'Your post was approved',
+            'body' => sprintf('Your post "%s" has been approved and is now visible in the forum.', $safeTitle),
+            'ctaLabel' => 'View post',
+        ],
+        'reject' => [
+            'title' => 'Your post was declined',
+            'body' => sprintf('Your post "%s" did not pass review. You can revise it and submit again later.', $safeTitle),
+            'ctaLabel' => 'Open forum',
+        ],
+        'delete' => [
+            'title' => 'Your post was deleted',
+            'body' => sprintf('Your post "%s" was removed by admin and is no longer public.', $safeTitle),
+            'ctaLabel' => 'Open forum',
+        ],
+        'reset' => [
+            'title' => 'Your post is back under review',
+            'body' => sprintf('Your post "%s" has been moved back into review status.', $safeTitle),
+            'ctaLabel' => 'Open forum',
+        ],
+        default => [
+            'title' => 'Your post was updated',
+            'body' => sprintf('There is a new moderation update for "%s".', $safeTitle),
+            'ctaLabel' => 'Open forum',
+        ],
+    };
+}
+
+function admin_posts_create_system_notification(PDO $pdo, array $postRow, string $action): void {
+    admin_posts_ensure_notification_type($pdo);
+
+    $recipientUserId = (int)($postRow['author_user_id'] ?? 0);
+    $postId = (int)($postRow['post_id'] ?? 0);
+    if ($recipientUserId <= 0 || $postId <= 0) {
+        return;
+    }
+
+    $copy = admin_posts_notification_copy($action, (string)($postRow['title'] ?? ''));
+    $ctaUrl = $action === 'approve'
+        ? sprintf('http://127.0.0.1:8001/forum-project/dist/index.html?view=forum&postId=%d', $postId)
+        : 'http://127.0.0.1:8001/forum-project/dist/index.html?view=forum';
+
+    $stmt = $pdo->prepare("
+        INSERT INTO message_center_notifications (
+            recipient_user_id,
+            actor_user_id,
+            notification_type,
+            post_id,
+            title,
+            body_text,
+            cta_label,
+            cta_url,
+            is_read,
+            created_at,
+            updated_at
+        )
+        VALUES (?, NULL, 'system', ?, ?, ?, ?, ?, 0, NOW(), NOW())
+    ");
+    $stmt->execute([
+        $recipientUserId,
+        $postId,
+        $copy['title'],
+        $copy['body'],
+        $copy['ctaLabel'],
+        $ctaUrl,
+    ]);
+}
+
 function admin_post_status_from_filter(string $filter): ?string {
     return match ($filter) {
         'pending' => 'Under review',
@@ -18,10 +119,18 @@ function admin_post_status_from_filter(string $filter): ?string {
 }
 
 function admin_post_counts(PDO $pdo): array {
+    $ann = FORUM_ANNOUNCEMENT_LABEL_NAME;
     $stmt = $pdo->query("
         SELECT status, COUNT(*) AS total
         FROM forum_posts
         WHERE status IN ('Under review', 'active', 'Rejected')
+          AND NOT EXISTS (
+              SELECT 1
+              FROM forum_post_labels xfpl
+              JOIN forum_labels xfl ON xfl.label_id = xfpl.label_id
+              WHERE xfpl.post_id = forum_posts.post_id
+                AND xfl.name = '{$ann}'
+          )
         GROUP BY status
     ");
 
@@ -53,7 +162,17 @@ if ($method === 'GET') {
     $search = trim((string)($_GET['q'] ?? ''));
     $status = admin_post_status_from_filter($filter);
 
-    $conditions = ["fp.status IN ('Under review', 'active', 'Rejected')"];
+    $ann = FORUM_ANNOUNCEMENT_LABEL_NAME;
+    $conditions = [
+        "fp.status IN ('Under review', 'active', 'Rejected')",
+        "NOT EXISTS (
+            SELECT 1
+            FROM forum_post_labels xfpl
+            JOIN forum_labels xfl ON xfl.label_id = xfpl.label_id
+            WHERE xfpl.post_id = fp.post_id
+              AND xfl.name = '{$ann}'
+        )",
+    ];
     $params = [];
 
     if ($status !== null) {
@@ -136,6 +255,19 @@ if ($targetStatus === null) {
     forum_json(['ok' => false, 'message' => 'Invalid action.'], 422);
 }
 
+$announcementCheckStmt = $pdo->prepare("
+    SELECT 1
+    FROM forum_post_labels fpl
+    JOIN forum_labels fl ON fl.label_id = fpl.label_id
+    WHERE fpl.post_id = ?
+      AND BINARY fl.name = ?
+    LIMIT 1
+");
+$announcementCheckStmt->execute([$postId, FORUM_ANNOUNCEMENT_LABEL_NAME]);
+if ($announcementCheckStmt->fetchColumn()) {
+    forum_json(['ok' => false, 'message' => 'Announcement posts are managed in the announcement page.'], 409);
+}
+
 if ($action === 'delete') {
     $statusStmt = $pdo->prepare('SELECT status FROM forum_posts WHERE post_id = ? LIMIT 1');
     $statusStmt->execute([$postId]);
@@ -192,6 +324,15 @@ $postStmt = $pdo->prepare("
 ");
 $postStmt->execute([$postId]);
 $postRow = $postStmt->fetch();
+
+if ($postRow) {
+    admin_posts_create_system_notification($pdo, $postRow, $action);
+    forum_realtime_publish('message-center.updated', [
+        'recipientUserId' => (int)($postRow['author_user_id'] ?? 0),
+        'action' => admin_posts_action_label($action),
+        'postId' => (int)($postRow['post_id'] ?? 0),
+    ]);
+}
 
 $payload = $postRow ? forum_post_row_to_payload($postRow) : null;
 if ($payload && isset($postRow['status'])) {

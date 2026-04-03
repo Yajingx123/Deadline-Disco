@@ -18,7 +18,7 @@ export default function PostItem({ post, onPostClick, showStatus, onDelete }) {
   const statusInfo = showStatus ? getStatusLabel(post.status) : null;
 
   return (
-    <article className="post-item" onClick={() => onPostClick(post.id)} style={{ cursor: 'pointer' }}>
+    <article className={`post-item ${(post.isPinned ?? post.is_pinned) ? 'post-item--pinned' : ''}`} onClick={() => onPostClick(post.id)} style={{ cursor: 'pointer' }}>
       <div className="post-avatarRail">
         <div className="post-avatarCircle">{post.authorInitial || post.author?.[0] || 'U'}</div>
       </div>
@@ -27,6 +27,9 @@ export default function PostItem({ post, onPostClick, showStatus, onDelete }) {
         <div className="post-authorRow">
           <span className="post-authorName">{post.author}</span>
           <span className="post-authorTime">posted on {post.publishTime}</span>
+          {(post.isPinned ?? post.is_pinned) && (
+            <span className="post-status post-status--pinned">Pinned</span>
+          )}
           {showStatus && statusInfo && (
             <span className={`post-status ${statusInfo.className}`}>{statusInfo.label}</span>
           )}
@@ -39,7 +42,7 @@ export default function PostItem({ post, onPostClick, showStatus, onDelete }) {
 
       <div className="post-side">
         <div className="post-tags post-tags--side">
-          {post.labels.map((tag) => (
+          {(post.labels || []).map((tag) => (
             <span key={tag} className="tag-badge">{tag}</span>
           ))}
           <span className="post-typeBadge">{post.mediaType}</span>

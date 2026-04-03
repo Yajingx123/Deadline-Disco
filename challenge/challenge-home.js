@@ -1,6 +1,6 @@
 (function () {
   const L = typeof window !== 'undefined' && window.ACADBEAT_LOCAL ? window.ACADBEAT_LOCAL : null;
-  const API_URL = (L && L.challengeApiUrl) || 'http://127.0.0.1:8001/forum-project/api/challenge.php';
+  const API_URL = (L && L.challengeApiUrl) || 'http://127.0.0.1:8001/challenge/api/challenge.php';
   const REALTIME_WS_URL = (L && L.voiceRoomWsUrl) || 'ws://127.0.0.1:3001/ws';
   const state = {
     data: null,

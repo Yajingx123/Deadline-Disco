@@ -1,0 +1,14 @@
+{
+  "name": "acadbeat-scrabble-match-server",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Socket.IO matchmaking + authoritative Scrabble state (lives under Studio/Scrabble)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "dependencies": {
+    "socket.io": "^4.7.5"
+  }
+}

@@ -4,11 +4,19 @@ declare(strict_types=1);
 $root = __DIR__;
 $config = require $root . '/Auth/backend/config/config.php';
 
-$tableSql = $root . '/101_acadbeat_all_tables.sql';
-$dataSql = $root . '/102_acadbeat_all_data.sql';
+$newTableSql = $root . '/database/bootstrap/101_acadbeat_all_tables.sql';
+$newDataSql = $root . '/database/bootstrap/102_acadbeat_all_data.sql';
+$legacyTableSql = $root . '/101_acadbeat_all_tables.sql';
+$legacyDataSql = $root . '/102_acadbeat_all_data.sql';
+
+$tableSql = is_file($newTableSql) ? $newTableSql : $legacyTableSql;
+$dataSql = is_file($newDataSql) ? $newDataSql : $legacyDataSql;
 
 if (!is_file($tableSql) || !is_file($dataSql)) {
-    fwrite(STDERR, "Missing SQL files. Expected 101_acadbeat_all_tables.sql and 102_acadbeat_all_data.sql\n");
+    fwrite(
+        STDERR,
+        "Missing SQL files. Checked database/bootstrap/ and repository root for 101/102 bootstrap SQL files.\n"
+    );
     exit(1);
 }
 
@@ -36,6 +44,8 @@ $mysqlBase = sprintf(
 );
 
 echo "=== AcadBeat Full Bootstrap ===\n\n";
+echo "[info] Using table SQL: {$tableSql}\n";
+echo "[info] Using data SQL:  {$dataSql}\n\n";
 
 run_or_fail(
     sprintf('%s < %s', $mysqlBase, escapeshellarg($tableSql)),
@@ -61,5 +71,5 @@ echo "=== Ready ===\n";
 echo "Home: http://127.0.0.1:8001/home.html\n";
 echo "Forum: http://127.0.0.1:8001/forum-project/dist/index.html?view=forum\n";
 echo "Message Center: http://127.0.0.1:8001/message-center-project/dist/index.html\n";
-echo "Admin: http://127.0.0.1:8001/admin_page/dist/index.html\n";
+echo "Admin: http://127.0.0.1:5174/admin_page/dist/\n";
 echo "Realtime health: http://127.0.0.1:3001/health\n";

@@ -9,30 +9,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../shared-nav.css">
   <script src="../shared/acadbeat-local-config.js"></script>
-  <style>html.acadbeat-role-guard body{visibility:hidden}</style>
-  <script>
-    document.documentElement.classList.add('acadbeat-role-guard');
-    (async function guardAdminRespondTraining() {
-      try {
-        const response = await fetch('../Auth/backend/api/me.php', { credentials: 'include' });
-        const data = await response.json().catch(() => ({ status: 'error' }));
-        if (data.status === 'success' && data.user && String(data.user.role || '').toLowerCase() === 'admin') {
-          const admin = (window.ACADBEAT_LOCAL && window.ACADBEAT_LOCAL.adminDistUrl) || 'http://127.0.0.1:8001/admin_page/dist/index.html';
-          window.location.replace(admin);
-          return;
-        }
-      } catch (_err) {}
-      document.documentElement.classList.remove('acadbeat-role-guard');
-    })();
-  </script>
   <link rel="stylesheet" href="acadbeat-global.css">
   <link rel="stylesheet" href="practice-style.css" id="practice-theme-style">
   <script>
     (function () {
       const params = new URLSearchParams(window.location.search);
-      const cookiePair = document.cookie.split('; ').find(item => item.startsWith('ui_mode='));
-      const cookieMode = cookiePair ? decodeURIComponent(cookiePair.split('=')[1] || '') : '';
-      const uiMode = params.get('ui') || cookieMode;
+      const uiMode = params.get('ui');
       if (uiMode !== 'godot') return;
       document.cookie = 'ui_mode=godot; path=/; max-age=2592000';
       const link = document.getElementById('practice-theme-style');
@@ -89,14 +71,15 @@
   </main>
 
   <script src="practice-data.js"></script>
-  <script src="practice-app.js"></script>
+  <script src="practice-data-api.js"></script>
+  <script src="practice-app-api.js"></script>
   <script>
     window.addEventListener('load', () => {
       const uiGodot = (() => {
         try {
-          if (new URLSearchParams(location.search).get('ui') === 'godot') return true;
+          return new URLSearchParams(location.search).get('ui') === 'godot';
         } catch (_e) {}
-        return document.cookie.split('; ').some((c) => c.startsWith('ui_mode=godot'));
+        return false;
       })();
       const L = window.ACADBEAT_LOCAL || {};
       const loginUrl = uiGodot ? (L.godotWebEntryUrl || 'http://127.0.0.1:5500/index.html?ui=godot') : '../home.html?login=1';
@@ -109,7 +92,7 @@
         ownerUrl: '../owner.html',
         adminUrl: L.adminDistUrl || 'http://127.0.0.1:8001/admin_page/dist/index.html',
         loginUrl,
-        redirectAdmins: true
+        redirectAdmins: false
       });
     });
   </script>

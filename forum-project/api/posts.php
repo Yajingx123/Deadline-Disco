@@ -5,14 +5,31 @@ require __DIR__ . '/bootstrap.php';
 
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 $pdo = forum_db();
+forum_ensure_forum_post_announcement_schema($pdo);
 
 if ($method === 'GET') {
     forum_require_user();
 
     $search = trim((string)($_GET['q'] ?? ''));
     $labelsParam = trim((string)($_GET['labels'] ?? ''));
-    $sort = trim((string)($_GET['sort'] ?? 'latest_reply'));
+    $sort = trim((string)($_GET['sort'] ?? 'latest_post'));
     $labels = array_values(array_filter(array_map('trim', explode(',', $labelsParam))));
+
+    $ann = FORUM_ANNOUNCEMENT_LABEL_NAME;
+    $hasLabels = $labels !== [];
+    $announcementSelected = $hasLabels && in_array($ann, $labels, true);
+    // 无 label 筛选时的语义：看所有消息（包含非置顶公告）。
+    $showUnpinnedAnnouncement = !$hasLabels || $announcementSelected;
+
+    $existsAnnouncement = "
+        EXISTS (
+            SELECT 1
+            FROM forum_post_labels fpl_a
+            JOIN forum_labels fl_a ON fl_a.label_id = fpl_a.label_id
+            WHERE fpl_a.post_id = fp.post_id
+              AND BINARY fl_a.name = ?
+        )
+    ";
 
     $conditions = ["fp.status = 'active'"];
     $params = [];
@@ -22,22 +39,51 @@ if ($method === 'GET') {
         $like = '%' . $search . '%';
         array_push($params, $like, $like, $like, $search);
     }
-    if ($labels) {
+
+    $labelFilterSql = '';
+    if ($hasLabels) {
         $placeholders = implode(',', array_fill(0, count($labels), '?'));
-        $conditions[] = "EXISTS (
-            SELECT 1
-            FROM forum_post_labels fpl2
-            JOIN forum_labels fl2 ON fl2.label_id = fpl2.label_id
-            WHERE fpl2.post_id = fp.post_id
-              AND fl2.name IN ({$placeholders})
-        )";
+        $labelFilterSql = "
+            EXISTS (
+                SELECT 1
+                FROM forum_post_labels fpl2
+                JOIN forum_labels fl2 ON fl2.label_id = fpl2.label_id
+                WHERE fpl2.post_id = fp.post_id
+                  AND fl2.name IN ({$placeholders})
+            )
+        ";
+    }
+
+    // 普通帖：非 Announcement；置顶公告：无论筛选如何都出现；非置顶公告：仅当筛选包含 Announcement 时出现。
+    $branchNormal = '
+        NOT (' . $existsAnnouncement . ')
+        AND COALESCE(fp.is_pinned, 0) = 0
+    ';
+    $params[] = $ann;
+    if ($hasLabels) {
+        $branchNormal .= ' AND ' . $labelFilterSql;
         array_push($params, ...$labels);
     }
 
+    $branchPinnedAnn = '
+        (' . $existsAnnouncement . ')
+        AND COALESCE(fp.is_pinned, 0) = 1
+    ';
+    $params[] = $ann;
+
+    $branchUnpinnedAnn = '
+        (' . $existsAnnouncement . ')
+        AND COALESCE(fp.is_pinned, 0) = 0
+        ' . ($showUnpinnedAnnouncement ? '' : 'AND 0 = 1') . '
+    ';
+    $params[] = $ann;
+
+    $conditions[] = '((' . trim($branchNormal) . ') OR (' . trim($branchPinnedAnn) . ') OR (' . trim($branchUnpinnedAnn) . '))';
+
     $orderBy = match ($sort) {
-        'latest_post' => 'fp.created_at DESC',
-        'most_viewed' => 'fp.view_count DESC, fp.last_commented_at DESC, fp.created_at DESC',
-        default => 'fp.last_commented_at DESC, fp.created_at DESC',
+        'latest_post' => 'fp.is_pinned DESC, fp.created_at DESC',
+        'most_viewed' => 'fp.is_pinned DESC, fp.view_count DESC, fp.last_commented_at DESC, fp.created_at DESC',
+        default => 'fp.is_pinned DESC, COALESCE(fp.last_commented_at, fp.created_at) DESC, fp.created_at DESC',
     };
 
     $sql = "
@@ -50,6 +96,9 @@ if ($method === 'GET') {
             fp.comment_count,
             fp.like_count,
             fp.favorite_count,
+            fp.status,
+            fp.is_pinned,
+            fp.last_commented_at,
             fp.created_at,
             u.username AS author_name,
             COALESCE(MIN(fpm.media_type), 'text') AS media_type,
@@ -60,7 +109,7 @@ if ($method === 'GET') {
         LEFT JOIN forum_post_labels fpl ON fpl.post_id = fp.post_id
         LEFT JOIN forum_labels fl ON fl.label_id = fpl.label_id
         WHERE " . implode(' AND ', $conditions) . "
-        GROUP BY fp.post_id, fp.user_id, fp.title, fp.content_text, fp.view_count, fp.comment_count, fp.like_count, fp.favorite_count, fp.created_at, u.username
+        GROUP BY fp.post_id, fp.user_id, fp.title, fp.content_text, fp.view_count, fp.comment_count, fp.like_count, fp.favorite_count, fp.status, fp.is_pinned, fp.last_commented_at, fp.created_at, u.username
         ORDER BY {$orderBy}
     ";
 
@@ -83,6 +132,18 @@ $input = forum_input();
 $title = trim((string)($input['title'] ?? ''));
 $content = trim((string)($input['content'] ?? ''));
 $labelNames = array_values(array_unique(array_filter(array_map('trim', (array)($input['labels'] ?? [])))));
+
+if (!forum_is_admin($user)) {
+    $labelNames = array_values(array_filter(
+        $labelNames,
+        static fn(string $label): bool => $label !== FORUM_ANNOUNCEMENT_LABEL_NAME
+    ));
+} else {
+    $labelNames = array_values(array_filter(
+        $labelNames,
+        static fn(string $label): bool => $label === FORUM_ANNOUNCEMENT_LABEL_NAME
+    ));
+}
 
 if ($title === '' || $content === '') {
     forum_json(['ok' => false, 'message' => 'Title and content are required.'], 422);

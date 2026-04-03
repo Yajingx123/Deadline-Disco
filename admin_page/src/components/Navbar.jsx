@@ -25,6 +25,13 @@ function Navbar({ currentPage, setCurrentPage, currentUser, isReady, onLogout })
           >
             Weekly Competition
           </button>
+          <button 
+            style={{ ...styles.navLink, ...(currentPage === 'videos' && styles.activeLink) }} 
+            onClick={() => setCurrentPage('videos')}
+            disabled={!isReady}
+          >
+            Video Resources
+          </button>
         </div>
         <div style={styles.userPanel}>
           <div style={styles.userMeta}>

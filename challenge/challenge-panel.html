@@ -1,0 +1,146 @@
+<div class="modal-overlay" id="teamModalOverlay">
+    <div class="team-modal" id="teamModal">
+        <div class="success-overlay" id="successOverlay">
+            <p class="module-label" style="opacity: 0.7; color: white;">Team Confirmed</p>
+            <h2 class="quote-text" id="successTeamTitle" style="font-size: 3.5rem; margin: 1rem 0;">Ready to Sprint</h2>
+            <p id="successTeamCopy" style="letter-spacing: 1px; font-size: 0.82rem; margin-bottom: 2rem; max-width: 520px;">Your team is locked for this week.</p>
+            <button class="challenge-btn" style="background: var(--primary-color);" onclick="closeChallengeCelebration()">BACK TO ARENA</button>
+        </div>
+        <div class="team-main">
+            <p class="module-label" id="challengeCycleLabel">Weekly Challenge</p>
+            <div class="challenge-hero">
+                <div>
+                    <h2 class="quote-text" id="challengeTitle">Create your fellowship</h2>
+                    <p class="challenge-copy" id="challengeCopy">Sign up first, then either create your own 4-person team or join one from the square. Teams that fail to fill in time dissolve automatically.</p>
+                </div>
+                <button type="button" class="challenge-secondary-btn" id="openInviteInboxBtn" onclick="openInviteInbox()">
+                    Invitations
+                    <span class="challenge-secondary-btn__count" id="inviteInboxCount">0</span>
+                </button>
+            </div>
+            <div class="challenge-status-row">
+                <div class="challenge-status-chip" id="challengeWeekChip">Teams reset every Monday at 00:00.</div>
+                <div class="challenge-status-chip" id="challengeRoleChip">Role: Open</div>
+            </div>
+            <div class="challenge-stage" id="challengeSignupPanel" hidden>
+                <div class="challenge-card challenge-card--center">
+                    <p class="challenge-stage__eyebrow">Step 1</p>
+                    <h3>Sign up for this week&apos;s challenge</h3>
+                    <p>After signing up, you can create your own 4-person team or go to the square and join another open team.</p>
+                    <button type="button" class="challenge-btn" onclick="signUpForChallenge()">Sign Up</button>
+                </div>
+            </div>
+            <div class="challenge-stage" id="challengeChooserPanel" hidden>
+                <div class="challenge-card challenge-card--center">
+                    <p class="challenge-stage__eyebrow">Step 2</p>
+                    <h3>Choose your route</h3>
+                    <p>You can create your own 4-person team or go to the square and join a team.</p>
+                    <div class="team-float-actions team-float-actions--wide">
+                        <button class="btn-publish" onclick="createChallengeTeam()">Create My Team</button>
+                        <button class="btn-publish btn-publish--secondary" onclick="openPublicHub()">Go To Square</button>
+                    </div>
+                </div>
+            </div>
+            <div class="challenge-stage" id="challengeFormingPanel" hidden>
+                <div class="challenge-forming-head">
+                    <div>
+                        <p class="challenge-stage__eyebrow">Forming Team</p>
+                        <h3 id="formingTeamHeading">Your team is forming</h3>
+                        <p id="formingTeamSubcopy">Fill all 4 seats before the countdown ends, or the team will dissolve and everyone returns to the signup chooser.</p>
+                    </div>
+                    <div class="challenge-countdown-card">
+                        <span>Team Countdown</span>
+                        <div class="challenge-countdown" id="formingCountdown" aria-label="Team countdown">
+                            <div class="challenge-countdown__unit">
+                                <strong id="formingCountdownHours">01</strong>
+                            </div>
+                            <div class="challenge-countdown__divider">:</div>
+                            <div class="challenge-countdown__unit">
+                                <strong id="formingCountdownMinutes">00</strong>
+                            </div>
+                            <div class="challenge-countdown__divider">:</div>
+                            <div class="challenge-countdown__unit">
+                                <strong id="formingCountdownSeconds">00</strong>
+                            </div>
+                        </div>
+                        <small id="formingMissingCopy">Still missing 3 members</small>
+                    </div>
+                </div>
+                <div class="slots-grid" id="slotsGrid"></div>
+                <div class="team-float-actions">
+                    <button class="btn-publish btn-publish--secondary" id="publishPublicBtn" onclick="toggleChallengePublicListing()">Post To Public</button>
+                    <button class="btn-publish" onclick="openInviteComposer()">Invite Friend</button>
+                </div>
+                <div class="challenge-pending" id="pendingInvitesSection" hidden>
+                    <label>Pending Sent Invites</label>
+                    <div class="challenge-pending__list" id="sentInvitesList"></div>
+                </div>
+            </div>
+            <div class="challenge-stage" id="challengeLockedPanel" hidden>
+                <div class="challenge-card challenge-card--stacked">
+                    <p class="challenge-stage__eyebrow">Team Ready</p>
+                    <h3 id="lockedTeamHeading">Your 4-person team is locked</h3>
+                    <p id="lockedTeamSubcopy">Now the captain confirms the official team name, and the team begins to accumulate points for the weekly rank.</p>
+                    <div class="challenge-name-row">
+                        <div class="challenge-name-field">
+                            <label for="teamNameInput">Official Team Name</label>
+                            <input id="teamNameInput" class="challenge-name-input" type="text" placeholder="Confirm the team name...">
+                        </div>
+                        <button type="button" class="challenge-secondary-btn" id="saveTeamNameBtn" onclick="saveChallengeTeamName()">Confirm Name</button>
+                    </div>
+                    <div class="slots-grid" id="lockedSlotsGrid"></div>
+                </div>
+            </div>
+            <p class="challenge-admin-note" id="challengeAdminNote" hidden>Admin accounts do not join challenge teams.</p>
+        </div>
+        <aside class="leaderboard-aside">
+            <h4 class="module-label" style="color: rgba(255,255,255,0.4);">Weekly Rank</h4>
+            <div id="leaderboardList" style="margin-top: 1rem;"></div>
+            <div class="leaderboard-empty" id="leaderboardEmpty">Rankings stay hidden until teams earn points. Every team begins the week at 0.</div>
+            <div class="challenge-system-card">
+                <p class="module-label" style="margin:0; font-size: 0.6rem;">YOUR STATUS</p>
+                <p class="challenge-system-card__value" id="challengeStatusCardValue">No team yet. Invite classmates to start this week.</p>
+            </div>
+        </aside>
+        <div class="search-layer" id="searchLayer">
+            <div class="search-layer__card">
+                <p class="module-label">Send Weekly Invite</p>
+                <h3 class="challenge-panel-title">Invite by Username</h3>
+                <p class="search-layer__copy">Type the exact AcadBeat username. The invitee will receive it in their challenge inbox and can accept or decline there.</p>
+                <input type="text" id="searchInput" class="challenge-search-input" placeholder="Enter username...">
+                <div class="challenge-panel-error" id="challengeComposerError" hidden></div>
+                <div class="search-layer__actions">
+                    <button type="button" class="challenge-ghost-btn" onclick="closeSearch()">Cancel</button>
+                    <button type="button" onclick="challengeSendInvite()" class="challenge-btn">Send Invite</button>
+                </div>
+            </div>
+        </div>
+        <div class="search-layer" id="publicHubLayer">
+            <div class="search-layer__card search-layer__card--wide">
+                <p class="module-label">Team Square</p>
+                <h3 class="challenge-panel-title">Open Teams</h3>
+                <p class="search-layer__copy">These teams are still forming. Joining from the square is direct, and the team will lock automatically as soon as it reaches 4 members.</p>
+                <div class="challenge-empty" id="publicLobbyEmpty">No public teams are open right now.</div>
+                <div class="challenge-invite-list" id="publicLobbyList"></div>
+                <div class="challenge-panel-error" id="publicLobbyError" hidden></div>
+                <div class="search-layer__actions">
+                    <button type="button" class="challenge-ghost-btn" onclick="closePublicHub()">Close</button>
+                </div>
+            </div>
+        </div>
+        <div class="search-layer" id="inviteHubLayer">
+            <div class="search-layer__card">
+                <p class="module-label">Invite Inbox</p>
+                <h3 class="challenge-panel-title">Invitations</h3>
+                <p class="search-layer__copy">Accept an invite to move into that forming team, or decline it and stay in your current state.</p>
+                <div class="challenge-empty" id="inviteInboxEmpty">No invite records right now.</div>
+                <div class="challenge-invite-list" id="inviteInboxList"></div>
+                <div class="challenge-panel-error" id="inviteInboxError" hidden></div>
+                <div class="search-layer__actions">
+                    <button type="button" class="challenge-ghost-btn" onclick="closeInviteInbox()">Close</button>
+                </div>
+            </div>
+        </div>
+        <button onclick="toggleTeamModal(false)" style="position: absolute; top: 25px; right: 25px; background:none; border:none; color:inherit; font-size: 1.5rem; cursor:pointer; opacity: 0.3; z-index: 1000;">✕</button>
+    </div>
+</div>

@@ -1,3 +1,5 @@
+// 默认题库：understand / respond 各 12 条，顺序即列表顺序；更新内容只改本文件即可。
+// 管理员在后台新增的条目请使用新 video_id（勿与下述 id 重复），会接在第 12 条之后展示。
 window.PracticeData = (function () {
   const modeMeta = {
     understand: {

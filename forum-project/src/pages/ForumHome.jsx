@@ -6,7 +6,7 @@ import PostList from '../components/PostList';
 import PostDetail from './PostDetail'; 
 import PostModal from '../components/PostModal'; 
 import { getSummary } from '../utils/formatText';
-import { connectRealtime, fetchLabels, fetchPosts, createPost, fetchPostDetail, incrementPostViews, createComment, deletePost, deleteComment, fetchUserFavorites, fetchUserLikes, fetchUserPosts } from '../api/forumApi';
+import { connectRealtime, fetchAnnouncements, fetchLabels, fetchPosts, createPost, fetchPostDetail, incrementPostViews, createComment, deletePost, deleteComment, fetchUserFavorites, fetchUserLikes, fetchUserPosts } from '../api/forumApi';
 
 const FORUM_PREFILL_WINDOW_NAME_KEY = '__acadbeat_forum_prefill__';
 
@@ -28,7 +28,7 @@ export default function ForumHome() {
   const [selectedTags, setSelectedTags] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedPost, setSelectedPost] = useState(null);
-  const [sortOrder, setSortOrder] = useState('latest_reply');
+  const [sortOrder, setSortOrder] = useState('latest_post');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [prefillDraft, setPrefillDraft] = useState(null);
@@ -37,18 +37,20 @@ export default function ForumHome() {
   const [likes, setLikes] = useState([]);
   const [userPosts, setUserPosts] = useState([]);
   const [favoritesTab, setFavoritesTab] = useState('favorites');
+  const [pinnedAnnouncements, setPinnedAnnouncements] = useState([]);
 
   const loadForumData = async () => {
     setLoading(true);
     setError('');
     try {
-      const [labelData, postData] = await Promise.all([
+      const [labelData, postData, announcementData] = await Promise.all([
         fetchLabels(),
         fetchPosts({
           q: searchQuery,
           labels: selectedTags,
           sort: sortOrder,
         }),
+        fetchAnnouncements({ limit: 30 }),
       ]);
       setLabels(labelData.labels || []);
       if ((labelData.currentUser?.role || '').toLowerCase() === 'admin') {
@@ -56,10 +58,21 @@ export default function ForumHome() {
         return
       }
       setCurrentUser(labelData.currentUser || null);
-      setPosts((postData.posts || []).map((post) => ({
+      // 顶部「公告」区只展示置顶；非置顶公告仅在侧边栏单独勾选 Announcement 时出现在帖子列表里。
+      const announcementRows = (announcementData.announcements || []).filter(
+        (post) => Boolean(post.isPinned ?? post.is_pinned)
+      );
+      setPinnedAnnouncements(announcementRows.map((post) => ({
         ...post,
         summary: getSummary(post.content, 120),
       })));
+      const pinnedIds = new Set(announcementRows.map((p) => Number(p.id)));
+      setPosts((postData.posts || [])
+        .filter((post) => !pinnedIds.has(Number(post.id)))
+        .map((post) => ({
+          ...post,
+          summary: getSummary(post.content, 120),
+        })));
     } catch (err) {
       if ((err.message || '').toLowerCase().includes('login required')) {
         window.location.href = 'http://127.0.0.1:8001/home.html?login=1';
@@ -109,6 +122,7 @@ export default function ForumHome() {
         || eventType === 'forum.post.deleted'
         || eventType === 'forum.comment.created'
         || eventType === 'forum.comment.deleted'
+        || eventType === 'forum.announcement.updated'
       ) {
         await loadForumData();
       }
@@ -475,7 +489,11 @@ export default function ForumHome() {
         ) : error ? (
           <div className="main-content"><div className="forum-empty forum-empty--error">{error}</div></div>
         ) : (
-          <PostList posts={posts} onPostClick={handlePostClick} />
+          <PostList
+            posts={posts}
+            pinnedPosts={pinnedAnnouncements}
+            onPostClick={handlePostClick}
+          />
         )}
       </div>
 

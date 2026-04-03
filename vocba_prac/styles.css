@@ -293,6 +293,10 @@ body{
   width: 100%;
 }
 
+body.with-acadbeat-shared-nav .page__main {
+  padding-top: 96px;
+}
+
 .vocabEntryHero{
   position: relative;
   display: flex;

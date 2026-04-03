@@ -35,46 +35,50 @@ const TAB_META = [
 
 const FALLBACK_BACK_URL = 'http://127.0.0.1:8001/home.html?module=Dialogue'
 
+function sanitizeBackUrl(rawUrl) {
+  if (!rawUrl) return ''
+  try {
+    const parsed = new URL(rawUrl, window.location.origin)
+    if (parsed.origin !== window.location.origin) {
+      return ''
+    }
+    parsed.searchParams.delete('login')
+    return parsed.toString()
+  } catch (_err) {
+    return ''
+  }
+}
+
 function resolveBackUrl() {
   const params = new URLSearchParams(window.location.search)
   const from = params.get('from')
   if (from) {
-    try {
-      const decoded = decodeURIComponent(from)
-      const parsed = new URL(decoded, window.location.origin)
-      if (parsed.origin === window.location.origin) {
-        sessionStorage.setItem('acadbeatMessageCenterFrom', parsed.toString())
-        return parsed.toString()
-      }
-    } catch (_err) {
-      // Ignore malformed referrer values.
+    const sanitized = sanitizeBackUrl(decodeURIComponent(from))
+    if (sanitized) {
+      sessionStorage.setItem('acadbeatMessageCenterFrom', sanitized)
+      return sanitized
     }
   }
 
   const stored = sessionStorage.getItem('acadbeatMessageCenterFrom')
   if (stored) {
-    try {
-      const parsed = new URL(stored, window.location.origin)
-      if (parsed.origin === window.location.origin) {
-        return parsed.toString()
-      }
-    } catch (_err) {
-      // Ignore malformed storage values.
+    const sanitized = sanitizeBackUrl(stored)
+    if (sanitized) {
+      sessionStorage.setItem('acadbeatMessageCenterFrom', sanitized)
+      return sanitized
     }
+    sessionStorage.removeItem('acadbeatMessageCenterFrom')
   }
 
   if (document.referrer) {
-    try {
-      const parsed = new URL(document.referrer, window.location.origin)
-      if (parsed.origin === window.location.origin) {
-        return parsed.toString()
-      }
-    } catch (_err) {
-      // Ignore malformed browser referrers.
+    const sanitized = sanitizeBackUrl(document.referrer)
+    if (sanitized) {
+      sessionStorage.setItem('acadbeatMessageCenterFrom', sanitized)
+      return sanitized
     }
   }
 
-  return FALLBACK_BACK_URL
+  return sanitizeBackUrl(FALLBACK_BACK_URL) || FALLBACK_BACK_URL
 }
 
 export default function MessageCenter() {
@@ -305,7 +309,9 @@ export default function MessageCenter() {
       {data.notices.map((item) => (
         <article key={`${item.kind || 'system'}-${item.id}`} className="notice-card">
           {!item.isRead && <div className="notice-card__dot" />}
-          <div className="notice-card__tag">{item.kind === 'challenge' ? 'Challenge Update' : 'System Notice'}</div>
+          <div className="notice-card__tag">
+            {item.kind === 'challenge' ? 'Challenge Update' : item.kind === 'notification' ? 'Moderation Update' : 'System Notice'}
+          </div>
           <h3>{item.title}</h3>
           <p>{item.body}</p>
           <div className="notice-card__footer">

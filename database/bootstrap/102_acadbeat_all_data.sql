@@ -78,7 +78,36 @@ INSERT INTO forum_labels (label_id, name, created_at) VALUES
 (3, 'Viewpoint topic', '2026-03-23 09:00:00'),
 (4, 'Study tips', '2026-03-23 09:00:00'),
 (5, 'Course guide', '2026-03-23 09:00:00'),
-(6, 'Campus life', '2026-03-23 09:00:00');
+(6, 'Campus life', '2026-03-23 09:00:00'),
+(7, 'Announcement', '2026-03-23 09:00:00');
+
+-- Forum: only one label for admin announcements — `Announcement` (rename lowercase row in place when possible to avoid FK CASCADE on forum_post_labels).
+UPDATE forum_labels
+SET name = 'Announcement'
+WHERE name = BINARY 'announcement'
+  AND NOT EXISTS (
+    SELECT 1 FROM (
+      SELECT 1 FROM forum_labels WHERE name = BINARY 'Announcement'
+    ) AS announce_exists
+  );
+
+INSERT INTO forum_labels (name, created_at)
+SELECT 'Announcement', NOW()
+FROM DUAL
+WHERE NOT EXISTS (SELECT 1 FROM forum_labels WHERE name = BINARY 'Announcement');
+
+DELETE fpl
+FROM forum_post_labels fpl
+JOIN forum_labels fl ON fl.label_id = fpl.label_id AND fl.name = BINARY 'announcement'
+JOIN forum_post_labels fpl2 ON fpl2.post_id = fpl.post_id
+JOIN forum_labels fl2 ON fl2.label_id = fpl2.label_id AND fl2.name = BINARY 'Announcement';
+
+UPDATE forum_post_labels fpl
+JOIN forum_labels fl ON fl.label_id = fpl.label_id AND fl.name = BINARY 'announcement'
+JOIN forum_labels fl2 ON fl2.name = BINARY 'Announcement'
+SET fpl.label_id = fl2.label_id;
+
+DELETE FROM forum_labels WHERE name = BINARY 'announcement';
 
 INSERT INTO forum_posts (post_id, user_id, title, content_text, view_count, comment_count, last_commented_at, status, created_at, updated_at) VALUES
 (1, 1, 'How should we balance AI tools and original writing in class?', 'Our seminar keeps debating where AI support becomes too much. I am curious how other students define a fair boundary between drafting support and actual authorship.\n\n**What counts as acceptable help** in your course right now?', 184, 2, '2026-03-23 12:40:00', 'active', '2026-03-22 19:10:00', '2026-03-23 12:40:00'),

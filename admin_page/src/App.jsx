@@ -4,6 +4,7 @@ import Navbar from './components/Navbar'
 import ForumPostReview from './components/ForumPostReview'
 import AnnouncementManager from './components/AnnouncementManager'
 import WeeklyCompetitionShell from './components/WeeklyCompetitionShell'
+import VideoResourceManager from './components/VideoResourceManager'
 import { adminFetch, redirectToHome, redirectToLogin } from './api'
 
 function App() {
@@ -109,6 +110,10 @@ function App() {
 
     if (currentPage === 'competition') {
       return <WeeklyCompetitionShell />
+    }
+
+    if (currentPage === 'videos') {
+      return <VideoResourceManager />
     }
 
     return <ForumPostReview />

@@ -2,6 +2,51 @@
 
 > Agile Software Engineering Course Project
 
+## Important Notice
+
+The repository has evolved beyond the historical module list below.
+For the current runnable architecture and startup topology, use:
+
+- `docs/ARCHITECTURE.md`
+- `docs/REPO_REORG_PLAN.md`
+- `SETUP_GUIDE.md`
+
+If this `README.md` conflicts with `docs/ARCHITECTURE.md`, treat `docs/ARCHITECTURE.md` as the source of truth.
+
+## Current Quick Start (Recommended)
+
+### 1) Start database
+
+- Ensure MySQL is running.
+- Import bootstrap SQL from the canonical path:
+
+```bash
+mysql -u root -p123456 < database/bootstrap/101_acadbeat_all_tables.sql
+mysql -u root -p123456 < database/bootstrap/102_acadbeat_all_data.sql
+```
+
+### 2) Start all services
+
+Use one command from repository root:
+
+```bash
+php start_all.php
+```
+
+Or run full bootstrap flow (import SQL + restart services):
+
+```bash
+php run_everything.php
+```
+
+### 3) Verify key pages
+
+- Home: `http://127.0.0.1:8001/home.html`
+- Forum: `http://127.0.0.1:8001/forum-project/dist/index.html?view=forum`
+- Message Center: `http://127.0.0.1:8001/message-center-project/dist/index.html`
+- Admin: `http://127.0.0.1:5174/admin_page/dist/`
+- Realtime health: `http://127.0.0.1:3001/health`
+
 AcadBeat is an English learning platform built for university freshmen. It currently provides four functional modules:
 
 | Module | Description | Tech Stack |
