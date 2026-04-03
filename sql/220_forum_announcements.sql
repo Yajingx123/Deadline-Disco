@@ -1,5 +1,5 @@
 -- 公告表（与 forum-project/api/announcements.php 一致）
--- 在 acadbeat 库中执行：mysql -u... -p acadbeat < forum-project/sql/forum_announcements.sql
+-- 在 acadbeat 库中执行：mysql -u... -p acadbeat < sql/220_forum_announcements.sql
 
 CREATE TABLE IF NOT EXISTS forum_announcements (
   announcement_id INT UNSIGNED NOT NULL AUTO_INCREMENT,

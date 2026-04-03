@@ -2,11 +2,16 @@
 declare(strict_types=1);
 
 $root = dirname(__DIR__);
-$targetDir = $root . '/database/bootstrap';
+$targetDir = $root . '/sql';
 
 $pairs = [
-    $root . '/101_acadbeat_all_tables.sql' => $targetDir . '/101_acadbeat_all_tables.sql',
-    $root . '/102_acadbeat_all_data.sql' => $targetDir . '/102_acadbeat_all_data.sql',
+    $root . '/database/bootstrap/101_acadbeat_all_tables.sql' => $targetDir . '/101_acadbeat_core_tables.sql',
+    $root . '/database/bootstrap/102_acadbeat_all_data.sql' => $targetDir . '/102_acadbeat_core_seed_data.sql',
+    $root . '/101_acadbeat_all_tables.sql' => $targetDir . '/101_acadbeat_core_tables.sql',
+    $root . '/102_acadbeat_all_data.sql' => $targetDir . '/102_acadbeat_core_seed_data.sql',
+    $root . '/105_academic_practice_video_match_tables.sql' => $targetDir . '/105_academic_practice_video_match_tables.sql',
+    $root . '/Academic-Practice/sql/video_resources.sql' => $targetDir . '/210_academic_practice_video_resources.sql',
+    $root . '/forum-project/sql/forum_announcements.sql' => $targetDir . '/220_forum_announcements.sql',
 ];
 
 if (!is_dir($targetDir) && !mkdir($targetDir, 0777, true) && !is_dir($targetDir)) {
@@ -42,4 +47,4 @@ foreach ($pairs as $src => $dst) {
     echo "[ok] Synced: {$src} -> {$dst}\n";
 }
 
-echo "[done] SQL bootstrap sync complete.\n";
+echo "[done] SQL sync complete. Canonical directory: ./sql\n";

@@ -13,7 +13,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
 $config = require __DIR__ . '/../../Auth/backend/config/config.php';
 
-/** Canonical forum_labels.name for admin-managed announcements (must match 102_acadbeat_all_data.sql). */
+/** Canonical forum_labels.name for admin-managed announcements (must match sql/102_acadbeat_core_seed_data.sql). */
 if (!defined('FORUM_ANNOUNCEMENT_LABEL_NAME')) {
     define('FORUM_ANNOUNCEMENT_LABEL_NAME', 'Announcement');
 }

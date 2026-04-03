@@ -4,19 +4,14 @@ declare(strict_types=1);
 $root = __DIR__;
 $config = require $root . '/Auth/backend/config/config.php';
 
-$newTableSql = $root . '/database/bootstrap/101_acadbeat_all_tables.sql';
-$newDataSql = $root . '/database/bootstrap/102_acadbeat_all_data.sql';
-$legacyTableSql = $root . '/101_acadbeat_all_tables.sql';
-$legacyDataSql = $root . '/102_acadbeat_all_data.sql';
-$videoMatchSql = $root . '/105_academic_practice_video_match_tables.sql';
+$tableSql = $root . '/sql/101_acadbeat_core_tables.sql';
+$dataSql = $root . '/sql/102_acadbeat_core_seed_data.sql';
+$videoMatchSql = $root . '/sql/105_academic_practice_video_match_tables.sql';
 
-$tableSql = is_file($newTableSql) ? $newTableSql : $legacyTableSql;
-$dataSql = is_file($newDataSql) ? $newDataSql : $legacyDataSql;
-
-if (!is_file($tableSql) || !is_file($dataSql)) {
+if (!is_file($tableSql) || !is_file($dataSql) || !is_file($videoMatchSql)) {
     fwrite(
         STDERR,
-        "Missing SQL files. Checked database/bootstrap/ and repository root for 101/102 bootstrap SQL files.\n"
+        "Missing SQL files. Expected under ./sql/: 101_acadbeat_core_tables.sql, 102_acadbeat_core_seed_data.sql, 105_academic_practice_video_match_tables.sql\n"
     );
     exit(1);
 }

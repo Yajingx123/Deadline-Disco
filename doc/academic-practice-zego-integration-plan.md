@@ -43,7 +43,7 @@
 - `zego_server_assistant/src/ZEGO/ZegoAssistantToken.php`
 - `zego_server_assistant/src/ZEGO/ZegoErrorCodes.php`
 - `zego_server_assistant/src/ZEGO/ZegoServerAssistant.php`
-- `105_academic_practice_video_match_tables.sql`
+- `sql/105_academic_practice_video_match_tables.sql`
 
 这里的原则是：
 
