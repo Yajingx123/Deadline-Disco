@@ -15,14 +15,20 @@ If this `README.md` conflicts with `docs/ARCHITECTURE.md`, treat `docs/ARCHITECT
 
 ## Current Quick Start (Recommended)
 
+### 0) Environment config
+
+- Copy `.env.example` to `.env.local` (or `.env`) and adjust values when needed.
+- For production, use `.env.prod.example` as the template.
+
 ### 1) Start database
 
 - Ensure MySQL is running.
 - Import bootstrap SQL from the canonical path:
 
 ```bash
-mysql -u root -p123456 < database/bootstrap/101_acadbeat_all_tables.sql
-mysql -u root -p123456 < database/bootstrap/102_acadbeat_all_data.sql
+mysql -u root -p123456 < sql/101_acadbeat_core_tables.sql
+mysql -u root -p123456 < sql/102_acadbeat_core_seed_data.sql
+mysql -u root -p123456 < sql/105_academic_practice_video_match_tables.sql
 ```
 
 ### 2) Start all services
@@ -38,6 +44,10 @@ Or run full bootstrap flow (import SQL + restart services):
 ```bash
 php run_everything.php
 ```
+
+Production deployment (Alibaba Cloud Linux 4):
+
+- See `DEPLOY_ALIYUN_LINUX4.md`
 
 ### 3) Verify key pages
 
@@ -64,8 +74,12 @@ AcadBeat is an English learning platform built for university freshmen. It curre
 Deadline-Disco-dev/
 |-- home.html                  # Main landing page (entry point)
 |-- README.md
-|-- 101_acadbeat_all_tables.sql
-|-- 102_acadbeat_all_data.sql
+|-- sql/
+|   |-- 101_acadbeat_core_tables.sql
+|   |-- 102_acadbeat_core_seed_data.sql
+|   |-- 105_academic_practice_video_match_tables.sql
+|   |-- 210_academic_practice_video_resources.sql
+|   +-- 220_forum_announcements.sql
 |
 |-- vocba_prac/                # Vocabulary Practice module (PHP, port 8002)
 |   |-- config.php             # DB config
@@ -126,8 +140,9 @@ Run the following commands from the project root directory. On Windows, if `mysq
 **Vocabulary module** (database: `acadbeat`):
 
 ```bash
-mysql -u root -p123456 < 101_acadbeat_all_tables.sql
-mysql -u root -p123456 < 102_acadbeat_all_data.sql
+mysql -u root -p123456 < sql/101_acadbeat_core_tables.sql
+mysql -u root -p123456 < sql/102_acadbeat_core_seed_data.sql
+mysql -u root -p123456 < sql/105_academic_practice_video_match_tables.sql
 ```
 
 **Listening module** (database: `my_test_schema`):

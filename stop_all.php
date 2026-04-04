@@ -1,14 +1,8 @@
 <?php
 declare(strict_types=1);
 
-$pidFiles = [
-    __DIR__ . '/.run/main_8001.pid',
-    __DIR__ . '/.run/vocab_8002.pid',
-    __DIR__ . '/.run/forum_5173.pid',
-    __DIR__ . '/.run/admin_5174.pid',
-    __DIR__ . '/.run/realtime_3001.pid',
-    __DIR__ . '/.run/godot_ui_5500.pid',
-];
+$runDir = __DIR__ . '/.run';
+$pidFiles = glob($runDir . '/*.pid') ?: [];
 
 function killProcess(int $pid): void {
     if ($pid <= 0) return;
@@ -45,6 +39,12 @@ function pidsByPortWindows(int $port): array {
 function pidsByPortUnix(int $port): array {
     $output = shell_exec(sprintf('lsof -ti tcp:%d 2>/dev/null', $port));
     if (!is_string($output) || trim($output) === '') {
+        $output = shell_exec(sprintf("ss -ltnp 'sport = :%d' 2>/dev/null | sed -n 's/.*pid=\\([0-9]\\+\\).*/\\1/p'", $port));
+    }
+    if (!is_string($output) || trim($output) === '') {
+        $output = shell_exec(sprintf("netstat -ltnp 2>/dev/null | awk '/:%d[[:space:]]/ {print $7}' | cut -d'/' -f1", $port));
+    }
+    if (!is_string($output) || trim($output) === '') {
         return [];
     }
     $pids = [];
@@ -72,7 +72,7 @@ foreach ($pidFiles as $pidFile) {
     @unlink($pidFile);
 }
 
-$ports = [8001, 8002, 5173, 5174, 3001, 5500];
+$ports = [8001, 8002, 5173, 5174, 3001, 9000, 5500];
 foreach ($ports as $port) {
     $pids = PHP_OS_FAMILY === 'Windows' ? pidsByPortWindows($port) : pidsByPortUnix($port);
     foreach ($pids as $pid) {
@@ -80,3 +80,5 @@ foreach ($ports as $port) {
         echo "[stopped-by-port] {$port} (PID {$pid})\n";
     }
 }
+
+echo "[done] stop_all completed.\n";

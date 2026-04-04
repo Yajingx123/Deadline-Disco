@@ -96,9 +96,21 @@ function challenge_upsert_signup(PDO $pdo, int $userId, string $weekStartDate): 
     $stmt->execute([$weekStartDate, $userId]);
 }
 
-function challenge_insert_user_notification(PDO $pdo, int $recipientUserId, string $type, string $title, string $body, string $ctaLabel = 'Open challenge', string $ctaUrl = 'http://127.0.0.1:8001/home.html?challenge=1'): void {
+function challenge_home_url(): string {
+    if (function_exists('forum_app_url')) {
+        return forum_app_url() . '/home.html?challenge=1';
+    }
+    $appUrl = rtrim((string)(getenv('APP_URL') ?: 'http://127.0.0.1:8001'), '/');
+    return $appUrl . '/home.html?challenge=1';
+}
+
+function challenge_insert_user_notification(PDO $pdo, int $recipientUserId, string $type, string $title, string $body, string $ctaLabel = 'Open challenge', ?string $ctaUrl = null): void {
     if ($recipientUserId <= 0) {
         return;
+    }
+    $ctaUrl = trim((string)$ctaUrl);
+    if ($ctaUrl === '') {
+        $ctaUrl = challenge_home_url();
     }
 
     $stmt = $pdo->prepare("
@@ -544,7 +556,7 @@ function challenge_maintain_weekly_cycle(PDO $pdo): array {
                         (string)$row['team_name'],
                         $cycle['label']
                     ),
-                    'http://127.0.0.1:8001/home.html?challenge=1',
+                    challenge_home_url(),
                 ]);
             }
 

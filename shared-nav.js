@@ -123,9 +123,10 @@
     const loginUrl = options.loginUrl || `${homeUrl}?login=1`;
     const ownerUrl = options.ownerUrl || `${basePath}owner.html`;
     const L = typeof window !== 'undefined' && window.ACADBEAT_LOCAL ? window.ACADBEAT_LOCAL : null;
-    const adminUrl = options.adminUrl || (L && L.adminDistUrl) || 'http://127.0.0.1:8001/admin_page/dist/index.html';
-    const messageCenterUrl = options.messageCenterUrl || (L && L.messageCenterDistUrl) || 'http://127.0.0.1:8001/message-center-project/dist/index.html';
-    const messageApiUrl = options.messageApiUrl || (L && L.messageSummaryApiUrl) || 'http://127.0.0.1:8001/forum-project/api/message-center.php?summaryOnly=1';
+    const currentOrigin = (typeof window !== 'undefined' && window.location) ? window.location.origin : 'http://127.0.0.1:8001';
+    const adminUrl = options.adminUrl || (L && L.adminDistUrl) || `${currentOrigin}/admin_page/dist/index.html`;
+    const messageCenterUrl = options.messageCenterUrl || (L && L.messageCenterDistUrl) || `${currentOrigin}/message-center-project/dist/index.html`;
+    const messageApiUrl = options.messageApiUrl || (L && L.messageSummaryApiUrl) || `${currentOrigin}/forum-project/api/message-center.php?summaryOnly=1`;
     const active = String(options.active || '').toLowerCase();
     const showChallengeButton = Boolean(options.showChallengeButton);
     const challengeButtonLabel = options.challengeButtonLabel || 'CHALLENGE';

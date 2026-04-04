@@ -10,21 +10,68 @@ if (!is_dir($runDir)) {
 $php = PHP_BINARY ?: 'php';
 $npm = 'npm';
 
+function sh_quote(string $value): string
+{
+    return escapeshellarg($value);
+}
+
+function resolve_binary(array $candidates): ?string
+{
+    foreach ($candidates as $candidate) {
+        $output = shell_exec('command -v ' . sh_quote($candidate) . ' 2>/dev/null');
+        if (is_string($output) && trim($output) !== '') {
+            return trim($output);
+        }
+    }
+    return null;
+}
+
+function run_unix_build(string $workdir, string $command): void
+{
+    $cmd = 'cd ' . sh_quote($workdir) . ' && ' . $command;
+    passthru('bash -lc ' . sh_quote($cmd), $exitCode);
+    if ($exitCode !== 0) {
+        throw new RuntimeException("Build failed with exit code {$exitCode}.");
+    }
+}
+
+function start_unix_detached(string $workdir, string $command, string $stdoutLog, string $stderrLog): int
+{
+    $cmd = sprintf(
+        'cd %s && nohup %s >> %s 2>> %s < /dev/null & echo $!',
+        sh_quote($workdir),
+        $command,
+        sh_quote($stdoutLog),
+        sh_quote($stderrLog)
+    );
+    $output = shell_exec('bash -lc ' . sh_quote($cmd));
+    $pid = (int) trim((string) $output);
+    if ($pid <= 0) {
+        throw new RuntimeException('Could not capture process PID.');
+    }
+    return $pid;
+}
+
+$python = resolve_binary(['python3', 'python']);
+if ($python === null) {
+    $python = 'python3';
+}
+
 $frontendBuilds = [
     [
         'name' => 'forum-static',
         'workdir' => $root . '/forum-project',
-        'command' => escapeshellarg($npm) . ' run build',
+        'command' => $npm . ' install && ' . $npm . ' run build',
     ],
     [
         'name' => 'admin-static',
         'workdir' => $root . '/admin_page',
-        'command' => escapeshellarg($npm) . ' run build',
+        'command' => $npm . ' install && ' . $npm . ' run build',
     ],
     [
         'name' => 'message-center-static',
         'workdir' => $root . '/message-center-project',
-        'command' => escapeshellarg($npm) . ' run build',
+        'command' => $npm . ' install && ' . $npm . ' run build',
     ],
 ];
 
@@ -34,71 +81,51 @@ $services = [
         'host' => '127.0.0.1',
         'port' => 8001,
         'workdir' => $root,
-        'command' => escapeshellarg($php) . ' -S 127.0.0.1:8001 -t ' . escapeshellarg($root),
+        'command' => sh_quote($php) . ' -S 127.0.0.1:8001 -t .',
     ],
     [
         'name' => 'vocab',
         'host' => '127.0.0.1',
         'port' => 8002,
         'workdir' => $root . '/vocba_prac',
-        'command' => escapeshellarg($php) . ' -S 127.0.0.1:8002 -t ' . escapeshellarg($root . '/vocba_prac'),
+        'command' => sh_quote($php) . ' -S 127.0.0.1:8002 -t .',
     ],
     [
         'name' => 'forum',
         'host' => '127.0.0.1',
         'port' => 5173,
         'workdir' => $root . '/forum-project',
-        'command' => escapeshellarg($npm) . ' run dev -- --host 127.0.0.1 --port 5173',
+        'command' => $npm . ' run dev -- --host 127.0.0.1 --port 5173',
     ],
     [
         'name' => 'admin',
         'host' => '127.0.0.1',
         'port' => 5174,
         'workdir' => $root . '/admin_page',
-        'command' => escapeshellarg($npm) . ' run dev -- --host 127.0.0.1 --port 5174',
+        'command' => $npm . ' run dev -- --host 127.0.0.1 --port 5174',
     ],
     [
         'name' => 'realtime',
         'host' => '127.0.0.1',
         'port' => 3001,
         'workdir' => $root . '/voice-room-server',
-        'command' => escapeshellarg($npm) . ' start',
+        'command' => $npm . ' start',
+    ],
+    [
+        'name' => 'scrabble_match',
+        'host' => '127.0.0.1',
+        'port' => 9000,
+        'workdir' => $root . '/Studio/Scrabble/match-server',
+        'command' => $npm . ' run start',
     ],
     [
         'name' => 'godot_ui',
         'host' => '127.0.0.1',
         'port' => 5500,
         'workdir' => $root . '/gameUI_src/Release',
-        'command' => 'python3 serve.py',
+        'command' => sh_quote($python) . ' serve.py',
     ],
 ];
-
-function startMacProcess(string $command, string $workdir, string $stdoutLog, string $stderrLog): int {
-    $shellCommand = sprintf(
-        'cd %s && nohup %s > %s 2> %s < /dev/null & echo $!',
-        escapeshellarg($workdir),
-        $command,
-        escapeshellarg($stdoutLog),
-        escapeshellarg($stderrLog)
-    );
-
-    $output = shell_exec($shellCommand);
-    $pid = (int)trim((string)$output);
-
-    if ($pid <= 0) {
-        throw new RuntimeException('Failed to start background process.');
-    }
-
-    return $pid;
-}
-
-function runForegroundBuild(string $command, string $workdir): void {
-    $shellCommand = sprintf('cd %s && %s 2>&1', escapeshellarg($workdir), $command);
-    passthru($shellCommand, $exitCode);
-    if ($exitCode !== 0) {
-        throw new RuntimeException("Build failed with exit code {$exitCode}.");
-    }
-}
 
 echo "=== Start Services (macOS) ===\n\n";
 
@@ -106,7 +133,7 @@ echo "=== Build Static Frontends ===\n";
 foreach ($frontendBuilds as $build) {
     try {
         echo "[build] {$build['name']}\n";
-        runForegroundBuild($build['command'], $build['workdir']);
+        run_unix_build($build['workdir'], $build['command']);
         echo "[done] {$build['name']}\n";
     } catch (Throwable $e) {
         echo "[failed] {$build['name']}: {$e->getMessage()}\n";
@@ -123,13 +150,8 @@ foreach ($services as $service) {
     $pidFile = "{$runDir}/{$name}_{$port}.pid";
 
     try {
-        $pid = startMacProcess(
-            $service['command'],
-            $service['workdir'],
-            $stdoutLog,
-            $stderrLog
-        );
-        file_put_contents($pidFile, (string)$pid);
+        $pid = start_unix_detached($service['workdir'], $service['command'], $stdoutLog, $stderrLog);
+        file_put_contents($pidFile, (string) $pid);
         echo "[started] {$name} http://{$host}:{$port} (PID {$pid})\n";
     } catch (Throwable $e) {
         echo "[failed] {$name}: {$e->getMessage()}\n";
@@ -139,10 +161,4 @@ foreach ($services as $service) {
 echo "\nLogs are in .run\n";
 echo "Start command: php start_all_mac.php\n";
 echo "Auto-detect command: php start_all.php\n";
-
-echo "\n=== 浏览器入口（唯一推荐）===\n";
-echo "  http://127.0.0.1:8001/home.html\n";
-echo "  （或 http://127.0.0.1:8001/ 会跳转到主页）\n";
-echo "  在主页登录后，使用右上角 Switch 进入 Godot；不要单独把 5500 当主入口。\n";
-echo "\n（后台已启动：8001 主站、8002 词表、5173 Vite 论坛、5174 管理、3001 语音房、5500 Godot 静态导出）\n";
-echo "  论坛开发地址：http://127.0.0.1:5173/forum-project/dist/\n";
+echo "\nHome: http://127.0.0.1:8001/home.html\n";

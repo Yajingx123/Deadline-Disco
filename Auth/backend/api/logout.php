@@ -1,12 +1,8 @@
 <?php
 header('Content-Type: application/json; charset=utf-8');
 
-$allowedOrigins = [
-    'http://127.0.0.1:5173',
-    'http://127.0.0.1:5174',
-    'http://127.0.0.1:5500',
-    'http://127.0.0.1:8001',
-];
+$config = require __DIR__ . '/../config/config.php';
+$allowedOrigins = is_array($config['allowed_origins'] ?? null) ? $config['allowed_origins'] : [];
 
 $origin = (string)($_SERVER['HTTP_ORIGIN'] ?? '');
 if (in_array($origin, $allowedOrigins, true)) {

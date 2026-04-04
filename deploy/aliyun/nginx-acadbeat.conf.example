@@ -1,0 +1,42 @@
+server {
+    listen 80;
+    server_name 118.31.127.110;
+
+    root /var/www/Deadline-Disco;
+    index index.php index.html;
+
+    client_max_body_size 20m;
+
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    location ~ \.php$ {
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_pass unix:/run/php-fpm/www.sock;
+        fastcgi_read_timeout 120;
+    }
+
+    location /ws {
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass http://127.0.0.1:3001/ws;
+    }
+
+    location /publish {
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_pass http://127.0.0.1:3001/publish;
+    }
+
+    location /health-realtime {
+        proxy_set_header Host $host;
+        proxy_pass http://127.0.0.1:3001/health;
+    }
+}

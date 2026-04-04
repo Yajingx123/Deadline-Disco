@@ -6,7 +6,7 @@ import PostList from '../components/PostList';
 import PostDetail from './PostDetail'; 
 import PostModal from '../components/PostModal'; 
 import { getSummary } from '../utils/formatText';
-import { connectRealtime, fetchAnnouncements, fetchLabels, fetchPosts, createPost, fetchPostDetail, incrementPostViews, createComment, deletePost, deleteComment, fetchUserFavorites, fetchUserLikes, fetchUserPosts } from '../api/forumApi';
+import { ADMIN_URL, LOGIN_URL, connectRealtime, fetchAnnouncements, fetchLabels, fetchPosts, createPost, fetchPostDetail, incrementPostViews, createComment, deletePost, deleteComment, fetchUserFavorites, fetchUserLikes, fetchUserPosts } from '../api/forumApi';
 
 const FORUM_PREFILL_WINDOW_NAME_KEY = '__acadbeat_forum_prefill__';
 
@@ -54,7 +54,7 @@ export default function ForumHome() {
       ]);
       setLabels(labelData.labels || []);
       if ((labelData.currentUser?.role || '').toLowerCase() === 'admin') {
-        window.location.replace('http://127.0.0.1:8001/admin_page/dist/index.html')
+        window.location.replace(ADMIN_URL)
         return
       }
       setCurrentUser(labelData.currentUser || null);
@@ -75,7 +75,7 @@ export default function ForumHome() {
         })));
     } catch (err) {
       if ((err.message || '').toLowerCase().includes('login required')) {
-        window.location.href = 'http://127.0.0.1:8001/home.html?login=1';
+        window.location.href = LOGIN_URL;
         return;
       }
       setError(err.message || 'Failed to load forum.');
@@ -277,7 +277,7 @@ export default function ForumHome() {
       setViewMode('favorites');
     } catch (err) {
       if ((err.message || '').toLowerCase().includes('login required')) {
-        window.location.href = 'http://127.0.0.1:8001/home.html?login=1';
+        window.location.href = LOGIN_URL;
         return;
       }
       setError(err.message || 'Failed to load favorites.');
@@ -311,7 +311,7 @@ export default function ForumHome() {
       setViewMode('favorites');
     } catch (err) {
       if ((err.message || '').toLowerCase().includes('login required')) {
-        window.location.href = 'http://127.0.0.1:8001/home.html?login=1';
+        window.location.href = LOGIN_URL;
         return;
       }
       setError(err.message || 'Failed to load posts.');

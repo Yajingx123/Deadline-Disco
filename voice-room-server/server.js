@@ -3,38 +3,63 @@ const { WebSocketServer } = require('ws')
 
 const HOST = process.env.REALTIME_HOST || '127.0.0.1'
 const PORT = Number(process.env.REALTIME_PORT || 3001)
-const ALLOWED_ORIGINS = new Set([
+const DEFAULT_ALLOWED_ORIGINS = [
   'http://127.0.0.1:5173',
+  'http://127.0.0.1:5174',
+  'http://127.0.0.1:5500',
   'http://127.0.0.1:8001',
-])
+]
+const ALLOWED_ORIGINS = new Set(
+  String(process.env.REALTIME_ALLOWED_ORIGINS || DEFAULT_ALLOWED_ORIGINS.join(','))
+    .split(',')
+    .map((v) => v.trim())
+    .filter(Boolean)
+)
+const CORS_ALLOW_ALL = process.env.REALTIME_CORS_ALLOW_ALL === '1'
 
-function sendJson(res, statusCode, payload) {
-  res.writeHead(statusCode, {
+function corsOriginForRequest(origin) {
+  if (CORS_ALLOW_ALL) return '*'
+  if (!origin) return ''
+  return ALLOWED_ORIGINS.has(origin) ? origin : ''
+}
+
+function sendJson(req, res, statusCode, payload) {
+  const origin = corsOriginForRequest(req.headers.origin)
+  const headers = {
     'Content-Type': 'application/json; charset=utf-8',
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
     'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-  })
+  }
+  if (origin !== '') {
+    headers['Access-Control-Allow-Origin'] = origin
+    headers.Vary = 'Origin'
+  }
+  res.writeHead(statusCode, headers)
   res.end(JSON.stringify(payload))
 }
 
 const server = http.createServer((req, res) => {
   if (!req.url) {
-    return sendJson(res, 404, { ok: false, message: 'Not found.' })
+    return sendJson(req, res, 404, { ok: false, message: 'Not found.' })
   }
 
   if (req.method === 'OPTIONS') {
-    res.writeHead(204, {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Headers': 'Content-Type',
+    const origin = corsOriginForRequest(req.headers.origin)
+    const headers = {
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
       'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-    })
+    }
+    if (origin !== '') {
+      headers['Access-Control-Allow-Origin'] = origin
+      headers.Vary = 'Origin'
+    }
+    res.writeHead(204, headers)
     res.end()
     return
   }
 
   if (req.method === 'GET' && req.url === '/health') {
-    return sendJson(res, 200, { ok: true, status: 'healthy' })
+    return sendJson(req, res, 200, { ok: true, status: 'healthy' })
   }
 
   if (req.method === 'POST' && req.url === '/publish') {
@@ -58,15 +83,15 @@ const server = http.createServer((req, res) => {
           }
         })
 
-        sendJson(res, 200, { ok: true, delivered })
+        sendJson(req, res, 200, { ok: true, delivered })
       } catch (_error) {
-        sendJson(res, 400, { ok: false, message: 'Invalid JSON payload.' })
+        sendJson(req, res, 400, { ok: false, message: 'Invalid JSON payload.' })
       }
     })
     return
   }
 
-  sendJson(res, 404, { ok: false, message: 'Not found.' })
+  sendJson(req, res, 404, { ok: false, message: 'Not found.' })
 })
 
 const wss = new WebSocketServer({ noServer: true })
@@ -81,7 +106,7 @@ wss.on('connection', (socket) => {
 
 server.on('upgrade', (req, socket, head) => {
   const origin = req.headers.origin
-  if (origin && !ALLOWED_ORIGINS.has(origin)) {
+  if (!CORS_ALLOW_ALL && origin && !ALLOWED_ORIGINS.has(origin)) {
     socket.write('HTTP/1.1 403 Forbidden\r\n\r\n')
     socket.destroy()
     return

@@ -173,6 +173,19 @@ export const renderFormattedText = (text) => {
     `;
   });
 
+  html = html.replace(/!\[video:(.*?)\]\((.*?)\)/g, (match, fileName, src) => {
+    return `
+      <div class="forumVideoPlayer">
+        <div class="forumVideoPlayer__label">Video: ${fileName}</div>
+        <video controls preload="metadata" style="width: 100%; max-height: 360px; border-radius: 10px; background: #111;">
+          <source src="${src}" type="video/mp4" />
+          <source src="${src}" type="video/webm" />
+          Your browser does not support the video element.
+        </video>
+      </div>
+    `;
+  });
+
   // 👇 第二步：处理普通图片
   // 注意：因为音频已经被替换掉了，这里的正则不会再匹配到 audio 标记
   html = html.replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1" style="max-width: 100%; border-radius: 8px; margin: 10px 0; display:block;" />');
@@ -194,10 +207,15 @@ export const getReplyPreview = (text, maxLength = 90) => {
   let preview = text;
   let imageCount = 0;
   let audioCount = 0;
+  let videoCount = 0;
 
   preview = preview.replace(/!\[audio:(.*?)\]\((.*?)\)/g, () => {
     audioCount += 1;
     return audioCount > 1 ? ' [Voice messages] ' : ' [Voice message] ';
+  });
+  preview = preview.replace(/!\[video:(.*?)\]\((.*?)\)/g, () => {
+    videoCount += 1;
+    return videoCount > 1 ? ' [Videos] ' : ' [Video] ';
   });
 
   preview = preview.replace(/!\[(.*?)\]\((.*?)\)/g, () => {
@@ -232,6 +250,7 @@ export const getSummary = (text, maxLength = 100) => {
 
   // 👇 1. 处理音频标记：替换为提示文字，避免显示 Base64 乱码
   cleanText = cleanText.replace(/!\[audio:(.*?)\]\((.*?)\)/g, '[🎵 音频]');
+  cleanText = cleanText.replace(/!\[video:(.*?)\]\((.*?)\)/g, '[🎬 视频]');
 
   // 2. 处理图片标记：替换为 [图片]
   cleanText = cleanText.replace(/!\[(.*?)\]\((.*?)\)/g, '[图片]');

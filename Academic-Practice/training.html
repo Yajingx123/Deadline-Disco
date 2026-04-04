@@ -69,7 +69,7 @@
           <a class="training-go-btn" href="listening.html?mode=respond">GO</a>
         </article>
 
-        <article class="training-clean-card training-clean-card--accent" onclick="window.location.href='voice_room.html'" role="link" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.location.href='voice_room.html';}">
+        <article class="training-clean-card training-clean-card--accent" onclick="window.location.href='video-match.php'" role="link" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.location.href='video-match.php';}">
           <span class="training-clean-kicker">Mode 04</span>
           <div class="training-visual visual-pair-room" aria-hidden="true">
             <span class="pair-node pair-node-left"></span>
@@ -78,9 +78,9 @@
             <span class="pair-ripple pair-ripple-left"></span>
             <span class="pair-ripple pair-ripple-right"></span>
           </div>
-          <h3>Pair Speaking Room</h3>
-          <p>Join a shared room for guided two-person speaking practice on academic tasks.</p>
-          <a class="training-go-btn training-go-btn--soft" href="voice_room.html">GO</a>
+          <h3>Random Video Match</h3>
+          <p>Join the live 1-on-1 video lobby, get paired with another learner, and continue straight into the call room.</p>
+          <a class="training-go-btn training-go-btn--soft" href="video-match.php">GO</a>
         </article>
       </div>
     </section>
@@ -106,7 +106,7 @@
         authApiBase: '../Auth/backend/api',
         homeUrl: '../home.html',
         ownerUrl: '../owner.html',
-        adminUrl: L.adminDistUrl || 'http://127.0.0.1:8001/admin_page/dist/index.html',
+        adminUrl: L.adminDistUrl || window.location.origin + '/admin_page/dist/index.html',
         loginUrl,
         redirectAdmins: false
       });

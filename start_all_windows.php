@@ -14,17 +14,17 @@ $frontendBuilds = [
     [
         'name' => 'forum-static',
         'workdir' => $root . '/forum-project',
-        'command' => $npm . ' run build',
+        'command' => $npm . ' install && ' . $npm . ' run build',
     ],
     [
         'name' => 'admin-static',
         'workdir' => $root . '/admin_page',
-        'command' => $npm . ' run build',
+        'command' => $npm . ' install && ' . $npm . ' run build',
     ],
     [
         'name' => 'message-center-static',
         'workdir' => $root . '/message-center-project',
-        'command' => $npm . ' run build',
+        'command' => $npm . ' install && ' . $npm . ' run build',
     ],
 ];
 
@@ -65,6 +65,13 @@ $services = [
         'command' => $npm . ' start',
     ],
     [
+        'name' => 'scrabble_match',
+        'host' => '127.0.0.1',
+        'port' => 9000,
+        'workdir' => $root . '/Studio/Scrabble/match-server',
+        'command' => $npm . ' run start',
+    ],
+    [
         'name' => 'godot_ui',
         'host' => '127.0.0.1',
         'port' => 5500,
@@ -74,12 +81,16 @@ $services = [
 ];
 
 function startWindowsDetached(string $title, string $workdir, string $command, string $stdoutLog, string $stderrLog): void {
-    $cmd = 'start "' . $title . '" /min cmd /c "cd /d "' . $workdir . '" && ' . $command . ' > "' . $stdoutLog . '" 2> "' . $stderrLog . '"';
+    global $runDir;
+    $npmCache = $runDir . '\\npm-cache';
+    $cmd = 'start "' . $title . '" /min cmd /c "cd /d "' . $workdir . '" && set "npm_config_cache=' . $npmCache . '" && ' . $command . ' > "' . $stdoutLog . '" 2> "' . $stderrLog . '"';
     pclose(popen($cmd, 'r'));
 }
 
 function runWindowsBuild(string $workdir, string $command): void {
-    $fullCommand = 'cmd /c "cd /d "' . $workdir . '" && ' . $command . '"';
+    global $runDir;
+    $npmCache = $runDir . '\\npm-cache';
+    $fullCommand = 'cmd /c "cd /d "' . $workdir . '" && set "npm_config_cache=' . $npmCache . '" && ' . $command . '"';
     passthru($fullCommand, $exitCode);
     if ($exitCode !== 0) {
         throw new RuntimeException("Build failed with exit code {$exitCode}.");

@@ -33,7 +33,10 @@ const TAB_META = [
   { id: 'system', label: 'System Notices', desc: 'Product and community updates' },
 ]
 
-const FALLBACK_BACK_URL = 'http://127.0.0.1:8001/home.html?module=Dialogue'
+const MAIN_ORIGIN =
+  (typeof window !== 'undefined' && window.ACADBEAT_LOCAL && window.ACADBEAT_LOCAL.mainOrigin)
+  || (typeof window !== 'undefined' ? window.location.origin : 'http://127.0.0.1:8001')
+const FALLBACK_BACK_URL = `${MAIN_ORIGIN}/home.html?module=Dialogue`
 
 function sanitizeBackUrl(rawUrl) {
   if (!rawUrl) return ''
@@ -95,7 +98,7 @@ export default function MessageCenter() {
       fetchMessageCenter(false),
     ])
     if ((sessionData.user?.role || '').toLowerCase() === 'admin') {
-      window.location.replace('http://127.0.0.1:8001/admin_page/dist/index.html')
+      window.location.replace(`${MAIN_ORIGIN}/admin_page/dist/index.html`)
       return
     }
     setCurrentUser(sessionData.user || null)
@@ -120,7 +123,7 @@ export default function MessageCenter() {
         ])
         if (cancelled) return
         if ((sessionData.user?.role || '').toLowerCase() === 'admin') {
-          window.location.replace('http://127.0.0.1:8001/admin_page/dist/index.html')
+          window.location.replace(`${MAIN_ORIGIN}/admin_page/dist/index.html`)
           return
         }
         setCurrentUser(sessionData.user || null)
@@ -133,7 +136,7 @@ export default function MessageCenter() {
         broadcastSummary(centerData.summary || {})
       } catch (err) {
         if ((err.message || '').toLowerCase().includes('login required')) {
-          window.location.href = 'http://127.0.0.1:8001/home.html?login=1'
+          window.location.href = `${MAIN_ORIGIN}/home.html?login=1`
           return
         }
         if (!cancelled) {

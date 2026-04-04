@@ -751,7 +751,15 @@
         const PREMIUM = buildPremiumMap();
 
         const params = new URLSearchParams(window.location.search);
-        const SCRABBLE_SERVER = params.get("server") || "http://127.0.0.1:9000";
+        const isLocalHost = ["127.0.0.1", "localhost", "::1"].includes(window.location.hostname);
+        const DEFAULT_SCRABBLE_SERVER = isLocalHost
+            ? `${window.location.protocol}//${window.location.hostname}:9000`
+            : `${window.location.origin}/scrabble-match`;
+        const SCRABBLE_SERVER = (params.get("server") || DEFAULT_SCRABBLE_SERVER).replace(/\/+$/, "");
+        const SCRABBLE_SERVER_URL = new URL(SCRABBLE_SERVER, window.location.href);
+        const SCRABBLE_SOCKET_ORIGIN = `${SCRABBLE_SERVER_URL.protocol}//${SCRABBLE_SERVER_URL.host}`;
+        const SCRABBLE_SOCKET_PATH_PREFIX = SCRABBLE_SERVER_URL.pathname.replace(/\/+$/, "");
+        const SCRABBLE_SOCKET_PATH = `${SCRABBLE_SOCKET_PATH_PREFIX || ""}/socket.io`;
         const MAX_ROUNDS = 20;
 
         const state = {
@@ -881,7 +889,10 @@
                 state.onlineSocket.removeAllListeners();
                 state.onlineSocket.disconnect();
             }
-            const s = io(SCRABBLE_SERVER, { transports: ["websocket", "polling"] });
+            const s = io(SCRABBLE_SOCKET_ORIGIN, {
+                path: SCRABBLE_SOCKET_PATH,
+                transports: ["websocket", "polling"]
+            });
             state.onlineSocket = s;
             s.on("connect", () => {
                 document.getElementById("match-status").textContent = "Connected. Finding opponent…";
@@ -1004,7 +1015,7 @@
             render();
         }
 
-        document.getElementById("server-hint").textContent = `Match server: ${SCRABBLE_SERVER} (override with ?server=http://host:port)`;
+        document.getElementById("server-hint").textContent = `Match server: ${SCRABBLE_SERVER} (override with ?server=https://host/scrabble-match)`;
 
         function buildWordIndexes() {
             wordsByLength = Array.from({ length: 16 }, () => []);

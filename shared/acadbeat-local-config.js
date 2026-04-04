@@ -6,22 +6,30 @@
  * @see docs/ARCHITECTURE.md
  */
 (function (g) {
-  var MAIN = 'http://127.0.0.1:8001';
+  var isBrowser = typeof window !== 'undefined' && window.location;
+  var host = isBrowser ? window.location.hostname : '127.0.0.1';
+  var isLocalHost = host === '127.0.0.1' || host === 'localhost';
+  var origin = isBrowser ? window.location.origin : 'http://127.0.0.1:8001';
+  var MAIN = isLocalHost ? 'http://127.0.0.1:8001' : origin;
+  var wsProtocol = isBrowser && window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+  var wsHost = isBrowser ? window.location.host : '127.0.0.1:3001';
+  var sameOriginWs = wsProtocol + '//' + wsHost + '/ws';
+  var localAdminDistUrl = 'http://127.0.0.1:8001/admin_page/dist/index.html';
   g.ACADBEAT_LOCAL = {
     mainOrigin: MAIN,
     challengeApiUrl: MAIN + '/challenge/api/challenge.php',
-    /** 与 start_all_mac 中 voice-room-server 一致 */
-    voiceRoomWsUrl: 'ws://127.0.0.1:3001/ws',
+    /** Production should use same-origin /ws via Nginx reverse proxy. */
+    voiceRoomWsUrl: isLocalHost ? 'ws://127.0.0.1:3001/ws' : sameOriginWs,
     // Default to PHP-served static builds so the app still opens even when Vite dev servers are not running.
-    adminDistUrl: MAIN + '/admin_page/dist/index.html',
+    adminDistUrl: isLocalHost ? localAdminDistUrl : MAIN + '/admin_page/dist/index.html',
     messageCenterDistUrl: MAIN + '/message-center-project/dist/index.html',
     messageSummaryApiUrl: MAIN + '/forum-project/api/message-center.php?summaryOnly=1',
     authMeUrl: MAIN + '/Auth/backend/api/me.php',
     /** 对应 forum-project build 后由 8001 主站托管的静态入口（直接进入论坛，不再经过 chooser 门户） */
     forumDevChooserUrl: MAIN + '/forum-project/dist/index.html?view=forum',
     forumProdIndexUrl: MAIN + '/forum-project/dist/index.html',
-    godotWebEntryUrl: 'http://127.0.0.1:5500/index.html?ui=godot',
+    godotWebEntryUrl: isLocalHost ? 'http://127.0.0.1:5500/index.html?ui=godot' : MAIN + '/gameUI_src/Release/index.html?ui=godot',
     /** Web 导出读 ?scene=academic 进入学术星球；听力页 Godot 模式返回用 */
-    godotAcademicWebUrl: 'http://127.0.0.1:5500/index.html?ui=godot&scene=academic',
+    godotAcademicWebUrl: isLocalHost ? 'http://127.0.0.1:5500/index.html?ui=godot&scene=academic' : MAIN + '/gameUI_src/Release/index.html?ui=godot&scene=academic',
   };
 })(typeof window !== 'undefined' ? window : globalThis);
