@@ -36,7 +36,7 @@ if [[ -f "$RUN_DIR/realtime_3001.pid" ]]; then
 fi
 
 (
-  cd "$ROOT_DIR/voice-room-server"
+  cd "$ROOT_DIR/video-chat-project/realtime"
   nohup npm start >> "$RUN_DIR/realtime_3001.out.log" 2>> "$RUN_DIR/realtime_3001.err.log" < /dev/null &
   echo $! > "$RUN_DIR/realtime_3001.pid"
 )

@@ -1,10 +1,10 @@
 (function () {
-  const AUTH_ME_URL = "../Auth/backend/api/me.php";
-  const ROOM_LIST_URL = "./api/video-room-list.php";
-  const ROOM_CREATE_URL = "./api/video-room-create.php";
-  const ROOM_INVITE_URL = "./api/video-room-invite.php";
-  const ROOM_END_URL = "./api/video-room-end.php";
-  const ROOM_EVENTS_URL = "./api/video-room-events.php";
+  const AUTH_ME_URL = "/Auth/backend/api/me.php";
+  const ROOM_LIST_URL = "/video-chat-project/api/video-room-list.php";
+  const ROOM_CREATE_URL = "/video-chat-project/api/video-room-create.php";
+  const ROOM_INVITE_URL = "/video-chat-project/api/video-room-invite.php";
+  const ROOM_END_URL = "/video-chat-project/api/video-room-end.php";
+  const ROOM_EVENTS_URL = "/video-chat-project/api/video-room-events.php";
   const ROOM_REENTRY_STORAGE_KEY = "acadbeat.video_room.latest_reentry";
 
   const state = {
@@ -229,7 +229,7 @@
       els.hostedLinkValue.textContent = "No hosted room link yet.";
       els.hostedLinkMeta.textContent = "Create a room and its current room URL or invite URL will appear here.";
       els.openHostedRoomBtn.hidden = true;
-      els.openHostedRoomBtn.href = "./video-match.php";
+      els.openHostedRoomBtn.href = "/video-chat-project/video-match.php";
       els.copyHostedLinkBtn.disabled = true;
       els.createInviteBtn.disabled = true;
       els.createInviteBtn.textContent = "Create Invite";
@@ -247,7 +247,7 @@
       ? `Invite active until ${formatDateTime(state.hostedInvite?.expiresAt)}.`
       : "Open the room directly or create an invite if this is a private room.";
     els.openHostedRoomBtn.hidden = false;
-    els.openHostedRoomBtn.href = canonicalRoomUrl || "./video-match.php";
+    els.openHostedRoomBtn.href = canonicalRoomUrl || "/video-chat-project/video-match.php";
     els.copyHostedLinkBtn.disabled = !visibleLink;
     els.createInviteBtn.disabled = room.visibility !== "private";
     els.createInviteBtn.textContent = inviteUrl ? "Refresh Invite" : "Create Invite";
@@ -511,7 +511,7 @@
     if (!state.me) {
       els.identityName.textContent = "Guest";
       els.hostWatchCopy.textContent = "Login is required before room creation and room notifications can start.";
-      setAuthState(false, "Your login session is missing or expired. Sign in before using video-call.");
+      setAuthState(false, "Your login session is missing or expired. Sign in before using the video chat lobby.");
       els.roomListContainer.innerHTML = '<div class="empty-box">Log in to load the room list.</div>';
       return;
     }

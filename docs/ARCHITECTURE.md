@@ -40,7 +40,7 @@
 ## 启动
 
 - `php start_all.php`：按 OS 拉起主站 `8001`、论坛 Vite、管理端、Godot 静态等；详见脚本输出。
-- **Windows** 与 **macOS** 的 `start_all` 均会尝试启动 **`voice-room-server`（`3001`）**；论坛实时/私信摘要等依赖该 WebSocket。若未在 `voice-room-server` 目录执行过 `npm install`，该进程可能立即退出，请在该目录安装依赖后重试。
+- **Windows** 与 **macOS** 的 `start_all` 均会尝试启动 **`video-chat-project/realtime`（`3001`）**；论坛实时/私信摘要等依赖该 WebSocket。若未在该目录执行过 `npm install`，该进程可能立即退出，请在该目录安装依赖后重试。
 - 论坛开发地址必须为 **`/forum-project/dist/`** 子路径（与 Vite `base` 一致）。
 - 论坛 / 消息中心 Vite 开发服将 **`/shared/*` 代理到 `http://127.0.0.1:8001`**，以便加载 `shared/acadbeat-local-config.js`；**主站 `8001` 必须先启动**，否则该脚本与 API 都会失败。
 - Vite 子项目执行 `npm run build` 后，`dist/index.html` 会从源 `index.html` 重新生成；若曾手改 `dist`，应以源文件为准并重新构建。

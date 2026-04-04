@@ -61,7 +61,7 @@ $services = [
         'name' => 'realtime',
         'host' => '127.0.0.1',
         'port' => 3001,
-        'workdir' => $root . '/voice-room-server',
+        'workdir' => $root . '/video-chat-project/realtime',
         'command' => $npm . ' start',
     ],
     [

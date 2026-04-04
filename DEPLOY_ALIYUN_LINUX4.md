@@ -49,7 +49,7 @@ mysql -u root -p < sql/220_forum_announcements.sql
 
 ```bash
 chmod +x ./start_prod_linux.sh ./stop_prod_linux.sh
-cd /var/www/Deadline-Disco/voice-room-server && npm install && cd ..
+cd /var/www/Deadline-Disco/video-chat-project/realtime && npm install && cd ../..
 bash ./start_prod_linux.sh
 ```
 

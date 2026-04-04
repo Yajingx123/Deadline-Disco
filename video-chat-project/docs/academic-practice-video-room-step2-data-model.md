@@ -1,5 +1,10 @@
 # Academic-Practice Video Room Step 2 Data Model And State Flow
 
+Migration note:
+The runtime code referenced in this document now lives under `video-chat-project/`.
+Legacy `video-call/*` paths below are historical names.
+The database SQL intentionally remains outside this folder at `video-call/sql/105_academic_practice_video_match_tables.sql`.
+
 ## Goal
 
 Document the active room-centric data model that supports:

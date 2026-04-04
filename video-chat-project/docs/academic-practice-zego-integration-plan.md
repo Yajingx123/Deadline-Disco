@@ -1,5 +1,10 @@
 # Academic-Practice Video Room Integration Snapshot
 
+Migration note:
+The runtime code referenced in this document now lives under `video-chat-project/`.
+Legacy `video-call/*` paths below are historical names.
+The database SQL intentionally remains outside this folder at `video-call/sql/105_academic_practice_video_match_tables.sql`.
+
 ## Decision
 
 The repository has already converged on a standalone `video-call` module for durable room-based video.

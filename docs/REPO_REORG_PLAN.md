@@ -20,7 +20,7 @@ This repository is a multi-module monorepo-like layout:
   - `challenge/`
   - `Academic-Practice/`
 - Realtime service:
-  - `voice-room-server/` (Node.js + ws)
+  - `video-chat-project/realtime/` (Node.js + ws)
 - Shared runtime config:
   - `shared/acadbeat-local-config.js`
 
