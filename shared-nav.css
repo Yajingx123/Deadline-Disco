@@ -9,6 +9,7 @@ html.acadbeat-login-guard body {
 }
 
 .acadbeat-shared-nav {
+  box-sizing: border-box;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -19,7 +20,8 @@ html.acadbeat-login-guard body {
   border-bottom: 1px solid rgba(58, 78, 107, 0.1);
   position: fixed;
   top: 0;
-  width: 100%;
+  left: 0;
+  right: 0;
   z-index: 1000;
 }
 

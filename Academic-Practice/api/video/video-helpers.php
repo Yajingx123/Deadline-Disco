@@ -681,3 +681,659 @@ function video_leave_session(PDO $pdo, int $userId, string $reason = 'user_left'
 
     return video_fetch_state($pdo, $userId, false);
 }
+
+function video_decode_json_array($value): array
+{
+    if (is_array($value)) {
+        return $value;
+    }
+    if (!is_string($value) || trim($value) === '') {
+        return [];
+    }
+
+    $decoded = json_decode($value, true);
+    return is_array($decoded) ? $decoded : [];
+}
+
+function video_fail(string $message, int $status = 400): void
+{
+    throw new VideoCallException($message, $status);
+}
+
+function video_app_url(): string
+{
+    global $config;
+    $base = trim((string) ($config['app_url'] ?? ''));
+    if ($base !== '') {
+        return rtrim($base, '/');
+    }
+
+    $scheme = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+    $host = (string) ($_SERVER['HTTP_HOST'] ?? '127.0.0.1:8001');
+    return $scheme . '://' . $host;
+}
+
+function video_call_room_page_url(string $roomId): string
+{
+    return video_app_url() . '/Academic-Practice/video_call/room.php?roomID=' . rawurlencode($roomId);
+}
+
+function video_call_visibility(array $metadata): string
+{
+    $visibility = strtolower(trim((string) ($metadata['visibility'] ?? 'public')));
+    return $visibility === 'private' ? 'private' : 'public';
+}
+
+function video_call_find_space_by_room_id(PDO $pdo, string $roomId, bool $forUpdate = false): ?array
+{
+    $sql = "
+        SELECT
+            s.*,
+            owner.username AS owner_username
+        FROM peer_spaces s
+        JOIN users owner ON owner.user_id = s.created_by_user_id
+        WHERE s.space_type = 'voice_room'
+          AND JSON_UNQUOTE(JSON_EXTRACT(s.metadata_json, '$.source')) = 'video_call'
+          AND JSON_UNQUOTE(JSON_EXTRACT(s.metadata_json, '$.roomId')) = ?
+        ORDER BY s.space_id DESC
+        LIMIT 1
+    ";
+    if ($forUpdate) {
+        $sql .= ' FOR UPDATE';
+    }
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$roomId]);
+    $row = $stmt->fetch();
+    return $row ?: null;
+}
+
+function video_call_load_members(PDO $pdo, int $spaceId, bool $forUpdate = false): array
+{
+    $sql = "
+        SELECT
+            m.*,
+            u.username
+        FROM peer_space_members m
+        JOIN users u ON u.user_id = m.user_id
+        WHERE m.space_id = ?
+        ORDER BY
+            CASE WHEN m.member_role = 'owner' THEN 0 ELSE 1 END,
+            m.membership_id ASC
+    ";
+    if ($forUpdate) {
+        $sql .= ' FOR UPDATE';
+    }
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute([$spaceId]);
+    return $stmt->fetchAll() ?: [];
+}
+
+function video_call_count_active_members(array $members): int
+{
+    $count = 0;
+    foreach ($members as $member) {
+        if ((string) ($member['membership_status'] ?? '') === 'accepted' && empty($member['left_at'])) {
+            $count += 1;
+        }
+    }
+    return $count;
+}
+
+function video_call_find_member(array $members, int $userId): ?array
+{
+    foreach ($members as $member) {
+        if ((int) ($member['user_id'] ?? 0) === $userId) {
+            return $member;
+        }
+    }
+    return null;
+}
+
+function video_call_find_user_by_username(PDO $pdo, string $username, int $excludeUserId = 0): ?array
+{
+    $trimmed = trim($username);
+    if ($trimmed === '') {
+        return null;
+    }
+
+    $stmt = $pdo->prepare("
+        SELECT user_id, username
+        FROM users
+        WHERE LOWER(username) = LOWER(?)
+          AND user_id <> ?
+        LIMIT 1
+    ");
+    $stmt->execute([$trimmed, $excludeUserId]);
+    $row = $stmt->fetch();
+    return $row ?: null;
+}
+
+function video_call_ensure_direct_conversation(PDO $pdo, int $currentUserId, int $targetUserId): int
+{
+    $existingStmt = $pdo->prepare("
+        SELECT c.conversation_id
+        FROM chat_conversations c
+        JOIN chat_conversation_members me
+            ON me.conversation_id = c.conversation_id
+           AND me.user_id = ?
+        JOIN chat_conversation_members other
+            ON other.conversation_id = c.conversation_id
+           AND other.user_id = ?
+        WHERE c.conversation_type = 'direct'
+          AND c.status = 'active'
+          AND (
+            SELECT COUNT(*)
+            FROM chat_conversation_members cm
+            WHERE cm.conversation_id = c.conversation_id
+          ) = 2
+        LIMIT 1
+    ");
+    $existingStmt->execute([$currentUserId, $targetUserId]);
+    $existingId = (int) ($existingStmt->fetchColumn() ?: 0);
+    if ($existingId > 0) {
+        return $existingId;
+    }
+
+    $insertConversation = $pdo->prepare("
+        INSERT INTO chat_conversations (conversation_type, title, created_by_user_id, last_message_at, status, created_at, updated_at)
+        VALUES ('direct', NULL, ?, NULL, 'active', NOW(), NOW())
+    ");
+    $insertConversation->execute([$currentUserId]);
+    $conversationId = (int) $pdo->lastInsertId();
+
+    $insertMember = $pdo->prepare("
+        INSERT INTO chat_conversation_members (conversation_id, user_id, member_role, joined_at, created_at, updated_at)
+        VALUES (?, ?, ?, NOW(), NOW(), NOW())
+    ");
+    $insertMember->execute([$conversationId, $currentUserId, 'owner']);
+    $insertMember->execute([$conversationId, $targetUserId, 'member']);
+
+    return $conversationId;
+}
+
+function video_call_send_invite_message(PDO $pdo, array $sender, array $invitee, array $room): int
+{
+    $conversationId = video_call_ensure_direct_conversation($pdo, (int) $sender['user_id'], (int) $invitee['user_id']);
+    $visibilityLabel = video_call_visibility($room['metadata']) === 'private' ? 'Private' : 'Public';
+    $message = implode("\n", [
+        sprintf('Video call invite from @%s', (string) $sender['username']),
+        'Topic: ' . (string) $room['topic'],
+        'Type: ' . $visibilityLabel,
+        'Room URL: ' . (string) $room['roomPageUrl'],
+    ]);
+
+    $insertMessage = $pdo->prepare("
+        INSERT INTO chat_messages (conversation_id, user_id, content_text, status, created_at, updated_at)
+        VALUES (?, ?, ?, 'active', NOW(), NOW())
+    ");
+    $insertMessage->execute([$conversationId, (int) $sender['user_id'], $message]);
+    $messageId = (int) $pdo->lastInsertId();
+
+    $updateConversation = $pdo->prepare("
+        UPDATE chat_conversations
+        SET last_message_at = NOW(), updated_at = NOW()
+        WHERE conversation_id = ?
+    ");
+    $updateConversation->execute([$conversationId]);
+
+    $updateRead = $pdo->prepare("
+        UPDATE chat_conversation_members
+        SET last_read_at = CASE WHEN user_id = ? THEN NOW() ELSE last_read_at END,
+            last_read_message_id = CASE WHEN user_id = ? THEN ? ELSE last_read_message_id END,
+            updated_at = NOW()
+        WHERE conversation_id = ?
+    ");
+    $updateRead->execute([(int) $sender['user_id'], (int) $sender['user_id'], $messageId, $conversationId]);
+
+    return $conversationId;
+}
+
+function video_call_build_room_payload(array $space, array $members, int $currentUserId): array
+{
+    $metadata = video_decode_json_array($space['metadata_json'] ?? null);
+    $roomId = (string) ($metadata['roomId'] ?? '');
+    $activeMembers = array_values(array_filter($members, static function (array $member): bool {
+        return (string) ($member['membership_status'] ?? '') === 'accepted' && empty($member['left_at']);
+    }));
+    $currentMember = video_call_find_member($members, $currentUserId);
+    $ownerMember = null;
+    foreach ($members as $member) {
+        if ((string) ($member['member_role'] ?? '') === 'owner') {
+            $ownerMember = $member;
+            break;
+        }
+    }
+
+    return [
+        'spaceId' => (int) $space['space_id'],
+        'roomId' => $roomId,
+        'title' => (string) ($space['title'] ?? ''),
+        'topic' => (string) ($metadata['topic'] ?? $space['title'] ?? 'Video Call'),
+        'visibility' => video_call_visibility($metadata),
+        'status' => (string) ($space['status'] ?? 'active'),
+        'memberCount' => count($activeMembers),
+        'capacity' => (int) ($space['max_members'] ?? 2),
+        'isFull' => count($activeMembers) >= (int) ($space['max_members'] ?? 2),
+        'roomPageUrl' => './room.php?roomID=' . rawurlencode($roomId),
+        'shareUrl' => video_call_room_page_url($roomId),
+        'invitedUsername' => (string) ($metadata['invitedUsername'] ?? ''),
+        'owner' => [
+            'userId' => (int) ($ownerMember['user_id'] ?? $space['created_by_user_id'] ?? 0),
+            'username' => (string) ($ownerMember['username'] ?? $space['owner_username'] ?? ''),
+            'displayName' => video_format_display_name((string) ($ownerMember['username'] ?? $space['owner_username'] ?? '')),
+        ],
+        'currentUser' => [
+            'isOwner' => (int) ($space['created_by_user_id'] ?? 0) === $currentUserId,
+            'membershipStatus' => (string) ($currentMember['membership_status'] ?? ''),
+        ],
+        'members' => array_map(static function (array $member): array {
+            return [
+                'userId' => (int) ($member['user_id'] ?? 0),
+                'username' => (string) ($member['username'] ?? ''),
+                'displayName' => video_format_display_name((string) ($member['username'] ?? '')),
+                'role' => (string) ($member['member_role'] ?? 'member'),
+                'status' => (string) ($member['membership_status'] ?? ''),
+            ];
+        }, $activeMembers),
+        'metadata' => $metadata,
+    ];
+}
+
+function video_call_sync_session(PDO $pdo, array $space, array $members): void
+{
+    $activeMembers = array_values(array_filter($members, static function (array $member): bool {
+        return (string) ($member['membership_status'] ?? '') === 'accepted' && empty($member['left_at']);
+    }));
+
+    $sessionStmt = $pdo->prepare("
+        SELECT *
+        FROM peer_video_sessions
+        WHERE space_id = ?
+        LIMIT 1
+        FOR UPDATE
+    ");
+    $sessionStmt->execute([(int) $space['space_id']]);
+    $sessionRow = $sessionStmt->fetch() ?: null;
+
+    if (count($activeMembers) < 2) {
+        if ($sessionRow && in_array((string) ($sessionRow['status'] ?? ''), video_session_statuses_open(), true)) {
+            $endStmt = $pdo->prepare("
+                UPDATE peer_video_sessions
+                SET status = 'ended',
+                    ended_at = NOW(),
+                    ended_reason = 'user_left',
+                    last_activity_at = NOW(),
+                    updated_at = NOW()
+                WHERE session_id = ?
+            ");
+            $endStmt->execute([(int) $sessionRow['session_id']]);
+        }
+        return;
+    }
+
+    $owner = $activeMembers[0];
+    $partner = $activeMembers[1];
+    $metadata = video_decode_json_array($space['metadata_json'] ?? null);
+    $sessionMetadata = video_json_encode([
+        'matchedFromQueue' => false,
+        'source' => 'video_call',
+        'topic' => (string) ($metadata['topic'] ?? $space['title'] ?? ''),
+        'visibility' => video_call_visibility($metadata),
+    ]);
+    $roomId = (string) ($metadata['roomId'] ?? '');
+
+    if ($sessionRow) {
+        $updateStmt = $pdo->prepare("
+            UPDATE peer_video_sessions
+            SET room_id = ?,
+                queue_mode = ?,
+                user_one_id = ?,
+                user_two_id = ?,
+                matched_by = 'manual',
+                status = 'connecting',
+                matched_at = COALESCE(matched_at, NOW()),
+                started_at = COALESCE(started_at, NOW()),
+                ended_at = NULL,
+                ended_reason = NULL,
+                last_activity_at = NOW(),
+                metadata_json = ?,
+                updated_at = NOW()
+            WHERE session_id = ?
+        ");
+        $updateStmt->execute([
+            $roomId,
+            video_queue_mode(),
+            (int) $owner['user_id'],
+            (int) $partner['user_id'],
+            $sessionMetadata,
+            (int) $sessionRow['session_id'],
+        ]);
+        return;
+    }
+
+    $insertStmt = $pdo->prepare("
+        INSERT INTO peer_video_sessions (
+            space_id,
+            room_id,
+            queue_mode,
+            user_one_id,
+            user_two_id,
+            matched_by,
+            status,
+            matched_at,
+            started_at,
+            ended_at,
+            last_activity_at,
+            ended_reason,
+            metadata_json,
+            created_at,
+            updated_at
+        ) VALUES (?, ?, ?, ?, ?, 'manual', 'connecting', NOW(), NOW(), NULL, NOW(), NULL, ?, NOW(), NOW())
+    ");
+    $insertStmt->execute([
+        (int) $space['space_id'],
+        $roomId,
+        video_queue_mode(),
+        (int) $owner['user_id'],
+        (int) $partner['user_id'],
+        $sessionMetadata,
+    ]);
+}
+
+function video_call_list_rooms(PDO $pdo, int $currentUserId): array
+{
+    $stmt = $pdo->prepare("
+        SELECT
+            s.*,
+            owner.username AS owner_username
+        FROM peer_spaces s
+        JOIN users owner ON owner.user_id = s.created_by_user_id
+        WHERE s.space_type = 'voice_room'
+          AND s.status = 'active'
+          AND JSON_UNQUOTE(JSON_EXTRACT(s.metadata_json, '$.source')) = 'video_call'
+          AND JSON_UNQUOTE(JSON_EXTRACT(s.metadata_json, '$.visibility')) = 'public'
+        ORDER BY s.created_at DESC, s.space_id DESC
+        LIMIT 40
+    ");
+    $stmt->execute();
+    $spaces = $stmt->fetchAll() ?: [];
+
+    $rooms = [];
+    foreach ($spaces as $space) {
+        $members = video_call_load_members($pdo, (int) $space['space_id']);
+        $payload = video_call_build_room_payload($space, $members, $currentUserId);
+        if ($payload['memberCount'] >= $payload['capacity']) {
+            continue;
+        }
+        $rooms[] = $payload;
+    }
+
+    return $rooms;
+}
+
+function video_call_create_room(PDO $pdo, int $userId, array $input): array
+{
+    $topic = trim((string) ($input['topic'] ?? ''));
+    $visibility = strtolower(trim((string) ($input['visibility'] ?? 'public')));
+    $inviteUsername = trim((string) ($input['inviteUsername'] ?? ''));
+    $visibility = $visibility === 'private' ? 'private' : 'public';
+
+    if ($topic === '') {
+        video_fail('Topic is required.', 422);
+    }
+
+    $ownerStmt = $pdo->prepare("SELECT user_id, username FROM users WHERE user_id = ? LIMIT 1");
+    $ownerStmt->execute([$userId]);
+    $owner = $ownerStmt->fetch();
+    if (!$owner) {
+        video_fail('User not found.', 404);
+    }
+
+    $pdo->beginTransaction();
+    try {
+        $spaceInsert = $pdo->prepare("
+            INSERT INTO peer_spaces (
+                space_type,
+                created_by_user_id,
+                title,
+                status,
+                max_members,
+                activated_at,
+                metadata_json,
+                created_at,
+                updated_at
+            ) VALUES ('voice_room', ?, ?, 'active', 2, NOW(), ?, NOW(), NOW())
+        ");
+        $spaceInsert->execute([
+            $userId,
+            $topic,
+            video_json_encode([
+                'source' => 'video_call',
+                'topic' => $topic,
+                'visibility' => $visibility,
+            ]),
+        ]);
+        $spaceId = (int) $pdo->lastInsertId();
+        $roomId = video_generate_room_id($spaceId);
+
+        $invitee = null;
+        if ($inviteUsername !== '') {
+            $invitee = video_call_find_user_by_username($pdo, $inviteUsername, $userId);
+            if (!$invitee) {
+                video_fail('Invite username not found.', 404);
+            }
+        }
+
+        $metadata = [
+            'source' => 'video_call',
+            'topic' => $topic,
+            'visibility' => $visibility,
+            'roomId' => $roomId,
+            'invitedUsername' => $invitee ? (string) $invitee['username'] : '',
+        ];
+        $updateSpace = $pdo->prepare("
+            UPDATE peer_spaces
+            SET metadata_json = ?, updated_at = NOW()
+            WHERE space_id = ?
+        ");
+        $updateSpace->execute([video_json_encode($metadata), $spaceId]);
+
+        $memberInsert = $pdo->prepare("
+            INSERT INTO peer_space_members (
+                space_id,
+                user_id,
+                member_role,
+                membership_status,
+                invited_by_user_id,
+                responded_at,
+                joined_at,
+                created_at,
+                updated_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW())
+        ");
+        $memberInsert->execute([$spaceId, $userId, 'owner', 'accepted', $userId, video_now(), video_now()]);
+
+        if ($invitee) {
+            $memberInsert->execute([$spaceId, (int) $invitee['user_id'], 'member', 'pending', $userId, null, null]);
+        }
+
+        $space = video_call_find_space_by_room_id($pdo, $roomId, true);
+        $members = video_call_load_members($pdo, $spaceId, true);
+        $room = video_call_build_room_payload($space ?: [
+            'space_id' => $spaceId,
+            'created_by_user_id' => $userId,
+            'title' => $topic,
+            'status' => 'active',
+            'max_members' => 2,
+            'metadata_json' => video_json_encode($metadata),
+            'owner_username' => (string) $owner['username'],
+        ], $members, $userId);
+
+        if ($invitee) {
+            video_call_send_invite_message($pdo, $owner, $invitee, $room);
+        }
+
+        $pdo->commit();
+        return $room;
+    } catch (Throwable $e) {
+        if ($pdo->inTransaction()) {
+            $pdo->rollBack();
+        }
+        throw $e;
+    }
+}
+
+function video_call_access_room(PDO $pdo, int $userId, string $roomId): array
+{
+    $roomId = sanitizeRoomValue($roomId);
+    if ($roomId === '') {
+        video_fail('Room ID is required.', 422);
+    }
+
+    $pdo->beginTransaction();
+    try {
+        $space = video_call_find_space_by_room_id($pdo, $roomId, true);
+        if (!$space || (string) ($space['status'] ?? '') !== 'active') {
+            video_fail('Room not found or already closed.', 404);
+        }
+
+        $members = video_call_load_members($pdo, (int) $space['space_id'], true);
+        $metadata = video_decode_json_array($space['metadata_json'] ?? null);
+        $visibility = video_call_visibility($metadata);
+        $currentMember = video_call_find_member($members, $userId);
+        $activeCount = video_call_count_active_members($members);
+        $capacity = (int) ($space['max_members'] ?? 2);
+
+        if ($currentMember) {
+            if ((string) $currentMember['membership_status'] !== 'accepted' || !empty($currentMember['left_at'])) {
+                $acceptStmt = $pdo->prepare("
+                    UPDATE peer_space_members
+                    SET membership_status = 'accepted',
+                        responded_at = NOW(),
+                        joined_at = NOW(),
+                        left_at = NULL,
+                        updated_at = NOW()
+                    WHERE membership_id = ?
+                ");
+                $acceptStmt->execute([(int) $currentMember['membership_id']]);
+            }
+        } else {
+            if ($activeCount >= $capacity) {
+                video_fail('This room is already full.', 409);
+            }
+            if ($visibility !== 'public') {
+                video_fail('This private room requires an invite.', 403);
+            }
+
+            $insertMember = $pdo->prepare("
+                INSERT INTO peer_space_members (
+                    space_id,
+                    user_id,
+                    member_role,
+                    membership_status,
+                    invited_by_user_id,
+                    responded_at,
+                    joined_at,
+                    created_at,
+                    updated_at
+                ) VALUES (?, ?, 'member', 'accepted', ?, NOW(), NOW(), NOW(), NOW())
+            ");
+            $insertMember->execute([(int) $space['space_id'], $userId, (int) $space['created_by_user_id']]);
+        }
+
+        $members = video_call_load_members($pdo, (int) $space['space_id'], true);
+        video_call_sync_session($pdo, $space, $members);
+        $payload = video_call_build_room_payload($space, $members, $userId);
+
+        $pdo->commit();
+        return $payload;
+    } catch (Throwable $e) {
+        if ($pdo->inTransaction()) {
+            $pdo->rollBack();
+        }
+        throw $e;
+    }
+}
+
+function video_call_leave_room(PDO $pdo, int $userId, string $roomId, string $reason = 'user_left'): array
+{
+    $roomId = sanitizeRoomValue($roomId);
+    if ($roomId === '') {
+        return ['closed' => true];
+    }
+
+    $pdo->beginTransaction();
+    try {
+        $space = video_call_find_space_by_room_id($pdo, $roomId, true);
+        if (!$space) {
+            $pdo->commit();
+            return ['closed' => true];
+        }
+
+        $memberStmt = $pdo->prepare("
+            SELECT *
+            FROM peer_space_members
+            WHERE space_id = ?
+              AND user_id = ?
+            LIMIT 1
+            FOR UPDATE
+        ");
+        $memberStmt->execute([(int) $space['space_id'], $userId]);
+        $member = $memberStmt->fetch() ?: null;
+
+        if ($member) {
+            $leaveStmt = $pdo->prepare("
+                UPDATE peer_space_members
+                SET membership_status = 'left',
+                    left_at = NOW(),
+                    updated_at = NOW()
+                WHERE membership_id = ?
+            ");
+            $leaveStmt->execute([(int) $member['membership_id']]);
+        }
+
+        if ((int) $space['created_by_user_id'] === $userId) {
+            $spaceStmt = $pdo->prepare("
+                UPDATE peer_spaces
+                SET status = 'completed',
+                    ended_at = NOW(),
+                    updated_at = NOW()
+                WHERE space_id = ?
+            ");
+            $spaceStmt->execute([(int) $space['space_id']]);
+        }
+
+        $members = video_call_load_members($pdo, (int) $space['space_id'], true);
+        video_call_sync_session($pdo, $space, $members);
+        $payload = video_call_build_room_payload($space, $members, $userId);
+
+        $pdo->commit();
+        return [
+            'closed' => (int) $space['created_by_user_id'] === $userId,
+            'reason' => $reason,
+            'room' => $payload,
+        ];
+    } catch (Throwable $e) {
+        if ($pdo->inTransaction()) {
+            $pdo->rollBack();
+        }
+        throw $e;
+    }
+}
+
+function sanitizeRoomValue($value): string
+{
+    $sanitized = preg_replace('/[^A-Za-z0-9_]/', '_', (string) $value);
+    $sanitized = preg_replace('/_+/', '_', (string) $sanitized);
+    return trim((string) $sanitized, '_');
+}
+
+final class VideoCallException extends RuntimeException
+{
+    public function __construct(string $message, int $status = 400)
+    {
+        parent::__construct($message, $status);
+    }
+}
