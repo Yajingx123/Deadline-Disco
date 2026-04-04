@@ -643,7 +643,7 @@
   padding: 12px 16px;
   min-width: 80px;
   width: fit-content;
-  max-width: min(560px, calc(100vw - 180px));
+  max-width: min(520px, calc(100vw - 180px));
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
@@ -661,6 +661,8 @@
 }
 
 .chat-message__content {
+  display: grid;
+  gap: 10px;
   color: var(--secondary-color);
   line-height: 1.5;
   font-size: 14px;
@@ -671,9 +673,50 @@
 }
 
 .chat-message__content img {
-  max-width: min(420px, 100%);
+  max-width: 100%;
   border-radius: 8px;
   display: block;
+}
+
+.chat-message__content .forumInlineImage {
+  display: block;
+  width: min(100%, 280px);
+  max-width: 100%;
+  text-decoration: none;
+}
+
+.chat-message__content .forumInlineImage__img {
+  width: 100%;
+  height: auto;
+  max-height: 280px;
+  object-fit: cover;
+  border-radius: 14px;
+  border: 1px solid #dbe3ee;
+  box-shadow: 0 8px 18px rgba(58, 78, 107, 0.08);
+}
+
+.chat-message__content .forumAudioPlayer {
+  width: min(100%, 320px);
+  max-width: 100%;
+  margin: 0;
+  padding: 8px 10px 8px 8px;
+  border-radius: 20px;
+}
+
+.chat-message__content .forumAudioPlayer__body {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.chat-message__content .forumAudioPlayer__wave {
+  max-width: min(100%, 180px);
+  height: 20px;
+}
+
+.chat-message__content .forumAudioPlayer__toggle {
+  min-width: 50px;
+  padding: 6px 10px;
+  font-size: 0.6rem;
 }
 
 .chat-composer {
@@ -724,7 +767,7 @@
   position: relative;
   z-index: 6;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-  max-height: 12vh;
+  max-height: none;
 }
 
 .chat-composer__panel:focus-within {
@@ -759,8 +802,13 @@
   gap: 8px;
   padding: 8px 12px 10px;
   border-top: 1px solid #e5e7eb;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  overflow-x: auto;
   position: relative;
+}
+
+.chat-composer__toolbar::-webkit-scrollbar {
+  display: none;
 }
 
 .chat-composer__tool {
@@ -775,6 +823,8 @@
   font-weight: 500;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
   transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  flex: 0 0 auto;
+  white-space: nowrap;
 }
 
 .chat-composer__tool:hover {
@@ -821,6 +871,8 @@
 .chat-composer__send {
   margin-left: auto;
   min-width: 88px;
+  flex: 0 0 auto;
+  white-space: nowrap;
 }
 
 .personal-modal {
@@ -1027,5 +1079,14 @@
 
   .chat-message__bubble {
     max-width: calc(100vw - 96px);
+  }
+
+  .chat-composer__toolbar {
+    flex-wrap: wrap;
+    overflow-x: visible;
+  }
+
+  .chat-composer__send {
+    margin-left: 0;
   }
 }

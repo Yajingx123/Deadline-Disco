@@ -857,11 +857,15 @@ function video_call_send_invite_message(PDO $pdo, array $sender, array $invitee,
 {
     $conversationId = video_call_ensure_direct_conversation($pdo, (int) $sender['user_id'], (int) $invitee['user_id']);
     $visibilityLabel = video_call_visibility($room['metadata']) === 'private' ? 'Private' : 'Public';
+    $shareUrl = trim((string) ($room['shareUrl'] ?? ''));
+    if ($shareUrl === '') {
+        $shareUrl = video_call_room_page_url((string) ($room['roomId'] ?? ''));
+    }
     $message = implode("\n", [
         sprintf('Video call invite from @%s', (string) $sender['username']),
         'Topic: ' . (string) $room['topic'],
         'Type: ' . $visibilityLabel,
-        'Room URL: ' . (string) $room['roomPageUrl'],
+        'Room URL: ' . $shareUrl,
     ]);
 
     $insertMessage = $pdo->prepare("

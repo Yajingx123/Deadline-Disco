@@ -69,6 +69,47 @@
     return payload;
   }
 
+  function avatarFallbackLabel(value) {
+    const trimmed = String(value || "").trim();
+    if (!trimmed) return "U";
+    return trimmed.slice(0, Math.min(trimmed.length, 2)).toUpperCase();
+  }
+
+  async function uploadPracticeAsset(file, kind) {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("kind", kind);
+
+    const response = await fetch(CHAT_API_BASE + "/upload.php", {
+      method: "POST",
+      credentials: "include",
+      body: formData
+    });
+    const payload = await response.json().catch(function () {
+      return { ok: false, message: "Invalid server response." };
+    });
+    if (!response.ok || payload.ok === false) {
+      throw new Error(payload.message || "Upload failed.");
+    }
+    return payload;
+  }
+
+  function dataUrlToFile(dataUrl, fileName, mimeType) {
+    const raw = String(dataUrl || "");
+    const parts = raw.split(",");
+    if (parts.length < 2) {
+      throw new Error("Invalid audio data.");
+    }
+    const header = parts[0] || "";
+    const inferredMime = mimeType || (header.match(/data:(.*?);base64/) || [])[1] || "application/octet-stream";
+    const binary = atob(parts[1]);
+    const bytes = new Uint8Array(binary.length);
+    for (let index = 0; index < binary.length; index += 1) {
+      bytes[index] = binary.charCodeAt(index);
+    }
+    return new File([bytes], fileName, { type: inferredMime });
+  }
+
   function ensureShareSheetStyles() {
     if (document.getElementById("practiceShareSheetStyles")) {
       return;
@@ -322,16 +363,18 @@
         const subline = kind === "search"
           ? escapeHtml(item.email || "")
           : escapeHtml((item.memberCount || 0) + " members");
+        const avatarLabel = escapeHtml(item.avatar || avatarFallbackLabel(item.title || item.username || "U"));
+        const targetId = String(item.id || item.conversationId || item.user_id || "");
         return `
           <div class="practice-share-item">
             <div class="practice-share-item__meta">
-              <span class="practice-share-item__avatar">${escapeHtml(item.avatar || "U")}</span>
+              <span class="practice-share-item__avatar">${avatarLabel}</span>
               <span class="practice-share-item__copy">
                 <strong>${escapeHtml(item.title || item.username || "Conversation")}</strong>
                 <span>${subline}</span>
               </span>
             </div>
-            <button type="button" class="practice-share-item__action" data-kind="${kind}" data-id="${escapeHtml(String(item.id || item.conversationId || ""))}">
+            <button type="button" class="practice-share-item__action" data-kind="${kind}" data-id="${escapeHtml(targetId)}">
               ${actionLabel}
             </button>
           </div>
@@ -1351,6 +1394,7 @@
     let currentStream = null;
     let currentAudioData = "";
     let currentAudioMime = "audio/webm";
+    let currentAudioShareUrl = "";
 
     function getAudioExtensionFromMime(mimeType) {
       const normalized = String(mimeType || "").toLowerCase();
@@ -1374,7 +1418,7 @@
       recordBtn.textContent = currentAudioData ? "Re-record" : "SPEAKING";
     }
 
-    function buildRespondShareContent() {
+    function buildRespondShareContent(audioUrl) {
       const trainingPath = withUiMode("Academic-Practice/respond_training.html?mode=" + encodeURIComponent(mode) + "&videoId=" + encodeURIComponent(video.id));
       const trainingUrl = buildAbsoluteProjectUrl(trainingPath);
       const audioFileName = "response-" + video.id + "." + getAudioExtensionFromMime(currentAudioMime);
@@ -1382,13 +1426,14 @@
         "Related training: [" + (video.title || "Open training") + "](" + trainingUrl + ")",
         "",
         "My answer: ",
-        "![audio:" + audioFileName + "](" + currentAudioData + ")"
+        "![audio:" + audioFileName + "](" + audioUrl + ")"
       ].join("\n");
     }
 
     function resetRespondAttempt() {
       currentAudioData = "";
       currentAudioMime = "audio/webm";
+      currentAudioShareUrl = "";
       chunks = [];
       if (recorder && recorder.state === "recording") {
         try {
@@ -1465,7 +1510,7 @@
     }
 
     if (respondShareBtn && respondSaveError && respondSaveFeedback) {
-      respondShareBtn.addEventListener("click", function () {
+      respondShareBtn.addEventListener("click", async function () {
         if (!currentAudioData) {
           respondSaveError.textContent = "no recording yet";
           respondSaveError.classList.remove("hidden");
@@ -1474,14 +1519,28 @@
         }
 
         respondSaveError.classList.add("hidden");
-        const sharedContent = buildRespondShareContent();
-        openShareModal({
-          forumDraft: {
-            title: "",
-            content: sharedContent
-          },
-          chatContent: sharedContent
-        });
+        respondShareBtn.disabled = true;
+        try {
+          if (!currentAudioShareUrl) {
+            const extension = getAudioExtensionFromMime(currentAudioMime);
+            const audioFile = dataUrlToFile(currentAudioData, "response-" + video.id + "." + extension, currentAudioMime);
+            const uploaded = await uploadPracticeAsset(audioFile, "audio");
+            currentAudioShareUrl = String(uploaded.url || "");
+          }
+          const sharedContent = buildRespondShareContent(currentAudioShareUrl || currentAudioData);
+          openShareModal({
+            forumDraft: {
+              title: "",
+              content: sharedContent
+            },
+            chatContent: sharedContent
+          });
+        } catch (error) {
+          respondSaveFeedback.innerHTML = "<strong>" + escapeHtml((error && error.message) || "Share failed.") + "</strong><span>Please try again.</span>";
+          respondSaveFeedback.classList.remove("hidden");
+        } finally {
+          respondShareBtn.disabled = false;
+        }
       });
     }
 
@@ -1514,6 +1573,7 @@
           const reader = new FileReader();
           reader.onloadend = function () {
             currentAudioData = String(reader.result || "");
+            currentAudioShareUrl = "";
             setPlaybackSource(currentAudioData);
             recordStatus.textContent = "Recorded. You can replay or save your answer.";
             if (respondSaveFeedback) respondSaveFeedback.classList.add("hidden");
