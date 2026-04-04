@@ -751,7 +751,10 @@
         const PREMIUM = buildPremiumMap();
 
         const params = new URLSearchParams(window.location.search);
-        const DEFAULT_SCRABBLE_SERVER = `${window.location.protocol}//${window.location.hostname}:9000`;
+        const isLocalHost = ["127.0.0.1", "localhost", "::1"].includes(window.location.hostname);
+        const DEFAULT_SCRABBLE_SERVER = isLocalHost
+            ? `${window.location.protocol}//${window.location.hostname}:9000`
+            : `${window.location.origin}/scrabble-match`;
         const SCRABBLE_SERVER = (params.get("server") || DEFAULT_SCRABBLE_SERVER).replace(/\/+$/, "");
         const MAX_ROUNDS = 20;
 
@@ -1005,7 +1008,7 @@
             render();
         }
 
-        document.getElementById("server-hint").textContent = `Match server: ${SCRABBLE_SERVER} (override with ?server=http://host:port)`;
+        document.getElementById("server-hint").textContent = `Match server: ${SCRABBLE_SERVER} (override with ?server=https://host/scrabble-match)`;
 
         function buildWordIndexes() {
             wordsByLength = Array.from({ length: 16 }, () => []);
