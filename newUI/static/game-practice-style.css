@@ -1,0 +1,328 @@
+/* =========================
+   官方固定配色 —— 完全统一
+========================= */
+:root {
+  --game-bg: #9a8c8f;
+  --game-panel: #b8a9ad;
+  --game-panel-2: #c7b9bc;
+  --game-surface: #d8cfd1;
+  --game-ink: #ffffff;
+  --game-shadow: #5c5054;
+  --game-dark: #2d2528;
+  --game-accent: #18d8e2;
+  --game-accent-2: #25a9ff;
+  --game-outline: #f6f3f4;
+  --game-muted: #eee8ea;
+}
+
+/* 全局像素渲染 + 强制游戏像素字体 */
+* {
+  image-rendering: pixelated;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Press Start 2P', monospace !important;
+}
+
+/* 页面主体风格 —— 100% 匹配你的软件 */
+body[data-page="response-detail"] {
+  background:
+    radial-gradient(circle at 16% 10%, rgba(255,255,255,0.12) 0 10%, transparent 10.5%),
+    radial-gradient(circle at 83% 23%, rgba(255,255,255,0.10) 0 8%, transparent 8.5%),
+    linear-gradient(180deg, #98898d 0%, #938589 100%);
+  color: var(--game-ink);
+  min-height: 100vh;
+  overflow-x: hidden;
+  line-height: 1.6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 背景装饰 —— 完全统一 */
+body[data-page="response-detail"]::before,
+body[data-page="response-detail"]::after {
+  content: "";
+  position: fixed;
+  pointer-events: none;
+  z-index: -1;
+  border: 4px solid rgba(255,255,255,0.78);
+  border-radius: 999px;
+  opacity: 0.34;
+}
+body[data-page="response-detail"]::before {
+  width: 320px; height: 140px; right: 90px; top: 170px; transform: rotate(18deg);
+}
+body[data-page="response-detail"]::after {
+  width: 360px; height: 180px; left: -120px; top: -10px; transform: -24deg;
+}
+
+/* 页面容器 —— 居中 + 无多余留白 */
+.page-shell {
+  width: min(calc(100% - 56px), 1460px);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* 核心布局：左右分栏 —— 紧凑无留白 */
+.respond-layout {
+  display: grid;
+  grid-template-columns: 1.4fr 0.8fr;
+  gap: 20px;
+  align-items: stretch;
+}
+
+/* =========================
+像素风终端面板（紧凑版）
+========================= */
+.video-panel,
+.note-panel {
+  background: linear-gradient(180deg, var(--game-panel) 0%, var(--game-panel-2) 100%);
+  border: 4px solid var(--game-outline);
+  box-shadow: 8px 8px 0 0 var(--game-shadow);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* 顶部标题栏 */
+.workspace-top-actions,
+.note-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 12px;
+  border-bottom: 3px dotted var(--game-shadow);
+}
+
+/* 标题文字 强化游戏像素质感 */
+.workspace-top-actions h2,
+.note-panel-head h3 {
+  font-size: 1rem;
+  color: var(--game-ink);
+  text-shadow: 2px 0 0 var(--game-accent-2), 4px 0 0 var(--game-accent);
+  letter-spacing: 1px;
+}
+
+/* 返回按钮 —— 完全统一 */
+.back-btn.back-fab {
+  width: 44px;
+  height: 44px;
+  border-radius: 0;
+  border: 4px solid var(--game-outline);
+  background: #b7c6d6;
+  color: var(--game-dark);
+  box-shadow: 4px 4px 0 0 var(--game-shadow);
+  font-size: 1rem;
+  cursor: pointer;
+  transition: 0.1s ease;
+}
+.back-btn.back-fab:hover {
+  transform: translate(-1px, -1px);
+  background: #c8d5e2;
+  box-shadow: 6px 6px 0 0 var(--game-shadow);
+}
+
+/* 信息标签 */
+.person-meta-line,
+.detail-meta-row {
+  font-size: 0.6rem;
+  color: var(--game-dark);
+  gap: 8px;
+}
+.detail-meta-pill {
+  background: var(--game-dark);
+  color: var(--game-accent);
+  padding: 4px 8px;
+  border: 2px solid var(--game-outline);
+  box-shadow: 2px 2px 0 var(--game-shadow);
+}
+
+/* =========================
+视频监视器 —— 统一风格
+========================= */
+#respondVideo {
+  width: 100%;
+  background: #000;
+  border: 4px solid var(--game-outline);
+  box-shadow: 8px 8px 0 0 var(--game-shadow);
+  position: relative;
+}
+
+/* 扫描线效果 */
+.video-panel {
+  position: relative;
+}
+.video-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(transparent 50%, rgba(0,0,0,0.2) 50%);
+  background-size: 100% 3px;
+  z-index: 10;
+  pointer-events: none;
+  animation: scrollScan 4s linear infinite;
+}
+.video-panel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  box-shadow: 0 0 25px var(--game-accent);
+  opacity: 0.2;
+  z-index: 2;
+  animation: glowPulse 3s infinite alternate;
+  pointer-events: none;
+}
+
+/* =========================
+按钮 —— 像素游戏风强化
+========================= */
+.detail-resource-tabs {
+  display: flex;
+  gap: 8px;
+}
+.btn-small {
+  flex: 1;
+  min-height: 42px;
+  font-size: 0.62rem;
+  line-height: 1.35;
+  border-radius: 0;
+  border: 3px solid var(--game-outline);
+  background: rgba(132,116,121,0.72);
+  color: var(--game-ink);
+  box-shadow: 3px 3px 0 0 var(--game-shadow);
+  cursor: pointer;
+  transition: 0.1s;
+  letter-spacing: 0.5px;
+}
+.btn-small:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 5px 5px 0 0 var(--game-shadow);
+}
+.btn-primary-small {
+  background: var(--game-accent);
+  color: var(--game-dark);
+}
+
+/* =========================
+字幕面板
+========================= */
+.transcript-panel {
+  background: var(--game-dark);
+  border: 3px solid var(--game-outline);
+  box-shadow: 4px 4px 0 0 var(--game-shadow);
+  padding: 12px;
+  color: var(--game-accent);
+  font-size: 0.6rem;
+  line-height: 1.6;
+}
+
+/* =========================
+右侧 重点修改区
+========================= */
+/* 提示文案：字号加大 + 游戏风优化 */
+.respond-hint {
+  font-size: 0.75rem;
+  color: var(--game-dark);
+  text-align: center;
+  margin: 4px 0 12px;
+  line-height: 1.8;
+  letter-spacing: 0.8px;
+}
+
+/* 录音按钮间距收紧 */
+.respond-speaking-wrap {
+  display: flex;
+  justify-content: center;
+  padding: 4px 0;
+  margin: 6px 0;
+}
+.respond-speaking-btn {
+  width: 140px;
+  height: 140px;
+  border-radius: 999px;
+  border: 4px solid var(--game-outline);
+  background: var(--game-accent);
+  color: var(--game-dark);
+  box-shadow: 6px 6px 0 0 var(--game-shadow);
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: 0.1s;
+  animation: pulse 1.2s infinite alternate;
+  letter-spacing: 1px;
+}
+.respond-speaking-btn:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0 0 var(--game-shadow);
+}
+.respond-speaking-btn.is-recording {
+  background: #ff4466;
+  color: #fff;
+}
+
+/* 状态文字 */
+.recording-status {
+  text-align: center;
+  font-size: 0.65rem;
+  color: var(--game-dark);
+  margin: 0 0 10px;
+  letter-spacing: 0.5px;
+}
+
+/* 音频播放器 */
+.respond-audio {
+  width: 100%;
+  border: 3px solid var(--game-outline);
+  box-shadow: 3px 3px 0 var(--game-shadow);
+  margin: 4px 0 10px;
+}
+
+/* 保存栏紧凑居中 */
+.respond-save-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  justify-content: center;
+  margin: 8px 0 0;
+}
+.note-record-error {
+  color: #ff4466;
+  font-size: 0.6rem;
+  text-shadow: 1px 1px 0 var(--game-shadow);
+}
+
+/* 👉 直接隐藏删除保存成功提示整行 */
+.note-record-feedback {
+  display: none !important;
+}
+
+/* =========================
+动画 —— 完全统一
+========================= */
+@keyframes blink {
+  50% { opacity: 0; }
+}
+@keyframes scrollScan {
+  from { background-position: 0 0; }
+  to { background-position: 0 3px; }
+}
+@keyframes glowPulse {
+  from { opacity: 0.15; }
+  to { opacity: 0.35; }
+}
+@keyframes pulse {
+  from { transform: scale(0.98); }
+  to { transform: scale(1); }
+}
+
+/* =========================
+响应式
+========================= */
+@media (max-width: 900px) {
+  .respond-layout {
+    grid-template-columns: 1fr;
+  }
+}

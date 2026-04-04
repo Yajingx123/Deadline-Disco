@@ -1,0 +1,2086 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AcadBeat Studio | Scrabble</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #E4DFD8;
+            --primary-color: #9BB7D4;
+            --secondary-color: #3A4E6B;
+            --white: #ffffff;
+            --panel: rgba(255, 255, 255, 0.76);
+            --panel-strong: rgba(255, 255, 255, 0.9);
+            --border: rgba(58, 78, 107, 0.12);
+            --tw: #d66978;
+            --dw: #ef9ca9;
+            --tl: #4c6fa8;
+            --dl: #9ec8ef;
+            --center: #f0b0bc;
+            --rack: #f3ece3;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+
+        body {
+            background:
+                radial-gradient(circle at top, rgba(155, 183, 212, 0.16), transparent 28%),
+                var(--bg-color);
+            color: var(--secondary-color);
+            min-height: 100vh;
+            padding-bottom: 28px;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            height: 80px;
+            padding: 0 5%;
+            border-bottom: 1px solid rgba(58, 78, 107, 0.1);
+            background: rgba(228, 223, 216, 0.95);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(8px);
+        }
+
+        .logo { font-size: 1.4rem; font-weight: 800; text-transform: uppercase; cursor: pointer; }
+        .logo span { color: var(--primary-color); }
+
+        .nav-menu { display: flex; gap: 2.2rem; }
+
+        .nav-item {
+            color: var(--secondary-color);
+            font-weight: 600;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            opacity: 0.5;
+            padding: 8px 0;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .nav-item.active,
+        .nav-item:hover { opacity: 1; }
+
+        .nav-item.active::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 2px;
+            background: var(--secondary-color);
+        }
+
+        .layout {
+            max-width: 1320px;
+            margin: 18px auto 0;
+            padding: 0 18px;
+            display: grid;
+            grid-template-columns: minmax(680px, 1fr) 360px;
+            gap: 18px;
+        }
+
+        .board-panel,
+        .side-panel {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 16px 40px rgba(58, 78, 107, 0.08);
+        }
+
+        .board-panel { padding: 16px; }
+        .side-panel { padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+
+        .board-wrap {
+            border: 1px solid rgba(58, 78, 107, 0.14);
+            border-radius: 14px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.74);
+        }
+
+        .board {
+            display: grid;
+            grid-template-columns: repeat(15, minmax(38px, 1fr));
+        }
+
+        .cell {
+            border: 1px solid rgba(58, 78, 107, 0.08);
+            aspect-ratio: 1 / 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            color: rgba(58, 78, 107, 0.78);
+            font-weight: 700;
+            font-size: 0.72rem;
+            user-select: none;
+        }
+
+        .cell .tile {
+            width: 90%;
+            height: 90%;
+            border-radius: 8px;
+            background: #f7efe4;
+            border: 1px solid rgba(58, 78, 107, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            font-size: 1rem;
+            color: #32415b;
+            position: relative;
+        }
+
+        .tile-score {
+            position: absolute;
+            bottom: 2px;
+            right: 4px;
+            font-size: 0.6rem;
+            font-weight: 700;
+            opacity: 0.75;
+        }
+
+        .premium-tw { background: rgba(214, 105, 120, 0.3); }
+        .premium-dw { background: rgba(239, 156, 169, 0.34); }
+        .premium-tl { background: rgba(76, 111, 168, 0.3); }
+        .premium-dl { background: rgba(158, 200, 239, 0.44); }
+        .premium-center { background: rgba(240, 176, 188, 0.44); }
+
+        .premium-label {
+            font-size: 0.6rem;
+            opacity: 0.85;
+            letter-spacing: 0.02em;
+        }
+
+        .tile.temp-tile { outline: 2px solid rgba(155, 183, 212, 0.9); background: #fff8ed; }
+        .tile[draggable="true"] { cursor: grab; }
+        .tile[draggable="true"]:active { cursor: grabbing; }
+
+        .cell.cell-preview-word {
+            box-shadow: inset 0 0 0 3px rgba(58, 78, 107, 0.45);
+            z-index: 1;
+        }
+        .cell.drag-over { outline: 2px dashed rgba(155, 183, 212, 0.95); outline-offset: -2px; }
+
+        .preview-turn {
+            font-size: 0.88rem;
+            font-weight: 700;
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.82);
+            line-height: 1.4;
+        }
+        .preview-turn--ok { border-color: rgba(155, 183, 212, 0.5); color: var(--secondary-color); }
+        .preview-turn--bad { border-color: rgba(214, 105, 120, 0.45); color: #a94455; }
+
+        .dict-status { font-size: 0.78rem; opacity: 0.75; padding: 0 4px; }
+
+        .ai-diff-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .ai-diff-row label { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06rem; opacity: 0.72; }
+        .ai-diff-row select {
+            flex: 1;
+            min-width: 120px;
+            padding: 8px 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(58, 78, 107, 0.18);
+            background: rgba(255, 255, 255, 0.88);
+            color: var(--secondary-color);
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .rack-return {
+            margin-top: 8px;
+            min-height: 36px;
+            border-radius: 10px;
+            border: 1px dashed rgba(58, 78, 107, 0.28);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.04rem;
+            text-transform: uppercase;
+            color: rgba(58, 78, 107, 0.55);
+            transition: background 0.2s ease, border-color 0.2s ease;
+        }
+        .rack-return.drag-over-rack {
+            background: rgba(155, 183, 212, 0.22);
+            border-color: rgba(58, 78, 107, 0.35);
+            color: var(--secondary-color);
+        }
+
+        .status {
+            background: var(--panel-strong);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 12px;
+            min-height: 64px;
+            line-height: 1.45;
+            font-size: 0.9rem;
+        }
+
+        .score-card {
+            background: var(--panel-strong);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 12px;
+            display: grid;
+            gap: 10px;
+        }
+
+        .score-line {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 700;
+            padding: 8px 10px;
+            border-radius: 10px;
+            background: rgba(155, 183, 212, 0.12);
+        }
+
+        .score-line.active {
+            outline: 2px solid rgba(58, 78, 107, 0.26);
+            background: rgba(155, 183, 212, 0.2);
+        }
+
+        .rack-box {
+            background: var(--rack);
+            border: 1px solid rgba(58, 78, 107, 0.16);
+            border-radius: 14px;
+            padding: 10px;
+        }
+
+        .rack-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            opacity: 0.72;
+        }
+
+        .rack {
+            display: grid;
+            grid-template-columns: repeat(7, minmax(38px, 1fr));
+            gap: 8px;
+        }
+
+        .rack-tile {
+            min-height: 44px;
+            border-radius: 10px;
+            border: 1px solid rgba(58, 78, 107, 0.2);
+            background: #f8efe0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 800;
+        }
+
+        .rack-tile.selected { outline: 2px solid rgba(58, 78, 107, 0.45); transform: translateY(-1px); }
+        .rack-tile.exchange-selected { outline: 2px solid rgba(214, 105, 120, 0.8); background: #fce3e7; }
+        .rack-tile.used { opacity: 0.35; pointer-events: none; }
+
+        .controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        button {
+            border: 1px solid rgba(58, 78, 107, 0.2);
+            background: rgba(255, 255, 255, 0.76);
+            color: var(--secondary-color);
+            border-radius: 999px;
+            min-height: 38px;
+            padding: 0 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s ease;
+        }
+
+        button:hover { transform: translateY(-1px); }
+        button.primary { background: rgba(58, 78, 107, 0.92); color: white; border-color: rgba(58, 78, 107, 0.92); }
+        button.warn { background: rgba(214, 105, 120, 0.9); color: white; border-color: rgba(214, 105, 120, 0.9); }
+
+        .meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.86rem;
+            opacity: 0.8;
+            padding: 0 4px;
+        }
+
+        .log-box {
+            background: rgba(255, 255, 255, 0.76);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 10px;
+            min-height: 160px;
+            max-height: 210px;
+            overflow: auto;
+            font-size: 0.82rem;
+            line-height: 1.55;
+        }
+
+        .log-line { padding: 4px 0; border-bottom: 1px dashed rgba(58, 78, 107, 0.14); }
+
+        @media (max-width: 1120px) {
+            .layout {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .mode-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            background:
+                radial-gradient(circle at top, rgba(155, 183, 212, 0.2), transparent 32%),
+                rgba(228, 223, 216, 0.96);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+        .mode-overlay.hidden { display: none; }
+        .mode-card {
+            width: min(420px, 100%);
+            background: rgba(255, 255, 255, 0.92);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 28px 26px;
+            box-shadow: 0 24px 60px rgba(58, 78, 107, 0.12);
+        }
+        .mode-card h2 {
+            margin: 0 0 8px;
+            font-size: 1.35rem;
+            letter-spacing: -0.02em;
+        }
+        .mode-card p {
+            margin: 0 0 20px;
+            font-size: 0.9rem;
+            color: rgba(58, 78, 107, 0.72);
+            line-height: 1.55;
+        }
+        .mode-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .mode-actions button { width: 100%; }
+        #match-panel {
+            margin-top: 18px;
+            padding-top: 18px;
+            border-top: 1px dashed rgba(58, 78, 107, 0.2);
+            display: none;
+        }
+        #match-panel.is-visible { display: block; }
+        #match-status {
+            font-size: 0.88rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--secondary-color);
+        }
+        .match-row { display: flex; gap: 8px; flex-wrap: wrap; }
+        .game-root.hidden { display: none; }
+        .server-hint {
+            font-size: 0.72rem;
+            opacity: 0.65;
+            margin-top: 14px;
+            word-break: break-all;
+        }
+
+        .nav-rules {
+            font-family: inherit;
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 8px 14px;
+            border-radius: 999px;
+            border: 1px solid rgba(58, 78, 107, 0.25);
+            background: rgba(255, 255, 255, 0.55);
+            color: var(--secondary-color);
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        .nav-rules:hover {
+            background: rgba(155, 183, 212, 0.35);
+        }
+
+        .game-progress {
+            width: 100%;
+            max-width: min(92vw, 720px);
+            margin: 0 auto 16px;
+            padding: 0;
+            border-radius: 16px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.88) 100%);
+            border: 1px solid var(--border);
+            box-shadow:
+                0 4px 24px rgba(58, 78, 107, 0.07),
+                inset 0 1px 0 rgba(255, 255, 255, 0.9);
+            overflow: hidden;
+        }
+        .game-progress.game-progress--done {
+            opacity: 0.88;
+            filter: saturate(0.92);
+        }
+        .game-progress__inner {
+            display: flex;
+            align-items: stretch;
+            min-height: 72px;
+        }
+        .game-progress__stat {
+            flex: 1;
+            padding: 14px 18px 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 6px;
+            min-width: 0;
+        }
+        .game-progress__stat--round {
+            background: linear-gradient(180deg, rgba(155, 183, 212, 0.12) 0%, transparent 100%);
+        }
+        .game-progress__stat--bag {
+            background: linear-gradient(180deg, rgba(58, 78, 107, 0.04) 0%, transparent 100%);
+        }
+        .game-progress__divider {
+            width: 1px;
+            align-self: stretch;
+            margin: 12px 0;
+            background: linear-gradient(180deg, transparent, rgba(58, 78, 107, 0.12), transparent);
+            flex-shrink: 0;
+        }
+        .game-progress__label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: var(--secondary-color);
+            opacity: 0.55;
+        }
+        .game-progress__value {
+            font-size: 1.55rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            color: var(--secondary-color);
+            line-height: 1.1;
+        }
+        .game-progress__max {
+            font-size: 0.95rem;
+            font-weight: 600;
+            opacity: 0.38;
+            margin-left: 2px;
+        }
+        .game-progress__hint {
+            font-size: 0.72rem;
+            font-weight: 500;
+            color: var(--secondary-color);
+            opacity: 0.45;
+        }
+        .game-progress__bar {
+            height: 5px;
+            border-radius: 999px;
+            background: rgba(58, 78, 107, 0.08);
+            overflow: hidden;
+            margin-top: 2px;
+        }
+        .game-progress__bar-fill {
+            height: 100%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, var(--primary-color), #7a9ab8);
+            box-shadow: 0 0 12px rgba(155, 183, 212, 0.45);
+            transition: width 0.35s ease;
+        }
+        @media (max-width: 560px) {
+            .game-progress__inner { flex-direction: column; min-height: 0; }
+            .game-progress__divider {
+                width: auto;
+                height: 1px;
+                margin: 0 14px;
+                background: linear-gradient(90deg, transparent, rgba(58, 78, 107, 0.1), transparent);
+            }
+            .game-progress__stat { padding: 12px 16px; }
+            .game-progress__value { font-size: 1.35rem; }
+        }
+
+        .rules-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 3000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+        .rules-modal.hidden { display: none; }
+        .rules-modal__backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(30, 40, 55, 0.45);
+            cursor: pointer;
+        }
+        .rules-modal__panel {
+            position: relative;
+            z-index: 1;
+            max-width: 560px;
+            max-height: min(82vh, 640px);
+            width: 100%;
+            background: #fdfcfa;
+            border-radius: 16px;
+            box-shadow: 0 20px 50px rgba(58, 78, 107, 0.2);
+            border: 1px solid rgba(58, 78, 107, 0.12);
+            display: flex;
+            flex-direction: column;
+        }
+        .rules-modal__head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 18px 10px;
+            border-bottom: 1px solid rgba(58, 78, 107, 0.1);
+        }
+        .rules-modal__head h2 {
+            margin: 0;
+            font-size: 1.15rem;
+            font-weight: 800;
+            color: var(--secondary-color);
+        }
+        .rules-modal__close {
+            border: none;
+            background: transparent;
+            font-size: 1.6rem;
+            line-height: 1;
+            cursor: pointer;
+            color: var(--secondary-color);
+            opacity: 0.65;
+            padding: 4px 8px;
+            border-radius: 8px;
+        }
+        .rules-modal__close:hover { opacity: 1; background: rgba(0,0,0,0.05); }
+        .rules-modal__body {
+            padding: 14px 20px 20px;
+            overflow-y: auto;
+            font-size: 0.84rem;
+            line-height: 1.55;
+            color: #2f3a4a;
+        }
+        .rules-modal__body h3 {
+            margin: 14px 0 6px;
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--secondary-color);
+            opacity: 0.85;
+        }
+        .rules-modal__body p { margin: 0 0 10px; }
+        .rules-modal__body ul { margin: 0 0 10px 1.1rem; padding: 0; }
+        .rules-modal__body li { margin-bottom: 4px; }
+    </style>
+</head>
+<body>
+    <div id="mode-overlay" class="mode-overlay">
+        <div class="mode-card">
+            <h2>Scrabble</h2>
+            <p>Choose how you want to play. Online mode needs the match server running (see hint below).</p>
+            <div class="mode-actions">
+                <button type="button" class="primary" onclick="chooseAiMode()">Play vs AI</button>
+                <button type="button" onclick="showOnlineMatchPanel()">Online match (2 players)</button>
+            </div>
+            <div id="match-panel">
+                <div id="match-status">Click “Find match” to join the queue.</div>
+                <div class="match-row">
+                    <button type="button" class="primary" id="btn-find-match" onclick="findOnlineMatch()">Find match</button>
+                    <button type="button" onclick="cancelOnlineMatch()">Cancel</button>
+                </div>
+            </div>
+            <p class="server-hint" id="server-hint"></p>
+        </div>
+    </div>
+    <nav>
+        <div class="logo" onclick="window.location.href='../../home.html'">Acad<span>Beat</span></div>
+        <div class="nav-menu">
+            <div class="nav-item" onclick="window.location.href='../../home.html?module=Insight'">Academic</div>
+            <div class="nav-item" onclick="window.location.href='../../home.html?module=Dialogue'">Forum</div>
+            <div class="nav-item" onclick="window.location.href='../../home.html?module=Method'">Technology</div>
+            <div class="nav-item active" onclick="window.location.href='../studio.html'">Studio</div>
+        </div>
+        <button type="button" class="nav-rules" onclick="openRulesModal()">Rules</button>
+    </nav>
+
+    <div id="game-root" class="game-root hidden">
+    <div class="layout">
+        <section class="board-panel">
+            <div class="game-progress" id="game-progress" aria-live="polite"></div>
+            <div class="board-wrap">
+                <div id="board" class="board"></div>
+            </div>
+        </section>
+
+        <aside class="side-panel">
+            <div class="status" id="status"></div>
+            <div class="preview-turn" id="preview-turn">Preview: —</div>
+            <div class="dict-status" id="dict-status">Dictionary: loading…</div>
+            <div class="ai-diff-row">
+                <label for="ai-difficulty">AI difficulty</label>
+                <select id="ai-difficulty" title="Applies on Restart">
+                    <option value="easy">Easy</option>
+                    <option value="normal" selected>Normal</option>
+                    <option value="hard">Hard</option>
+                </select>
+            </div>
+
+            <div class="score-card">
+                <div class="score-line" id="score-you"><span id="score-you-name">You</span> <span id="score-you-v">0</span></div>
+                <div class="score-line" id="score-ai"><span id="score-ai-name">Computer</span> <span id="score-ai-v">0</span></div>
+            </div>
+
+            <div class="meta">
+                <span id="bag-count">Bag: 100</span>
+                <span id="turn-count">Round: 1 / 20</span>
+            </div>
+
+            <div class="rack-box">
+                <div class="rack-title">Your Rack</div>
+                <div id="rack" class="rack"></div>
+                <div id="rack-return" class="rack-return" ondragover="onRackReturnDragOver(event)" ondragleave="onRackReturnDragLeave(event)" ondrop="onRackReturnDrop(event)">Drop tile here to return</div>
+            </div>
+
+            <div class="controls">
+                <button class="primary" onclick="submitMove()">Play</button>
+                <button onclick="undoTempMove()">Undo</button>
+                <button id="exchange-toggle" onclick="toggleExchangeMode()">Exchange Mode</button>
+                <button onclick="exchangeSelected()">Exchange Selected</button>
+                <button class="warn" onclick="passTurn()">Pass</button>
+                <button onclick="restartGame()">Restart</button>
+            </div>
+
+            <div class="log-box" id="log-box"></div>
+        </aside>
+    </div>
+    </div>
+
+    <div id="rules-modal" class="rules-modal hidden" role="dialog" aria-modal="true" aria-labelledby="rules-title">
+        <div class="rules-modal__backdrop" onclick="closeRulesModal()"></div>
+        <div class="rules-modal__panel" onclick="event.stopPropagation()">
+            <div class="rules-modal__head">
+                <h2 id="rules-title">How to Play</h2>
+                <button type="button" class="rules-modal__close" onclick="closeRulesModal()" aria-label="Close">&times;</button>
+            </div>
+            <div class="rules-modal__body">
+                <h3>Goal</h3>
+                <p>Score more points than your opponent by forming valid English words on the 15×15 board. This version uses the ENABLE word list for validation.</p>
+                <h3>Setup</h3>
+                <p>Each player draws seven letter tiles from the bag. The first word must cover the center star (H8). Later words must touch existing letters.</p>
+                <h3>Your turn</h3>
+                <ul>
+                    <li><strong>Play:</strong> Place one or more tiles from your rack in a single row or column with no gaps, then press <strong>Play</strong>.</li>
+                    <li><strong>Blank (*):</strong> Choose any A–Z letter; it scores 0 but counts as that letter.</li>
+                    <li><strong>Pass:</strong> Skip your turn (contributes to a possible four-pass end).</li>
+                    <li><strong>Exchange:</strong> Turn on <strong>Exchange Mode</strong>, select rack tiles, then <strong>Exchange Selected</strong> (only while at least seven tiles remain in the bag).</li>
+                </ul>
+                <h3>Scoring</h3>
+                <p>Letter values are printed on tiles. Premium squares apply only when a tile is first placed there: DL/TL multiply the letter; DW/TW multiply the whole word. Using all seven tiles in one play adds a 50-point bingo bonus.</p>
+                <h3>Winning</h3>
+                <ul>
+                    <li><strong>Classic:</strong> When the bag is empty, the first player to use every tile ends the game; remaining tile values are subtracted and (usually) added to the player who went out.</li>
+                    <li><strong>Stalemate:</strong> If both players pass twice in a row (four consecutive passes), the game ends and rack penalties are applied.</li>
+                    <li><strong>Round limit:</strong> A <strong>round</strong> is one move by each player (play, pass, or exchange). After <strong>20</strong> full rounds, the game ends immediately and the higher score wins (ties are draws). Rack penalties are not applied for this ending.</li>
+                </ul>
+                <h3>Online play</h3>
+                <p>Start the match server, choose <strong>Online match</strong>, and join the queue with a second browser or friend. The server keeps the official board, scores, and bag.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js" crossorigin="anonymous"></script>
+    <script>
+        const BOARD_SIZE = 15;
+        const CENTER = 7;
+        const HUMAN = 0;
+        const AI = 1;
+
+        const WORDLIST_URLS = [
+            "./enable.txt",
+            "https://raw.githubusercontent.com/dolph/dictionary/master/enable1.txt"
+        ];
+
+        const FALLBACK_WORDS = [
+            "AA","AB","AD","AE","AG","AH","AI","AL","AM","AN","AR","AS","AT","AW","AX","AY",
+            "BA","BE","BI","BO","BY","CAT","DOG","THE","AND","FOR","ARE","BUT","NOT","YOU","ALL","CAN","HER","WAS","ONE","OUR","OUT",
+            "DAY","GET","HAS","HIM","HIS","HOW","ITS","LET","MAY","NEW","NOW","OLD","SEE","WAY","WHO","BOY","DID","OWN","SAW","SAY","TOO","TWO",
+            "HELLO","WORLD","QUIZ","GAME","PLAY","WORD","WORK","HOME","TIME","YEAR","GOOD","LIFE","HAND","BACK","LONG","GREAT","SMALL","LARGE"
+        ];
+
+        const LETTER_SPECS = {
+            A: { score: 1, count: 9 }, B: { score: 3, count: 2 }, C: { score: 3, count: 2 }, D: { score: 2, count: 4 },
+            E: { score: 1, count: 12 }, F: { score: 4, count: 2 }, G: { score: 2, count: 3 }, H: { score: 4, count: 2 },
+            I: { score: 1, count: 9 }, J: { score: 8, count: 1 }, K: { score: 5, count: 1 }, L: { score: 1, count: 4 },
+            M: { score: 3, count: 2 }, N: { score: 1, count: 6 }, O: { score: 1, count: 8 }, P: { score: 3, count: 2 },
+            Q: { score: 10, count: 1 }, R: { score: 1, count: 6 }, S: { score: 1, count: 4 }, T: { score: 1, count: 6 },
+            U: { score: 1, count: 4 }, V: { score: 4, count: 2 }, W: { score: 4, count: 2 }, X: { score: 8, count: 1 },
+            Y: { score: 4, count: 2 }, Z: { score: 10, count: 1 }, "*": { score: 0, count: 2 }
+        };
+
+        let DICTIONARY = new Set();
+        let wordsByLength = [];
+        let letterToWords = [];
+        let dictSourceLabel = "";
+
+        const PREMIUM = buildPremiumMap();
+
+        const params = new URLSearchParams(window.location.search);
+        const isLocalHost = ["127.0.0.1", "localhost", "::1"].includes(window.location.hostname);
+        const DEFAULT_SCRABBLE_SERVER = isLocalHost
+            ? `${window.location.protocol}//${window.location.hostname}:9000`
+            : `${window.location.origin}/scrabble-match`;
+        const SCRABBLE_SERVER = (params.get("server") || DEFAULT_SCRABBLE_SERVER).replace(/\/+$/, "");
+        const SCRABBLE_SERVER_URL = new URL(SCRABBLE_SERVER, window.location.href);
+        const SCRABBLE_SOCKET_ORIGIN = `${SCRABBLE_SERVER_URL.protocol}//${SCRABBLE_SERVER_URL.host}`;
+        const SCRABBLE_SOCKET_PATH_PREFIX = SCRABBLE_SERVER_URL.pathname.replace(/\/+$/, "");
+        const SCRABBLE_SOCKET_PATH = `${SCRABBLE_SOCKET_PATH_PREFIX || ""}/socket.io`;
+        const MAX_ROUNDS = 20;
+
+        const state = {
+            mode: "pick",
+            board: [],
+            bag: [],
+            players: [
+                { name: "You", score: 0, rack: [], isAI: false },
+                { name: "Computer", score: 0, rack: [], isAI: true }
+            ],
+            current: HUMAN,
+            turn: 1,
+            passStreak: 0,
+            temp: new Map(),
+            selectedRack: -1,
+            exchangeMode: false,
+            exchangeSet: new Set(),
+            logs: [],
+            gameOver: false,
+            previewHighlight: new Set(),
+            previewEval: null,
+            dictReady: false,
+            onlineSocket: null,
+            mySeat: 0,
+            isMyTurn: true,
+            endReason: null
+        };
+
+        function openRulesModal() {
+            const el = document.getElementById("rules-modal");
+            if (!el) return;
+            el.classList.remove("hidden");
+        }
+
+        function closeRulesModal() {
+            const el = document.getElementById("rules-modal");
+            if (!el) return;
+            el.classList.add("hidden");
+        }
+
+        function getDisplayRound() {
+            if (isOnline()) {
+                const tn = state.turn || 1;
+                return Math.min(Math.floor((tn - 1) / 2) + 1, MAX_ROUNDS);
+            }
+            return Math.min(state.turn, MAX_ROUNDS);
+        }
+
+        function renderGameProgress() {
+            const el = document.getElementById("game-progress");
+            if (!el) return;
+            if (document.getElementById("game-root")?.classList.contains("hidden")) {
+                el.textContent = "";
+                el.classList.remove("game-progress--done");
+                return;
+            }
+            const bag = state.bag.length;
+            const round = getDisplayRound();
+            const pct = Math.min(100, Math.max(0, (round / MAX_ROUNDS) * 100));
+            el.classList.toggle("game-progress--done", !!state.gameOver);
+            el.innerHTML = `
+                <div class="game-progress__inner">
+                    <div class="game-progress__stat game-progress__stat--round">
+                        <span class="game-progress__label">Round</span>
+                        <span class="game-progress__value">${round}<span class="game-progress__max">/${MAX_ROUNDS}</span></span>
+                        <div class="game-progress__bar" role="progressbar" aria-valuenow="${round}" aria-valuemin="0" aria-valuemax="${MAX_ROUNDS}" aria-label="Round progress">
+                            <div class="game-progress__bar-fill" style="width:${pct}%"></div>
+                        </div>
+                    </div>
+                    <div class="game-progress__divider" aria-hidden="true"></div>
+                    <div class="game-progress__stat game-progress__stat--bag">
+                        <span class="game-progress__label">Letter pool</span>
+                        <span class="game-progress__value">${bag}</span>
+                        <span class="game-progress__hint">tiles remaining in bag</span>
+                    </div>
+                </div>`;
+        }
+
+        function isOnline() {
+            return state.mode === "online";
+        }
+
+        function showGameRoot() {
+            document.getElementById("game-root")?.classList.remove("hidden");
+        }
+
+        function hideGameRoot() {
+            document.getElementById("game-root")?.classList.add("hidden");
+        }
+
+        function showModeOverlay() {
+            document.getElementById("mode-overlay")?.classList.remove("hidden");
+        }
+
+        function hideModeOverlay() {
+            document.getElementById("mode-overlay")?.classList.add("hidden");
+        }
+
+        function setAiUiVisible(show) {
+            const row = document.querySelector(".ai-diff-row");
+            if (row) row.style.display = show ? "" : "none";
+        }
+
+        function chooseAiMode() {
+            document.getElementById("match-panel")?.classList.remove("is-visible");
+            hideModeOverlay();
+            showGameRoot();
+            state.mode = "ai";
+            setAiUiVisible(true);
+            state.players[AI].name = "Computer";
+            state.players[AI].isAI = true;
+            loadDictionary().then(() => restartGame());
+        }
+
+        function showOnlineMatchPanel() {
+            document.getElementById("match-panel")?.classList.add("is-visible");
+            document.getElementById("match-status").textContent = "Click “Find match” to queue. Two browsers can open this page.";
+        }
+
+        function ensureOnlineSocket() {
+            if (typeof io === "undefined") {
+                document.getElementById("match-status").textContent = "Socket.IO failed to load. Check your network.";
+                return null;
+            }
+            if (state.onlineSocket?.connected) return state.onlineSocket;
+            if (state.onlineSocket) {
+                state.onlineSocket.removeAllListeners();
+                state.onlineSocket.disconnect();
+            }
+            const s = io(SCRABBLE_SOCKET_ORIGIN, {
+                path: SCRABBLE_SOCKET_PATH,
+                transports: ["websocket", "polling"]
+            });
+            state.onlineSocket = s;
+            s.on("connect", () => {
+                document.getElementById("match-status").textContent = "Connected. Finding opponent…";
+            });
+            s.on("connect_error", () => {
+                document.getElementById("match-status").textContent = "Cannot reach match server. Start: cd Studio/Scrabble/match-server then npm install && npm start";
+            });
+            s.on("match:waiting", () => {
+                document.getElementById("match-status").textContent = "Waiting for another player…";
+            });
+            s.on("match:found", () => {
+                hideModeOverlay();
+                showGameRoot();
+                state.mode = "online";
+                setAiUiVisible(false);
+                state.players[AI].name = "Opponent";
+                state.players[AI].isAI = false;
+                document.getElementById("match-status").textContent = "Matched! Loading game…";
+            });
+            s.on("match:cancelled", () => {
+                document.getElementById("match-status").textContent = "Left queue.";
+            });
+            s.on("game:state", (snap) => applyOnlineSnapshot(snap));
+            s.on("game:error", (payload) => {
+                setStatus(payload?.message || "Server rejected move.");
+            });
+            s.on("game:left", (payload) => {
+                const r = payload?.reason || "";
+                setStatus(r === "opponent_left" || r === "opponent_disconnected" ? "Opponent left. Returning to menu." : "Disconnected from game.");
+                teardownOnlineAndReturnToMenu();
+            });
+            return s;
+        }
+
+        function findOnlineMatch() {
+            document.getElementById("match-panel")?.classList.add("is-visible");
+            const sock = ensureOnlineSocket();
+            if (!sock) return;
+            document.getElementById("match-status").textContent = "Connecting…";
+            if (!state.dictReady) loadDictionary();
+            sock.emit("match:join");
+        }
+
+        function cancelOnlineMatch() {
+            state.onlineSocket?.emit("match:cancel");
+            document.getElementById("match-status").textContent = "Queue cancelled.";
+        }
+
+        function teardownOnlineAndReturnToMenu() {
+            if (state.onlineSocket) {
+                try {
+                    state.onlineSocket.emit("game:leave");
+                } catch (_e) { /* */ }
+                state.onlineSocket.removeAllListeners();
+                state.onlineSocket.disconnect();
+                state.onlineSocket = null;
+            }
+            state.mode = "pick";
+            state.temp.clear();
+            state.gameOver = true;
+            hideGameRoot();
+            showModeOverlay();
+            document.getElementById("match-panel")?.classList.remove("is-visible");
+            setAiUiVisible(true);
+        }
+
+        function applyBoardSnapshot(snapBoard) {
+            for (let r = 0; r < BOARD_SIZE; r += 1) {
+                for (let c = 0; c < BOARD_SIZE; c += 1) {
+                    const cell = snapBoard[r][c];
+                    if (cell && cell.letter) {
+                        state.board[r][c].letter = cell.letter;
+                        state.board[r][c].isBlank = !!cell.isBlank;
+                    } else {
+                        state.board[r][c].letter = "";
+                        state.board[r][c].isBlank = false;
+                    }
+                }
+            }
+        }
+
+        function applyOnlineSnapshot(snap) {
+            if (!snap) return;
+            if (!state.board.length) state.board = createBoard();
+            applyBoardSnapshot(snap.board);
+            state.bag = Array(Math.max(0, snap.bagCount)).fill("·");
+            const seat = snap.seat;
+            state.mySeat = seat;
+            state.players[HUMAN].score = snap.scores[seat];
+            state.players[AI].score = snap.scores[1 - seat];
+            state.players[HUMAN].rack = snap.myRack || [];
+            state.players[AI].rack = Array(Math.max(0, snap.opponentRackCount)).fill("?");
+            state.isMyTurn = !!snap.isMyTurn;
+            state.turn = snap.turnNumber || 1;
+            state.passStreak = snap.passStreak || 0;
+            state.gameOver = !!snap.gameOver;
+            state.endReason = snap.endReason || null;
+            state.temp.clear();
+            state.selectedRack = -1;
+            state.exchangeMode = false;
+            state.exchangeSet.clear();
+            state.current = state.isMyTurn ? HUMAN : AI;
+            if (Array.isArray(snap.log) && snap.log.length) {
+                state.logs = [...snap.log];
+            }
+            if (state.gameOver) {
+                let msg = `Game over. Scores You ${state.players[HUMAN].score} — Opponent ${state.players[AI].score}.`;
+                if (snap.endReason === "round_limit") {
+                    msg = `Game over (${MAX_ROUNDS} rounds). Scores You ${state.players[HUMAN].score} — Opponent ${state.players[AI].score}.`;
+                }
+                if (snap.winnerSeat === seat) msg = `You win! ${msg}`;
+                else if (snap.winnerSeat === 1 - seat) msg = `Opponent wins. ${msg}`;
+                else if (snap.winnerSeat === null) msg = `Draw. ${msg}`;
+                setStatus(msg);
+            } else if (state.isMyTurn) {
+                setStatus("Your turn.");
+            } else {
+                setStatus("Opponent’s turn — wait for their move.");
+            }
+            render();
+        }
+
+        document.getElementById("server-hint").textContent = `Match server: ${SCRABBLE_SERVER} (override with ?server=https://host/scrabble-match)`;
+
+        function buildWordIndexes() {
+            wordsByLength = Array.from({ length: 16 }, () => []);
+            letterToWords = Array.from({ length: 26 }, () => []);
+            for (const w of DICTIONARY) {
+                const len = w.length;
+                if (len >= 2 && len <= 15) wordsByLength[len].push(w);
+                const seen = new Set();
+                for (let i = 0; i < w.length; i += 1) {
+                    const code = w.charCodeAt(i) - 65;
+                    if (code >= 0 && code < 26 && !seen.has(code)) {
+                        seen.add(code);
+                        letterToWords[code].push(w);
+                    }
+                }
+            }
+        }
+
+        async function loadDictionary() {
+            if (state.dictReady) return Promise.resolve();
+            const statusEl = document.getElementById("dict-status");
+            statusEl.textContent = "Dictionary: loading…";
+            DICTIONARY = new Set();
+            let loaded = false;
+            for (const url of WORDLIST_URLS) {
+                try {
+                    const res = await fetch(url, { cache: "force-cache" });
+                    if (!res.ok) continue;
+                    const text = await res.text();
+                    const lines = text.split(/\r?\n/);
+                    for (let i = 0; i < lines.length; i += 1) {
+                        const w = lines[i].trim().toUpperCase().replace(/[^A-Z]/g, "");
+                        if (w.length >= 2 && w.length <= 15) DICTIONARY.add(w);
+                    }
+                    if (DICTIONARY.size > 1000) {
+                        loaded = true;
+                        dictSourceLabel = url.includes("http") ? "remote ENABLE" : "enable.txt";
+                        break;
+                    }
+                } catch (_e) {
+                    /* try next */
+                }
+            }
+            if (!loaded) {
+                FALLBACK_WORDS.forEach((w) => DICTIONARY.add(w));
+                dictSourceLabel = "fallback mini list";
+            }
+            buildWordIndexes();
+            state.dictReady = true;
+            statusEl.textContent = `Dictionary: ${DICTIONARY.size.toLocaleString()} words (${dictSourceLabel})`;
+        }
+
+        function getAiMaxWordLen() {
+            const d = document.getElementById("ai-difficulty")?.value || "normal";
+            if (d === "easy") return 8;
+            if (d === "hard") return 15;
+            return 11;
+        }
+
+        function getAiDifficulty() {
+            return document.getElementById("ai-difficulty")?.value || "normal";
+        }
+
+        function wordsForAnchorLetter(ch) {
+            const code = ch.charCodeAt(0) - 65;
+            if (code < 0 || code >= 26) return [];
+            return letterToWords[code] || [];
+        }
+
+        function buildPremiumMap() {
+            const map = {};
+            const add = (type, coords) => coords.forEach(([r, c]) => { map[`${r}-${c}`] = type; });
+            add("TW", [[0,0],[0,7],[0,14],[7,0],[7,14],[14,0],[14,7],[14,14]]);
+            add("DW", [[1,1],[2,2],[3,3],[4,4],[7,7],[10,10],[11,11],[12,12],[13,13],[1,13],[2,12],[3,11],[4,10],[10,4],[11,3],[12,2],[13,1]]);
+            add("TL", [[1,5],[1,9],[5,1],[5,5],[5,9],[5,13],[9,1],[9,5],[9,9],[9,13],[13,5],[13,9]]);
+            add("DL", [[0,3],[0,11],[2,6],[2,8],[3,0],[3,7],[3,14],[6,2],[6,6],[6,8],[6,12],[7,3],[7,11],[8,2],[8,6],[8,8],[8,12],[11,0],[11,7],[11,14],[12,6],[12,8],[14,3],[14,11]]);
+            return map;
+        }
+
+        function letterScore(ch) {
+            return LETTER_SPECS[ch]?.score ?? 0;
+        }
+
+        function shuffle(arr) {
+            for (let i = arr.length - 1; i > 0; i -= 1) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function createBag() {
+            const bag = [];
+            Object.entries(LETTER_SPECS).forEach(([ch, spec]) => {
+                for (let i = 0; i < spec.count; i += 1) bag.push(ch);
+            });
+            return shuffle(bag);
+        }
+
+        function createBoard() {
+            const board = [];
+            for (let r = 0; r < BOARD_SIZE; r += 1) {
+                const row = [];
+                for (let c = 0; c < BOARD_SIZE; c += 1) {
+                    const premium = PREMIUM[`${r}-${c}`] || "";
+                    row.push({ letter: "", isBlank: false, premium, usedPremium: false });
+                }
+                board.push(row);
+            }
+            return board;
+        }
+
+        function drawTiles(player, n) {
+            for (let i = 0; i < n && state.bag.length > 0; i += 1) {
+                player.rack.push(state.bag.pop());
+            }
+        }
+
+        function restartGame() {
+            if (isOnline()) {
+                teardownOnlineAndReturnToMenu();
+                return;
+            }
+            state.board = createBoard();
+            state.bag = createBag();
+            state.players.forEach((p) => { p.score = 0; p.rack = []; });
+            drawTiles(state.players[HUMAN], 7);
+            drawTiles(state.players[AI], 7);
+            state.current = HUMAN;
+            state.turn = 1;
+            state.passStreak = 0;
+            state.temp.clear();
+            state.selectedRack = -1;
+            state.exchangeMode = false;
+            state.exchangeSet.clear();
+            state.logs = [];
+            state.gameOver = false;
+            state.endReason = null;
+            state.previewEval = null;
+            state.previewHighlight = new Set();
+            pushLog("Game started. Your move.");
+            render();
+            if (state.dictReady) setStatus("Your turn. Click or drag tiles onto the board.");
+        }
+
+        function pushLog(msg) {
+            state.logs.unshift(`[T${state.turn}] ${msg}`);
+            if (state.logs.length > 48) state.logs = state.logs.slice(0, 48);
+        }
+
+        function cellKey(r, c) { return `${r}-${c}`; }
+        function parseKey(key) { const [r, c] = key.split("-").map(Number); return { r, c }; }
+
+        function boardHasTiles() {
+            for (let r = 0; r < BOARD_SIZE; r += 1) {
+                for (let c = 0; c < BOARD_SIZE; c += 1) {
+                    if (state.board[r][c].letter) return true;
+                }
+            }
+            return false;
+        }
+
+        function getPlacementMap(placements) {
+            const map = new Map();
+            placements.forEach((p) => map.set(cellKey(p.r, p.c), p));
+            return map;
+        }
+
+        function getCellLetter(r, c, placementMap) {
+            const p = placementMap?.get(cellKey(r, c));
+            if (p) return p.letter;
+            return state.board[r][c].letter;
+        }
+
+        function isInside(r, c) {
+            return r >= 0 && r < BOARD_SIZE && c >= 0 && c < BOARD_SIZE;
+        }
+
+        function hasNeighborTile(r, c, placementMap) {
+            const dirs = [[1,0],[-1,0],[0,1],[0,-1]];
+            for (const [dr, dc] of dirs) {
+                const nr = r + dr;
+                const nc = c + dc;
+                if (!isInside(nr, nc)) continue;
+                const boardLetter = state.board[nr][nc].letter;
+                const newLetter = placementMap?.get(cellKey(nr, nc))?.letter;
+                if (boardLetter || newLetter) return true;
+            }
+            return false;
+        }
+
+        function buildWordFrom(r, c, dr, dc, placementMap) {
+            let sr = r;
+            let sc = c;
+            while (isInside(sr - dr, sc - dc) && getCellLetter(sr - dr, sc - dc, placementMap)) {
+                sr -= dr;
+                sc -= dc;
+            }
+            const coords = [];
+            let cr = sr;
+            let cc = sc;
+            let word = "";
+            while (isInside(cr, cc) && getCellLetter(cr, cc, placementMap)) {
+                word += getCellLetter(cr, cc, placementMap);
+                coords.push([cr, cc]);
+                cr += dr;
+                cc += dc;
+            }
+            return { word, coords };
+        }
+
+        function scoreWord(wordData, placementMap) {
+            let wordMultiplier = 1;
+            let sum = 0;
+            for (const [r, c] of wordData.coords) {
+                const key = cellKey(r, c);
+                const placed = placementMap.get(key);
+                const boardCell = state.board[r][c];
+                const letter = placed ? placed.letter : boardCell.letter;
+                const base = placed && placed.isBlank ? 0 : letterScore(letter);
+                let letterValue = base;
+                if (placed && !boardCell.letter) {
+                    const premium = boardCell.premium;
+                    if (premium === "DL") letterValue *= 2;
+                    if (premium === "TL") letterValue *= 3;
+                    if (premium === "DW" || premium === "CENTER") wordMultiplier *= 2;
+                    if (premium === "TW") wordMultiplier *= 3;
+                }
+                sum += letterValue;
+            }
+            return sum * wordMultiplier;
+        }
+
+        function evaluateMove(placements, playerIndex) {
+            if (!placements.length) return { valid: false, message: "Place at least one tile.", highlightCells: [] };
+            const placementMap = getPlacementMap(placements);
+            const keys = new Set();
+            for (const p of placements) {
+                const key = cellKey(p.r, p.c);
+                if (keys.has(key)) return { valid: false, message: "Duplicate tile placement.", highlightCells: [] };
+                keys.add(key);
+                if (state.board[p.r][p.c].letter) return { valid: false, message: "Cannot place on occupied square.", highlightCells: [] };
+            }
+
+            const firstMove = !boardHasTiles();
+            if (firstMove && placements.length < 2) return { valid: false, message: "First word must contain at least 2 letters.", highlightCells: [] };
+
+            const sameRow = placements.every((p) => p.r === placements[0].r);
+            const sameCol = placements.every((p) => p.c === placements[0].c);
+            if (!sameRow && !sameCol) return { valid: false, message: "Tiles must be in one row or one column.", highlightCells: [] };
+
+            let dr = 0;
+            let dc = 0;
+            if (sameRow && !sameCol) { dr = 0; dc = 1; }
+            if (sameCol && !sameRow) { dr = 1; dc = 0; }
+            if (sameRow && sameCol) {
+                const r = placements[0].r;
+                const c = placements[0].c;
+                const hWord = buildWordFrom(r, c, 0, 1, placementMap);
+                const vWord = buildWordFrom(r, c, 1, 0, placementMap);
+                if (hWord.word.length > 1) { dr = 0; dc = 1; }
+                else if (vWord.word.length > 1) { dr = 1; dc = 0; }
+                else return { valid: false, message: "Single tile must connect to existing letters.", highlightCells: [] };
+            }
+
+            if (dr === 0) {
+                const row = placements[0].r;
+                const cols = placements.map((p) => p.c).sort((a, b) => a - b);
+                for (let c = cols[0]; c <= cols[cols.length - 1]; c += 1) {
+                    if (!getCellLetter(row, c, placementMap)) {
+                        return { valid: false, message: "Placement has gaps.", highlightCells: [] };
+                    }
+                }
+            } else {
+                const col = placements[0].c;
+                const rows = placements.map((p) => p.r).sort((a, b) => a - b);
+                for (let r = rows[0]; r <= rows[rows.length - 1]; r += 1) {
+                    if (!getCellLetter(r, col, placementMap)) {
+                        return { valid: false, message: "Placement has gaps.", highlightCells: [] };
+                    }
+                }
+            }
+
+            if (firstMove) {
+                const onCenter = placements.some((p) => p.r === CENTER && p.c === CENTER);
+                if (!onCenter) return { valid: false, message: "First move must cover center star (H8).", highlightCells: [] };
+            } else {
+                const touching = placements.some((p) => hasNeighborTile(p.r, p.c, placementMap));
+                if (!touching) return { valid: false, message: "Move must connect to existing board letters.", highlightCells: [] };
+            }
+
+            const uniqueWords = new Map();
+            const mainStart = placements[0];
+            const mainWord = buildWordFrom(mainStart.r, mainStart.c, dr, dc, placementMap);
+            if (mainWord.word.length > 1) uniqueWords.set(mainWord.coords.map(([r, c]) => cellKey(r, c)).join("|"), mainWord);
+
+            for (const p of placements) {
+                const cross = buildWordFrom(p.r, p.c, dc, dr, placementMap);
+                if (cross.word.length > 1) {
+                    uniqueWords.set(cross.coords.map(([r, c]) => cellKey(r, c)).join("|"), cross);
+                }
+            }
+
+            if (uniqueWords.size === 0) return { valid: false, message: "No valid word formed.", highlightCells: [] };
+
+            let total = 0;
+            const words = [];
+            const highlightCells = [];
+            for (const wordData of uniqueWords.values()) {
+                const w = wordData.word.toUpperCase();
+                if (!DICTIONARY.has(w)) {
+                    return { valid: false, message: `Word "${w}" is not in dictionary.`, highlightCells: [] };
+                }
+                const score = scoreWord(wordData, placementMap);
+                total += score;
+                words.push({ word: w, score });
+                for (const [rr, cc] of wordData.coords) {
+                    highlightCells.push(cellKey(rr, cc));
+                }
+            }
+
+            const bingo = placements.length === 7 ? 50 : 0;
+            total += bingo;
+            return {
+                valid: true,
+                total,
+                words,
+                bingo,
+                highlightCells
+            };
+        }
+
+        function commitMove(playerIndex, placements, evalResult) {
+            const player = state.players[playerIndex];
+            placements.forEach((p) => {
+                const cell = state.board[p.r][p.c];
+                cell.letter = p.letter;
+                cell.isBlank = p.isBlank;
+                cell.usedPremium = true;
+            });
+
+            const removeIndices = [...new Set(placements.map((p) => p.rackIndex))].sort((a, b) => b - a);
+            removeIndices.forEach((idx) => player.rack.splice(idx, 1));
+            drawTiles(player, 7 - player.rack.length);
+            player.score += evalResult.total;
+            state.passStreak = 0;
+
+            const wordsDesc = evalResult.words.map((w) => `${w.word}(+${w.score})`).join(", ");
+            pushLog(`${player.name} played ${wordsDesc}${evalResult.bingo ? " + Bingo 50" : ""}.`);
+        }
+
+        function submitMove() {
+            if (state.gameOver) return;
+            if (isOnline()) {
+                if (!state.isMyTurn) return;
+                if (!state.dictReady) {
+                    setStatus("Dictionary is still loading. Please wait.");
+                    return;
+                }
+                if (state.exchangeMode) {
+                    setStatus("Exit Exchange Mode before playing tiles.");
+                    return;
+                }
+                const placements = [...state.temp.entries()].map(([key, value]) => {
+                    const { r, c } = parseKey(key);
+                    return { r, c, ...value };
+                });
+                const evaluated = evaluateMove(placements, HUMAN);
+                if (!evaluated.valid) {
+                    setStatus(evaluated.message);
+                    return;
+                }
+                state.onlineSocket?.emit("game:play", { placements });
+                state.temp.clear();
+                state.selectedRack = -1;
+                render();
+                return;
+            }
+            if (state.current !== HUMAN) return;
+            if (!state.dictReady) {
+                setStatus("Dictionary is still loading. Please wait.");
+                return;
+            }
+            if (state.exchangeMode) {
+                setStatus("Exit Exchange Mode before playing tiles.");
+                return;
+            }
+            const placements = [...state.temp.entries()].map(([key, value]) => {
+                const { r, c } = parseKey(key);
+                return { r, c, ...value };
+            });
+            const evaluated = evaluateMove(placements, HUMAN);
+            if (!evaluated.valid) {
+                setStatus(evaluated.message);
+                return;
+            }
+            commitMove(HUMAN, placements, evaluated);
+            state.temp.clear();
+            state.selectedRack = -1;
+            nextTurn();
+        }
+
+        function nextTurn() {
+            if (isOnline()) return;
+            if (checkGameOverByEmptyRack()) return;
+            state.current = state.current === HUMAN ? AI : HUMAN;
+            if (state.current === HUMAN) {
+                state.turn += 1;
+                if (state.turn > MAX_ROUNDS) {
+                    finalizeGameRoundLimit();
+                    return;
+                }
+            }
+            render();
+            if (state.current === AI && !state.gameOver) {
+                setStatus("Computer is thinking...");
+                setTimeout(computerTurn, 700);
+            } else if (!state.gameOver) {
+                setStatus("Your turn. Select a tile, then click board squares.");
+            }
+        }
+
+        function checkGameOverByEmptyRack() {
+            if (state.bag.length > 0) return false;
+            const emptiedIndex = state.players.findIndex((p) => p.rack.length === 0);
+            if (emptiedIndex === -1) return false;
+            finalizeGame(emptiedIndex);
+            return true;
+        }
+
+        function finalizeGame(emptiedIndex = -1) {
+            if (state.gameOver) return;
+            let bonusToEmptied = 0;
+            state.players.forEach((p, idx) => {
+                const left = p.rack.reduce((sum, ch) => sum + letterScore(ch), 0);
+                p.score -= left;
+                if (idx !== emptiedIndex) bonusToEmptied += left;
+            });
+            if (emptiedIndex >= 0) {
+                state.players[emptiedIndex].score += bonusToEmptied;
+            }
+            state.gameOver = true;
+            const you = state.players[HUMAN].score;
+            const ai = state.players[AI].score;
+            const winner = you === ai ? "Draw game." : (you > ai ? "You win!" : "Computer wins.");
+            pushLog(`Game over. ${winner} Final score You ${you} : Computer ${ai}.`);
+            setStatus(`Game over. ${winner}`);
+            render();
+        }
+
+        function finalizeGameRoundLimit() {
+            if (state.gameOver) return;
+            state.gameOver = true;
+            state.endReason = "round_limit";
+            const you = state.players[HUMAN].score;
+            const opp = state.players[AI].score;
+            const oppName = state.players[AI].name;
+            const winner = you === opp ? "Draw." : (you > opp ? "You win!" : `${oppName} wins!`);
+            pushLog(`Game over (${MAX_ROUNDS} rounds). ${winner} Final score You ${you} : ${opp}.`);
+            setStatus(`Game over — ${MAX_ROUNDS} rounds. ${winner}`);
+            render();
+        }
+
+        function undoTempMove() {
+            if (state.gameOver) return;
+            if (isOnline() && !state.isMyTurn) return;
+            if (!isOnline() && state.current !== HUMAN) return;
+            state.temp.clear();
+            state.selectedRack = -1;
+            render();
+            setStatus("Temporary placements cleared.");
+        }
+
+        function passTurn(fromAI = false) {
+            if (state.gameOver) return;
+            if (isOnline()) {
+                if (!fromAI) {
+                    if (!state.isMyTurn) return;
+                    if (state.temp.size > 0) {
+                        setStatus("Clear temporary tiles first or submit move.");
+                        return;
+                    }
+                    state.onlineSocket?.emit("game:pass");
+                }
+                return;
+            }
+            if (!fromAI && state.current !== HUMAN) return;
+            if (!fromAI && state.temp.size > 0) {
+                setStatus("Clear temporary tiles first or submit move.");
+                return;
+            }
+            state.passStreak += 1;
+            pushLog(`${state.players[state.current].name} passed.`);
+            if (state.passStreak >= 4) {
+                finalizeGame(-1);
+                return;
+            }
+            if (!fromAI) {
+                state.exchangeMode = false;
+                state.exchangeSet.clear();
+            }
+            nextTurn();
+        }
+
+        function toggleExchangeMode() {
+            if (state.gameOver) return;
+            if (isOnline() && !state.isMyTurn) return;
+            if (!isOnline() && state.current !== HUMAN) return;
+            state.exchangeMode = !state.exchangeMode;
+            if (state.exchangeMode) {
+                state.temp.clear();
+                state.selectedRack = -1;
+                setStatus("Exchange Mode on. Click rack tiles to select.");
+            } else {
+                state.exchangeSet.clear();
+                setStatus("Exchange Mode off.");
+            }
+            render();
+        }
+
+        function exchangeSelected(fromAI = false, aiIndices = []) {
+            if (state.gameOver) return;
+            if (isOnline()) {
+                if (!fromAI) {
+                    if (!state.isMyTurn) return;
+                    const indices = [...state.exchangeSet];
+                    if (indices.length === 0) {
+                        setStatus("No tiles selected for exchange.");
+                        return;
+                    }
+                    state.onlineSocket?.emit("game:exchange", { indices });
+                    state.exchangeSet.clear();
+                    state.exchangeMode = false;
+                }
+                return;
+            }
+            if (!fromAI && state.current !== HUMAN) return;
+            const player = state.players[state.current];
+            if (state.bag.length < 7) {
+                setStatus("Exchange requires at least 7 tiles in bag.");
+                return;
+            }
+            const indices = fromAI ? aiIndices : [...state.exchangeSet].sort((a, b) => b - a);
+            if (indices.length === 0) {
+                setStatus("No tiles selected for exchange.");
+                return;
+            }
+            const removed = [];
+            indices.sort((a, b) => b - a).forEach((idx) => {
+                if (idx >= 0 && idx < player.rack.length) removed.push(player.rack.splice(idx, 1)[0]);
+            });
+            state.bag.push(...removed);
+            shuffle(state.bag);
+            drawTiles(player, removed.length);
+            state.passStreak = 0;
+            pushLog(`${player.name} exchanged ${removed.length} tile(s).`);
+            if (!fromAI) {
+                state.exchangeSet.clear();
+                state.exchangeMode = false;
+            }
+            nextTurn();
+        }
+
+        function onRackClick(idx) {
+            if (state.gameOver) return;
+            if (isOnline() && !state.isMyTurn) return;
+            if (!isOnline() && state.current !== HUMAN) return;
+            if (state.exchangeMode) {
+                if (state.exchangeSet.has(idx)) state.exchangeSet.delete(idx);
+                else state.exchangeSet.add(idx);
+                render();
+                return;
+            }
+            state.selectedRack = state.selectedRack === idx ? -1 : idx;
+            render();
+        }
+
+        function usedRackIndicesInTemp() {
+            return new Set([...state.temp.values()].map((v) => v.rackIndex));
+        }
+
+        function placeFromRackToCell(r, c, rackIdx) {
+            if (rackIdx < 0 || rackIdx >= state.players[HUMAN].rack.length) return false;
+            const key = cellKey(r, c);
+            if (state.board[r][c].letter || state.temp.has(key)) return false;
+            const used = usedRackIndicesInTemp();
+            if (used.has(rackIdx)) {
+                setStatus("This rack tile is already on the board.");
+                return false;
+            }
+            const rackLetter = state.players[HUMAN].rack[rackIdx];
+            if (!rackLetter || rackLetter === "?") return false;
+            let placedLetter = rackLetter;
+            let isBlank = false;
+            if (rackLetter === "*") {
+                const input = window.prompt("Blank tile: choose one letter A-Z", "E");
+                const candidate = String(input || "").trim().toUpperCase();
+                if (!/^[A-Z]$/.test(candidate)) {
+                    setStatus("Invalid blank tile letter.");
+                    return false;
+                }
+                placedLetter = candidate;
+                isBlank = true;
+            }
+            state.temp.set(key, { letter: placedLetter, isBlank, rackIndex: rackIdx });
+            return true;
+        }
+
+        function moveTempCell(fr, fc, tr, tc) {
+            const ok = tr >= 0 && tr < BOARD_SIZE && tc >= 0 && tc < BOARD_SIZE;
+            if (!ok) return;
+            if (state.board[tr][tc].letter) return;
+            const fromKey = cellKey(fr, fc);
+            const toKey = cellKey(tr, tc);
+            const val = state.temp.get(fromKey);
+            if (!val) return;
+            if (state.temp.has(toKey) && (fr !== tr || fc !== tc)) return;
+            state.temp.delete(fromKey);
+            state.temp.set(toKey, val);
+        }
+
+        function onCellClick(r, c) {
+            if (state.gameOver || state.exchangeMode) return;
+            if (isOnline() && !state.isMyTurn) return;
+            if (!isOnline() && state.current !== HUMAN) return;
+            const key = cellKey(r, c);
+            if (state.temp.has(key)) {
+                state.temp.delete(key);
+                render();
+                return;
+            }
+            if (state.board[r][c].letter) return;
+            if (state.selectedRack < 0) {
+                setStatus("Select a rack tile or drag it onto the board.");
+                return;
+            }
+            if (placeFromRackToCell(r, c, state.selectedRack)) {
+                state.selectedRack = -1;
+            }
+            render();
+        }
+
+        function onRackDragStart(ev, idx) {
+            if (state.gameOver || state.exchangeMode) {
+                ev.preventDefault();
+                return;
+            }
+            if (isOnline() && !state.isMyTurn) {
+                ev.preventDefault();
+                return;
+            }
+            if (!isOnline() && state.current !== HUMAN) {
+                ev.preventDefault();
+                return;
+            }
+            if (usedRackIndicesInTemp().has(idx)) {
+                ev.preventDefault();
+                return;
+            }
+            ev.dataTransfer.setData("application/json", JSON.stringify({ src: "rack", idx }));
+            ev.dataTransfer.effectAllowed = "move";
+        }
+
+        function onTempDragStart(ev, r, c) {
+            ev.stopPropagation();
+            ev.dataTransfer.setData("application/json", JSON.stringify({ src: "temp", r, c }));
+            ev.dataTransfer.effectAllowed = "move";
+        }
+
+        function onBoardDragOver(ev) {
+            ev.preventDefault();
+            ev.dataTransfer.dropEffect = "move";
+            const cell = ev.target.closest(".cell");
+            if (cell) cell.classList.add("drag-over");
+        }
+
+        function onBoardDragLeave(ev) {
+            const cell = ev.target.closest(".cell");
+            if (cell && !cell.contains(ev.relatedTarget)) cell.classList.remove("drag-over");
+        }
+
+        function clearBoardDragOver() {
+            document.querySelectorAll(".cell.drag-over").forEach((el) => el.classList.remove("drag-over"));
+        }
+
+        function onBoardDrop(ev) {
+            ev.preventDefault();
+            ev.stopPropagation();
+            clearBoardDragOver();
+            let data;
+            try {
+                data = JSON.parse(ev.dataTransfer.getData("application/json"));
+            } catch (_e) {
+                return;
+            }
+            const cell = ev.target.closest(".cell");
+            if (!cell) return;
+            const r = Number(cell.dataset.r);
+            const c = Number(cell.dataset.c);
+            if (Number.isNaN(r) || Number.isNaN(c)) return;
+            if (state.gameOver || state.exchangeMode) return;
+            if (isOnline() && !state.isMyTurn) return;
+            if (!isOnline() && state.current !== HUMAN) return;
+            if (data.src === "rack") {
+                if (placeFromRackToCell(r, c, data.idx)) {
+                    state.selectedRack = -1;
+                }
+            } else if (data.src === "temp") {
+                moveTempCell(data.r, data.c, r, c);
+            }
+            render();
+        }
+
+        function onRackReturnDragOver(ev) {
+            ev.preventDefault();
+            ev.dataTransfer.dropEffect = "move";
+            document.getElementById("rack-return")?.classList.add("drag-over-rack");
+        }
+
+        function onRackReturnDragLeave(ev) {
+            document.getElementById("rack-return")?.classList.remove("drag-over-rack");
+        }
+
+        function onRackReturnDrop(ev) {
+            ev.preventDefault();
+            document.getElementById("rack-return")?.classList.remove("drag-over-rack");
+            let data;
+            try {
+                data = JSON.parse(ev.dataTransfer.getData("application/json"));
+            } catch (_e) {
+                return;
+            }
+            if (data.src !== "temp") return;
+            state.temp.delete(cellKey(data.r, data.c));
+            render();
+        }
+
+        function canBuildWordWithRack(word, rack) {
+            const counts = {};
+            let blanks = 0;
+            rack.forEach((ch) => {
+                if (ch === "*") blanks += 1;
+                else counts[ch] = (counts[ch] || 0) + 1;
+            });
+            for (const ch of word) {
+                if (counts[ch] > 0) counts[ch] -= 1;
+                else if (blanks > 0) blanks -= 1;
+                else return false;
+            }
+            return true;
+        }
+
+        function assignRackIndices(requiredLetters, rack) {
+            const taken = new Set();
+            const result = [];
+            for (const ch of requiredLetters) {
+                let idx = -1;
+                for (let i = 0; i < rack.length; i += 1) {
+                    if (!taken.has(i) && rack[i] === ch) { idx = i; break; }
+                }
+                if (idx === -1) {
+                    for (let i = 0; i < rack.length; i += 1) {
+                        if (!taken.has(i) && rack[i] === "*") { idx = i; break; }
+                    }
+                }
+                if (idx === -1) return null;
+                taken.add(idx);
+                result.push(idx);
+            }
+            return result;
+        }
+
+        function shuffleCopy(arr) {
+            const a = arr.slice();
+            for (let i = a.length - 1; i > 0; i -= 1) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [a[i], a[j]] = [a[j], a[i]];
+            }
+            return a;
+        }
+
+        function blankChoicesForAi() {
+            const d = getAiDifficulty();
+            if (d === "easy") return ["A", "E", "I", "O", "U"];
+            if (d === "hard") return "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+            return ["A", "E", "I", "O", "U", "R", "S", "T", "N", "L", "D", "G"];
+        }
+
+        function enumerateWordsFromRack(rack) {
+            const wordsFound = new Set();
+            const blanks = blankChoicesForAi();
+            const n = rack.length;
+            function rec(mask, word) {
+                if (word.length >= 2 && word.length <= 7 && DICTIONARY.has(word)) wordsFound.add(word);
+                if (word.length >= 7) return;
+                for (let i = 0; i < n; i += 1) {
+                    if (mask & (1 << i)) continue;
+                    const ch = rack[i];
+                    if (ch === "*") {
+                        for (let b = 0; b < blanks.length; b += 1) {
+                            rec(mask | (1 << i), word + blanks[b]);
+                        }
+                    } else {
+                        rec(mask | (1 << i), word + ch);
+                    }
+                }
+            }
+            rec(0, "");
+            return [...wordsFound];
+        }
+
+        function maxHookWordsPerAnchor() {
+            const d = getAiDifficulty();
+            if (d === "easy") return 450;
+            if (d === "hard") return 1400;
+            return 850;
+        }
+
+        function tryFirstMoveWord(word, rack, candidates) {
+            if (word.length < 2 || word.length > 7) return;
+            if (!canBuildWordWithRack(word, rack)) return;
+            for (let centerIndex = 0; centerIndex < word.length; centerIndex += 1) {
+                const startCol = CENTER - centerIndex;
+                if (startCol < 0 || startCol + word.length > BOARD_SIZE) continue;
+                const required = word.split("");
+                const rackIndices = assignRackIndices(required, rack);
+                if (!rackIndices) continue;
+                const placements = required.map((ch, i) => ({
+                    r: CENTER, c: startCol + i, letter: ch, rackIndex: rackIndices[i], isBlank: rack[rackIndices[i]] === "*"
+                }));
+                const evaluated = evaluateMove(placements, AI);
+                if (evaluated.valid) candidates.push({ placements, evaluated });
+            }
+        }
+
+        function tryHookWordAtAnchor(word, anchor, rack, candidates) {
+            const chars = word.split("");
+            const maxLen = getAiMaxWordLen();
+            if (chars.length > maxLen) return;
+            for (let idx = 0; idx < chars.length; idx += 1) {
+                if (chars[idx] !== anchor.ch) continue;
+                for (const dir of ["H", "V"]) {
+                    const startR = dir === "H" ? anchor.r : anchor.r - idx;
+                    const startC = dir === "H" ? anchor.c - idx : anchor.c;
+                    if (startR < 0 || startC < 0) continue;
+                    const endR = dir === "H" ? startR : startR + chars.length - 1;
+                    const endC = dir === "H" ? startC + chars.length - 1 : startC;
+                    if (endR >= BOARD_SIZE || endC >= BOARD_SIZE) continue;
+
+                    const requiredLetters = [];
+                    const requiredPos = [];
+                    let conflict = false;
+                    for (let i = 0; i < chars.length; i += 1) {
+                        const rr = dir === "H" ? startR : startR + i;
+                        const cc = dir === "H" ? startC + i : startC;
+                        const boardLetter = state.board[rr][cc].letter;
+                        if (boardLetter && boardLetter !== chars[i]) { conflict = true; break; }
+                        if (!boardLetter) {
+                            requiredLetters.push(chars[i]);
+                            requiredPos.push({ r: rr, c: cc, letter: chars[i] });
+                        }
+                    }
+                    if (conflict || requiredLetters.length === 0 || requiredLetters.length > rack.length) continue;
+                    const rackIndices = assignRackIndices(requiredLetters, rack);
+                    if (!rackIndices) continue;
+                    const placements = requiredPos.map((p, i) => ({
+                        ...p,
+                        rackIndex: rackIndices[i],
+                        isBlank: rack[rackIndices[i]] === "*"
+                    }));
+                    const evaluated = evaluateMove(placements, AI);
+                    if (evaluated.valid) candidates.push({ placements, evaluated });
+                }
+            }
+        }
+
+        function collectAiCandidates() {
+            const rack = state.players[AI].rack;
+            const candidates = [];
+            const firstMove = !boardHasTiles();
+            const maxLen = getAiMaxWordLen();
+
+            if (firstMove) {
+                const playable = enumerateWordsFromRack(rack);
+                for (let i = 0; i < playable.length; i += 1) {
+                    const w = playable[i];
+                    if (w.length > Math.min(7, maxLen)) continue;
+                    tryFirstMoveWord(w, rack, candidates);
+                }
+            } else {
+                const anchors = [];
+                for (let r = 0; r < BOARD_SIZE; r += 1) {
+                    for (let c = 0; c < BOARD_SIZE; c += 1) {
+                        const ch = state.board[r][c].letter;
+                        if (ch) anchors.push({ r, c, ch });
+                    }
+                }
+                const cap = maxHookWordsPerAnchor();
+                for (let ai = 0; ai < anchors.length; ai += 1) {
+                    const anchor = anchors[ai];
+                    const bucket = wordsForAnchorLetter(anchor.ch);
+                    const slice = shuffleCopy(bucket).slice(0, cap);
+                    for (let wi = 0; wi < slice.length; wi += 1) {
+                        tryHookWordAtAnchor(slice[wi], anchor, rack, candidates);
+                    }
+                }
+            }
+            return candidates;
+        }
+
+        function bestAIMove() {
+            if (!state.dictReady) return null;
+            const candidates = collectAiCandidates();
+            if (!candidates.length) return null;
+            candidates.sort((a, b) => b.evaluated.total - a.evaluated.total);
+            const diff = getAiDifficulty();
+            if (diff === "easy") {
+                candidates.sort((a, b) => a.evaluated.total - b.evaluated.total);
+                const poolSize = Math.max(1, Math.ceil(candidates.length * 0.4));
+                const pool = candidates.slice(0, poolSize);
+                return pool[Math.floor(Math.random() * pool.length)];
+            }
+            return candidates[0];
+        }
+
+        function computerTurn() {
+            if (isOnline()) return;
+            if (state.gameOver || state.current !== AI) return;
+            const move = bestAIMove();
+            if (move) {
+                commitMove(AI, move.placements, move.evaluated);
+                nextTurn();
+                return;
+            }
+            if (state.bag.length >= 7 && state.players[AI].rack.length > 0) {
+                const n = Math.min(3, state.players[AI].rack.length);
+                const indices = [];
+                while (indices.length < n) {
+                    const idx = Math.floor(Math.random() * state.players[AI].rack.length);
+                    if (!indices.includes(idx)) indices.push(idx);
+                }
+                exchangeSelected(true, indices);
+                return;
+            }
+            passTurn(true);
+        }
+
+        function setStatus(msg) {
+            const statusEl = document.getElementById("status");
+            statusEl.textContent = msg;
+        }
+
+        function updatePreview() {
+            const el = document.getElementById("preview-turn");
+            if (!el) return;
+            const myTurnUi = isOnline() ? state.isMyTurn : state.current === HUMAN;
+            if (!state.dictReady || state.gameOver || !myTurnUi || state.exchangeMode || state.temp.size === 0) {
+                state.previewEval = null;
+                state.previewHighlight = new Set();
+                el.textContent = "Preview: —";
+                el.className = "preview-turn";
+                return;
+            }
+            const placements = [...state.temp.entries()].map(([key, value]) => {
+                const { r, c } = parseKey(key);
+                return { r, c, ...value };
+            });
+            const ev = evaluateMove(placements, HUMAN);
+            state.previewEval = ev;
+            if (ev.valid && ev.highlightCells && ev.highlightCells.length) {
+                state.previewHighlight = new Set(ev.highlightCells);
+                el.textContent = ev.bingo ? `Preview: +${ev.total} (incl. Bingo +50)` : `Preview: +${ev.total}`;
+                el.className = "preview-turn preview-turn--ok";
+            } else {
+                state.previewHighlight = new Set();
+                el.textContent = `Invalid: ${ev.message}`;
+                el.className = "preview-turn preview-turn--bad";
+            }
+        }
+
+        function renderBoard() {
+            const boardEl = document.getElementById("board");
+            const html = [];
+            const ph = state.previewHighlight;
+            for (let r = 0; r < BOARD_SIZE; r += 1) {
+                for (let c = 0; c < BOARD_SIZE; c += 1) {
+                    const key = cellKey(r, c);
+                    const temp = state.temp.get(key);
+                    const cell = state.board[r][c];
+                    const showLetter = temp?.letter || cell.letter;
+                    const isBlank = temp ? temp.isBlank : cell.isBlank;
+                    let premiumClass = "";
+                    let premiumLabel = "";
+                    if (!showLetter) {
+                        if (cell.premium === "TW") { premiumClass = "premium-tw"; premiumLabel = "TW"; }
+                        if (cell.premium === "DW") { premiumClass = "premium-dw"; premiumLabel = "DW"; }
+                        if (cell.premium === "TL") { premiumClass = "premium-tl"; premiumLabel = "TL"; }
+                        if (cell.premium === "DL") { premiumClass = "premium-dl"; premiumLabel = "DL"; }
+                        if (r === CENTER && c === CENTER) { premiumClass = "premium-center"; premiumLabel = "★"; }
+                    }
+                    const hl = ph.has(key) ? " cell-preview-word" : "";
+                    html.push(`<div class="cell ${premiumClass}${hl}" data-r="${r}" data-c="${c}" onclick="onCellClick(${r}, ${c})" ondragover="onBoardDragOver(event)" ondragleave="onBoardDragLeave(event)" ondrop="onBoardDrop(event)">`);
+                    if (showLetter) {
+                        const score = isBlank ? 0 : letterScore(showLetter);
+                        const dragAttr = temp ? ` draggable="true" ondragstart="onTempDragStart(event, ${r}, ${c})" ondragover="onBoardDragOver(event)" ondragleave="onBoardDragLeave(event)" ondrop="onBoardDrop(event)"` : "";
+                        html.push(`<div class="tile ${temp ? "temp-tile" : ""}"${dragAttr}>${showLetter}<span class="tile-score">${score}</span></div>`);
+                    } else {
+                        html.push(`<span class="premium-label">${premiumLabel}</span>`);
+                    }
+                    html.push(`</div>`);
+                }
+            }
+            boardEl.innerHTML = html.join("");
+        }
+
+        function renderRack() {
+            const rackEl = document.getElementById("rack");
+            const rack = state.players[HUMAN].rack;
+            const used = usedRackIndicesInTemp();
+            rackEl.innerHTML = rack.map((ch, idx) => {
+                const selected = state.selectedRack === idx ? "selected" : "";
+                const exSelected = state.exchangeSet.has(idx) ? "exchange-selected" : "";
+                const usedCls = used.has(idx) ? "used" : "";
+                const display = ch === "*" ? "?" : ch;
+                const myTurnUi = isOnline() ? state.isMyTurn : state.current === HUMAN;
+                const canDrag = !used.has(idx) && myTurnUi && !state.gameOver && !state.exchangeMode;
+                const dragAttr = canDrag ? ` draggable="true" ondragstart="onRackDragStart(event, ${idx})"` : "";
+                return `<div class="rack-tile ${selected} ${exSelected} ${usedCls}"${dragAttr} onclick="onRackClick(${idx})">
+                    ${display}<span class="tile-score">${letterScore(ch)}</span>
+                </div>`;
+            }).join("");
+        }
+
+        function renderScores() {
+            const nameAi = document.getElementById("score-ai-name");
+            if (nameAi) nameAi.textContent = isOnline() ? "Opponent" : "Computer";
+            document.getElementById("score-you-v").textContent = state.players[HUMAN].score;
+            document.getElementById("score-ai-v").textContent = state.players[AI].score;
+            const myTurnUi = isOnline() ? state.isMyTurn : state.current === HUMAN;
+            document.getElementById("score-you").classList.toggle("active", myTurnUi && !state.gameOver);
+            document.getElementById("score-ai").classList.toggle("active", !myTurnUi && !state.gameOver);
+            document.getElementById("bag-count").textContent = `Bag: ${state.bag.length}`;
+            document.getElementById("turn-count").textContent = `Round: ${getDisplayRound()} / ${MAX_ROUNDS}`;
+        }
+
+        function renderLogs() {
+            const logEl = document.getElementById("log-box");
+            logEl.innerHTML = state.logs.map((line) => `<div class="log-line">${line}</div>`).join("");
+        }
+
+        function render() {
+            updatePreview();
+            renderBoard();
+            renderRack();
+            renderScores();
+            renderGameProgress();
+            renderLogs();
+            document.getElementById("exchange-toggle").textContent = state.exchangeMode ? "Exit Exchange Mode" : "Exchange Mode";
+        }
+
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "Escape") closeRulesModal();
+        });
+
+        loadDictionary();
+    </script>
+</body>
+</html>

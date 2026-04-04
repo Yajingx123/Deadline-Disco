@@ -1,0 +1,16 @@
+[Unit]
+Description=AcadBeat Realtime Relay
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/var/www/Deadline-Disco/voice-room-server
+EnvironmentFile=/var/www/Deadline-Disco/.env.production
+ExecStart=/usr/bin/npm start
+Restart=always
+RestartSec=3
+User=nginx
+Group=nginx
+
+[Install]
+WantedBy=multi-user.target

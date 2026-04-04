@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Training Hub | AcadBeat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared-nav.css">
+  <script src="../shared/acadbeat-local-config.js"></script>
+  <link rel="stylesheet" href="acadbeat-global.css">
+  <link rel="stylesheet" href="practice-style.css">
+</head>
+<body data-page="training-home">
+  <div id="acadbeatNav"></div>
+
+  <main class="module-content page-shell">
+    <section class="section-block training-clean">
+      <header class="training-clean-header">
+        <div class="training-clean-copy">
+          <span class="training-clean-eyebrow">Academic Practice</span>
+          <h2>Training</h2>
+          <p>Move from listening and response into live pair speaking, then branch into vocabulary reinforcement without leaving the same academic learning flow.</p>
+        </div>
+        <div class="training-clean-summary" aria-hidden="true">
+          <span>Vocabulary</span>
+          <span>Listen</span>
+          <span>Respond</span>
+          <span>Pair Speak</span>
+        </div>
+      </header>
+
+      <div class="training-clean-grid">
+        <article class="training-clean-card training-clean-card--vocab" onclick="window.location.href='../vocba_prac/'" role="link" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.location.href='../vocba_prac/';}">
+          <span class="training-clean-kicker">Mode 01</span>
+          <div class="training-visual visual-vocab-flow" aria-hidden="true">
+            <span class="vocab-chip vocab-chip-main">TERM</span>
+            <span class="vocab-chip">Meaning</span>
+            <span class="vocab-chip">Context</span>
+            <span class="vocab-chip">Recall</span>
+          </div>
+          <h3>Vocabulary</h3>
+          <p>Return to the original vocabulary practice space for word banks, book study, and review around the same topics.</p>
+          <a class="training-go-btn" href="../vocba_prac/">GO</a>
+        </article>
+
+        <article class="training-clean-card" onclick="window.location.href='listening.html?mode=understand'" role="link" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.location.href='listening.html?mode=understand';}">
+          <span class="training-clean-kicker">Mode 02</span>
+          <div class="training-visual visual-quiz" aria-hidden="true">
+            <span class="qa-row"><i></i><b></b></span>
+            <span class="qa-row"><i></i><b></b></span>
+            <span class="qa-row"><i></i><b></b></span>
+          </div>
+          <h3>Listening and Understand</h3>
+          <p>Extract the key points from videos</p>
+          <a class="training-go-btn" href="listening.html?mode=understand">GO</a>
+        </article>
+
+        <article class="training-clean-card" onclick="window.location.href='listening.html?mode=respond'" role="link" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.location.href='listening.html?mode=respond';}">
+          <span class="training-clean-kicker">Mode 03</span>
+          <div class="training-visual visual-record" aria-hidden="true">
+            <span class="mic-core"></span>
+            <span class="mic-wave"></span>
+            <span class="mic-wave"></span>
+          </div>
+          <h3>Listening and Respond</h3>
+          <p>Try to speak with confidence</p>
+          <a class="training-go-btn" href="listening.html?mode=respond">GO</a>
+        </article>
+
+        <article class="training-clean-card training-clean-card--accent" onclick="window.location.href='../video-call/video-match.php'" role="link" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();window.location.href='../video-call/video-match.php';}">
+          <span class="training-clean-kicker">Mode 04</span>
+          <div class="training-visual visual-pair-room" aria-hidden="true">
+            <span class="pair-node pair-node-left"></span>
+            <span class="pair-link"></span>
+            <span class="pair-node pair-node-right"></span>
+            <span class="pair-ripple pair-ripple-left"></span>
+            <span class="pair-ripple pair-ripple-right"></span>
+          </div>
+          <h3>Video Call Rooms</h3>
+          <p>Create a public or private room, invite others if needed, and re-enter the same room URL within its lifetime.</p>
+          <a class="training-go-btn training-go-btn--soft" href="../video-call/video-match.php">GO</a>
+        </article>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="practice-data.js"></script>
+  <script src="practice-app.js"></script>
+  <script>
+    window.addEventListener('load', () => {
+      const uiGodot = (() => {
+        try {
+          if (new URLSearchParams(location.search).get('ui') === 'godot') return true;
+        } catch (_e) {}
+        return document.cookie.split('; ').some((c) => c.startsWith('ui_mode=godot'));
+      })();
+      const L = window.ACADBEAT_LOCAL || {};
+      const loginUrl = uiGodot ? (L.godotWebEntryUrl || 'http://127.0.0.1:5500/index.html?ui=godot') : '../home.html?login=1';
+      window.initializeAcadBeatNav({
+        mountId: 'acadbeatNav',
+        basePath: '../',
+        active: 'academic',
+        authApiBase: '../Auth/backend/api',
+        homeUrl: '../home.html',
+        ownerUrl: '../owner.html',
+        adminUrl: L.adminDistUrl || window.location.origin + '/admin_page/dist/index.html',
+        loginUrl,
+        redirectAdmins: false
+      });
+    });
+  </script>
+  <script src="../shared-nav.js"></script>
+</body>
+</html>

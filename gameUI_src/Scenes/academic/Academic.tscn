@@ -1,0 +1,139 @@
+[gd_scene format=3 uid="uid://ki84oislh7xp"]
+
+[ext_resource type="Script" uid="uid://cw7bw0pylubxc" path="res://Scripts/academic/academic.gd" id="1_5404h"]
+[ext_resource type="Texture2D" uid="uid://cgy65r6mc5qgs" path="res://Assets/Sprites/pure_bg.png" id="1_u48br"]
+[ext_resource type="Texture2D" uid="uid://mo7uen62ikvq" path="res://Assets/Sprites/planet.png" id="2_bjjj1"]
+[ext_resource type="Texture2D" uid="uid://dgpvlnhdkgc1n" path="res://Assets/Sprites/door.png" id="3_2ov4b"]
+[ext_resource type="Texture2D" uid="uid://bnx0u5i8kgf0n" path="res://Assets/Sprites/man2.png" id="4_5404h"]
+[ext_resource type="FontFile" uid="uid://dj8m3ejixir1v" path="res://Assets/Fonts/Myfont-Regular.ttf" id="6_4oxwx"]
+
+[node name="Academic" type="Node2D" unique_id=143610814]
+script = ExtResource("1_5404h")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=493862057]
+texture = ExtResource("1_u48br")
+metadata/_edit_lock_ = true
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1318034342]
+zoom = Vector2(0.4, 0.4)
+metadata/_edit_lock_ = true
+
+[node name="Planet1" type="TextureRect" parent="." unique_id=1626418898]
+offset_left = -410.0
+offset_top = -731.0
+offset_right = 833.0
+offset_bottom = 483.0
+rotation = 1.8550911
+scale = Vector2(0.32, 0.32)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+size_flags_horizontal = 4
+size_flags_vertical = 4
+mouse_filter = 0
+texture = ExtResource("2_bjjj1")
+metadata/_edit_use_anchors_ = true
+
+[node name="Planet2" type="TextureRect" parent="." unique_id=710890744]
+offset_left = 89.00001
+offset_top = -1340.0
+offset_right = 1332.0
+offset_bottom = -126.0
+rotation = -1.0444031
+scale = Vector2(0.41, 0.41)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 0
+texture = ExtResource("2_bjjj1")
+metadata/_edit_use_anchors_ = true
+
+[node name="Planet3" type="TextureRect" parent="." unique_id=1959849106]
+offset_left = -1717.0
+offset_top = -79.0
+offset_right = -474.0
+offset_bottom = 1135.0
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 0
+texture = ExtResource("2_bjjj1")
+metadata/_edit_use_anchors_ = true
+
+[node name="Planet4" type="TextureRect" parent="." unique_id=707018032]
+offset_left = -1307.0
+offset_top = -1149.0
+offset_right = -64.0
+offset_bottom = 65.0
+rotation = 0.0041906834
+scale = Vector2(0.65, 0.65)
+pivot_offset_ratio = Vector2(0.5, 0.5)
+mouse_filter = 0
+texture = ExtResource("2_bjjj1")
+metadata/_edit_use_anchors_ = true
+
+[node name="Planet5" type="TextureRect" parent="." unique_id=962840285]
+offset_left = -831.0
+offset_top = 190.67236
+offset_right = 412.0
+offset_bottom = 1404.6724
+scale = Vector2(2.485, 2.485)
+texture = ExtResource("2_bjjj1")
+
+[node name="Door" type="Sprite2D" parent="." unique_id=155438704]
+position = Vector2(1023, 137.67236)
+rotation = 0.09341188
+scale = Vector2(2.035, 2.035)
+texture = ExtResource("3_2ov4b")
+
+[node name="Man2" type="Sprite2D" parent="." unique_id=299947410]
+position = Vector2(741, 271.67236)
+scale = Vector2(2.1749997, 2.1749997)
+texture = ExtResource("4_5404h")
+
+[node name="Label1" type="Label" parent="." unique_id=642961318]
+visible = false
+offset_left = -315.0
+offset_top = 227.0
+offset_right = 268.00012
+offset_bottom = 622.0
+theme_override_fonts/font = ExtResource("6_4oxwx")
+theme_override_font_sizes/font_size = 80
+text = "Vocabulary"
+
+[node name="Label2" type="Label" parent="." unique_id=307180924]
+visible = false
+offset_left = -315.0
+offset_top = 227.0
+offset_right = 268.0
+offset_bottom = 622.0
+theme_override_fonts/font = ExtResource("6_4oxwx")
+theme_override_font_sizes/font_size = 80
+text = "Listening and Understand"
+
+[node name="Label3" type="Label" parent="." unique_id=2104673672]
+visible = false
+offset_left = -315.0
+offset_top = 227.0
+offset_right = 268.0
+offset_bottom = 622.0
+theme_override_fonts/font = ExtResource("6_4oxwx")
+theme_override_font_sizes/font_size = 80
+text = "Listening and Respond"
+
+[node name="Label4" type="Label" parent="." unique_id=735366343]
+visible = false
+offset_left = -315.0
+offset_top = 227.0
+offset_right = 268.0
+offset_bottom = 621.9999
+theme_override_fonts/font = ExtResource("6_4oxwx")
+theme_override_font_sizes/font_size = 80
+text = "Pair Speaking Room"
+
+[connection signal="mouse_entered" from="Planet1" to="." method="_on_planet_1_mouse_entered"]
+[connection signal="mouse_exited" from="Planet1" to="." method="_on_planet_1_mouse_exited"]
+[connection signal="mouse_entered" from="Planet2" to="." method="_on_planet_2_mouse_entered"]
+[connection signal="mouse_exited" from="Planet2" to="." method="_on_planet_2_mouse_exited"]
+[connection signal="mouse_entered" from="Planet3" to="." method="_on_planet_3_mouse_entered"]
+[connection signal="mouse_exited" from="Planet3" to="." method="_on_planet_3_mouse_exited"]
+[connection signal="mouse_entered" from="Planet4" to="." method="_on_planet_4_mouse_entered"]
+[connection signal="mouse_exited" from="Planet4" to="." method="_on_planet_4_mouse_exited"]
+[connection signal="gui_input" from="Planet1" to="." method="_on_planet_1_gui_input"]
+[connection signal="gui_input" from="Planet2" to="." method="_on_planet_2_gui_input"]
+[connection signal="gui_input" from="Planet3" to="." method="_on_planet_3_gui_input"]
+[connection signal="gui_input" from="Planet4" to="." method="_on_planet_4_gui_input"]

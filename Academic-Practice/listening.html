@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video Selection | AcadBeat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared-nav.css">
+  <script src="../shared/acadbeat-local-config.js"></script>
+  <link rel="stylesheet" href="acadbeat-global.css">
+  <link rel="stylesheet" href="practice-style.css">
+  <script>
+    (function () {
+      var params = new URLSearchParams(window.location.search);
+      var uiMode = params.get('ui');
+      if (uiMode !== 'godot') {
+        return;
+      }
+      document.cookie = 'ui_mode=godot; path=/; max-age=2592000';
+      var font = document.createElement('link');
+      font.rel = 'stylesheet';
+      font.href = 'https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap';
+      document.head.appendChild(font);
+      var theme = document.createElement('link');
+      theme.rel = 'stylesheet';
+      theme.href = '../newUI/static/game-listening-theme.css';
+      document.head.appendChild(theme);
+    })();
+  </script>
+</head>
+<body data-page="video-list">
+  <div id="acadbeatNav"></div>
+  <main class="module-content page-shell">
+    <section class="video-results compact-results">
+      <div class="results-header compact-results-header">
+        <div class="inline-title-wrap">
+          <button class="back-btn back-fab" data-back-target="training.html" aria-label="Go back" title="Back" type="button">&#8592;</button>
+          <div class="inline-title-copy">
+            <h3 id="modeTitle">Self-training</h3>
+            <p id="resultsCount">0 videos</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="top-filter-bar">
+        <input id="smartSearch" class="smart-input compact-search" type="search" placeholder="Search videos...">
+        <select id="smartType" class="smart-select compact-select"></select>
+        <select id="smartDifficulty" class="smart-select compact-select">
+          <option value="All">Difficulty: All</option>
+          <option value="Easy">Easy</option>
+          <option value="Medium">Medium</option>
+          <option value="Hard">Hard</option>
+        </select>
+        <select id="smartDuration" class="smart-select compact-select">
+          <option value="All">Duration: All</option>
+          <option value="0-1min">0-1min</option>
+          <option value="1-2min">1-2min</option>
+          <option value="2-3min">2-3min</option>
+        </select>
+        <select id="smartSource" class="smart-select compact-select">
+          <option value="All">Source: All</option>
+          <option value="OpenLearn">OpenLearn</option>
+          <option value="ELLLO">ELLLO</option>
+        </select>
+        <div id="smartCountryFilter" class="compact-select country-filter"></div>
+        <button id="clearSmartFilters" class="btn-small compact-reset-btn" type="button">Reset</button>
+      </div>
+
+      <div class="results-scroll-region">
+        <div id="videoResultList" class="video-card-list"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="practice-data.js"></script>
+  <script src="practice-data-api.js"></script>
+  <script src="practice-app-api.js"></script>
+  <script>
+    window.addEventListener('load', () => {
+      const uiGodot = (() => {
+        try {
+          if (new URLSearchParams(location.search).get('ui') === 'godot') return true;
+        } catch (_e) {}
+        return document.cookie.split('; ').some((c) => c.startsWith('ui_mode=godot'));
+      })();
+      const L = window.ACADBEAT_LOCAL || {};
+      const loginUrl = uiGodot ? (L.godotWebEntryUrl || 'http://127.0.0.1:5500/index.html?ui=godot') : '../home.html?login=1';
+      window.initializeAcadBeatNav({
+        mountId: 'acadbeatNav',
+        basePath: '../',
+        active: 'academic',
+        authApiBase: '../Auth/backend/api',
+        homeUrl: '../home.html',
+        ownerUrl: '../owner.html',
+        forumUrl: '../home.html?module=Dialogue',
+        technologyUrl: '../home.html?module=Method',
+        studioUrl: '../Studio/studio.html',
+        messageCenterUrl: L.messageCenterDistUrl,
+        adminUrl: L.adminDistUrl || window.location.origin + '/admin_page/dist/index.html',
+        messageApiUrl: L.messageSummaryApiUrl,
+        loginUrl,
+        redirectAdmins: false,
+        showChallengeButton: false
+      });
+    });
+  </script>
+  <script src="../shared-nav.js"></script>
+</body>
+</html>
