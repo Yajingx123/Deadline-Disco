@@ -65,6 +65,13 @@ $services = [
         'command' => $npm . ' start',
     ],
     [
+        'name' => 'scrabble_match',
+        'host' => '127.0.0.1',
+        'port' => 9000,
+        'workdir' => $root . '/Studio/Scrabble/match-server',
+        'command' => $npm . ' run start',
+    ],
+    [
         'name' => 'godot_ui',
         'host' => '127.0.0.1',
         'port' => 5500,

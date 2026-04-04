@@ -20,9 +20,10 @@ stop_pid_file() {
 }
 
 stop_pid_file "$RUN_DIR/realtime_3001.pid"
+stop_pid_file "$RUN_DIR/scrabble_9000.pid"
 
 if command -v lsof >/dev/null 2>&1; then
-  for port in 3001; do
+  for port in 3001 9000; do
     pids="$(lsof -ti tcp:$port 2>/dev/null || true)"
     if [[ -n "${pids:-}" ]]; then
       echo "$pids" | xargs -r kill -9

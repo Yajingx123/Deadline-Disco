@@ -72,7 +72,7 @@ foreach ($pidFiles as $pidFile) {
     @unlink($pidFile);
 }
 
-$ports = [8001, 8002, 5173, 5174, 3001, 5500];
+$ports = [8001, 8002, 5173, 5174, 3001, 9000, 5500];
 foreach ($ports as $port) {
     $pids = PHP_OS_FAMILY === 'Windows' ? pidsByPortWindows($port) : pidsByPortUnix($port);
     foreach ($pids as $pid) {

@@ -26,7 +26,7 @@ for app in forum-project admin_page message-center-project; do
 done
 
 echo
-echo "=== Start Realtime Service ==="
+echo "=== Start Realtime + Scrabble Match Services ==="
 if [[ -f "$RUN_DIR/realtime_3001.pid" ]]; then
   old_pid="$(cat "$RUN_DIR/realtime_3001.pid" || true)"
   if [[ -n "${old_pid:-}" ]] && kill -0 "$old_pid" 2>/dev/null; then
@@ -42,6 +42,22 @@ fi
 )
 
 echo "[started] realtime PID $(cat "$RUN_DIR/realtime_3001.pid")"
+
+if [[ -f "$RUN_DIR/scrabble_9000.pid" ]]; then
+  old_pid="$(cat "$RUN_DIR/scrabble_9000.pid" || true)"
+  if [[ -n "${old_pid:-}" ]] && kill -0 "$old_pid" 2>/dev/null; then
+    kill "$old_pid" || true
+    sleep 1
+  fi
+fi
+
+(
+  cd "$ROOT_DIR/Studio/Scrabble/match-server"
+  nohup npm run start >> "$RUN_DIR/scrabble_9000.out.log" 2>> "$RUN_DIR/scrabble_9000.err.log" < /dev/null &
+  echo $! > "$RUN_DIR/scrabble_9000.pid"
+)
+
+echo "[started] scrabble-match PID $(cat "$RUN_DIR/scrabble_9000.pid")"
 echo
 echo "Done."
 echo "1) If using Nginx + PHP-FPM, ensure Nginx is started and points to this repo root."
