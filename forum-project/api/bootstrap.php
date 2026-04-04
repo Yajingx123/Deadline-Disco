@@ -18,22 +18,33 @@ if (!defined('FORUM_ANNOUNCEMENT_LABEL_NAME')) {
     define('FORUM_ANNOUNCEMENT_LABEL_NAME', 'Announcement');
 }
 
-$allowedOrigins = [
-    'http://127.0.0.1:5173',
-    'http://127.0.0.1:5174',
-    'http://127.0.0.1:8001',
-];
+$allowedOrigins = array_values(array_unique(array_filter(array_map(
+    'trim',
+    (array)($config['allowed_origins'] ?? [])
+))));
+if (!$allowedOrigins) {
+    $allowedOrigins = ['http://127.0.0.1:8001'];
+}
+
+function forum_app_url(): string {
+    global $config;
+    $base = trim((string)($config['app_url'] ?? ''));
+    if ($base === '') {
+        $base = 'http://127.0.0.1:8001';
+    }
+    return rtrim($base, '/');
+}
 
 function forum_admin_url(): string {
-    return 'http://127.0.0.1:8001/admin_page/dist/index.html';
+    return forum_app_url() . '/admin_page/dist/index.html';
 }
 
 function forum_forum_url(string $suffix = ''): string {
-    return 'http://127.0.0.1:8001/forum-project/dist/index.html' . $suffix;
+    return forum_app_url() . '/forum-project/dist/index.html' . $suffix;
 }
 
 function forum_message_center_url(): string {
-    return 'http://127.0.0.1:8001/message-center-project/dist/index.html';
+    return forum_app_url() . '/message-center-project/dist/index.html';
 }
 
 function forum_normalize_local_url(string $url): string {
@@ -44,14 +55,14 @@ function forum_normalize_local_url(string $url): string {
     // Vite dev server uses base /forum-project/dist/ — map to PHP-served dist index
     $normalized = str_replace(
         'http://127.0.0.1:5173/forum-project/dist/',
-        'http://127.0.0.1:8001/forum-project/dist/index.html',
+        forum_forum_url(''),
         $trimmed
     );
     $normalized = str_replace('http://127.0.0.1:5173/', forum_forum_url('?'), $normalized);
     $normalized = str_replace('http://127.0.0.1:5174/', forum_admin_url(), $normalized);
     $normalized = str_replace('http://127.0.0.1:5173?', forum_forum_url('?'), $normalized);
-    $normalized = str_replace('http://127.0.0.1:8001/forum-project/dist/index.html?view=messages', forum_message_center_url(), $normalized);
-    $normalized = str_replace('http://127.0.0.1:8001/forum-project/dist/message-center.html', forum_message_center_url(), $normalized);
+    $normalized = str_replace(forum_forum_url('?view=messages'), forum_message_center_url(), $normalized);
+    $normalized = str_replace(forum_app_url() . '/forum-project/dist/message-center.html', forum_message_center_url(), $normalized);
     return $normalized;
 }
 
@@ -409,6 +420,7 @@ function forum_sync_message_center_notifications(PDO $pdo, int $recipientUserId)
     if ($recipientUserId <= 0) {
         return;
     }
+    $forumPostUrlPrefix = forum_forum_url('?view=forum&postId=');
 
     $replyPostStmt = $pdo->prepare("
         INSERT INTO message_center_notifications (
@@ -434,7 +446,7 @@ function forum_sync_message_center_notifications(PDO $pdo, int $recipientUserId)
             CONCAT(u.username, ' replied to your post') AS title,
             LEFT(TRIM(fc.content_text), 180) AS body_text,
             'Reply' AS cta_label,
-            CONCAT('http://127.0.0.1:8001/forum-project/dist/index.html?view=forum&postId=', fc.post_id) AS cta_url,
+            CONCAT('{$forumPostUrlPrefix}', fc.post_id) AS cta_url,
             0 AS is_read,
             fc.created_at,
             fc.updated_at
@@ -476,7 +488,7 @@ function forum_sync_message_center_notifications(PDO $pdo, int $recipientUserId)
             CONCAT(u.username, ' replied to your comment') AS title,
             LEFT(TRIM(child.content_text), 180) AS body_text,
             'Reply' AS cta_label,
-            CONCAT('http://127.0.0.1:8001/forum-project/dist/index.html?view=forum&postId=', child.post_id) AS cta_url,
+            CONCAT('{$forumPostUrlPrefix}', child.post_id) AS cta_url,
             0 AS is_read,
             child.created_at,
             child.updated_at
@@ -516,7 +528,7 @@ function forum_sync_message_center_notifications(PDO $pdo, int $recipientUserId)
             CONCAT(u.username, ' liked your post') AS title,
             fp.title AS body_text,
             'View post' AS cta_label,
-            CONCAT('http://127.0.0.1:8001/forum-project/dist/index.html?view=forum&postId=', l.post_id) AS cta_url,
+            CONCAT('{$forumPostUrlPrefix}', l.post_id) AS cta_url,
             0 AS is_read,
             l.created_at,
             l.created_at
@@ -556,7 +568,7 @@ function forum_sync_message_center_notifications(PDO $pdo, int $recipientUserId)
             CONCAT(u.username, ' favorited your post') AS title,
             fp.title AS body_text,
             'View post' AS cta_label,
-            CONCAT('http://127.0.0.1:8001/forum-project/dist/index.html?view=forum&postId=', f.post_id) AS cta_url,
+            CONCAT('{$forumPostUrlPrefix}', f.post_id) AS cta_url,
             0 AS is_read,
             f.created_at,
             f.created_at
@@ -600,7 +612,7 @@ function forum_sync_message_center_notifications(PDO $pdo, int $recipientUserId)
 }
 
 function forum_public_base_url(): string {
-    return 'http://127.0.0.1:8001';
+    return forum_app_url();
 }
 
 function forum_uploaded_file_path_from_url(string $url): ?string {
