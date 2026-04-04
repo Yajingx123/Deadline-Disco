@@ -2,9 +2,11 @@
   const data = window.PracticeData;
   const LISTENING_RECORD_API = "./api/save-record.php";
   const INTEGRATED_RECORD_API = "./api/save-integrated-record.php";
-  const FORUM_COMPOSE_URL = "http://127.0.0.1:8001/forum-project/dist/index.html?view=forum&compose=1";
+  const L = window.ACADBEAT_LOCAL || {};
+  const MAIN_ORIGIN = L.mainOrigin || window.location.origin;
+  const FORUM_COMPOSE_URL = `${MAIN_ORIGIN}/forum-project/dist/index.html?view=forum&compose=1`;
   const FORUM_PREFILL_WINDOW_NAME_KEY = "__acadbeat_forum_prefill__";
-  const CHAT_API_BASE = "http://127.0.0.1:8001/forum-project/api";
+  const CHAT_API_BASE = `${MAIN_ORIGIN}/forum-project/api`;
   if (!data) {
     return;
   }

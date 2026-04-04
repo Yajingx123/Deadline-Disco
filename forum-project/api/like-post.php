@@ -86,7 +86,7 @@ try {
                     $postId,
                     sprintf('%s liked your post', (string)($user['username'] ?? 'Someone')),
                     (string)($postOwner['title'] ?? ''),
-                    sprintf('http://127.0.0.1:8001/forum-project/dist/index.html?view=forum&postId=%d', $postId),
+                    forum_forum_url('?view=forum&postId=' . $postId),
                 ]);
             } catch (Throwable $notificationError) {
                 error_log('[forum like notification insert] ' . $notificationError->getMessage());

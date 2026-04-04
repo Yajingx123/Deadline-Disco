@@ -17,7 +17,7 @@
         const response = await fetch('../Auth/backend/api/me.php', { credentials: 'include' });
         const data = await response.json().catch(() => ({ status: 'error' }));
         if (data.status === 'success' && data.user && String(data.user.role || '').toLowerCase() === 'admin') {
-          const admin = (window.ACADBEAT_LOCAL && window.ACADBEAT_LOCAL.adminDistUrl) || 'http://127.0.0.1:8001/admin_page/dist/index.html';
+          const admin = (window.ACADBEAT_LOCAL && window.ACADBEAT_LOCAL.adminDistUrl) || window.location.origin + '/admin_page/dist/index.html';
           window.location.replace(admin);
           return;
         }
@@ -59,7 +59,7 @@
         authApiBase: '../Auth/backend/api',
         homeUrl: '../home.html',
         ownerUrl: '../owner.html',
-        adminUrl: L.adminDistUrl || 'http://127.0.0.1:8001/admin_page/dist/index.html',
+        adminUrl: L.adminDistUrl || window.location.origin + '/admin_page/dist/index.html',
         loginUrl,
         redirectAdmins: true
       });

@@ -19,7 +19,7 @@
                 const response = await fetch('./Auth/backend/api/me.php', { credentials: 'include' });
                 const data = await response.json().catch(() => ({ status: 'error' }));
                 if (data.status === 'success' && data.user && String(data.user.role || '').toLowerCase() === 'admin') {
-                    const admin = (window.ACADBEAT_LOCAL && window.ACADBEAT_LOCAL.adminDistUrl) || 'http://127.0.0.1:8001/admin_page/dist/index.html';
+                    const admin = (window.ACADBEAT_LOCAL && window.ACADBEAT_LOCAL.adminDistUrl) || window.location.origin + '/admin_page/dist/index.html';
                     window.location.replace(admin);
                     return;
                 }
@@ -1056,9 +1056,9 @@
         const L = window.ACADBEAT_LOCAL || {};
         const HOME_URL = './home.html';
         const OWNER_URL = './owner.html';
-        const ADMIN_URL = L.adminDistUrl || 'http://127.0.0.1:8001/admin_page/dist/index.html';
+        const ADMIN_URL = L.adminDistUrl || window.location.origin + '/admin_page/dist/index.html';
         const VOCABULARY_URL = './vocba_prac/';
-        const FORUM_URL = L.forumDevChooserUrl || 'http://127.0.0.1:8001/forum-project/dist/index.html?view=forum';
+        const FORUM_URL = L.forumDevChooserUrl || (window.location.origin + '/forum-project/dist/index.html?view=forum');
         const TECHNOLOGY_URL = './technology.html';
         const ACADEMIC_PRACTICE_URL = './Academic-Practice/training.html';
         const AUTH_API_BASE = './Auth/backend/api';
@@ -1170,11 +1170,11 @@
                 authApiBase: './Auth/backend/api',
                 homeUrl: './home.html',
                 ownerUrl: './owner.html',
-                adminUrl: L.adminDistUrl || 'http://127.0.0.1:8001/admin_page/dist/index.html',
+                adminUrl: L.adminDistUrl || window.location.origin + '/admin_page/dist/index.html',
                 forumUrl: './home.html?module=Dialogue',
                 technologyUrl: './home.html?module=Method',
                 studioUrl: './Studio/studio.html',
-                messageCenterUrl: L.messageCenterDistUrl || 'http://127.0.0.1:8001/message-center-project/dist/index.html',
+                messageCenterUrl: L.messageCenterDistUrl || (window.location.origin + '/message-center-project/dist/index.html'),
                 redirectAdmins: true,
                 showChallengeButton: true,
                 challengeButtonLabel: 'CHALLENGE',

@@ -1,7 +1,8 @@
 (function () {
   const L = typeof window !== 'undefined' && window.ACADBEAT_LOCAL ? window.ACADBEAT_LOCAL : null;
-  const API_URL = (L && L.challengeApiUrl) || 'http://127.0.0.1:8001/challenge/api/challenge.php';
-  const REALTIME_WS_URL = (L && L.voiceRoomWsUrl) || 'ws://127.0.0.1:3001/ws';
+  const MAIN_ORIGIN = (L && L.mainOrigin) || window.location.origin;
+  const API_URL = (L && L.challengeApiUrl) || `${MAIN_ORIGIN}/challenge/api/challenge.php`;
+  const REALTIME_WS_URL = (L && L.voiceRoomWsUrl) || `${window.location.protocol === 'https:' ? 'wss' : 'ws'}://${window.location.host}/ws`;
   const state = {
     data: null,
     pendingOpenAfterLogin: false,

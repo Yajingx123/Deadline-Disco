@@ -32,8 +32,9 @@ define('DB_HOST', '127.0.0.1');
 define('DB_PORT', '3306');
 define('DB_NAME', 'acadbeat');
 define('DB_USER', 'root');
-define('APP_HOME_URL', 'http://127.0.0.1:8001/home.html');
-define('APP_OWNER_URL', 'http://127.0.0.1:8001/owner.html');
+$appBaseUrl = rtrim((string)(getenv('APP_URL') ?: 'http://127.0.0.1:8001'), '/');
+define('APP_HOME_URL', $appBaseUrl . '/home.html');
+define('APP_OWNER_URL', $appBaseUrl . '/owner.html');
 /** 主站静态资源根（shared-nav.js / shared-nav.css），与 APP_HOME_URL 同主机 */
 define('ACADBEAT_MAIN_ORIGIN', preg_replace('#/home\\.html$#i', '', APP_HOME_URL));
 define('APP_VOCAB_ROOT_PATH', '/vocba_prac/');

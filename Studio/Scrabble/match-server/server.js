@@ -360,6 +360,6 @@ io.on("connection", (socket) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`Scrabble server http://127.0.0.1:${PORT} (Socket.IO)`);
+  console.log(`Scrabble server listening on 0.0.0.0:${PORT} (Socket.IO)`);
   console.log("Dictionary file:", ENABLE_PATH);
 });

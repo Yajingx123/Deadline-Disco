@@ -87,7 +87,7 @@ function forum_announcement_insert_system_notice(PDO $pdo, int $postId, string $
         $noticeStmt->execute([
             $title,
             forum_announcement_notice_body($content),
-            sprintf('http://127.0.0.1:8001/forum-project/dist/index.html?view=forum&postId=%d', $postId),
+            forum_forum_url('?view=forum&postId=' . $postId),
         ]);
     } catch (Throwable $e) {
         error_log('forum_announcement_insert_system_notice: ' . $e->getMessage());

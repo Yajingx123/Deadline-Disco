@@ -79,8 +79,8 @@ function admin_posts_create_system_notification(PDO $pdo, array $postRow, string
 
     $copy = admin_posts_notification_copy($action, (string)($postRow['title'] ?? ''));
     $ctaUrl = $action === 'approve'
-        ? sprintf('http://127.0.0.1:8001/forum-project/dist/index.html?view=forum&postId=%d', $postId)
-        : 'http://127.0.0.1:8001/forum-project/dist/index.html?view=forum';
+        ? forum_forum_url('?view=forum&postId=' . $postId)
+        : forum_forum_url('?view=forum');
 
     $stmt = $pdo->prepare("
         INSERT INTO message_center_notifications (

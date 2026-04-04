@@ -109,7 +109,7 @@
         authApiBase: '../Auth/backend/api',
         homeUrl: '../home.html',
         ownerUrl: '../owner.html',
-        adminUrl: L.adminDistUrl || 'http://127.0.0.1:8001/admin_page/dist/index.html',
+        adminUrl: L.adminDistUrl || window.location.origin + '/admin_page/dist/index.html',
         loginUrl,
         redirectAdmins: false
       });

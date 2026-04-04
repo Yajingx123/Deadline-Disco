@@ -751,7 +751,8 @@
         const PREMIUM = buildPremiumMap();
 
         const params = new URLSearchParams(window.location.search);
-        const SCRABBLE_SERVER = params.get("server") || "http://127.0.0.1:9000";
+        const DEFAULT_SCRABBLE_SERVER = `${window.location.protocol}//${window.location.hostname}:9000`;
+        const SCRABBLE_SERVER = (params.get("server") || DEFAULT_SCRABBLE_SERVER).replace(/\/+$/, "");
         const MAX_ROUNDS = 20;
 
         const state = {
