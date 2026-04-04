@@ -91,7 +91,6 @@
       </div>
     </section>
 
-    <button id="voiceRoomCreateBtn" class="voice-room-create-btn" type="button">Create your room</button>
   </main>
 
   <div id="voiceRoomCreateModal" class="voice-room-modal hidden" role="dialog" aria-modal="true" aria-labelledby="voiceRoomCreateTitle">
@@ -126,7 +125,7 @@
           <div id="voiceRoomInviteSuggestions" class="voice-room-invite-suggestions hidden"></div>
         </label>
 
-        <div class="voice-room-form-field">
+        <div class="voice-room-form-field voice-room-form-field--narrow">
           <span>What happens next</span>
           <input type="text" value="Open the room in a new browser tab after creation" disabled>
         </div>
@@ -160,6 +159,15 @@
     .voice-room-card p.voice-room-card-note {
       margin-top: 12px;
       min-height: 3.2em;
+    }
+
+    .voice-room-tag-list {
+      margin-top: 16px;
+      margin-bottom: 14px;
+    }
+
+    .voice-room-join-btn {
+      margin-top: 14px;
     }
 
     .voice-room-tag--private {
@@ -203,12 +211,16 @@
     }
 
     body[data-page="voice-room-home"] .page-shell {
-      width: min(calc(100% - 40px), 1320px);
-      margin-top: 96px;
+      width: min(calc(100% - 28px), 1180px);
+      margin-top: 92px;
+    }
+
+    body[data-page="voice-room-home"] {
+      overflow-y: visible;
     }
 
     .voice-room-shell {
-      padding-bottom: 144px;
+      padding-bottom: 32px;
     }
 
     .voice-room-hero-wrap {
@@ -216,7 +228,7 @@
       grid-template-columns: 56px minmax(0, 1fr) 56px;
       align-items: center;
       margin-bottom: 10px;
-      min-height: 96px;
+      min-height: 82px;
     }
 
     .voice-room-back {
@@ -235,56 +247,64 @@
     }
 
     .voice-room-hero p {
-      max-width: 760px;
+      max-width: 680px;
       margin-inline: auto;
       text-wrap: balance;
+      font-size: 0.96rem;
     }
 
     .voice-room-board {
-      padding: 28px;
+      padding: 22px;
     }
 
     .voice-room-tools {
-      grid-template-columns: minmax(0, 1.05fr) minmax(300px, 0.7fr);
-      gap: 20px;
-    }
-
-    .voice-room-filter-bar {
-      grid-template-columns: 1.1fr 1.1fr 0.9fr;
+      grid-template-columns: minmax(0, 1fr) minmax(260px, 0.62fr);
       gap: 16px;
     }
 
+    .voice-room-filter-bar {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      align-items: start;
+    }
+
     .voice-room-grid {
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 18px;
-      align-items: stretch;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+      align-items: start;
     }
 
     .voice-room-card {
-      min-height: 272px;
-      padding: 20px;
+      min-height: 0;
+      height: auto;
+      padding: 18px;
+      border-radius: 26px !important;
+      overflow: hidden;
+      align-self: start;
     }
 
     .voice-room-card h3 {
-      font-size: 1.5rem;
+      font-size: 1.22rem;
     }
 
     .voice-room-create-btn {
-      right: 36px;
-      bottom: 34px;
-      min-height: 62px;
-      padding: 0 28px;
+      position: static;
+      margin-top: 18px;
+      justify-self: end;
+      min-height: 52px;
+      padding: 0 22px;
+      font-size: 0.88rem;
     }
 
     .voice-room-modal-card--form {
-      width: min(620px, calc(100vw - 32px));
+      width: min(560px, calc(100vw - 32px));
       max-width: none;
-      padding: 28px 28px;
+      padding: 24px 24px;
     }
 
     .voice-room-modal-card--form h2 {
       font-family: "Inter", sans-serif;
-      font-size: 2.1rem;
+      font-size: 1.5rem;
       font-weight: 800;
       letter-spacing: -0.03em;
       text-align: center;
@@ -293,14 +313,26 @@
     .voice-room-modal-card--form p {
       font-family: "Inter", sans-serif;
       text-align: center;
+      font-size: 0.94rem;
+      line-height: 1.6;
     }
 
     .voice-room-create-form {
-      gap: 16px;
+      gap: 12px;
     }
 
     .voice-room-form-field {
       align-items: stretch;
+    }
+
+    .voice-room-form-field input,
+    .voice-room-form-field select {
+      width: 100%;
+      max-width: 430px;
+    }
+
+    .voice-room-form-field--narrow input {
+      max-width: 430px;
     }
 
     .voice-room-form-field > span {
@@ -309,9 +341,9 @@
       padding-right: 0;
       padding-left: 2px;
       font-family: "Inter", sans-serif;
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       font-weight: 800;
-      letter-spacing: 0.14em;
+      letter-spacing: 0.1em;
     }
 
     .voice-room-visibility-choice {
@@ -321,6 +353,12 @@
       gap: 16px;
       min-height: 48px;
       padding: 0 6px;
+    }
+
+    .voice-room-form-field input,
+    .voice-room-form-field select {
+      min-height: 44px;
+      font-size: 0.92rem;
     }
 
     .voice-room-radio {
@@ -355,7 +393,7 @@
     }
 
     .voice-room-radio__label {
-      font-size: 1rem;
+      font-size: 0.94rem;
     }
 
     .voice-room-form-field--invite {
@@ -370,7 +408,7 @@
       z-index: 20;
       display: grid;
       gap: 8px;
-      max-height: 220px;
+      max-height: 180px;
       overflow: auto;
       padding: 10px;
       border: 1px solid rgba(58, 78, 107, 0.12);
@@ -436,9 +474,24 @@
         grid-template-columns: 1fr;
       }
 
+      .voice-room-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
       .voice-room-modal-card--form {
-        width: min(100vw - 24px, 620px);
+        width: min(100vw - 24px, 560px);
         padding: 28px 22px;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .voice-room-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .voice-room-create-btn {
+        width: 100%;
+        justify-self: stretch;
       }
     }
   </style>

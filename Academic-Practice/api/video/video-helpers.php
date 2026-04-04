@@ -290,7 +290,7 @@ function video_build_room_payload(?array $session): ?array
         'spaceId' => (int) ($session['spaceId'] ?? 0),
         'queueMode' => (string) ($session['queueMode'] ?? video_queue_mode()),
         'sessionStatus' => (string) ($session['status'] ?? ''),
-        'roomPageUrl' => './zego-call.php?roomID=' . rawurlencode((string) $session['roomId']),
+        'roomPageUrl' => './video_call/room.php?roomID=' . rawurlencode((string) $session['roomId']),
     ];
 }
 
@@ -1053,7 +1053,6 @@ function video_call_list_rooms(PDO $pdo, int $currentUserId): array
         WHERE s.space_type = 'voice_room'
           AND s.status = 'active'
           AND JSON_UNQUOTE(JSON_EXTRACT(s.metadata_json, '$.source')) = 'video_call'
-          AND JSON_UNQUOTE(JSON_EXTRACT(s.metadata_json, '$.visibility')) = 'public'
         ORDER BY s.created_at DESC, s.space_id DESC
         LIMIT 40
     ");
@@ -1063,6 +1062,31 @@ function video_call_list_rooms(PDO $pdo, int $currentUserId): array
     $rooms = [];
     foreach ($spaces as $space) {
         $members = video_call_load_members($pdo, (int) $space['space_id']);
+        $ownerActive = false;
+        foreach ($members as $member) {
+            if (
+                (string) ($member['member_role'] ?? '') === 'owner' &&
+                (string) ($member['membership_status'] ?? '') === 'accepted' &&
+                empty($member['left_at'])
+            ) {
+                $ownerActive = true;
+                break;
+            }
+        }
+
+        if (!$ownerActive) {
+            $closeStmt = $pdo->prepare("
+                UPDATE peer_spaces
+                SET status = 'completed',
+                    ended_at = COALESCE(ended_at, NOW()),
+                    updated_at = NOW()
+                WHERE space_id = ?
+                  AND status = 'active'
+            ");
+            $closeStmt->execute([(int) $space['space_id']]);
+            continue;
+        }
+
         $payload = video_call_build_room_payload($space, $members, $currentUserId);
         if ($payload['memberCount'] >= $payload['capacity']) {
             continue;
@@ -1295,6 +1319,18 @@ function video_call_leave_room(PDO $pdo, int $userId, string $roomId, string $re
         }
 
         if ((int) $space['created_by_user_id'] === $userId) {
+            $closeMembersStmt = $pdo->prepare("
+                UPDATE peer_space_members
+                SET membership_status = CASE
+                        WHEN membership_status = 'left' THEN membership_status
+                        ELSE 'left'
+                    END,
+                    left_at = COALESCE(left_at, NOW()),
+                    updated_at = NOW()
+                WHERE space_id = ?
+            ");
+            $closeMembersStmt->execute([(int) $space['space_id']]);
+
             $spaceStmt = $pdo->prepare("
                 UPDATE peer_spaces
                 SET status = 'completed',

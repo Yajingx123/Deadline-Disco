@@ -151,6 +151,12 @@
     empty.classList.add('hidden');
     rooms.forEach((room) => {
       const availability = room.memberCount >= room.capacity ? 'full' : 'available';
+      const joinDisabled = availability === 'full' || room.visibility === 'private';
+      const joinLabel = availability === 'full'
+        ? 'Room Full'
+        : room.visibility === 'private'
+          ? 'Invite Only'
+          : 'Join Room';
       const card = document.createElement('article');
       card.className = `voice-room-card${availability === 'full' ? ' is-full' : ''}`;
       card.innerHTML = `
@@ -166,10 +172,16 @@
           <span class="voice-room-tag voice-room-tag--${availability}">${availability === 'full' ? 'Full' : 'Available'}</span>
           <span class="voice-room-tag">URL Invite</span>
         </div>
-        <button type="button" class="voice-room-join-btn"${availability === 'full' ? ' disabled' : ''}>${availability === 'full' ? 'Room Full' : 'Join Room'}</button>
+        <button type="button" class="voice-room-join-btn"${joinDisabled ? ' disabled' : ''}>${joinLabel}</button>
       `;
       const button = card.querySelector('.voice-room-join-btn');
-      button.addEventListener('click', () => openRoom(room.roomId));
+      if (room.visibility === 'private') {
+        button.title = 'Private rooms can only be opened from their invite link.';
+      } else if (availability === 'full') {
+        button.title = 'This room is already full.';
+      } else {
+        button.addEventListener('click', () => openRoom(room.roomId));
+      }
       grid.appendChild(card);
     });
   }

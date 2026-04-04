@@ -46,7 +46,7 @@ if ($tokenMode === 'test') {
     <link rel="stylesheet" href="../../shared-nav.css">
     <script src="../../shared/acadbeat-local-config.js"></script>
     <link rel="stylesheet" href="../practice-style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Playfair+Display:wght@600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #e7dfd6;
@@ -64,77 +64,65 @@ if ($tokenMode === 'test') {
         body {
             min-height: 100vh;
             color: var(--ink);
+            overflow: hidden;
             background:
                 radial-gradient(circle at top left, rgba(145,171,200,0.28), transparent 30%),
                 radial-gradient(circle at bottom right, rgba(51,69,95,0.10), transparent 34%),
                 var(--bg);
         }
         .room-page-shell {
-            width: min(calc(100% - 12px), 1760px);
-            margin: 96px auto 28px;
+            width: min(calc(100% - 32px), 960px);
+            margin: 92px auto 0;
+            height: calc(100vh - 108px);
         }
-        .layout {
-            min-height: calc(100vh - 124px);
+        .room-stack {
             display: grid;
-            grid-template-columns: minmax(300px, 360px) minmax(0, 1fr);
-            gap: 20px;
+            gap: 12px;
+            height: 100%;
+            grid-template-rows: auto minmax(0, 1fr);
         }
-        .sidebar,
+        .overview,
         .shell {
             border: 1px solid var(--line);
-            border-radius: 26px;
+            border-radius: 20px;
             background: var(--panel);
             backdrop-filter: blur(14px);
-            box-shadow: 0 18px 44px rgba(51, 69, 95, 0.08);
+            box-shadow: 0 16px 38px rgba(51, 69, 95, 0.07);
         }
-        .sidebar {
-            padding: 28px;
+        .overview {
+            padding: 14px 16px;
             display: grid;
-            align-content: start;
-            gap: 18px;
+            grid-template-columns: minmax(0, 1fr) auto;
+            gap: 12px;
+            align-items: start;
         }
-        .eyebrow {
-            font-size: 0.74rem;
+        .overview-copy {
+            min-width: 0;
+        }
+        .overview-eyebrow {
+            font-size: 0.72rem;
             font-weight: 800;
-            letter-spacing: 0.18em;
+            letter-spacing: 0.14em;
             text-transform: uppercase;
             color: var(--muted);
         }
-        .headline {
-            font-family: "Playfair Display", serif;
-            font-size: 2rem;
-            letter-spacing: -0.03em;
-            line-height: 1;
-        }
-        .copy,
-        .status-body,
-        .panel p,
-        .panel li {
-            color: var(--muted);
-            line-height: 1.72;
-        }
-        .status-card,
-        .panel {
-            border: 1px solid var(--line);
-            border-radius: 20px;
-            padding: 16px;
-            background: var(--strong);
-        }
-        .status-card.success { border-color: rgba(76,121,96,0.24); }
-        .status-card.warning { border-color: rgba(148,105,65,0.24); }
-        .status-card.danger { border-color: rgba(178,96,96,0.24); }
-        .status-title {
-            font-size: 0.78rem;
+        .overview-title {
+            margin-top: 6px;
+            font-size: 1.08rem;
             font-weight: 800;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            margin-bottom: 8px;
+            letter-spacing: -0.02em;
         }
-        .pill-row,
-        .action-row {
+        .overview-sub {
+            margin-top: 4px;
+            color: var(--muted);
+            line-height: 1.6;
+            font-size: 0.86rem;
+        }
+        .pill-row {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 8px;
+            justify-content: flex-end;
         }
         .pill,
         .btn {
@@ -146,12 +134,12 @@ if ($tokenMode === 'test') {
         }
         .pill {
             border: 1px solid var(--line);
-            padding: 9px 13px;
+            padding: 8px 12px;
             background: rgba(255,255,255,0.88);
         }
         .btn {
-            min-height: 44px;
-            padding: 0 18px;
+            min-height: 38px;
+            padding: 0 14px;
             border: 1px solid var(--line);
             background: rgba(255,255,255,0.88);
             color: var(--ink);
@@ -167,17 +155,15 @@ if ($tokenMode === 'test') {
             color: var(--danger);
             border-color: rgba(178,96,96,0.32);
         }
-        .panel ul { padding-left: 18px; }
-        .panel li + li { margin-top: 8px; }
-        .stage { min-width: 0; }
         .shell {
-            min-height: calc(100vh - 28px);
+            height: 100%;
+            min-height: 620px;
             display: flex;
             flex-direction: column;
             overflow: hidden;
         }
         .shell-header {
-            padding: 16px 20px;
+            padding: 12px 14px;
             border-bottom: 1px solid var(--line);
             background: rgba(255,255,255,0.82);
             display: flex;
@@ -185,61 +171,71 @@ if ($tokenMode === 'test') {
             justify-content: space-between;
             gap: 14px;
         }
+        .header-actions {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
         .header-main {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 12px;
             min-width: 0;
         }
         .back-btn {
-            width: 42px;
-            height: 42px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
             border: 1px solid var(--line);
             background: rgba(255,255,255,0.9);
             color: var(--ink);
-            font-size: 1.2rem;
+            font-size: 1.05rem;
             cursor: pointer;
             flex: 0 0 auto;
         }
         .shell-header h1 {
-            font-size: 1rem;
+            font-size: 0.88rem;
             letter-spacing: 0.08em;
             text-transform: uppercase;
         }
         .shell-meta {
-            margin-top: 4px;
+            margin-top: 2px;
             color: var(--muted);
-            font-size: 0.86rem;
+            font-size: 0.78rem;
         }
         #zego-root {
             width: 100%;
+            height: 100%;
             flex: 1 1 auto;
             min-height: 0;
             background: #f7f4ef;
+            overflow: hidden;
         }
         .empty {
             position: absolute;
-            inset: 92px 18px 18px;
-            border-radius: 24px;
+            inset: 14px;
+            border-radius: 16px;
             border: 1px dashed rgba(51,69,95,0.22);
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
-            padding: 24px;
+            padding: 16px;
             background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(241,236,230,0.92));
         }
         .empty[hidden] { display: none !important; }
-        .empty-card { max-width: 520px; }
+        .empty-card { max-width: 440px; }
         .empty-title {
-            font-family: "Playfair Display", serif;
-            font-size: 2rem;
-            margin-bottom: 12px;
+            font-size: 1.02rem;
+            font-weight: 800;
+            margin-bottom: 8px;
         }
         .empty-body {
             color: var(--muted);
-            line-height: 1.72;
+            line-height: 1.6;
+            font-size: 0.88rem;
         }
         .empty-actions {
             margin-top: 20px;
@@ -252,13 +248,38 @@ if ($tokenMode === 'test') {
             position: relative;
             flex: 1 1 auto;
             min-height: 0;
+            height: 100%;
+            overflow: hidden;
         }
         @media (max-width: 1024px) {
-            .layout { grid-template-columns: 1fr; }
-            .shell { min-height: 72vh; }
+            .overview {
+                grid-template-columns: 1fr;
+            }
+            .pill-row {
+                justify-content: flex-start;
+            }
+            body {
+                overflow-y: auto;
+            }
+            .room-page-shell {
+                height: auto;
+                margin-bottom: 20px;
+            }
+            .room-stack {
+                height: auto;
+                grid-template-rows: none;
+            }
+            .shell {
+                min-height: 68vh;
+                height: auto;
+            }
             .shell-header {
                 align-items: flex-start;
                 flex-direction: column;
+            }
+            .header-actions {
+                width: 100%;
+                justify-content: flex-start;
             }
         }
     </style>
@@ -266,44 +287,21 @@ if ($tokenMode === 'test') {
 <body>
     <div id="acadbeatNav"></div>
     <main class="room-page-shell">
-    <div class="layout">
-        <aside class="sidebar">
-            <div class="eyebrow">Academic Practice</div>
-            <div class="headline">Video Call Room</div>
-            <p class="copy">This page keeps the built-in ZEGO call runtime, but room access now comes from topic rooms and invite URLs instead of random matching.</p>
-
+    <div class="room-stack">
+        <section class="overview">
+            <div class="overview-copy">
+                <div class="overview-eyebrow">Academic Practice</div>
+                <div class="overview-title">Video Call Room</div>
+                <div class="overview-sub">Topic-based room access with invite URLs. Use the lobby to create, share, or reopen rooms.</div>
+            </div>
             <div class="pill-row">
                 <div class="pill" id="topicPill">Topic</div>
                 <div class="pill" id="visibilityPill">Visibility</div>
                 <div class="pill" id="tokenModePill">Token mode</div>
             </div>
+        </section>
 
-            <div class="status-card" id="connectionStatus">
-                <div class="status-title">Status</div>
-                <div class="status-body">Checking your room access and preparing the call.</div>
-            </div>
-
-            <div class="panel">
-                <div class="status-title">How It Works</div>
-                <ul>
-                    <li>Public rooms can be opened from the room list.</li>
-                    <li>Private rooms can be opened from the invite URL in direct message.</li>
-                    <li>Leaving the room keeps your original lobby page untouched in the previous tab.</li>
-                </ul>
-            </div>
-
-            <div class="panel">
-                <div class="status-title">Setup</div>
-                <p>Fill <code>ZEGO_APP_ID</code> and <code>ZEGO_SERVER_SECRET</code> in the server environment. Test mode still works for local verification.</p>
-            </div>
-
-            <div class="action-row">
-                <a class="btn primary" href="./index.php">Back To Lobby</a>
-                <a class="btn" href="../training.html">Back To Training</a>
-            </div>
-        </aside>
-
-        <main class="stage">
+        <section class="shell-wrap">
             <div class="shell">
                 <div class="shell-header">
                     <div class="header-main">
@@ -313,7 +311,10 @@ if ($tokenMode === 'test') {
                             <div class="shell-meta" id="stageMeta">Preparing the room...</div>
                         </div>
                     </div>
-                    <button class="btn danger" id="closeCallBtn" type="button">Leave Room</button>
+                    <div class="header-actions">
+                        <button class="btn" id="refreshRoomBtn" type="button">Refresh</button>
+                        <button class="btn danger" id="closeCallBtn" type="button">Leave Room</button>
+                    </div>
                 </div>
                 <div class="shell-stage">
                     <div id="zego-root"></div>
@@ -328,7 +329,7 @@ if ($tokenMode === 'test') {
                     </div>
                 </div>
             </div>
-        </main>
+        </section>
     </div>
     </main>
 
@@ -351,13 +352,6 @@ if ($tokenMode === 'test') {
             return sanitizeRoomValue(new URLSearchParams(window.location.search).get('roomID'));
         }
 
-        function updateStatus(title, body, tone) {
-            const card = document.getElementById('connectionStatus');
-            card.className = `status-card${tone ? ` ${tone}` : ''}`;
-            card.querySelector('.status-title').textContent = title;
-            card.querySelector('.status-body').textContent = body;
-        }
-
         function updateEmptyState(title, body, actionsHtml) {
             document.getElementById('emptyTitle').textContent = title;
             document.getElementById('emptyBody').textContent = body;
@@ -369,6 +363,35 @@ if ($tokenMode === 'test') {
 
         function hideEmptyState() {
             document.getElementById('emptyState').hidden = true;
+        }
+
+        async function ensureZegoSdkReady() {
+            if (window.ZegoUIKitPrebuilt) {
+                return window.ZegoUIKitPrebuilt;
+            }
+
+            await new Promise((resolve, reject) => {
+                const existing = document.querySelector('script[data-zego-sdk="1"]');
+                if (existing) {
+                    existing.addEventListener('load', () => resolve(), { once: true });
+                    existing.addEventListener('error', () => reject(new Error('Failed to load ZEGO SDK.')), { once: true });
+                    return;
+                }
+
+                const script = document.createElement('script');
+                script.src = 'https://unpkg.com/@zegocloud/zego-uikit-prebuilt/zego-uikit-prebuilt.js';
+                script.async = true;
+                script.dataset.zegoSdk = '1';
+                script.onload = () => resolve();
+                script.onerror = () => reject(new Error('Failed to load ZEGO SDK.'));
+                document.head.appendChild(script);
+            });
+
+            if (!window.ZegoUIKitPrebuilt) {
+                throw new Error('ZEGO SDK is unavailable.');
+            }
+
+            return window.ZegoUIKitPrebuilt;
         }
 
         async function fetchJson(url, options = {}) {
@@ -391,6 +414,7 @@ if ($tokenMode === 'test') {
         }
 
         async function buildKitToken(roomID, userID, userName) {
+            const zegoSdk = await ensureZegoSdkReady();
             if (!ZEGO_PUBLIC_CONFIG.appID) {
                 throw new Error('Missing ZEGO_APP_ID. Configure Academic-Practice/api/video/zego-config.php first.');
             }
@@ -404,7 +428,7 @@ if ($tokenMode === 'test') {
                 if (!tokenResponse.token) {
                     throw new Error(tokenResponse.message || 'Production token endpoint returned no token.');
                 }
-                return ZegoUIKitPrebuilt.generateKitTokenForProduction(
+                return zegoSdk.generateKitTokenForProduction(
                     ZEGO_PUBLIC_CONFIG.appID,
                     tokenResponse.token,
                     roomID,
@@ -417,7 +441,7 @@ if ($tokenMode === 'test') {
                 throw new Error('Missing ZEGO test secret.');
             }
 
-            return ZegoUIKitPrebuilt.generateKitTokenForTest(
+            return zegoSdk.generateKitTokenForTest(
                 ZEGO_PUBLIC_CONFIG.appID,
                 ZEGO_PUBLIC_CONFIG.testSecret,
                 roomID,
@@ -471,7 +495,6 @@ if ($tokenMode === 'test') {
             document.getElementById('tokenModePill').textContent = `Token ${ZEGO_PUBLIC_CONFIG.tokenMode}`;
             const roomId = requestedRoomId();
             if (!roomId) {
-                updateStatus('Missing room URL', 'No roomID was provided in the URL.', 'warning');
                 updateEmptyState('Invalid room link', 'This room link is missing the roomID parameter.', '<a class="btn primary" href="./index.php">Open Room Lobby</a>');
                 return;
             }
@@ -496,6 +519,7 @@ if ($tokenMode === 'test') {
 
                 const userID = sanitizeRoomValue(`acadbeat_${me.user_id || me.userId || me.username}`);
                 const userName = String(me.username || 'AcadBeat User');
+                const ZegoUIKitPrebuilt = await ensureZegoSdkReady();
                 const kitToken = await buildKitToken(room.roomId, userID, userName);
                 const zp = ZegoUIKitPrebuilt.create(kitToken);
                 const shareLink = room.shareUrl || `${window.location.origin}${window.location.pathname}?roomID=${encodeURIComponent(room.roomId)}`;
@@ -521,21 +545,12 @@ if ($tokenMode === 'test') {
 
                 hideEmptyState();
                 bindLeaveHooks();
-                updateStatus(
-                    'Room ready',
-                    ZEGO_PUBLIC_CONFIG.tokenMode === 'test'
-                        ? 'Room opened successfully. Switch to production tokens before release.'
-                        : 'Room opened successfully.',
-                    ZEGO_PUBLIC_CONFIG.tokenMode === 'test' ? 'warning' : 'success'
-                );
             } catch (error) {
                 if (error.status === 401) {
-                    updateStatus('Login required', 'Please log in before joining this room.', 'warning');
                     updateEmptyState('Login required', 'Your session is missing or expired.', '<a class="btn primary" href="../../home.html?login=1">Go To Login</a>');
                     return;
                 }
 
-                updateStatus('Unable to open room', error.message || 'The room could not be prepared.', 'danger');
                 updateEmptyState('Room access failed', error.message || 'The room could not be prepared.', '<a class="btn primary" href="./index.php">Open Room Lobby</a>');
             }
         }
@@ -544,6 +559,9 @@ if ($tokenMode === 'test') {
             await leaveRoom('return_to_lobby', false);
             window.close();
             window.location.href = './index.php';
+        });
+        document.getElementById('refreshRoomBtn').addEventListener('click', () => {
+            window.location.reload();
         });
         document.getElementById('backToLobbyBtn').addEventListener('click', () => {
             window.location.href = './index.php';
