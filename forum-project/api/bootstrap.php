@@ -63,6 +63,27 @@ function forum_normalize_local_url(string $url): string {
     $normalized = str_replace('http://127.0.0.1:5173?', forum_forum_url('?'), $normalized);
     $normalized = str_replace(forum_forum_url('?view=messages'), forum_message_center_url(), $normalized);
     $normalized = str_replace(forum_app_url() . '/forum-project/dist/message-center.html', forum_message_center_url(), $normalized);
+
+    // Convert local absolute URLs to public app URL for production deployments.
+    $parts = parse_url($normalized);
+    if (is_array($parts)) {
+        $scheme = strtolower((string)($parts['scheme'] ?? ''));
+        $host = strtolower((string)($parts['host'] ?? ''));
+        if (($scheme === 'http' || $scheme === 'https') && in_array($host, ['127.0.0.1', 'localhost', '::1'], true)) {
+            $path = (string)($parts['path'] ?? '/');
+            if ($path === '') {
+                $path = '/';
+            }
+            $query = isset($parts['query']) && $parts['query'] !== '' ? ('?' . $parts['query']) : '';
+            $fragment = isset($parts['fragment']) && $parts['fragment'] !== '' ? ('#' . $parts['fragment']) : '';
+            return forum_app_url() . $path . $query . $fragment;
+        }
+    }
+
+    if (str_starts_with($normalized, '/')) {
+        return forum_app_url() . $normalized;
+    }
+
     return $normalized;
 }
 
