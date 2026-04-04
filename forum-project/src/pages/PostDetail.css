@@ -167,6 +167,41 @@
   box-shadow: 0 12px 28px rgba(58, 78, 107, 0.08);
 }
 
+.post-image-viewer {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  background: rgba(18, 24, 34, 0.82);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28px;
+}
+
+.post-image-viewer__back {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  border: 0;
+  background: rgba(255, 255, 255, 0.92);
+  color: #24354d;
+  border-radius: 999px;
+  min-height: 42px;
+  padding: 0 18px;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.post-image-viewer__img {
+  max-width: min(92vw, 1100px);
+  max-height: min(88vh, 900px);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 0;
+  box-shadow: none;
+}
+
 .post-actions-bar {
   display: flex;
   align-items: center;

@@ -17,11 +17,31 @@ const PostDetail = ({ post, onBack, onAddComment, onDeletePost, onDeleteComment,
   const [isFavorited, setIsFavorited] = useState(post.isFavorited || false);
   const [likeCount, setLikeCount] = useState(post.likeCount || 0);
   const [favoriteCount, setFavoriteCount] = useState(post.favoriteCount || 0);
+  const [imageViewer, setImageViewer] = useState(null);
   const comments = post.comments || [];
   const contentRootRef = useRef(null);
 
   useEffect(() => {
     return enhanceRenderedAudioPlayers(contentRootRef.current);
+  }, [post]);
+
+  useEffect(() => {
+    const root = contentRootRef.current;
+    if (!root) return undefined;
+
+    const handleImageClick = (event) => {
+      const trigger = event.target.closest('.forumInlineImage');
+      if (!trigger) return;
+      event.preventDefault();
+      const image = trigger.querySelector('img');
+      setImageViewer({
+        src: trigger.getAttribute('href') || image?.getAttribute('src') || '',
+        alt: image?.getAttribute('alt') || '',
+      });
+    };
+
+    root.addEventListener('click', handleImageClick);
+    return () => root.removeEventListener('click', handleImageClick);
   }, [post]);
 
   const handleReplySubmit = async (newComment) => {
@@ -215,6 +235,20 @@ const PostDetail = ({ post, onBack, onAddComment, onDeletePost, onDeleteComment,
         labelOptions={labelOptions}
         currentUser={currentUser}
       />
+
+      {imageViewer?.src && (
+        <div className="post-image-viewer" onClick={() => setImageViewer(null)}>
+          <button type="button" className="post-image-viewer__back" onClick={() => setImageViewer(null)}>
+            Back
+          </button>
+          <img
+            className="post-image-viewer__img"
+            src={imageViewer.src}
+            alt={imageViewer.alt || 'Preview image'}
+            onClick={(event) => event.stopPropagation()}
+          />
+        </div>
+      )}
     </div>
   );
 };
