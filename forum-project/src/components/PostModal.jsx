@@ -33,6 +33,7 @@ const PostModal = ({
   
   const editorRef = useRef(null);
   const fileInputRef = useRef(null);
+  const videoInputRef = useRef(null);
   const audioInputRef = useRef(null);
   const mediaRecorderRef = useRef(null);
   const mediaStreamRef = useRef(null);
@@ -114,6 +115,9 @@ const PostModal = ({
     html = html.replace(/!\[audio:(.*?)\]\((.*?)\)/g, (match, fileName, src) => {
       return `<div style="margin: 12px 0; padding: 10px; background: #f4f3ec; border-radius: 8px; border: 1px solid #e5e4e7;"><div style="font-size: 12px; color: #6b6375; margin-bottom: 6px;">🎵 ${fileName}</div><audio controls style="width: 100%; height: 32px;"><source src="${src}" type="audio/mpeg" /><source src="${src}" type="audio/wav" /><source src="${src}" type="audio/ogg" />Your browser does not support the audio element.</audio></div>`;
     });
+    html = html.replace(/!\[video:(.*?)\]\((.*?)\)/g, (match, fileName, src) => {
+      return `<div style="margin: 12px 0; padding: 10px; background: #f4f3ec; border-radius: 8px; border: 1px solid #e5e4e7;"><div style="font-size: 12px; color: #6b6375; margin-bottom: 6px;">🎬 ${fileName}</div><video controls style="width: 100%; max-height: 320px; border-radius: 8px;"><source src="${src}" type="video/mp4" /><source src="${src}" type="video/webm" />Your browser does not support the video element.</video></div>`;
+    });
     html = html.replace(/\[(.*?)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
     html = html.replace(/\n/g, '<br/>');
     return html;
@@ -168,6 +172,18 @@ const PostModal = ({
       insertUploadedMarkup(`![audio:${uploaded.fileName}](${uploaded.url})`);
     } catch (err) {
       setError(err?.message || 'Failed to upload audio.');
+    }
+    e.target.value = '';
+  };
+  const handleVideoUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file || !file.type.startsWith('video/')) { setError('Please upload a valid video file.'); return; }
+    try {
+      setError('');
+      const uploaded = await uploadForumAsset(file, 'video');
+      insertUploadedMarkup(`![video:${uploaded.fileName}](${uploaded.url})`);
+    } catch (err) {
+      setError(err?.message || 'Failed to upload video.');
     }
     e.target.value = '';
   };
@@ -469,6 +485,9 @@ const PostModal = ({
               <button onClick={() => fileInputRef.current.click()} title="Upload image" className="post-modal-format-btn">
                 🖼️
               </button>
+              <button onClick={() => videoInputRef.current.click()} title="Upload video" className="post-modal-format-btn">
+                🎬
+              </button>
               <button onClick={() => audioInputRef.current.click()} title="Upload audio" className="post-modal-format-btn">
                 🎵
               </button>
@@ -504,6 +523,7 @@ const PostModal = ({
         </div>
         
         <input type="file" ref={fileInputRef} style={{ display: 'none' }} accept="image/*" onChange={handleImageUpload} />
+        <input type="file" ref={videoInputRef} style={{ display: 'none' }} accept="video/*" onChange={handleVideoUpload} />
         <input type="file" ref={audioInputRef} style={{ display: 'none' }} accept="audio/*" onChange={handleAudioUpload} />
       </div>
     </>

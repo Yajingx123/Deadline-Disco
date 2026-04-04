@@ -1,6 +1,10 @@
 <?php
 declare(strict_types=1);
 
+// Keep API responses machine-readable JSON in production even when warnings occur.
+@ini_set('display_errors', '0');
+@ini_set('html_errors', '0');
+
 if (session_status() === PHP_SESSION_NONE) {
     session_set_cookie_params([
         'lifetime' => 0,

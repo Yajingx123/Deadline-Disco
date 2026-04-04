@@ -28,6 +28,7 @@ $extension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
 $allowed = [
     'image' => ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'],
     'audio' => ['mp3', 'wav', 'ogg', 'm4a', 'webm'],
+    'video' => ['mp4', 'mov', 'webm', 'm4v', 'avi'],
 ];
 
 if (!isset($allowed[$kind])) {
@@ -38,14 +39,26 @@ if (!in_array($extension, $allowed[$kind], true)) {
     forum_json(['ok' => false, 'message' => 'Unsupported file format.'], 422);
 }
 
-$maxBytes = $kind === 'image' ? 8 * 1024 * 1024 : 10 * 1024 * 1024;
+$maxBytes = match ($kind) {
+    'image' => 8 * 1024 * 1024,
+    'audio' => 10 * 1024 * 1024,
+    default => 25 * 1024 * 1024,
+};
 if ((int)($file['size'] ?? 0) > $maxBytes) {
-    forum_json(['ok' => false, 'message' => $kind === 'image' ? 'Image is too large. Keep it under 8MB.' : 'Audio is too large. Keep it under 10MB.'], 422);
+    $message = match ($kind) {
+        'image' => 'Image is too large. Keep it under 8MB.',
+        'audio' => 'Audio is too large. Keep it under 10MB.',
+        default => 'Video is too large. Keep it under 25MB.',
+    };
+    forum_json(['ok' => false, 'message' => $message], 422);
 }
 
 $uploadRoot = dirname(__DIR__) . '/uploads/' . $kind;
-if (!is_dir($uploadRoot) && !mkdir($uploadRoot, 0775, true) && !is_dir($uploadRoot)) {
+if (!is_dir($uploadRoot) && !@mkdir($uploadRoot, 0775, true) && !is_dir($uploadRoot)) {
     forum_json(['ok' => false, 'message' => 'Failed to prepare upload folder.'], 500);
+}
+if (!is_writable($uploadRoot)) {
+    forum_json(['ok' => false, 'message' => 'Upload folder is not writable by PHP-FPM user.'], 500);
 }
 
 $safeBase = preg_replace('/[^a-zA-Z0-9_-]+/', '-', pathinfo($originalName, PATHINFO_FILENAME));
@@ -57,7 +70,7 @@ if ($safeBase === '') {
 $filename = sprintf('%s-%s.%s', $safeBase, bin2hex(random_bytes(6)), $extension);
 $targetPath = $uploadRoot . '/' . $filename;
 
-if (!move_uploaded_file($tmpName, $targetPath)) {
+if (!@move_uploaded_file($tmpName, $targetPath)) {
     forum_json(['ok' => false, 'message' => 'Failed to save uploaded file.'], 500);
 }
 
