@@ -52,16 +52,19 @@
     navRoot.querySelectorAll('.nav-item[data-nav]').forEach((el) => {
       el.classList.remove('active');
     });
+    navRoot.querySelectorAll('.message-link').forEach((el) => {
+      el.classList.remove('active');
+    });
     navRoot.querySelectorAll('.nav-item[data-nav]').forEach((el) => {
       const itemKey = el.getAttribute('data-nav');
-      let on = false;
-      if (itemKey === 'forum') {
-        on = key === 'forum' || key === 'messages';
-      } else {
-        on = key === itemKey;
-      }
+      const on = key === itemKey;
       if (on) el.classList.add('active');
     });
+    if (key === 'messages') {
+      navRoot.querySelectorAll('.message-link').forEach((el) => {
+        el.classList.add('active');
+      });
+    }
   }
 
   window.setAcadBeatNavActive = function setAcadBeatNavActive(activeKey) {

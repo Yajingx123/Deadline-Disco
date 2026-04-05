@@ -60,7 +60,7 @@ class ZegoServerAssistant
         $plaintext = json_encode($tokenInfo, JSON_BIGINT_AS_STRING);
         $cipher = 'aes-256-gcm';
         $iv = self::makeRandomIv(12);
-        $encrypted = openssl_encrypt($plaintext, $cipher, $secret, OPENSSL_RAW_DATA, $iv, $tag);
+        $encrypted = \openssl_encrypt($plaintext, $cipher, $secret, \OPENSSL_RAW_DATA, $iv, $tag);
 
         if ($encrypted === false) {
             $assistantToken->code = ZegoErrorCodes::secretInvalid;

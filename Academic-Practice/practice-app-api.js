@@ -16,7 +16,7 @@
   }
 
   function escapeHtml(value) {
-    return String(value == null ? "" : "")
+    return String(value == null ? "" : value)
       .replace(/&/g, "&amp;")
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;")
@@ -69,6 +69,47 @@
     return payload;
   }
 
+  function avatarFallbackLabel(value) {
+    const trimmed = String(value || "").trim();
+    if (!trimmed) return "U";
+    return trimmed.slice(0, Math.min(trimmed.length, 2)).toUpperCase();
+  }
+
+  async function uploadPracticeAsset(file, kind) {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("kind", kind);
+
+    const response = await fetch(CHAT_API_BASE + "/upload.php", {
+      method: "POST",
+      credentials: "include",
+      body: formData
+    });
+    const payload = await response.json().catch(function () {
+      return { ok: false, message: "Invalid server response." };
+    });
+    if (!response.ok || payload.ok === false) {
+      throw new Error(payload.message || "Upload failed.");
+    }
+    return payload;
+  }
+
+  function dataUrlToFile(dataUrl, fileName, mimeType) {
+    const raw = String(dataUrl || "");
+    const parts = raw.split(",");
+    if (parts.length < 2) {
+      throw new Error("Invalid audio data.");
+    }
+    const header = parts[0] || "";
+    const inferredMime = mimeType || (header.match(/data:(.*?);base64/) || [])[1] || "application/octet-stream";
+    const binary = atob(parts[1]);
+    const bytes = new Uint8Array(binary.length);
+    for (let index = 0; index < binary.length; index += 1) {
+      bytes[index] = binary.charCodeAt(index);
+    }
+    return new File([bytes], fileName, { type: inferredMime });
+  }
+
   function ensureShareSheetStyles() {
     if (document.getElementById("practiceShareSheetStyles")) {
       return;
@@ -95,7 +136,7 @@
         position: relative;
         width: min(860px, 100%);
         max-height: min(88vh, 860px);
-        overflow: auto;
+        overflow: visible;
         border-radius: 28px;
         background: #fffdf9;
         box-shadow: 0 28px 70px rgba(58, 78, 107, 0.18);
@@ -140,6 +181,9 @@
         background: rgba(255, 255, 255, 0.92);
         padding: 22px;
       }
+      .practice-share-panel--chat {
+        position: relative;
+      }
       .practice-share-panel h4 {
         margin: 0 0 8px;
         font-size: 1rem;
@@ -167,31 +211,46 @@
         border-radius: 16px;
         padding: 12px 14px;
         font-size: 0.95rem;
-        margin-bottom: 14px;
+      }
+      .practice-share-searchWrap {
+        position: relative;
       }
       .practice-share-list {
+        position: absolute;
+        left: 0;
+        top: calc(100% + 8px);
+        z-index: 6;
+        width: min(360px, 100%);
         display: flex;
         flex-direction: column;
-        gap: 10px;
-        max-height: 300px;
+        gap: 6px;
+        max-height: 240px;
         overflow: auto;
+        padding: 8px;
+        border: 1px solid rgba(58, 78, 107, 0.1);
+        border-radius: 18px;
+        background: #ffffff;
+        box-shadow: 0 18px 36px rgba(58, 78, 107, 0.16);
+      }
+      .practice-share-list.hidden {
+        display: none;
       }
       .practice-share-item {
         width: 100%;
         border: 1px solid rgba(58, 78, 107, 0.08);
-        border-radius: 18px;
+        border-radius: 16px;
         background: #fff;
-        padding: 12px 14px;
+        padding: 10px 12px;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 14px;
+        gap: 10px;
       }
       .practice-share-item__meta {
         min-width: 0;
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 10px;
       }
       .practice-share-item__avatar {
         width: 38px;
@@ -219,6 +278,21 @@
       .practice-share-item__copy span {
         color: rgba(36, 53, 77, 0.58);
         font-size: 0.84rem;
+      }
+      .practice-share-item__type {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 28px;
+        padding: 0 10px;
+        border-radius: 999px;
+        background: rgba(58, 78, 107, 0.08);
+        color: #5f708d;
+        font-size: 0.72rem;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        flex: 0 0 auto;
       }
       .practice-share-item__action {
         border: none;
@@ -285,11 +359,13 @@
             <p>The draft will be prefilled into the normal post flow and still goes through admin review.</p>
             <button type="button" class="practice-share-primary" id="practiceShareForumBtn">Continue to forum draft</button>
           </section>
-          <section class="practice-share-panel">
+          <section class="practice-share-panel practice-share-panel--chat">
             <h4>Share to Private Chat</h4>
             <p>Pick one of your existing group chats, or search a person and send it into a direct conversation.</p>
-            <input type="text" class="practice-share-search" id="practiceShareSearch" placeholder="Search a username to share privately">
-            <div class="practice-share-list" id="practiceShareList"></div>
+            <div class="practice-share-searchWrap">
+              <input type="text" class="practice-share-search" id="practiceShareSearch" placeholder="Search a username or group title">
+              <div class="practice-share-list hidden" id="practiceShareList"></div>
+            </div>
             <div class="practice-share-feedback" id="practiceShareFeedback"></div>
           </section>
         </div>
@@ -304,6 +380,7 @@
     const searchInput = modal.querySelector("#practiceShareSearch");
     const listEl = modal.querySelector("#practiceShareList");
     const feedbackEl = modal.querySelector("#practiceShareFeedback");
+    let groupChats = [];
 
     function setFeedback(message, isError) {
       if (!feedbackEl) return;
@@ -311,27 +388,35 @@
       feedbackEl.style.color = isError ? "#c2410c" : "#3A4E6B";
     }
 
-    function renderShareItems(items, kind) {
+    function hideShareList() {
       if (!listEl) return;
+      listEl.innerHTML = "";
+      listEl.classList.add("hidden");
+    }
+
+    function renderShareItems(items, kind) {
       if (!items.length) {
-        listEl.innerHTML = `<div class="chat-sidebar__empty">${kind === "search" ? "No users found." : "No group chats yet."}</div>`;
-        return;
+        return "";
       }
-      listEl.innerHTML = items.map(function (item) {
+      return items.map(function (item) {
         const actionLabel = kind === "search" ? "Share" : "Send";
         const subline = kind === "search"
           ? escapeHtml(item.email || "")
           : escapeHtml((item.memberCount || 0) + " members");
+        const avatarLabel = escapeHtml(item.avatar || avatarFallbackLabel(item.title || item.username || "U"));
+        const targetId = String(item.id || item.conversationId || item.user_id || "");
+        const typeLabel = kind === "search" ? "User" : "Group";
         return `
           <div class="practice-share-item">
             <div class="practice-share-item__meta">
-              <span class="practice-share-item__avatar">${escapeHtml(item.avatar || "U")}</span>
+              <span class="practice-share-item__avatar">${avatarLabel}</span>
               <span class="practice-share-item__copy">
                 <strong>${escapeHtml(item.title || item.username || "Conversation")}</strong>
                 <span>${subline}</span>
               </span>
             </div>
-            <button type="button" class="practice-share-item__action" data-kind="${kind}" data-id="${escapeHtml(String(item.id || item.conversationId || ""))}">
+            <span class="practice-share-item__type">${typeLabel}</span>
+            <button type="button" class="practice-share-item__action" data-kind="${kind}" data-id="${escapeHtml(targetId)}">
               ${actionLabel}
             </button>
           </div>
@@ -339,25 +424,46 @@
       }).join("");
     }
 
+    function renderSearchResults(groups, users) {
+      if (!listEl) return;
+      const html = [
+        renderShareItems(groups, "group"),
+        renderShareItems(users, "search")
+      ].filter(Boolean).join("");
+
+      if (!html) {
+        hideShareList();
+        return;
+      }
+      listEl.innerHTML = html;
+      listEl.classList.remove("hidden");
+    }
+
     async function loadGroupChats() {
       try {
         const payload = await forumApiFetch("/chat-conversations.php");
-        const groups = (payload.conversations || []).filter(function (conversation) {
+        groupChats = (payload.conversations || []).filter(function (conversation) {
           return String(conversation.type || "") === "group";
         });
-        renderShareItems(groups, "group");
       } catch (error) {
         setFeedback(error.message || "Unable to load chats.", true);
-        renderShareItems([], "group");
+        groupChats = [];
       }
     }
 
     async function runUserSearch(query) {
       try {
         const payload = await forumApiFetch("/chat-users.php?q=" + encodeURIComponent(query));
-        renderShareItems(payload.users || [], "search");
+        const users = payload.users || [];
+        const keyword = String(query || "").trim().toLowerCase();
+        const matchedGroups = groupChats.filter(function (conversation) {
+          const title = String(conversation.title || "").toLowerCase();
+          return keyword && title.indexOf(keyword) !== -1;
+        });
+        renderSearchResults(matchedGroups, users);
       } catch (error) {
         setFeedback(error.message || "Unable to search users.", true);
+        hideShareList();
       }
     }
 
@@ -372,10 +478,22 @@
       const query = searchInput.value.trim();
       setFeedback("", false);
       if (!query) {
-        loadGroupChats();
+        hideShareList();
         return;
       }
       runUserSearch(query);
+    });
+
+    searchInput.addEventListener("blur", function () {
+      window.setTimeout(function () {
+        hideShareList();
+      }, 120);
+    });
+
+    searchInput.addEventListener("focus", function () {
+      if (searchInput.value.trim()) {
+        runUserSearch(searchInput.value.trim());
+      }
     });
 
     listEl.addEventListener("click", async function (event) {
@@ -1351,6 +1469,7 @@
     let currentStream = null;
     let currentAudioData = "";
     let currentAudioMime = "audio/webm";
+    let currentAudioShareUrl = "";
 
     function getAudioExtensionFromMime(mimeType) {
       const normalized = String(mimeType || "").toLowerCase();
@@ -1374,7 +1493,7 @@
       recordBtn.textContent = currentAudioData ? "Re-record" : "SPEAKING";
     }
 
-    function buildRespondShareContent() {
+    function buildRespondShareContent(audioUrl) {
       const trainingPath = withUiMode("Academic-Practice/respond_training.html?mode=" + encodeURIComponent(mode) + "&videoId=" + encodeURIComponent(video.id));
       const trainingUrl = buildAbsoluteProjectUrl(trainingPath);
       const audioFileName = "response-" + video.id + "." + getAudioExtensionFromMime(currentAudioMime);
@@ -1382,13 +1501,14 @@
         "Related training: [" + (video.title || "Open training") + "](" + trainingUrl + ")",
         "",
         "My answer: ",
-        "![audio:" + audioFileName + "](" + currentAudioData + ")"
+        "![audio:" + audioFileName + "](" + audioUrl + ")"
       ].join("\n");
     }
 
     function resetRespondAttempt() {
       currentAudioData = "";
       currentAudioMime = "audio/webm";
+      currentAudioShareUrl = "";
       chunks = [];
       if (recorder && recorder.state === "recording") {
         try {
@@ -1465,7 +1585,7 @@
     }
 
     if (respondShareBtn && respondSaveError && respondSaveFeedback) {
-      respondShareBtn.addEventListener("click", function () {
+      respondShareBtn.addEventListener("click", async function () {
         if (!currentAudioData) {
           respondSaveError.textContent = "no recording yet";
           respondSaveError.classList.remove("hidden");
@@ -1474,14 +1594,28 @@
         }
 
         respondSaveError.classList.add("hidden");
-        const sharedContent = buildRespondShareContent();
-        openShareModal({
-          forumDraft: {
-            title: "",
-            content: sharedContent
-          },
-          chatContent: sharedContent
-        });
+        respondShareBtn.disabled = true;
+        try {
+          if (!currentAudioShareUrl) {
+            const extension = getAudioExtensionFromMime(currentAudioMime);
+            const audioFile = dataUrlToFile(currentAudioData, "response-" + video.id + "." + extension, currentAudioMime);
+            const uploaded = await uploadPracticeAsset(audioFile, "audio");
+            currentAudioShareUrl = String(uploaded.url || "");
+          }
+          const sharedContent = buildRespondShareContent(currentAudioShareUrl || currentAudioData);
+          openShareModal({
+            forumDraft: {
+              title: "",
+              content: sharedContent
+            },
+            chatContent: sharedContent
+          });
+        } catch (error) {
+          respondSaveFeedback.innerHTML = "<strong>" + escapeHtml((error && error.message) || "Share failed.") + "</strong><span>Please try again.</span>";
+          respondSaveFeedback.classList.remove("hidden");
+        } finally {
+          respondShareBtn.disabled = false;
+        }
       });
     }
 
@@ -1514,6 +1648,7 @@
           const reader = new FileReader();
           reader.onloadend = function () {
             currentAudioData = String(reader.result || "");
+            currentAudioShareUrl = "";
             setPlaybackSource(currentAudioData);
             recordStatus.textContent = "Recorded. You can replay or save your answer.";
             if (respondSaveFeedback) respondSaveFeedback.classList.add("hidden");

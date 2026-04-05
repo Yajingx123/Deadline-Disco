@@ -1,4 +1,6 @@
 export default function PostItem({ post, onPostClick, showStatus, onDelete }) {
+  const normalizedStatus = String(post.status || '').trim().toLowerCase();
+
   const formatViews = (views) => {
     if (views >= 10000) {
       return (views / 10000).toFixed(1) + 'w';
@@ -11,11 +13,13 @@ export default function PostItem({ post, onPostClick, showStatus, onDelete }) {
       'active': { label: 'Active', className: 'post-status--active' },
       'Under review': { label: 'Under review', className: 'post-status--pending' },
       'Rejected': { label: 'Rejected', className: 'post-status--rejected' },
+      'deleted': { label: 'Deleted', className: 'post-status--rejected' },
     };
     return statusMap[status] || { label: 'Under review', className: 'post-status--pending' };
   };
 
   const statusInfo = showStatus ? getStatusLabel(post.status) : null;
+  const canDelete = Boolean(showStatus && onDelete && normalizedStatus !== 'deleted');
 
   return (
     <article className={`post-item ${(post.isPinned ?? post.is_pinned) ? 'post-item--pinned' : ''}`} onClick={() => onPostClick(post.id)} style={{ cursor: 'pointer' }}>
@@ -57,7 +61,7 @@ export default function PostItem({ post, onPostClick, showStatus, onDelete }) {
             <span>{formatViews(post.views)}</span>
           </div>
         </div>
-        {showStatus && onDelete && (
+        {canDelete && (
           <button 
             className="post-delete-btn"
             onClick={(e) => {

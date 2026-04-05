@@ -131,6 +131,7 @@ export default function PersonalHub({ onBackToChooser, embedded = false }) {
   const [menuState, setMenuState] = useState(null)
   const [profileModalOpen, setProfileModalOpen] = useState(false)
   const [profileTitleDraft, setProfileTitleDraft] = useState('')
+  const [imageViewer, setImageViewer] = useState(null)
 
   const messageRootRef = useRef(null)
   const messageListRef = useRef(null)
@@ -399,6 +400,29 @@ export default function PersonalHub({ onBackToChooser, embedded = false }) {
   }, [loading, activeConversationId, currentUser])
 
   useEffect(() => enhanceRenderedAudioPlayers(messageRootRef.current), [messages])
+
+  useEffect(() => {
+    const root = messageRootRef.current
+    if (!root) {
+      return undefined
+    }
+
+    const handleImageClick = (event) => {
+      const trigger = event.target.closest('.forumInlineImage')
+      if (!trigger) {
+        return
+      }
+      event.preventDefault()
+      const image = trigger.querySelector('img')
+      setImageViewer({
+        src: trigger.getAttribute('href') || image?.getAttribute('src') || '',
+        alt: image?.getAttribute('alt') || '',
+      })
+    }
+
+    root.addEventListener('click', handleImageClick)
+    return () => root.removeEventListener('click', handleImageClick)
+  }, [messages])
 
   useEffect(() => {
     const closeMenu = () => setMenuState(null)
@@ -851,6 +875,20 @@ export default function PersonalHub({ onBackToChooser, embedded = false }) {
               </button>
             </div>
           </div>
+        </div>
+      )}
+
+      {imageViewer?.src && (
+        <div className="chat-image-viewer" onClick={() => setImageViewer(null)}>
+          <button type="button" className="chat-image-viewer__back" onClick={() => setImageViewer(null)}>
+            Back
+          </button>
+          <img
+            className="chat-image-viewer__img"
+            src={imageViewer.src}
+            alt={imageViewer.alt || 'Preview image'}
+            onClick={(event) => event.stopPropagation()}
+          />
         </div>
       )}
     </div>
