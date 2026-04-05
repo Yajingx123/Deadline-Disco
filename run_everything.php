@@ -1,6 +1,23 @@
 <?php
 declare(strict_types=1);
 
+/*
+ * AcadBeat initialization order
+ * 1. Import core schema: sql/101_acadbeat_core_tables.sql
+ * 2. Import core seed data: sql/102_acadbeat_core_seed_data.sql
+ *    - This file resets and reimports forum/chat/challenge/vocab sample data.
+ *    - Do not rerun it on a working database unless you intentionally want fresh sample data.
+ * 3. Import video schema only: sql/105_academic_practice_video_match_tables.sql
+ *    - This file creates / upgrades video-call related tables only.
+ *    - It does NOT import any video room sample/runtime data.
+ * 4. Start services with start_all.php
+ *
+ * Important:
+ * - Video call runtime data lives in peer_spaces / peer_space_members / peer_video_* tables.
+ * - If you only want to reset video-call state, clear those tables only.
+ * - Do not use sql/102_acadbeat_core_seed_data.sql as a "video reset" because it reloads global sample data.
+ */
+
 $root = __DIR__;
 function env_guess(string $key, string $fallback): string
 {
@@ -120,6 +137,9 @@ function mysql_import_command(string $host, string $port, string $user, string $
 }
 
 echo "=== AcadBeat Full Bootstrap ===\n\n";
+echo "[init-order] 1) core tables -> 2) core seed data -> 3) video schema -> 4) start services\n";
+echo "[warning] 102_acadbeat_core_seed_data.sql resets and reloads forum/chat/challenge/vocab sample data.\n";
+echo "[warning] 105_academic_practice_video_match_tables.sql only creates video-call tables and does not add video sample rooms.\n\n";
 echo "[info] Using table SQL: {$tableSql}\n";
 echo "[info] Using data SQL:  {$dataSql}\n\n";
 

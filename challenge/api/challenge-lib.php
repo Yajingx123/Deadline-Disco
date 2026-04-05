@@ -419,6 +419,46 @@ function challenge_release_user_from_forming_team(PDO $pdo, int $userId, string 
     }
 }
 
+function challenge_activate_team_membership(PDO $pdo, int $teamId, int $userId, string $memberRole = 'member'): void {
+    $existingStmt = $pdo->prepare("
+        SELECT team_member_id
+        FROM challenge_team_members
+        WHERE team_id = ?
+          AND user_id = ?
+        LIMIT 1
+        FOR UPDATE
+    ");
+    $existingStmt->execute([$teamId, $userId]);
+    $existingMembershipId = (int)($existingStmt->fetchColumn() ?: 0);
+
+    if ($existingMembershipId > 0) {
+        $updateStmt = $pdo->prepare("
+            UPDATE challenge_team_members
+            SET member_role = ?,
+                membership_status = 'active',
+                joined_at = NOW(),
+                left_at = NULL,
+                updated_at = NOW()
+            WHERE team_member_id = ?
+        ");
+        $updateStmt->execute([$memberRole, $existingMembershipId]);
+        return;
+    }
+
+    $insertStmt = $pdo->prepare("
+        INSERT INTO challenge_team_members (
+            team_id,
+            user_id,
+            member_role,
+            membership_status,
+            joined_at,
+            created_at,
+            updated_at
+        ) VALUES (?, ?, ?, 'active', NOW(), NOW(), NOW())
+    ");
+    $insertStmt->execute([$teamId, $userId, $memberRole]);
+}
+
 function challenge_lock_team_if_full(PDO $pdo, int $teamId, string $weekStartDate): bool {
     if (challenge_team_member_count($pdo, $teamId) < CHALLENGE_MAX_MEMBERS) {
         return false;

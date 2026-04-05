@@ -513,18 +513,7 @@ if ($action === 'respond_invite') {
 
         challenge_release_user_from_forming_team($pdo, $userId, $weekStartDate, (int)$invite['team_id']);
         if (!challenge_find_team_for_user($pdo, $userId, $weekStartDate)) {
-            $memberStmt = $pdo->prepare("
-                INSERT INTO challenge_team_members (
-                    team_id,
-                    user_id,
-                    member_role,
-                    membership_status,
-                    joined_at,
-                    created_at,
-                    updated_at
-                ) VALUES (?, ?, 'member', 'active', NOW(), NOW(), NOW())
-            ");
-            $memberStmt->execute([(int)$invite['team_id'], $userId]);
+            challenge_activate_team_membership($pdo, (int)$invite['team_id'], $userId, 'member');
         }
 
         $acceptStmt = $pdo->prepare("
@@ -670,18 +659,7 @@ if ($action === 'join_public_team') {
 
         challenge_release_user_from_forming_team($pdo, $userId, $weekStartDate, $teamId);
         if (!challenge_find_team_for_user($pdo, $userId, $weekStartDate)) {
-            $memberStmt = $pdo->prepare("
-                INSERT INTO challenge_team_members (
-                    team_id,
-                    user_id,
-                    member_role,
-                    membership_status,
-                    joined_at,
-                    created_at,
-                    updated_at
-                ) VALUES (?, ?, 'member', 'active', NOW(), NOW(), NOW())
-            ");
-            $memberStmt->execute([$teamId, $userId]);
+            challenge_activate_team_membership($pdo, $teamId, $userId, 'member');
         }
 
         $inviteCloseStmt = $pdo->prepare("

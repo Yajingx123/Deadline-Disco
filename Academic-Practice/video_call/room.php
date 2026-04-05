@@ -43,8 +43,6 @@ if ($tokenMode === 'test') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AcadBeat | Video Call Room</title>
-    <link rel="stylesheet" href="../../shared-nav.css">
-    <script src="../../shared/acadbeat-local-config.js"></script>
     <link rel="stylesheet" href="../practice-style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -72,16 +70,14 @@ if ($tokenMode === 'test') {
         }
         .room-page-shell {
             width: min(calc(100% - 32px), 960px);
-            margin: 92px auto 0;
-            height: calc(100vh - 108px);
+            margin: 20px auto 0;
+            height: calc(100vh - 40px);
         }
         .room-stack {
             display: grid;
-            gap: 12px;
             height: 100%;
-            grid-template-rows: auto minmax(0, 1fr);
+            grid-template-rows: minmax(0, 1fr);
         }
-        .overview,
         .shell {
             border: 1px solid var(--line);
             border-radius: 20px;
@@ -89,53 +85,12 @@ if ($tokenMode === 'test') {
             backdrop-filter: blur(14px);
             box-shadow: 0 16px 38px rgba(51, 69, 95, 0.07);
         }
-        .overview {
-            padding: 14px 16px;
-            display: grid;
-            grid-template-columns: minmax(0, 1fr) auto;
-            gap: 12px;
-            align-items: start;
-        }
-        .overview-copy {
-            min-width: 0;
-        }
-        .overview-eyebrow {
-            font-size: 0.72rem;
-            font-weight: 800;
-            letter-spacing: 0.14em;
-            text-transform: uppercase;
-            color: var(--muted);
-        }
-        .overview-title {
-            margin-top: 6px;
-            font-size: 1.08rem;
-            font-weight: 800;
-            letter-spacing: -0.02em;
-        }
-        .overview-sub {
-            margin-top: 4px;
-            color: var(--muted);
-            line-height: 1.6;
-            font-size: 0.86rem;
-        }
-        .pill-row {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            justify-content: flex-end;
-        }
-        .pill,
         .btn {
             border-radius: 999px;
             font-size: 0.78rem;
             font-weight: 800;
             letter-spacing: 0.08em;
             text-transform: uppercase;
-        }
-        .pill {
-            border: 1px solid var(--line);
-            padding: 8px 12px;
-            background: rgba(255,255,255,0.88);
         }
         .btn {
             min-height: 38px;
@@ -182,19 +137,7 @@ if ($tokenMode === 'test') {
         .header-main {
             display: flex;
             align-items: center;
-            gap: 12px;
             min-width: 0;
-        }
-        .back-btn {
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            border: 1px solid var(--line);
-            background: rgba(255,255,255,0.9);
-            color: var(--ink);
-            font-size: 1.05rem;
-            cursor: pointer;
-            flex: 0 0 auto;
         }
         .shell-header h1 {
             font-size: 0.88rem;
@@ -429,12 +372,6 @@ if ($tokenMode === 'test') {
             font-size: 0.84rem;
         }
         @media (max-width: 1024px) {
-            .overview {
-                grid-template-columns: 1fr;
-            }
-            .pill-row {
-                justify-content: flex-start;
-            }
             body {
                 overflow-y: auto;
             }
@@ -462,33 +399,19 @@ if ($tokenMode === 'test') {
     </style>
 </head>
 <body>
-    <div id="acadbeatNav"></div>
     <main class="room-page-shell">
     <div class="room-stack">
-        <section class="overview">
-            <div class="overview-copy">
-                <div class="overview-eyebrow">Academic Practice</div>
-                <div class="overview-title">Video Call Room</div>
-                <div class="overview-sub">Topic-based room access with invite URLs. Use the lobby to create, share, or reopen rooms.</div>
-            </div>
-            <div class="pill-row">
-                <div class="pill" id="topicPill">Topic</div>
-                <div class="pill" id="visibilityPill">Visibility</div>
-                <div class="pill" id="tokenModePill">Token mode</div>
-            </div>
-        </section>
-
         <section class="shell-wrap">
             <div class="shell">
                 <div class="shell-header">
                     <div class="header-main">
-                        <button class="back-btn" id="backToLobbyBtn" type="button" aria-label="Back">←</button>
                         <div>
                             <h1 id="stageTitle">Video Room</h1>
                             <div class="shell-meta" id="stageMeta">Preparing the room...</div>
                         </div>
                     </div>
                     <div class="header-actions">
+                        <button class="btn" id="inviteRoomBtn" type="button" hidden>Invite</button>
                         <button class="btn" id="manageRoomBtn" type="button" hidden>Manage Room</button>
                         <button class="btn" id="refreshRoomBtn" type="button">Refresh</button>
                         <button class="btn danger" id="closeCallBtn" type="button">Leave Room</button>
@@ -551,7 +474,6 @@ if ($tokenMode === 'test') {
         </div>
     </div>
 
-    <script src="../../shared-nav.js"></script>
     <script src="https://unpkg.com/@zegocloud/zego-uikit-prebuilt/zego-uikit-prebuilt.js"></script>
     <script>
         const ZEGO_PUBLIC_CONFIG = <?php echo json_encode($publicConfig, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>;
@@ -676,7 +598,6 @@ if ($tokenMode === 'test') {
             });
             activeRoom = data.room || activeRoom;
             document.getElementById('stageMeta').textContent = `${activeRoom.visibility || 'public'} room | Room ${activeRoom.roomId} | Host @${activeRoom.owner?.username || 'unknown'}`;
-            document.getElementById('visibilityPill').textContent = (activeRoom.visibility || 'public').toUpperCase();
             syncManageModal();
         }
 
@@ -788,26 +709,6 @@ if ($tokenMode === 'test') {
         }
 
         async function mountRoom() {
-            const L = window.ACADBEAT_LOCAL || {};
-            window.initializeAcadBeatNav({
-                mountId: 'acadbeatNav',
-                basePath: '../../',
-                active: 'academic',
-                authApiBase: '../../Auth/backend/api',
-                homeUrl: '../../home.html',
-                ownerUrl: '../../owner.html',
-                forumUrl: '../../home.html?module=Dialogue',
-                technologyUrl: '../../home.html?module=Method',
-                studioUrl: '../../Studio/studio.html',
-                messageCenterUrl: L.messageCenterDistUrl,
-                adminUrl: L.adminDistUrl || window.location.origin + '/admin_page/dist/index.html',
-                messageApiUrl: L.messageSummaryApiUrl,
-                loginUrl: '../../home.html?login=1',
-                redirectAdmins: true,
-                showChallengeButton: false
-            });
-
-            document.getElementById('tokenModePill').textContent = `Token ${ZEGO_PUBLIC_CONFIG.tokenMode}`;
             const roomId = requestedRoomId();
             if (!roomId) {
                 updateEmptyState('Invalid room link', 'This room link is missing the roomID parameter.', '<a class="btn primary" href="./index.php">Open Room Lobby</a>');
@@ -829,9 +730,8 @@ if ($tokenMode === 'test') {
 
                 document.getElementById('stageTitle').textContent = room.topic || 'Video Call Room';
                 document.getElementById('stageMeta').textContent = `${room.visibility || 'public'} room | Room ${room.roomId} | Host @${room.owner?.username || 'unknown'}`;
-                document.getElementById('topicPill').textContent = room.topic || 'Topic';
-                document.getElementById('visibilityPill').textContent = (room.visibility || 'public').toUpperCase();
                 document.getElementById('manageRoomBtn').hidden = !room.currentUser?.canManage;
+                document.getElementById('inviteRoomBtn').hidden = !room.currentUser?.canManage;
 
                 const userID = sanitizeRoomValue(`acadbeat_${me.user_id || me.userId || me.username}`);
                 const userName = String(me.username || 'AcadBeat User');
@@ -880,8 +780,11 @@ if ($tokenMode === 'test') {
         document.getElementById('refreshRoomBtn').addEventListener('click', () => {
             window.location.reload();
         });
-        document.getElementById('backToLobbyBtn').addEventListener('click', () => {
-            window.location.href = './index.php';
+        document.getElementById('inviteRoomBtn').addEventListener('click', () => {
+            toggleManageModal(true);
+            window.setTimeout(() => {
+                document.getElementById('roomInviteInput')?.focus();
+            }, 40);
         });
         document.getElementById('manageRoomBtn').addEventListener('click', () => {
             toggleManageModal(true);

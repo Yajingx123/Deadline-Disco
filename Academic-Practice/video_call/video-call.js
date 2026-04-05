@@ -151,22 +151,26 @@
     empty.classList.add('hidden');
     rooms.forEach((room) => {
       const availability = room.memberCount >= room.capacity ? 'full' : 'available';
-      const joinDisabled = availability === 'full' || room.visibility === 'private';
+      const canJoinPrivate = room.visibility === 'private'
+        && (room.currentUser?.isOwner || room.currentUser?.hasInviteAccess);
+      const joinDisabled = availability === 'full' || (room.visibility === 'private' && !canJoinPrivate);
       const joinLabel = availability === 'full'
         ? 'Room Full'
         : room.visibility === 'private'
-          ? 'Invite Only'
+          ? (canJoinPrivate ? 'Join Room' : 'Invite Only')
           : 'Join Room';
       const card = document.createElement('article');
       card.className = `voice-room-card${availability === 'full' ? ' is-full' : ''}`;
       card.innerHTML = `
         <div class="voice-room-card-top">
           <span class="voice-room-card-id">${room.visibility === 'private' ? 'Private Room' : 'Public Room'}</span>
-          <span class="voice-room-people">People ${room.memberCount}/${room.capacity}</span>
+          <span class="voice-room-people">${room.memberCount} joined</span>
         </div>
         <h3>${room.topic || 'Untitled room'}</h3>
         <p class="voice-room-card-host">Hosted by @${room.owner?.username || 'unknown'}</p>
-        <p class="voice-room-card-note">${room.visibility === 'private' ? 'Invite URL supported through direct message.' : 'Open room, URL invite, and browser tab launch enabled.'}</p>
+        <p class="voice-room-card-note">${room.visibility === 'private'
+          ? (canJoinPrivate ? 'You were invited to this private room and can enter from the lobby.' : 'Private room. Ask the host for an invite.')
+          : 'Open room, URL invite, and browser tab launch enabled.'}</p>
         <div class="voice-room-tag-list">
           <span class="voice-room-tag voice-room-tag--${room.visibility}">${room.visibility === 'private' ? 'Private' : 'Public'}</span>
           <span class="voice-room-tag voice-room-tag--${availability}">${availability === 'full' ? 'Full' : 'Available'}</span>
@@ -175,8 +179,8 @@
         <button type="button" class="voice-room-join-btn"${joinDisabled ? ' disabled' : ''}>${joinLabel}</button>
       `;
       const button = card.querySelector('.voice-room-join-btn');
-      if (room.visibility === 'private') {
-        button.title = 'Private rooms can only be opened from their invite link.';
+      if (room.visibility === 'private' && !canJoinPrivate) {
+        button.title = 'Private rooms can only be opened by invited members.';
       } else if (availability === 'full') {
         button.title = 'This room is already full.';
       } else {
@@ -219,6 +223,21 @@
     const modal = qs('#voiceRoomCreateModal');
     const form = qs('#voiceRoomCreateForm');
     const inviteInput = qs('#voiceRoomInviteInput');
+    const scheduleField = qs('#voiceRoomScheduleField');
+    const scheduledAtInput = qs('#voiceRoomScheduledAtInput');
+    const nextStepInput = qs('#voiceRoomNextStepInput');
+
+    function syncScheduleMode() {
+      const scheduleMode = document.querySelector('input[name="scheduleMode"]:checked')?.value || 'now';
+      const isScheduled = scheduleMode === 'scheduled';
+      scheduleField?.classList.toggle('hidden', !isScheduled);
+      if (nextStepInput) {
+        nextStepInput.value = isScheduled
+          ? 'Save the meeting now. The room will open automatically at the scheduled time, and reminders will be sent 5 minutes before. Up to 6 people can join.'
+          : 'Open the room in a new browser tab after creation. Up to 6 people can join.';
+      }
+    }
+
     qs('#voiceRoomCreateBtn')?.addEventListener('click', openModal);
     qs('#voiceRoomOpenCreateBtn')?.addEventListener('click', openModal);
     qs('#voiceRoomCreateCancelBtn')?.addEventListener('click', closeModal);
@@ -232,26 +251,45 @@
       const topic = qs('#voiceRoomTopicInput')?.value.trim() || '';
       const inviteUsername = qs('#voiceRoomInviteInput')?.value.trim() || '';
       const visibility = document.querySelector('input[name="visibility"]:checked')?.value || 'public';
+      const scheduleMode = document.querySelector('input[name="scheduleMode"]:checked')?.value || 'now';
+      const scheduledStartAt = scheduledAtInput?.value || '';
 
       if (!topic) {
         showToast('Topic is required.', 'error');
         qs('#voiceRoomTopicInput')?.focus();
         return;
       }
+      if (scheduleMode === 'scheduled' && !scheduledStartAt) {
+        showToast('Scheduled start time is required.', 'error');
+        scheduledAtInput?.focus();
+        return;
+      }
 
       try {
         const data = await fetchJson(API_ROOMS, {
           method: 'POST',
-          body: JSON.stringify({ topic, visibility, inviteUsername }),
+          body: JSON.stringify({ topic, visibility, inviteUsername, scheduleMode, scheduledStartAt }),
         });
         closeModal();
-        showToast(inviteUsername ? 'Room created and invite sent.' : 'Room created.', 'success');
-        if (data.room && data.room.roomId) {
+        const isScheduled = data.room?.status === 'pending' || scheduleMode === 'scheduled';
+        showToast(
+          isScheduled
+            ? 'Meeting scheduled. Reminders will be sent 5 minutes before it starts.'
+            : (inviteUsername ? 'Room created and invite sent.' : 'Room created.'),
+          'success'
+        );
+        if (!isScheduled && data.room && data.room.roomId) {
           openRoom(data.room.roomId);
         }
         form.reset();
+        if (scheduledAtInput) {
+          scheduledAtInput.value = '';
+        }
+        const startNow = document.querySelector('input[name="scheduleMode"][value="now"]');
+        if (startNow) startNow.checked = true;
         const publicVisibility = document.querySelector('input[name="visibility"][value="public"]');
         if (publicVisibility) publicVisibility.checked = true;
+        syncScheduleMode();
         await loadRooms();
       } catch (error) {
         showToast(error.message || 'Failed to create room.', 'error');
@@ -273,6 +311,11 @@
         renderInviteSuggestions();
       }
     });
+
+    document.querySelectorAll('input[name="scheduleMode"]').forEach((input) => {
+      input.addEventListener('change', syncScheduleMode);
+    });
+    syncScheduleMode();
   }
 
   function initFilters() {
@@ -300,5 +343,8 @@
       renderRooms();
     });
     void loadRooms();
+    window.setInterval(() => {
+      void loadRooms();
+    }, 30000);
   });
 })();

@@ -39,7 +39,18 @@ function video_require_user(): array
 
 function video_now(): string
 {
-    return date('Y-m-d H:i:s');
+    return (new DateTimeImmutable('now', video_timezone()))->format('Y-m-d H:i:s');
+}
+
+function video_timezone(): DateTimeZone
+{
+    static $tz = null;
+    if ($tz instanceof DateTimeZone) {
+        return $tz;
+    }
+
+    $tz = new DateTimeZone('Asia/Shanghai');
+    return $tz;
 }
 
 function video_initials(string $username): string

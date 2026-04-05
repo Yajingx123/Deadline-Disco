@@ -96,11 +96,32 @@
   <div id="voiceRoomCreateModal" class="voice-room-modal hidden" role="dialog" aria-modal="true" aria-labelledby="voiceRoomCreateTitle">
     <div class="voice-room-modal-card voice-room-modal-card--form">
       <h2 id="voiceRoomCreateTitle">Create your room</h2>
-      <p>Set the topic, choose public or private access, and optionally send the invite URL to a username through direct message.</p>
+      <p>Set the topic, choose public or private access, and optionally send the invite URL to a username through direct message. Each room currently supports up to 6 people.</p>
       <form id="voiceRoomCreateForm" class="voice-room-create-form">
         <label class="voice-room-form-field">
           <span>Topic</span>
           <input id="voiceRoomTopicInput" type="text" maxlength="120" placeholder="Enter your speaking topic">
+        </label>
+
+        <div class="voice-room-form-field">
+          <span>Meeting type</span>
+          <div class="voice-room-visibility-choice" id="voiceRoomScheduleChoice">
+            <label class="voice-room-radio">
+              <input type="radio" name="scheduleMode" value="now" checked>
+              <span class="voice-room-radio__dot"></span>
+              <span class="voice-room-radio__label">Start now</span>
+            </label>
+            <label class="voice-room-radio">
+              <input type="radio" name="scheduleMode" value="scheduled">
+              <span class="voice-room-radio__dot"></span>
+              <span class="voice-room-radio__label">Schedule meeting</span>
+            </label>
+          </div>
+        </div>
+
+        <label id="voiceRoomScheduleField" class="voice-room-form-field voice-room-form-field--narrow hidden">
+          <span>Start time</span>
+          <input id="voiceRoomScheduledAtInput" type="datetime-local">
         </label>
 
         <div class="voice-room-form-field">
@@ -127,7 +148,7 @@
 
         <div class="voice-room-form-field voice-room-form-field--narrow">
           <span>What happens next</span>
-          <input type="text" value="Open the room in a new browser tab after creation" disabled>
+          <input id="voiceRoomNextStepInput" type="text" value="Open the room in a new browser tab after creation. Up to 6 people can join." disabled>
         </div>
 
         <div class="voice-room-modal-actions">
@@ -208,6 +229,10 @@
       opacity: 0.82;
       cursor: default;
       background: rgba(244, 241, 236, 0.9);
+    }
+
+    .voice-room-form-field.hidden {
+      display: none;
     }
 
     body[data-page="voice-room-home"] .page-shell {
