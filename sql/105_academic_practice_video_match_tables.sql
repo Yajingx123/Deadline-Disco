@@ -241,26 +241,83 @@ CREATE TABLE IF NOT EXISTS peer_video_session_events (
         ))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE INDEX idx_peer_spaces_status
-    ON peer_spaces(space_type, status);
+-- Idempotent indexes: older MySQL rejects "CREATE INDEX IF NOT EXISTS" (1064). Use schema check + PREPARE.
+SELECT IF(
+    (SELECT COUNT(*) FROM information_schema.statistics
+     WHERE table_schema = DATABASE() AND table_name = 'peer_spaces' AND index_name = 'idx_peer_spaces_status') = 0,
+    'CREATE INDEX idx_peer_spaces_status ON peer_spaces (space_type, status)',
+    'SELECT 1'
+) INTO @__peer_idx_sql;
+PREPARE __peer_idx_stmt FROM @__peer_idx_sql;
+EXECUTE __peer_idx_stmt;
+DEALLOCATE PREPARE __peer_idx_stmt;
 
-CREATE INDEX idx_peer_space_members_user
-    ON peer_space_members(user_id, membership_status);
+SELECT IF(
+    (SELECT COUNT(*) FROM information_schema.statistics
+     WHERE table_schema = DATABASE() AND table_name = 'peer_space_members' AND index_name = 'idx_peer_space_members_user') = 0,
+    'CREATE INDEX idx_peer_space_members_user ON peer_space_members (user_id, membership_status)',
+    'SELECT 1'
+) INTO @__peer_idx_sql;
+PREPARE __peer_idx_stmt FROM @__peer_idx_sql;
+EXECUTE __peer_idx_stmt;
+DEALLOCATE PREPARE __peer_idx_stmt;
 
-CREATE INDEX idx_peer_video_sessions_status
-    ON peer_video_sessions(status, matched_at);
+SELECT IF(
+    (SELECT COUNT(*) FROM information_schema.statistics
+     WHERE table_schema = DATABASE() AND table_name = 'peer_video_sessions' AND index_name = 'idx_peer_video_sessions_status') = 0,
+    'CREATE INDEX idx_peer_video_sessions_status ON peer_video_sessions (status, matched_at)',
+    'SELECT 1'
+) INTO @__peer_idx_sql;
+PREPARE __peer_idx_stmt FROM @__peer_idx_sql;
+EXECUTE __peer_idx_stmt;
+DEALLOCATE PREPARE __peer_idx_stmt;
 
-CREATE INDEX idx_peer_video_sessions_users
-    ON peer_video_sessions(user_one_id, user_two_id);
+SELECT IF(
+    (SELECT COUNT(*) FROM information_schema.statistics
+     WHERE table_schema = DATABASE() AND table_name = 'peer_video_sessions' AND index_name = 'idx_peer_video_sessions_users') = 0,
+    'CREATE INDEX idx_peer_video_sessions_users ON peer_video_sessions (user_one_id, user_two_id)',
+    'SELECT 1'
+) INTO @__peer_idx_sql;
+PREPARE __peer_idx_stmt FROM @__peer_idx_sql;
+EXECUTE __peer_idx_stmt;
+DEALLOCATE PREPARE __peer_idx_stmt;
 
-CREATE INDEX idx_peer_video_match_queue_status
-    ON peer_video_match_queue(status, queue_mode, last_heartbeat_at);
+SELECT IF(
+    (SELECT COUNT(*) FROM information_schema.statistics
+     WHERE table_schema = DATABASE() AND table_name = 'peer_video_match_queue' AND index_name = 'idx_peer_video_match_queue_status') = 0,
+    'CREATE INDEX idx_peer_video_match_queue_status ON peer_video_match_queue (status, queue_mode, last_heartbeat_at)',
+    'SELECT 1'
+) INTO @__peer_idx_sql;
+PREPARE __peer_idx_stmt FROM @__peer_idx_sql;
+EXECUTE __peer_idx_stmt;
+DEALLOCATE PREPARE __peer_idx_stmt;
 
-CREATE INDEX idx_peer_video_match_queue_session
-    ON peer_video_match_queue(current_session_id);
+SELECT IF(
+    (SELECT COUNT(*) FROM information_schema.statistics
+     WHERE table_schema = DATABASE() AND table_name = 'peer_video_match_queue' AND index_name = 'idx_peer_video_match_queue_session') = 0,
+    'CREATE INDEX idx_peer_video_match_queue_session ON peer_video_match_queue (current_session_id)',
+    'SELECT 1'
+) INTO @__peer_idx_sql;
+PREPARE __peer_idx_stmt FROM @__peer_idx_sql;
+EXECUTE __peer_idx_stmt;
+DEALLOCATE PREPARE __peer_idx_stmt;
 
-CREATE INDEX idx_peer_video_session_events_session
-    ON peer_video_session_events(session_id, created_at);
+SELECT IF(
+    (SELECT COUNT(*) FROM information_schema.statistics
+     WHERE table_schema = DATABASE() AND table_name = 'peer_video_session_events' AND index_name = 'idx_peer_video_session_events_session') = 0,
+    'CREATE INDEX idx_peer_video_session_events_session ON peer_video_session_events (session_id, created_at)',
+    'SELECT 1'
+) INTO @__peer_idx_sql;
+PREPARE __peer_idx_stmt FROM @__peer_idx_sql;
+EXECUTE __peer_idx_stmt;
+DEALLOCATE PREPARE __peer_idx_stmt;
 
-CREATE INDEX idx_peer_video_session_events_actor
-    ON peer_video_session_events(actor_user_id, created_at);
+SELECT IF(
+    (SELECT COUNT(*) FROM information_schema.statistics
+     WHERE table_schema = DATABASE() AND table_name = 'peer_video_session_events' AND index_name = 'idx_peer_video_session_events_actor') = 0,
+    'CREATE INDEX idx_peer_video_session_events_actor ON peer_video_session_events (actor_user_id, created_at)',
+    'SELECT 1'
+) INTO @__peer_idx_sql;
+PREPARE __peer_idx_stmt FROM @__peer_idx_sql;
+EXECUTE __peer_idx_stmt;
+DEALLOCATE PREPARE __peer_idx_stmt;

@@ -1,6 +1,26 @@
 import { useEffect, useState } from 'react'
 import { adminFetch } from '../api'
 
+function renderAdminPostContent(text) {
+  if (!text) return ''
+
+  let html = String(text)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;')
+
+  html = html.replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1" style="max-width:100%; height:auto; border-radius:14px; display:block; margin:8px 0;" />')
+  html = html.replace(/\[(.*?)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
+  html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+  html = html.replace(/\*(.+?)\*/g, '<em>$1</em>')
+  html = html.replace(/&lt;u&gt;(.*?)&lt;\/u&gt;/g, '<u>$1</u>')
+  html = html.replace(/\n/g, '<br>')
+
+  return html
+}
+
 function ForumPostReview() {
   const [filterStatus, setFilterStatus] = useState('pending')
   const [posts, setPosts] = useState([])
@@ -8,6 +28,7 @@ function ForumPostReview() {
   const [isLoading, setIsLoading] = useState(true)
   const [errorMessage, setErrorMessage] = useState('')
   const [actingPostId, setActingPostId] = useState(null)
+  const [selectedPost, setSelectedPost] = useState(null)
 
   useEffect(() => {
     let active = true
@@ -74,6 +95,10 @@ function ForumPostReview() {
       return
     }
     return updatePostStatus(postId, 'delete')
+  }
+
+  function closePostPreview() {
+    setSelectedPost(null)
   }
 
   function getStatusBadge(status) {
@@ -148,7 +173,19 @@ function ForumPostReview() {
             posts.map((post) => {
               const isActing = actingPostId === post.id
               return (
-                <article key={post.id} style={styles.postItem}>
+                <article
+                  key={post.id}
+                  style={styles.postItem}
+                  onClick={() => setSelectedPost(post)}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(event) => {
+                    if (event.key === 'Enter' || event.key === ' ') {
+                      event.preventDefault()
+                      setSelectedPost(post)
+                    }
+                  }}
+                >
                   <div style={styles.postAvatarRail}>
                     <div style={styles.postAvatarCircle}>{post.authorInitial}</div>
                   </div>
@@ -188,14 +225,20 @@ function ForumPostReview() {
                       <div style={styles.actionButtons}>
                         <button
                           style={styles.approveButton}
-                          onClick={() => handleApprove(post.id)}
+                          onClick={(event) => {
+                            event.stopPropagation()
+                            handleApprove(post.id)
+                          }}
                           disabled={isActing}
                         >
                           {isActing ? 'Saving...' : 'Approve'}
                         </button>
                         <button
                           style={styles.rejectButton}
-                          onClick={() => handleReject(post.id)}
+                          onClick={(event) => {
+                            event.stopPropagation()
+                            handleReject(post.id)
+                          }}
                           disabled={isActing}
                         >
                           {isActing ? 'Saving...' : 'Reject'}
@@ -206,7 +249,10 @@ function ForumPostReview() {
                       <div style={styles.actionButtons}>
                         <button
                           style={styles.deleteButton}
-                          onClick={() => handleDelete(post.id)}
+                          onClick={(event) => {
+                            event.stopPropagation()
+                            handleDelete(post.id)
+                          }}
                           disabled={isActing}
                         >
                           {isActing ? 'Deleting...' : 'Delete'}
@@ -220,6 +266,40 @@ function ForumPostReview() {
           )}
         </div>
       </div>
+
+      {selectedPost ? (
+        <div style={styles.previewOverlay} onClick={closePostPreview}>
+          <div style={styles.previewCard} onClick={(event) => event.stopPropagation()}>
+            <div style={styles.previewHeader}>
+              <div>
+                <div style={styles.previewEyebrow}>Forum Post Preview</div>
+                <h2 style={styles.previewTitle}>{selectedPost.title}</h2>
+                <div style={styles.previewMeta}>
+                  <span>{selectedPost.author}</span>
+                  <span>{selectedPost.publishTime}</span>
+                  {getStatusBadge(selectedPost.status)}
+                </div>
+              </div>
+              <button type="button" style={styles.previewClose} onClick={closePostPreview}>Back</button>
+            </div>
+            <div style={styles.previewInfoRow}>
+              {(selectedPost.labels || []).map((label) => (
+                <span key={label} style={styles.tagBadge}>{label}</span>
+              ))}
+              <span style={styles.typeBadge}>{selectedPost.mediaType || 'text'}</span>
+            </div>
+            <div
+              style={styles.previewBody}
+              dangerouslySetInnerHTML={{ __html: renderAdminPostContent(selectedPost.content || '') }}
+            />
+            <div style={styles.previewStats}>
+              <span>Comments: {selectedPost.commentCount}</span>
+              <span>Views: {selectedPost.views}</span>
+              <span>Likes: {selectedPost.likeCount}</span>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   )
 }
@@ -348,7 +428,8 @@ const styles = {
     alignItems: 'flex-start',
     gap: '18px',
     transition: 'background 0.2s ease',
-    backdropFilter: 'none'
+    backdropFilter: 'none',
+    cursor: 'pointer'
   },
   postAvatarRail: {
     flexShrink: 0,
@@ -512,6 +593,91 @@ const styles = {
     cursor: 'pointer',
     transition: 'all 0.25s ease',
     fontFamily: 'Inter, sans-serif'
+  },
+  previewOverlay: {
+    position: 'fixed',
+    inset: 0,
+    zIndex: 1200,
+    background: 'rgba(28, 35, 49, 0.42)',
+    backdropFilter: 'blur(6px)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '24px'
+  },
+  previewCard: {
+    width: 'min(920px, 100%)',
+    maxHeight: '88vh',
+    overflow: 'auto',
+    borderRadius: '28px',
+    background: 'rgba(255,255,255,0.98)',
+    boxShadow: '0 28px 64px rgba(58, 78, 107, 0.18)',
+    padding: '24px'
+  },
+  previewHeader: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    gap: '18px',
+    marginBottom: '18px'
+  },
+  previewEyebrow: {
+    fontSize: '0.74rem',
+    fontWeight: 800,
+    letterSpacing: '0.16em',
+    textTransform: 'uppercase',
+    color: 'rgba(58, 78, 107, 0.48)',
+    marginBottom: '10px'
+  },
+  previewTitle: {
+    margin: '0 0 10px',
+    fontSize: '1.6rem',
+    lineHeight: 1.2,
+    color: 'var(--secondary-color)'
+  },
+  previewMeta: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+    flexWrap: 'wrap',
+    color: 'rgba(58, 78, 107, 0.62)',
+    fontSize: '0.84rem'
+  },
+  previewClose: {
+    minHeight: '40px',
+    padding: '0 16px',
+    borderRadius: '999px',
+    border: '1px solid rgba(58, 78, 107, 0.14)',
+    background: 'rgba(255,255,255,0.88)',
+    color: 'var(--secondary-color)',
+    fontSize: '0.82rem',
+    fontWeight: 700,
+    cursor: 'pointer'
+  },
+  previewInfoRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    flexWrap: 'wrap',
+    marginBottom: '18px'
+  },
+  previewBody: {
+    border: '1px solid rgba(58, 78, 107, 0.08)',
+    borderRadius: '20px',
+    background: 'rgba(247, 244, 239, 0.62)',
+    padding: '18px',
+    color: 'rgba(58, 78, 107, 0.86)',
+    fontSize: '0.94rem',
+    lineHeight: 1.7
+  },
+  previewStats: {
+    display: 'flex',
+    gap: '18px',
+    flexWrap: 'wrap',
+    marginTop: '16px',
+    color: 'rgba(58, 78, 107, 0.62)',
+    fontSize: '0.82rem',
+    fontWeight: 700
   }
 }
 

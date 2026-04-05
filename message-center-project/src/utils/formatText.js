@@ -175,7 +175,7 @@ export const renderFormattedText = (text) => {
 
   // 👇 第二步：处理普通图片
   // 注意：因为音频已经被替换掉了，这里的正则不会再匹配到 audio 标记
-  html = html.replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1" style="max-width: 100%; border-radius: 8px; margin: 10px 0; display:block;" />');
+  html = html.replace(/!\[(.*?)\]\((.*?)\)/g, '<a class="forumInlineImage" href="$2" target="_blank" rel="noopener noreferrer"><img class="forumInlineImage__img" src="$2" alt="$1" /></a>');
   html = html.replace(/\[(.*?)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
   
   // 处理加粗、斜体、下划线
