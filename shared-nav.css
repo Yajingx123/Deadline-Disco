@@ -122,6 +122,12 @@ html.acadbeat-login-guard body {
   transform: translateY(-1px);
 }
 
+.acadbeat-shared-nav .message-link.active {
+  background: rgba(155, 183, 212, 0.26);
+  border-color: rgba(58, 78, 107, 0.26);
+  box-shadow: 0 10px 22px rgba(58, 78, 107, 0.12);
+}
+
 .acadbeat-shared-nav .message-link[hidden] {
   display: none !important;
 }

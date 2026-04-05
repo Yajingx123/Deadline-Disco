@@ -67,7 +67,9 @@ const PostDetail = ({ post, onBack, onAddComment, onDeletePost, onDeleteComment,
     await onDeleteComment(commentId);
   };
 
-  const canDeletePost = Number(currentUser?.user_id || 0) === Number(post.authorUserId || 0);
+  const canDeletePost =
+    Number(currentUser?.user_id || 0) === Number(post.authorUserId || 0)
+    && String(post.status || '').trim().toLowerCase() !== 'deleted';
 
   const handleLike = async () => {
     try {
