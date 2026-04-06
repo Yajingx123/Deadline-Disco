@@ -37,6 +37,16 @@ try {
         }
 
         $game = draw_guess_sync_game($pdo, $game);
+        if (in_array((string)($game['status'] ?? ''), [DRAW_GUESS_STATUS_ROUND_START, DRAW_GUESS_STATUS_PLAYING, DRAW_GUESS_STATUS_ROUND_END], true)) {
+            $players = draw_guess_players($pdo, (int)$game['game_id']);
+            $viewerPlayer = draw_guess_find_player($players, (int)$user['user_id']);
+            if (!$viewerPlayer || ($viewerPlayer['player_status'] ?? 'active') !== 'active') {
+                forum_json([
+                    'ok' => true,
+                    'game' => null,
+                ]);
+            }
+        }
         forum_json([
             'ok' => true,
             'game' => draw_guess_public_state($pdo, $game, (int)$user['user_id']),
@@ -60,6 +70,13 @@ try {
 
     $game = draw_guess_active_game($pdo, $conversationId);
     if (!$game && !in_array($action, ['createLobby'], true)) {
+        $latest = draw_guess_any_game($pdo, $conversationId);
+        if ($action === 'tick' && $latest) {
+            forum_json([
+                'ok' => true,
+                'game' => draw_guess_public_state($pdo, $latest, (int)$user['user_id']),
+            ]);
+        }
         forum_json([
             'ok' => false,
             'message' => 'No active game for this conversation.',

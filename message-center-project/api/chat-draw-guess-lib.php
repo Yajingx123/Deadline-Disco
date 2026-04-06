@@ -549,6 +549,13 @@ function draw_guess_sync_game(PDO $pdo, array $game): array {
 function draw_guess_create_or_resume_lobby(PDO $pdo, array $conversation, array $user, int $minPlayers): array {
     $existing = draw_guess_active_game($pdo, (int)$conversation['conversation_id']);
     if ($existing) {
+        if (($existing['status'] ?? '') !== DRAW_GUESS_STATUS_LOBBY) {
+            $existingPlayers = draw_guess_players($pdo, (int)$existing['game_id']);
+            $existingViewer = draw_guess_find_player($existingPlayers, (int)$user['user_id']);
+            if (!$existingViewer || ($existingViewer['player_status'] ?? 'active') !== 'active') {
+                forum_json(['ok' => false, 'message' => 'This game is already in progress. You cannot join it now.'], 403);
+            }
+        }
         return draw_guess_sync_game($pdo, $existing);
     }
 
@@ -960,6 +967,11 @@ function draw_guess_submit_guess(PDO $pdo, array $game, int $userId, string $gue
     if ((int)($game['current_drawer_user_id'] ?? 0) === $userId) {
         forum_json(['ok' => false, 'message' => 'The drawer cannot submit guesses.'], 422);
     }
+    $players = draw_guess_players($pdo, (int)$game['game_id']);
+    $viewerPlayer = draw_guess_find_player($players, $userId);
+    if (!$viewerPlayer || ($viewerPlayer['player_status'] ?? 'active') !== 'active') {
+        forum_json(['ok' => false, 'message' => 'Only active players can submit guesses.'], 403);
+    }
 
     $round = draw_guess_current_round($pdo, (int)$game['game_id']);
     if (!$round || empty($round['selected_word'])) {
@@ -1129,6 +1141,46 @@ function draw_guess_finish_round(PDO $pdo, array $game, string $reason): array {
 
     $pdo->beginTransaction();
     try {
+        if ($correctActiveCount <= 0) {
+            $roundScoresStmt = $pdo->prepare("
+                SELECT user_id, SUM(score_awarded) AS total_score
+                FROM chat_draw_guess_guesses
+                WHERE round_id = :roundId
+                GROUP BY user_id
+                HAVING SUM(score_awarded) > 0
+            ");
+            $roundScoresStmt->execute([
+                ':roundId' => (int)$round['round_id'],
+            ]);
+            $roundScores = $roundScoresStmt->fetchAll() ?: [];
+
+            $revertPlayerScoreStmt = $pdo->prepare("
+                UPDATE chat_draw_guess_players
+                SET score = GREATEST(0, score - :scoreToRevert)
+                WHERE game_id = :gameId
+                  AND user_id = :userId
+                LIMIT 1
+            ");
+            foreach ($roundScores as $scoreRow) {
+                $revertPlayerScoreStmt->execute([
+                    ':scoreToRevert' => (int)($scoreRow['total_score'] ?? 0),
+                    ':gameId' => (int)$game['game_id'],
+                    ':userId' => (int)$scoreRow['user_id'],
+                ]);
+            }
+
+            $zeroRoundGuessScoresStmt = $pdo->prepare("
+                UPDATE chat_draw_guess_guesses
+                SET score_awarded = 0
+                WHERE round_id = :roundId
+            ");
+            $zeroRoundGuessScoresStmt->execute([
+                ':roundId' => (int)$round['round_id'],
+            ]);
+
+            $drawerScore = 0;
+        }
+
         if ($drawerScore > 0) {
             $scoreStmt = $pdo->prepare("
                 UPDATE chat_draw_guess_players
@@ -1195,7 +1247,13 @@ function draw_guess_finish_round(PDO $pdo, array $game, string $reason): array {
 }
 
 function draw_guess_leave(PDO $pdo, array $game, int $userId): array {
-    $stmt = $pdo->prepare("
+    $playersBeforeLeave = draw_guess_players($pdo, (int)$game['game_id']);
+    $leftPlayer = draw_guess_find_player($playersBeforeLeave, $userId);
+    $leftByName = (string)($leftPlayer['display_name'] ?? $leftPlayer['username'] ?? ('User ' . $userId));
+
+    $pdo->beginTransaction();
+    try {
+        $stmt = $pdo->prepare("
         UPDATE chat_draw_guess_players
         SET player_status = 'left',
             connection_status = 'offline',
@@ -1204,14 +1262,22 @@ function draw_guess_leave(PDO $pdo, array $game, int $userId): array {
           AND user_id = :userId
         LIMIT 1
     ");
-    $stmt->execute([
-        ':gameId' => (int)$game['game_id'],
-        ':userId' => $userId,
-    ]);
+        $stmt->execute([
+            ':gameId' => (int)$game['game_id'],
+            ':userId' => $userId,
+        ]);
 
-    $fresh = draw_guess_active_game($pdo, (int)$game['conversation_id']) ?? $game;
+        $resetPlayers = $pdo->prepare("
+            UPDATE chat_draw_guess_players
+            SET player_status = 'left',
+                connection_status = 'offline',
+                is_ready = 0
+            WHERE game_id = :gameId
+        ");
+        $resetPlayers->execute([
+            ':gameId' => (int)$game['game_id'],
+        ]);
 
-    if (($fresh['status'] ?? '') === DRAW_GUESS_STATUS_LOBBY) {
         $cancelStmt = $pdo->prepare("
             UPDATE chat_draw_guess_games
             SET status = 'GAME_END',
@@ -1224,19 +1290,24 @@ function draw_guess_leave(PDO $pdo, array $game, int $userId): array {
             ':endedAt' => draw_guess_now_sql(),
             ':gameId' => (int)$game['game_id'],
         ]);
-        $ended = draw_guess_any_game($pdo, (int)$game['conversation_id']) ?? $fresh;
-        draw_guess_publish_state($pdo, $ended, ['type' => 'game.cancelled', 'reason' => 'cancelled']);
-        return $ended;
+
+        $pdo->commit();
+    } catch (Throwable $error) {
+        if ($pdo->inTransaction()) {
+            $pdo->rollBack();
+        }
+        throw $error;
     }
 
-    if ((int)($fresh['current_drawer_user_id'] ?? 0) === $userId && ($fresh['status'] ?? '') === DRAW_GUESS_STATUS_PLAYING) {
-        draw_guess_finish_round($pdo, $fresh, 'drawer_left');
-        $fresh = draw_guess_active_game($pdo, (int)$game['conversation_id']) ?? (draw_guess_any_game($pdo, (int)$game['conversation_id']) ?? $fresh);
-    } else {
-        draw_guess_publish_state($pdo, $fresh, ['type' => 'game.lobby.updated']);
-    }
-
-    return $fresh;
+    $ended = draw_guess_any_game($pdo, (int)$game['conversation_id']) ?? $game;
+    draw_guess_publish_state($pdo, $ended, [
+        'type' => 'game.cancelled',
+        'reason' => 'player_left',
+        'leftByUserId' => $userId,
+        'leftByName' => $leftByName,
+        'message' => $leftByName . ' left the game. This round is closed for everyone.',
+    ]);
+    return $ended;
 }
 
 function draw_guess_add_stroke(PDO $pdo, array $game, int $userId, string $eventType, array $payload): array {
@@ -1374,12 +1445,17 @@ function draw_guess_publish_state(PDO $pdo, array $game, array $extra = []): voi
     foreach ($players as $player) {
         $stateByUser[(int)$player['user_id']] = draw_guess_public_state($pdo, $game, (int)$player['user_id']);
     }
+    $publishedAtMs = (int)floor(microtime(true) * 1000);
 
     forum_realtime_publish((string)($extra['type'] ?? 'game.state.sync'), [
         'conversationId' => (int)$game['conversation_id'],
         'gameId' => (int)$game['game_id'],
+        'publishedAtMs' => $publishedAtMs,
         'states' => $stateByUser,
         'reason' => $extra['reason'] ?? null,
         'answer' => $extra['answer'] ?? null,
+        'message' => $extra['message'] ?? null,
+        'leftByUserId' => $extra['leftByUserId'] ?? null,
+        'leftByName' => $extra['leftByName'] ?? null,
     ]);
 }

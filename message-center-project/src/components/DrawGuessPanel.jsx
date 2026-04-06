@@ -137,7 +137,7 @@ export default function DrawGuessPanel({
   onStroke,
   onClearCanvas,
   onLeaveGame,
-  onBackToChat,
+  onExitGameView,
 }) {
   const canvasRef = useRef(null)
   const pointerRef = useRef(null)
@@ -243,9 +243,6 @@ export default function DrawGuessPanel({
           <div className="draw-guess__heroBadge">Lobby Closed</div>
           <div className="draw-guess__heroTitle">Game cancelled</div>
           <p className="draw-guess__heroText">The room was closed before the match began.</p>
-          <button type="button" className="draw-guess__ghostBtn" onClick={onBackToChat}>
-            Back to Chat
-          </button>
         </div>
       </section>
     )
@@ -279,7 +276,7 @@ export default function DrawGuessPanel({
             <button type="button" className="draw-guess__primaryBtn" onClick={onCreateLobby}>
               Go on
             </button>
-            <button type="button" className="draw-guess__ghostBtn" onClick={onBackToChat}>
+            <button type="button" className="draw-guess__ghostBtn" onClick={onExitGameView}>
               Exit
             </button>
           </div>
@@ -291,10 +288,6 @@ export default function DrawGuessPanel({
   return (
     <section className={`draw-guess draw-guess--arcade ${viewer?.isDrawer ? 'draw-guess--drawerView' : 'draw-guess--guesserView'}`}>
       <div className="draw-guess__arcadeHeader">
-        <button type="button" className="draw-guess__ghostBtn" onClick={onBackToChat}>
-          Back to Chat
-        </button>
-
         <div className="draw-guess__headerMeta">
           <span className="draw-guess__chip">Round {Math.max(1, Number(game?.roundIndex || 0))}</span>
           <span className="draw-guess__headerText">
@@ -384,6 +377,41 @@ export default function DrawGuessPanel({
 
       {['PLAYING', 'ROUND_END'].includes(game?.status) && (
         <>
+          {viewer?.isDrawer && game?.status === 'PLAYING' && (
+            <div className="draw-guess__toolbarStrip">
+              <div className="draw-guess__toolbarGroup">
+                <span className="draw-guess__toolbarLabel">Tools</span>
+                <div className="draw-guess__iconRow">
+                  <ToolButton kind="brush" label="Brush" active={tool === 'brush'} onClick={() => setTool('brush')} />
+                  <ToolButton kind="eraser" label="Eraser" active={tool === 'eraser'} onClick={() => setTool('eraser')} />
+                  <ToolButton kind="clear" label="Clear canvas" onClick={onClearCanvas} />
+                </div>
+              </div>
+              <div className="draw-guess__toolbarGroup">
+                <span className="draw-guess__toolbarLabel">Colors</span>
+                <div className="draw-guess__paletteRow">
+                  {['#1f2937', '#2563eb', '#dc2626', '#16a34a', '#f59e0b', '#7c3aed'].map((swatch) => (
+                    <button
+                      key={swatch}
+                      type="button"
+                      className={`draw-guess__swatch ${color === swatch ? 'is-active' : ''}`}
+                      style={{ '--swatch': swatch }}
+                      title={swatch}
+                      aria-label={`Color ${swatch}`}
+                      onClick={() => setColor(swatch)}
+                    >
+                      <span className="draw-guess__swatchInner" />
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <label className="draw-guess__sizeControl draw-guess__sizeControl--toolbar">
+                <span>Brush Size</span>
+                <input type="range" min="2" max="18" value={size} onChange={(event) => setSize(Number(event.target.value))} />
+              </label>
+            </div>
+          )}
+
           <div className="draw-guess__playGrid">
             <div className="draw-guess__stageCard">
               <div className="draw-guess__canvasShell">
@@ -438,36 +466,6 @@ export default function DrawGuessPanel({
                 </div>
               </section>
 
-              {viewer?.isDrawer && game?.status === 'PLAYING' && (
-                <section className="draw-guess__railCard">
-                  <div className="draw-guess__panelTitle">Tools</div>
-                  <div className="draw-guess__iconRow">
-                    <ToolButton kind="brush" label="Brush" active={tool === 'brush'} onClick={() => setTool('brush')} />
-                    <ToolButton kind="eraser" label="Eraser" active={tool === 'eraser'} onClick={() => setTool('eraser')} />
-                    <ToolButton kind="clear" label="Clear canvas" onClick={onClearCanvas} />
-                  </div>
-                  <div className="draw-guess__panelTitle">Colors</div>
-                  <div className="draw-guess__paletteRow">
-                    {['#1f2937', '#2563eb', '#dc2626', '#16a34a', '#f59e0b', '#7c3aed'].map((swatch) => (
-                      <button
-                        key={swatch}
-                        type="button"
-                        className={`draw-guess__swatch ${color === swatch ? 'is-active' : ''}`}
-                        style={{ '--swatch': swatch }}
-                        title={swatch}
-                        aria-label={`Color ${swatch}`}
-                        onClick={() => setColor(swatch)}
-                      >
-                        <span className="draw-guess__swatchInner" />
-                      </button>
-                    ))}
-                  </div>
-                  <label className="draw-guess__sizeControl">
-                    <span>Brush Size</span>
-                    <input type="range" min="2" max="18" value={size} onChange={(event) => setSize(Number(event.target.value))} />
-                  </label>
-                </section>
-              )}
             </aside>
           </div>
 

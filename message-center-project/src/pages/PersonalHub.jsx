@@ -116,6 +116,56 @@ function renderConversationAvatar(conversation, currentUser, extraClass = '') {
   )
 }
 
+const DRAW_GUESS_STATUS_RANK = {
+  IDLE: 0,
+  LOBBY: 1,
+  ROUND_START: 2,
+  PLAYING: 3,
+  ROUND_END: 4,
+  GAME_END: 5,
+}
+
+function drawGuessStatusRank(status) {
+  return DRAW_GUESS_STATUS_RANK[String(status || 'IDLE')] || 0
+}
+
+function shouldAcceptDrawGuessState(prev, next) {
+  if (!next) return false
+  if (!prev) return true
+
+  const prevRoomId = Number(prev.roomId || 0)
+  const nextRoomId = Number(next.roomId || 0)
+  if (prevRoomId && nextRoomId && nextRoomId !== prevRoomId) {
+    return nextRoomId > prevRoomId
+  }
+
+  const prevRound = Number(prev.roundIndex || 0)
+  const nextRound = Number(next.roundIndex || 0)
+  if (nextRound !== prevRound) {
+    return nextRound > prevRound
+  }
+
+  const prevStatusRank = drawGuessStatusRank(prev.status)
+  const nextStatusRank = drawGuessStatusRank(next.status)
+  if (nextStatusRank !== prevStatusRank) {
+    return nextStatusRank > prevStatusRank
+  }
+
+  const prevStrokeCount = Array.isArray(prev.strokes) ? prev.strokes.length : 0
+  const nextStrokeCount = Array.isArray(next.strokes) ? next.strokes.length : 0
+  if (nextStrokeCount !== prevStrokeCount) {
+    return nextStrokeCount > prevStrokeCount
+  }
+
+  const prevGuessCount = Array.isArray(prev.recentGuesses) ? prev.recentGuesses.length : 0
+  const nextGuessCount = Array.isArray(next.recentGuesses) ? next.recentGuesses.length : 0
+  if (nextGuessCount !== prevGuessCount) {
+    return nextGuessCount > prevGuessCount
+  }
+
+  return true
+}
+
 export default function PersonalHub({ onBackToChooser, embedded = false }) {
   const [currentUser, setCurrentUser] = useState(null)
   const [conversations, setConversations] = useState([])
@@ -147,6 +197,21 @@ export default function PersonalHub({ onBackToChooser, embedded = false }) {
 
   const messageRootRef = useRef(null)
   const messageListRef = useRef(null)
+  const lastDrawGuessRealtimeAtRef = useRef(0)
+  const lastDrawGuessPublishedAtRef = useRef(0)
+  const drawGuessTickInFlightRef = useRef(false)
+
+  const applyDrawGuessState = (nextGame, source = 'http') => {
+    if (!nextGame) {
+      setDrawGuessGame(null)
+      return
+    }
+    if (source === 'ws') {
+      lastDrawGuessRealtimeAtRef.current = Date.now()
+    }
+    setDrawGuessGame((prev) => (shouldAcceptDrawGuessState(prev, nextGame) ? nextGame : prev))
+    setDrawGuessError('')
+  }
 
   const syncMessageSummary = async () => {
     try {
@@ -329,16 +394,24 @@ export default function PersonalHub({ onBackToChooser, embedded = false }) {
 
     async function loadGame() {
       if (!activeConversationId) {
+        lastDrawGuessRealtimeAtRef.current = 0
+        lastDrawGuessPublishedAtRef.current = 0
         setDrawGuessGame(null)
         setDrawGuessRoomOpen(false)
         return
       }
+      lastDrawGuessRealtimeAtRef.current = 0
+      lastDrawGuessPublishedAtRef.current = 0
       setDrawGuessLoading(true)
       try {
         const data = await fetchDrawGuessGame(activeConversationId)
         if (!cancelled) {
-          setDrawGuessGame(data.game || null)
-          setDrawGuessError('')
+          if (data.game) {
+            applyDrawGuessState(data.game, 'http')
+          } else {
+            setDrawGuessGame(null)
+            setDrawGuessError('')
+          }
         }
       } catch (err) {
         if (!cancelled) {
@@ -409,7 +482,15 @@ export default function PersonalHub({ onBackToChooser, embedded = false }) {
         && eventConversationId
         && Number(activeConversationId) === eventConversationId
       ) {
+        const publishedAtMs = Number(event?.data?.publishedAtMs || 0)
+        if (publishedAtMs > 0 && publishedAtMs < lastDrawGuessPublishedAtRef.current) {
+          return
+        }
+        const pushedStates = event?.data?.states && typeof event.data.states === 'object' ? event.data.states : null
+        const pushedForViewer = pushedStates ? (pushedStates[String(currentUserId)] || pushedStates[currentUserId] || null) : null
+
         if (eventType === 'game.stroke.broadcast') {
+          lastDrawGuessRealtimeAtRef.current = Date.now()
           setDrawGuessGame((prev) => {
             if (!prev || Number(prev.roomId || 0) !== Number(event?.data?.gameId || 0)) {
               return prev
@@ -420,6 +501,7 @@ export default function PersonalHub({ onBackToChooser, embedded = false }) {
             }
           })
         } else if (eventType === 'game.canvas.cleared') {
+          lastDrawGuessRealtimeAtRef.current = Date.now()
           setDrawGuessGame((prev) => {
             if (!prev || Number(prev.roomId || 0) !== Number(event?.data?.gameId || 0)) {
               return prev
@@ -430,17 +512,17 @@ export default function PersonalHub({ onBackToChooser, embedded = false }) {
             }
           })
         } else {
-          try {
-            const data = await fetchDrawGuessGame(activeConversationId)
-            setDrawGuessGame(data.game || null)
-            setDrawGuessError('')
+          if (pushedForViewer) {
+            if (publishedAtMs > 0) {
+              lastDrawGuessPublishedAtRef.current = Math.max(lastDrawGuessPublishedAtRef.current, publishedAtMs)
+            }
+            applyDrawGuessState(pushedForViewer, 'ws')
             if (
-              data.game
-              && data.game.status !== 'GAME_END'
+              pushedForViewer.status !== 'GAME_END'
               && !drawGuessRoomOpen
               && ['game.lobby.updated', 'game.round.started', 'game.state.sync'].includes(eventType)
             ) {
-              const drawer = (data.game.players || []).find((player) => Number(player.userId) === Number(data.game.currentDrawerId || 0))
+              const drawer = (pushedForViewer.players || []).find((player) => Number(player.userId) === Number(pushedForViewer.currentDrawerId || 0))
               setIncomingGamePrompt({
                 title: eventType === 'game.lobby.updated' ? 'Draw & Guess invitation' : 'Draw & Guess is live',
                 description: eventType === 'game.lobby.updated'
@@ -448,8 +530,27 @@ export default function PersonalHub({ onBackToChooser, embedded = false }) {
                   : 'The game state changed. Open the game room to continue.',
               })
             }
-          } catch (_err) {
-            // Keep current state if game hydration fails.
+          } else {
+            if (publishedAtMs > 0) {
+              lastDrawGuessPublishedAtRef.current = Math.max(lastDrawGuessPublishedAtRef.current, publishedAtMs)
+            }
+            try {
+              const data = await fetchDrawGuessGame(activeConversationId)
+              if (data.game) {
+                applyDrawGuessState(data.game, 'http')
+              }
+            } catch (_err) {
+              // Keep current state if game hydration fails.
+            }
+          }
+
+          if (eventType === 'game.cancelled') {
+            const leftByName = String(event?.data?.leftByName || 'A player')
+            const serverMessage = String(event?.data?.message || `${leftByName} left the game. This round is closed for everyone.`)
+            setIncomingGamePrompt({
+              title: 'Draw & Guess ended',
+              description: serverMessage,
+            })
           }
         }
       }
@@ -501,43 +602,40 @@ export default function PersonalHub({ onBackToChooser, embedded = false }) {
     if (!activeConversationId || !drawGuessGame) {
       return undefined
     }
-    const timers = []
-    const now = Date.now()
-    const schedule = (targetTime) => {
-      if (!targetTime) return
-      const target = new Date(targetTime).getTime()
-      if (!Number.isFinite(target)) return
-      const delay = Math.max(300, target - now + 300)
-      const timer = window.setTimeout(() => {
-        mutateDrawGuessGame(activeConversationId, 'tick').catch(() => {})
-      }, delay)
-      timers.push(timer)
+
+    const syncableStatuses = ['LOBBY', 'ROUND_START', 'PLAYING', 'ROUND_END']
+    const isSyncable = syncableStatuses.includes(String(drawGuessGame.status || ''))
+    if (!isSyncable) {
+      return undefined
     }
 
-    schedule(drawGuessGame.selectionDeadlineAt)
-    schedule(drawGuessGame.roundEndsAt)
-    if (drawGuessGame.roundStartTime) {
-      const startedAt = new Date(drawGuessGame.roundStartTime).getTime()
-      if (Number.isFinite(startedAt)) {
-        schedule(new Date(startedAt + 30000).toISOString())
-        schedule(new Date(startedAt + 60000).toISOString())
+    const runTick = () => {
+      if (drawGuessTickInFlightRef.current) {
+        return
       }
+      drawGuessTickInFlightRef.current = true
+      const startedAt = Date.now()
+      mutateDrawGuessGame(activeConversationId, 'tick')
+        .then((data) => {
+          if (!data?.game) return
+          if (lastDrawGuessRealtimeAtRef.current > startedAt) {
+            return
+          }
+          applyDrawGuessState(data.game, 'http')
+        })
+        .catch(() => {})
+        .finally(() => {
+          drawGuessTickInFlightRef.current = false
+        })
     }
-    if (drawGuessGame.roundEndedAt) {
-      const endedAt = new Date(drawGuessGame.roundEndedAt).getTime()
-      if (Number.isFinite(endedAt)) {
-        schedule(new Date(endedAt + 1200).toISOString())
-      }
-    }
-    return () => timers.forEach((timer) => window.clearTimeout(timer))
+
+    runTick()
+    const timer = window.setInterval(runTick, 450)
+    return () => window.clearInterval(timer)
   }, [
     activeConversationId,
     drawGuessGame?.roomId,
     drawGuessGame?.status,
-    drawGuessGame?.selectionDeadlineAt,
-    drawGuessGame?.roundStartTime,
-    drawGuessGame?.roundEndsAt,
-    drawGuessGame?.roundEndedAt,
   ])
 
   useEffect(() => {
@@ -553,10 +651,14 @@ export default function PersonalHub({ onBackToChooser, embedded = false }) {
 
   const runDrawGuessAction = async (action, payload = {}) => {
     if (!activeConversationId) return
+    const startedAt = Date.now()
     try {
       const data = await mutateDrawGuessGame(activeConversationId, action, payload)
-      setDrawGuessGame(data.game || null)
-      setDrawGuessError('')
+      if (data?.game && lastDrawGuessRealtimeAtRef.current <= startedAt) {
+        applyDrawGuessState(data.game, 'http')
+      } else {
+        setDrawGuessError('')
+      }
       if (action === 'leave' && data.game?.status === 'GAME_END') {
         setDrawGuessRoomOpen(false)
       }
@@ -565,23 +667,56 @@ export default function PersonalHub({ onBackToChooser, embedded = false }) {
     }
   }
 
-  const openGameRoom = () => {
+  const openGameRoom = async () => {
+    if (!activeConversationId) {
+      return
+    }
+
     if (drawGuessGame && drawGuessGame.status !== 'GAME_END') {
       setDrawGuessRoomOpen(true)
       setIncomingGamePrompt(null)
       return
     }
-    openGameStartModal()
-  }
 
-  const closeGameRoom = () => {
-    setDrawGuessRoomOpen(false)
+    if (drawGuessLoading) {
+      return
+    }
+
+    const conversationIdAtClick = Number(activeConversationId)
+    setDrawGuessLoading(true)
+    try {
+      const data = await fetchDrawGuessGame(conversationIdAtClick)
+      if (Number(activeConversationId) !== conversationIdAtClick) {
+        return
+      }
+      const latestGame = data?.game || null
+      if (latestGame && latestGame.status !== 'GAME_END') {
+        applyDrawGuessState(latestGame, 'http')
+        setDrawGuessRoomOpen(true)
+        setIncomingGamePrompt(null)
+        return
+      }
+      openGameStartModal()
+    } catch (err) {
+      if (Number(activeConversationId) === conversationIdAtClick) {
+        setDrawGuessError(err?.message || 'Failed to load Draw & Guess.')
+      }
+      openGameStartModal()
+    } finally {
+      if (Number(activeConversationId) === conversationIdAtClick) {
+        setDrawGuessLoading(false)
+      }
+    }
   }
 
   const openGameStartModal = () => {
     const memberCount = Math.max(2, Math.min(Number(activeConversation?.memberCount || 2), 6))
     setGamePlayerCount(memberCount >= 3 ? 3 : memberCount)
     setGameStartModalOpen(true)
+  }
+
+  const closeGameRoom = () => {
+    setDrawGuessRoomOpen(false)
   }
 
   useEffect(() => enhanceRenderedAudioPlayers(messageRootRef.current), [messages])
@@ -901,8 +1036,9 @@ export default function PersonalHub({ onBackToChooser, embedded = false }) {
                         type="button"
                         className="chat-stage__addBtn chat-stage__addBtn--game"
                         onClick={openGameRoom}
+                        disabled={drawGuessLoading}
                       >
-                        {drawGuessGame ? 'Open Game' : 'Start Game'}
+                        {drawGuessLoading ? 'Checking...' : (drawGuessGame && drawGuessGame.status !== 'GAME_END') ? 'Open Game' : 'Start Game'}
                       </button>
                     </div>
                   </div>
@@ -926,7 +1062,7 @@ export default function PersonalHub({ onBackToChooser, embedded = false }) {
                           onStroke={(payload) => runDrawGuessAction('stroke', { payload })}
                           onClearCanvas={() => runDrawGuessAction('clearCanvas')}
                           onLeaveGame={() => runDrawGuessAction('leave')}
-                          onBackToChat={closeGameRoom}
+                          onExitGameView={closeGameRoom}
                         />
                       )}
                     </div>
