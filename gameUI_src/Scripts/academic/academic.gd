@@ -31,7 +31,7 @@ func _try_open_planet(which: int) -> void:
 		4:
 			url = URL_VOICE_ROOM
 	if url != "":
-		ExternalLink.open(url)
+		ExternalLink.open_in_new_tab(url)
 
 
 func _is_left_click(event: InputEvent) -> bool:

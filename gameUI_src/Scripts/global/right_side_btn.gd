@@ -18,7 +18,7 @@ func _on_switch_mouse_exited() -> void:
 func _on_switch_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
 		if event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-			AutoTransition.change_scene("res://Scenes/homepage/homepage.tscn")
+			ExternalLink.open_classic_home()
 
 # ==========================
 # 菜单按钮

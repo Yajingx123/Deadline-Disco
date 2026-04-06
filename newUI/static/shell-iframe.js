@@ -1,6 +1,6 @@
 /**
- * 为 newUI/shell/*/shell.html 设置 iframe 默认地址：与原版同一主站，仅换肤参数。
- * - ?embed=<encodeURIComponent(url)> 强制嵌入任意同源/可嵌页面
+ * Set default iframe URL for newUI shells.
+ * Optional override: ?embed=<encodeURIComponent(url)>
  */
 (function () {
   var frame = document.getElementById('abLegacyFrame');
@@ -38,7 +38,7 @@
   }
 
   if (mod === 'forum') {
-    var forumBase = L.forumProdIndexUrl || (origin ? origin + '/forum-project/dist/index.html' : '/forum-project/dist/index.html');
+    var forumBase = L.forumGodotShellIndexUrl || (origin ? origin + '/forum-project-v2/dist/index.html' : '/forum-project-v2/dist/index.html');
     frame.src = withUiGodot(forumBase);
     return;
   }
