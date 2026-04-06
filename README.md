@@ -9,7 +9,6 @@ For the current runnable architecture and startup topology, use:
 
 - `docs/ARCHITECTURE.md`
 - `docs/REPO_REORG_PLAN.md`
-- `SETUP_GUIDE.md`
 
 If this `README.md` conflicts with `docs/ARCHITECTURE.md`, treat `docs/ARCHITECTURE.md` as the source of truth.
 
@@ -26,9 +25,8 @@ If this `README.md` conflicts with `docs/ARCHITECTURE.md`, treat `docs/ARCHITECT
 - Import bootstrap SQL from the canonical path:
 
 ```bash
-mysql -u root -p123456 < sql/101_acadbeat_core_tables.sql
-mysql -u root -p123456 < sql/102_acadbeat_core_seed_data.sql
-mysql -u root -p123456 < sql/105_academic_practice_video_match_tables.sql
+mysql -u root -p123456 < sql/001_acadbeat_all_create_tables.sql
+mysql -u root -p123456 < sql/002_acadbeat_all_other_sql.sql
 ```
 
 ### 2) Start all services
@@ -75,11 +73,8 @@ Deadline-Disco-dev/
 |-- home.html                  # Main landing page (entry point)
 |-- README.md
 |-- sql/
-|   |-- 101_acadbeat_core_tables.sql
-|   |-- 102_acadbeat_core_seed_data.sql
-|   |-- 105_academic_practice_video_match_tables.sql
-|   |-- 210_academic_practice_video_resources.sql
-|   +-- 220_forum_announcements.sql
+|   |-- 001_acadbeat_all_create_tables.sql
+|   +-- 002_acadbeat_all_other_sql.sql
 |
 |-- vocba_prac/                # Vocabulary Practice module (PHP, port 8002)
 |   |-- config.php             # DB config
@@ -140,9 +135,8 @@ Run the following commands from the project root directory. On Windows, if `mysq
 **Vocabulary module** (database: `acadbeat`):
 
 ```bash
-mysql -u root -p123456 < sql/101_acadbeat_core_tables.sql
-mysql -u root -p123456 < sql/102_acadbeat_core_seed_data.sql
-mysql -u root -p123456 < sql/105_academic_practice_video_match_tables.sql
+mysql -u root -p123456 < sql/001_acadbeat_all_create_tables.sql
+mysql -u root -p123456 < sql/002_acadbeat_all_other_sql.sql
 ```
 
 **Listening module** (database: `my_test_schema`):

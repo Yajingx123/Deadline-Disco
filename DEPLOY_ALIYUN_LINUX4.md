@@ -38,11 +38,8 @@ Note:
 ## 3) Initialize database
 
 ```bash
-mysql -u root -p < sql/101_acadbeat_core_tables.sql
-mysql -u root -p < sql/102_acadbeat_core_seed_data.sql
-mysql -u root -p < sql/105_academic_practice_video_match_tables.sql
-mysql -u root -p < sql/210_academic_practice_video_resources.sql
-mysql -u root -p < sql/220_forum_announcements.sql
+mysql -u root -p < sql/001_acadbeat_all_create_tables.sql
+mysql -u root -p < sql/002_acadbeat_all_other_sql.sql
 ```
 
 ## 4) Build frontend and start realtime

@@ -22,7 +22,7 @@ Challenge-related code is organized here.
 
 - `home.html`
   Contains the `challengeMount` placeholder and loads the challenge bundle
-- `sql/101_acadbeat_core_tables.sql` (canonical)
-  Challenge table definitions
-- `sql/102_acadbeat_core_seed_data.sql` (canonical)
-  Challenge reset and seed cleanup data
+- `sql/001_acadbeat_all_create_tables.sql` (canonical)
+  Challenge table definitions (included in consolidated create-table bootstrap)
+- `sql/002_acadbeat_all_other_sql.sql` (canonical)
+  Challenge reset and seed cleanup data (included in consolidated non-table bootstrap)

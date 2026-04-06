@@ -9,7 +9,7 @@
 ## Directory Hygiene
 
 - Do not add new business files directly under repository root
-- Put repository-level SQL under `database/bootstrap/`
+- Put repository-level SQL under `sql/`
 - Put helper scripts under `tools/`
 - Keep historical artifacts under `archive/` if immediate deletion is risky
 
