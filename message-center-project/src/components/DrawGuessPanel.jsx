@@ -285,8 +285,11 @@ export default function DrawGuessPanel({
     )
   }
 
+  const isRoundStartWaiting = game?.status === 'ROUND_START' && !viewer?.isDrawer
+  const isLobbyState = game?.status === 'LOBBY'
+
   return (
-    <section className={`draw-guess draw-guess--arcade ${viewer?.isDrawer ? 'draw-guess--drawerView' : 'draw-guess--guesserView'}`}>
+    <section className={`draw-guess draw-guess--arcade ${viewer?.isDrawer ? 'draw-guess--drawerView' : 'draw-guess--guesserView'} ${isRoundStartWaiting ? 'draw-guess--waitingState' : ''} ${isLobbyState ? 'draw-guess--lobbyState' : ''}`.trim()}>
       <div className="draw-guess__arcadeHeader">
         <div className="draw-guess__headerMeta">
           <span className="draw-guess__chip">Round {Math.max(1, Number(game?.roundIndex || 0))}</span>
@@ -322,7 +325,7 @@ export default function DrawGuessPanel({
       {game?.status === 'LOBBY' && (
         <div className="draw-guess__lobbyShell">
           <div className="draw-guess__panelTitle">Lobby</div>
-          <div className="draw-guess__panelCopy">
+          <div className="draw-guess__panelCopy draw-guess__lobbySummary">
             Required players: {game.minPlayers}. Ready now: {game.readyCount || 0}.
           </div>
           <div className="draw-guess__playerGrid">
@@ -333,7 +336,7 @@ export default function DrawGuessPanel({
               </div>
             ))}
           </div>
-          <div className="draw-guess__rankActions">
+          <div className="draw-guess__rankActions draw-guess__lobbyActions">
             <button type="button" className="draw-guess__ghostBtn" onClick={() => onToggleReady?.(!viewer?.isReady)}>
               {viewer?.isReady ? 'Unready' : 'Ready'}
             </button>

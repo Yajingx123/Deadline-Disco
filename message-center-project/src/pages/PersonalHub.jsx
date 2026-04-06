@@ -712,6 +712,10 @@ export default function PersonalHub({ onBackToChooser, embedded = false }) {
   const openGameStartModal = () => {
     const memberCount = Math.max(2, Math.min(Number(activeConversation?.memberCount || 2), 6))
     setGamePlayerCount(memberCount >= 3 ? 3 : memberCount)
+    setDrawGuessError('')
+    setDrawGuessGame(null)
+    setIncomingGamePrompt(null)
+    setDrawGuessRoomOpen(true)
     setGameStartModalOpen(true)
   }
 
@@ -1044,27 +1048,71 @@ export default function PersonalHub({ onBackToChooser, embedded = false }) {
                   </div>
                   )}
 
-                  {drawGuessRoomOpen && (drawGuessGame || drawGuessLoading || drawGuessError) && (
+                  {drawGuessRoomOpen && (drawGuessGame || drawGuessLoading || drawGuessError || gameStartModalOpen) && (
                     <div className="chat-stage__gameRoom">
-                      {drawGuessError ? (
-                        <div className="chat-stage__gameError">{drawGuessError}</div>
-                      ) : drawGuessLoading ? (
-                        <div className="chat-stage__gameLoading">Loading Draw & Guess…</div>
-                      ) : (
-                        <DrawGuessPanel
-                          game={drawGuessGame}
-                          currentUser={currentUser}
-                          onCreateLobby={() => runDrawGuessAction('createLobby')}
-                          onToggleReady={(isReady) => runDrawGuessAction('toggleReady', { isReady })}
-                          onStartGame={() => runDrawGuessAction('startGame')}
-                          onPickWord={(wordId) => runDrawGuessAction('pickWord', { wordId })}
-                          onSubmitGuess={(guess) => runDrawGuessAction('submitGuess', { guess })}
-                          onStroke={(payload) => runDrawGuessAction('stroke', { payload })}
-                          onClearCanvas={() => runDrawGuessAction('clearCanvas')}
-                          onLeaveGame={() => runDrawGuessAction('leave')}
-                          onExitGameView={closeGameRoom}
-                        />
-                      )}
+                      <div className="chat-stage__gameViewport">
+                        {drawGuessError ? (
+                          <div className="chat-stage__gameError">{drawGuessError}</div>
+                        ) : drawGuessLoading ? (
+                          <div className="chat-stage__gameLoading">Loading Draw & Guess…</div>
+                        ) : gameStartModalOpen ? (
+                          <div className="chat-stage__gameSetupCard">
+                            <div className="chat-stage__gameSetupTitle">Start Draw & Guess</div>
+                            <p className="chat-stage__gameSetupHint">
+                              Choose how many people should join this round. After confirmation, an invitation will be posted automatically in this chat.
+                            </p>
+                            <label className="chat-stage__gameSetupLabel">
+                              Players for this round
+                              <select
+                                className="chat-stage__gameSetupSelect"
+                                value={gamePlayerCount}
+                                onChange={(event) => setGamePlayerCount(Number(event.target.value))}
+                              >
+                                {Array.from({ length: Math.max(1, Math.min(Number(activeConversation?.memberCount || 2), 6)) - 1 }, (_, index) => index + 2).map((count) => (
+                                  <option key={count} value={count}>{count}</option>
+                                ))}
+                              </select>
+                            </label>
+                            <div className="chat-stage__gameSetupActions">
+                              <button
+                                type="button"
+                                className="draw-guess__ghostBtn"
+                                onClick={() => {
+                                  setGameStartModalOpen(false)
+                                  setDrawGuessRoomOpen(false)
+                                }}
+                              >
+                                Cancel
+                              </button>
+                              <button
+                                type="button"
+                                className="draw-guess__primaryBtn"
+                                onClick={async () => {
+                                  await runDrawGuessAction('createLobby', { minPlayers: gamePlayerCount })
+                                  setGameStartModalOpen(false)
+                                  setDrawGuessRoomOpen(true)
+                                }}
+                              >
+                                Confirm
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <DrawGuessPanel
+                            game={drawGuessGame}
+                            currentUser={currentUser}
+                            onCreateLobby={() => runDrawGuessAction('createLobby')}
+                            onToggleReady={(isReady) => runDrawGuessAction('toggleReady', { isReady })}
+                            onStartGame={() => runDrawGuessAction('startGame')}
+                            onPickWord={(wordId) => runDrawGuessAction('pickWord', { wordId })}
+                            onSubmitGuess={(guess) => runDrawGuessAction('submitGuess', { guess })}
+                            onStroke={(payload) => runDrawGuessAction('stroke', { payload })}
+                            onClearCanvas={() => runDrawGuessAction('clearCanvas')}
+                            onLeaveGame={() => runDrawGuessAction('leave')}
+                            onExitGameView={closeGameRoom}
+                          />
+                        )}
+                      </div>
                     </div>
                   )}
 
@@ -1179,49 +1227,6 @@ export default function PersonalHub({ onBackToChooser, embedded = false }) {
           >
             Delete Chat
           </button>
-        </div>
-      )}
-
-      {gameStartModalOpen && (
-        <div className="personal-modal">
-          <div className="personal-modal__backdrop" onClick={() => setGameStartModalOpen(false)} />
-          <div className="personal-modal__card personal-modal__card--compact">
-            <div className="personal-modal__header">
-              <h3>Start Draw & Guess</h3>
-              <button type="button" className="personal-modal__close" onClick={() => setGameStartModalOpen(false)}>✕</button>
-            </div>
-            <div className="personal-modal__body">
-              <p className="personal-modal__hint">
-                Choose how many people should join this round. After confirmation, an invitation will be posted automatically in this chat.
-              </p>
-              <label className="personal-modal__label">
-                Players for this round
-                <select
-                  className="personal-modal__input"
-                  value={gamePlayerCount}
-                  onChange={(event) => setGamePlayerCount(Number(event.target.value))}
-                >
-                  {Array.from({ length: Math.max(1, Math.min(Number(activeConversation?.memberCount || 2), 6)) - 1 }, (_, index) => index + 2).map((count) => (
-                    <option key={count} value={count}>{count}</option>
-                  ))}
-                </select>
-              </label>
-            </div>
-            <div className="personal-modal__footer">
-              <button type="button" className="personal-modal__secondary" onClick={() => setGameStartModalOpen(false)}>Cancel</button>
-              <button
-                type="button"
-                className="personal-modal__primary"
-                onClick={async () => {
-                  await runDrawGuessAction('createLobby', { minPlayers: gamePlayerCount })
-                  setGameStartModalOpen(false)
-                  setDrawGuessRoomOpen(true)
-                }}
-              >
-                Confirm
-              </button>
-            </div>
-          </div>
         </div>
       )}
 
