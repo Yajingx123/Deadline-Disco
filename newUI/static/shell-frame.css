@@ -1,0 +1,104 @@
+/**
+ * 网页壳布局：底图 + 边框覆盖 + 中间 iframe 承载原版页面。
+ * 配图放入 newUI/assets/<模块>/ 后，在对应 shell/overrides.css 里写 --ab-* 变量即可。
+ */
+:root {
+  --ab-shell-bg: #2b2630;
+  --ab-shell-bg-image: none;
+  --ab-shell-frame-image: none;
+  --ab-shell-overlay-image: none;
+  --ab-shell-content-inset: 8%;
+  --ab-shell-radius: 0;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+body.ab-shell {
+  overflow: hidden;
+  background: var(--ab-shell-bg);
+  color: #f5f5f5;
+  font-family: system-ui, "Segoe UI", sans-serif;
+}
+
+.ab-shell-viewport {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  min-height: 100dvh;
+  isolation: isolate;
+}
+
+.ab-shell-underlay {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-color: var(--ab-shell-bg);
+  background-image: var(--ab-shell-bg-image);
+  background-size: cover;
+  background-position: center;
+  pointer-events: none;
+}
+
+.ab-shell-underlay img.ab-shell-bg-fallback {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.ab-shell-underlay img.ab-shell-bg-fallback[src=""] {
+  display: none;
+}
+
+.ab-shell-frame {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background-image: var(--ab-shell-frame-image);
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.ab-shell-main {
+  position: absolute;
+  z-index: 1;
+  left: var(--ab-shell-content-inset);
+  right: var(--ab-shell-content-inset);
+  top: var(--ab-shell-content-inset);
+  bottom: var(--ab-shell-content-inset);
+  border-radius: var(--ab-shell-radius);
+  overflow: hidden;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.35);
+  background: #111;
+}
+
+.ab-shell-iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #fff;
+}
+
+.ab-shell-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+  background-image: var(--ab-shell-overlay-image);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}

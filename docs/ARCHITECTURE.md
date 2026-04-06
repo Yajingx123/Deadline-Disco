@@ -18,7 +18,9 @@
 | `forum-project/` | 论坛前端（Vite）；开发 `5173/forum-project/dist/` |
 | `admin_page/` | 管理端构建产物 + 开发服务 |
 | `message-center-project/` | 消息中心前端 |
-| `newUI/static/` | Godot/经典共用的**补充样式与静态片段**（如像素风 CSS） |
+| `newUI/static/` | Godot/经典共用的**补充样式与静态片段**（如像素风 CSS）；含 **`shell-frame.css` / `shell-iframe.js`**（网页壳布局与 iframe 默认路由） |
+| `newUI/shell/` | **网页壳**：按 `academic` / `vocabulary` / `forum` 分子目录，`shell.html` 内嵌 iframe 承载原版同功能页面 |
+| `newUI/assets/` | 新版 UI **成品配图**（按模块分子目录，由对应 `shell/*/overrides.css` 引用） |
 | `gameUI_src/` | Godot 工程；Web 玩法则导出到 `gameUI_src/Release` 并由 `serve.py` 提供 |
 | `shared/` | **跨页面共享**：`acadbeat-local-config.js`（本地绝对 URL 单一真相） |
 | `shared-nav.js` / `shared-nav.css`（仓库根） | 顶栏导航组件（Academic / Forum / Technology / **Studio** → `Studio/studio.html`）；在引入 `shared/acadbeat-local-config.js` 后会自动使用其中的管理端/消息中心/摘要 API URL（未引入时仍有内置回退） |

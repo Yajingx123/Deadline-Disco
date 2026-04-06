@@ -1,0 +1,18 @@
+newUI 目录约定（网页壳 + 配图；Godot 仅大厅约两页，见 gameUI_src/LOBBY_SCOPE.txt）
+
+static/
+  shell-frame.css    壳布局与 CSS 变量（底图 / 边框 / 覆盖层 / 内嵌区）
+  shell-iframe.js    默认 iframe 指向原版页面并带 ui=godot；?embed= 可强制 URL
+  （原有 game-practice-*.css / html 仍在此）
+
+shell/
+  common/shell-base.html   可复制改写的模板
+  academic|vocabulary|forum/
+    shell.html             入口页
+    overrides.css          模块变量与配图 url（引用 ../static/shell-frame.css）
+
+assets/
+  common|academic|vocabulary|forum/   运行时 Web 使用的成品图（webp/png 等）
+
+本地打开壳页：经主站 8001 访问（与 shared/acadbeat-local-config.js 同源），例如：
+  /newUI/shell/academic/shell.html

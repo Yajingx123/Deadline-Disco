@@ -1,0 +1,5 @@
+Godot 工程（gameUI_src）在本仓库中的定位：仅承担「大厅」类入口，约两页量级；
+业务功能页面以网页壳 newUI/shell/* 内嵌 iframe 打开原版（同 ACADBEAT_LOCAL.mainOrigin）为主。
+
+大厅内跳转外链时，请与 shared/acadbeat-local-config.js 中 godotWebEntryUrl / mainOrigin 等保持一致
+（Godot 无法读取该 JS，改端口或路径后需手动同步 GDScript 常量并重新导出 Web）。
