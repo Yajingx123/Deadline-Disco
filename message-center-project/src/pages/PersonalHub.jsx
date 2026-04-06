@@ -1,14 +1,17 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import MessageComposer from '../components/MessageComposer'
+import DrawGuessPanel from '../components/DrawGuessPanel'
 import {
   connectRealtime,
   createDirectConversation,
   createGroupConversation,
   deleteChatConversation,
+  fetchDrawGuessGame,
   fetchChatConversations,
   fetchMessageCenter,
   fetchChatMessages,
   fetchSessionUser,
+  mutateDrawGuessGame,
   renameChatConversation,
   searchChatUsers,
   sendChatMessage,
@@ -134,6 +137,13 @@ export default function PersonalHub({ onBackToChooser, embedded = false }) {
   const [profileModalOpen, setProfileModalOpen] = useState(false)
   const [profileTitleDraft, setProfileTitleDraft] = useState('')
   const [imageViewer, setImageViewer] = useState(null)
+  const [drawGuessGame, setDrawGuessGame] = useState(null)
+  const [drawGuessError, setDrawGuessError] = useState('')
+  const [drawGuessLoading, setDrawGuessLoading] = useState(false)
+  const [gameStartModalOpen, setGameStartModalOpen] = useState(false)
+  const [gamePlayerCount, setGamePlayerCount] = useState(2)
+  const [drawGuessRoomOpen, setDrawGuessRoomOpen] = useState(false)
+  const [incomingGamePrompt, setIncomingGamePrompt] = useState(null)
 
   const messageRootRef = useRef(null)
   const messageListRef = useRef(null)
@@ -315,6 +325,40 @@ export default function PersonalHub({ onBackToChooser, embedded = false }) {
   }, [activeConversationId])
 
   useEffect(() => {
+    let cancelled = false
+
+    async function loadGame() {
+      if (!activeConversationId) {
+        setDrawGuessGame(null)
+        setDrawGuessRoomOpen(false)
+        return
+      }
+      setDrawGuessLoading(true)
+      try {
+        const data = await fetchDrawGuessGame(activeConversationId)
+        if (!cancelled) {
+          setDrawGuessGame(data.game || null)
+          setDrawGuessError('')
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setDrawGuessGame(null)
+          setDrawGuessError(err?.message || 'Failed to load Draw & Guess.')
+        }
+      } finally {
+        if (!cancelled) {
+          setDrawGuessLoading(false)
+        }
+      }
+    }
+
+    loadGame()
+    return () => {
+      cancelled = true
+    }
+  }, [activeConversationId])
+
+  useEffect(() => {
     if (!activeConversationId) {
       return undefined
     }
@@ -353,9 +397,61 @@ export default function PersonalHub({ onBackToChooser, embedded = false }) {
       const eventType = String(event?.type || '')
       const eventConversationId = Number(event?.data?.conversationId || 0)
       const eventMessage = normalizeRealtimeMessage(event?.data?.message || null, currentUser)
+      const currentUserId = Number(currentUser?.user_id || currentUser?.id || 0)
 
       if (eventType.startsWith('chat.')) {
         await refreshConversations().catch(() => {})
+      }
+
+      if (
+        eventType.startsWith('game.')
+        && activeConversationId
+        && eventConversationId
+        && Number(activeConversationId) === eventConversationId
+      ) {
+        if (eventType === 'game.stroke.broadcast') {
+          setDrawGuessGame((prev) => {
+            if (!prev || Number(prev.roomId || 0) !== Number(event?.data?.gameId || 0)) {
+              return prev
+            }
+            return {
+              ...prev,
+              strokes: [...(prev.strokes || []), event?.data?.stroke].filter(Boolean),
+            }
+          })
+        } else if (eventType === 'game.canvas.cleared') {
+          setDrawGuessGame((prev) => {
+            if (!prev || Number(prev.roomId || 0) !== Number(event?.data?.gameId || 0)) {
+              return prev
+            }
+            return {
+              ...prev,
+              strokes: [],
+            }
+          })
+        } else {
+          try {
+            const data = await fetchDrawGuessGame(activeConversationId)
+            setDrawGuessGame(data.game || null)
+            setDrawGuessError('')
+            if (
+              data.game
+              && data.game.status !== 'GAME_END'
+              && !drawGuessRoomOpen
+              && ['game.lobby.updated', 'game.round.started', 'game.state.sync'].includes(eventType)
+            ) {
+              const drawer = (data.game.players || []).find((player) => Number(player.userId) === Number(data.game.currentDrawerId || 0))
+              setIncomingGamePrompt({
+                title: eventType === 'game.lobby.updated' ? 'Draw & Guess invitation' : 'Draw & Guess is live',
+                description: eventType === 'game.lobby.updated'
+                  ? `${drawer?.displayName || drawer?.username || 'Someone'} started a game in this chat.`
+                  : 'The game state changed. Open the game room to continue.',
+              })
+            }
+          } catch (_err) {
+            // Keep current state if game hydration fails.
+          }
+        }
       }
 
       if (eventType === 'chat.message.created' || eventType === 'message-center.updated') {
@@ -399,7 +495,94 @@ export default function PersonalHub({ onBackToChooser, embedded = false }) {
         }
       }
     })
-  }, [loading, activeConversationId, currentUser])
+  }, [loading, activeConversationId, currentUser, drawGuessRoomOpen])
+
+  useEffect(() => {
+    if (!activeConversationId || !drawGuessGame) {
+      return undefined
+    }
+    const timers = []
+    const now = Date.now()
+    const schedule = (targetTime) => {
+      if (!targetTime) return
+      const target = new Date(targetTime).getTime()
+      if (!Number.isFinite(target)) return
+      const delay = Math.max(300, target - now + 300)
+      const timer = window.setTimeout(() => {
+        mutateDrawGuessGame(activeConversationId, 'tick').catch(() => {})
+      }, delay)
+      timers.push(timer)
+    }
+
+    schedule(drawGuessGame.selectionDeadlineAt)
+    schedule(drawGuessGame.roundEndsAt)
+    if (drawGuessGame.roundStartTime) {
+      const startedAt = new Date(drawGuessGame.roundStartTime).getTime()
+      if (Number.isFinite(startedAt)) {
+        schedule(new Date(startedAt + 30000).toISOString())
+        schedule(new Date(startedAt + 60000).toISOString())
+      }
+    }
+    if (drawGuessGame.roundEndedAt) {
+      const endedAt = new Date(drawGuessGame.roundEndedAt).getTime()
+      if (Number.isFinite(endedAt)) {
+        schedule(new Date(endedAt + 1200).toISOString())
+      }
+    }
+    return () => timers.forEach((timer) => window.clearTimeout(timer))
+  }, [
+    activeConversationId,
+    drawGuessGame?.roomId,
+    drawGuessGame?.status,
+    drawGuessGame?.selectionDeadlineAt,
+    drawGuessGame?.roundStartTime,
+    drawGuessGame?.roundEndsAt,
+    drawGuessGame?.roundEndedAt,
+  ])
+
+  useEffect(() => {
+    if (
+      drawGuessRoomOpen
+      && drawGuessGame
+      && drawGuessGame.status === 'GAME_END'
+      && drawGuessGame.endReason === 'cancelled'
+    ) {
+      setDrawGuessRoomOpen(false)
+    }
+  }, [drawGuessRoomOpen, drawGuessGame])
+
+  const runDrawGuessAction = async (action, payload = {}) => {
+    if (!activeConversationId) return
+    try {
+      const data = await mutateDrawGuessGame(activeConversationId, action, payload)
+      setDrawGuessGame(data.game || null)
+      setDrawGuessError('')
+      if (action === 'leave' && data.game?.status === 'GAME_END') {
+        setDrawGuessRoomOpen(false)
+      }
+    } catch (err) {
+      setDrawGuessError(err?.message || 'Draw & Guess request failed.')
+    }
+  }
+
+  const openGameRoom = () => {
+    if (drawGuessGame && drawGuessGame.status !== 'GAME_END') {
+      setDrawGuessRoomOpen(true)
+      setIncomingGamePrompt(null)
+      return
+    }
+    openGameStartModal()
+  }
+
+  const closeGameRoom = () => {
+    setDrawGuessRoomOpen(false)
+  }
+
+  const openGameStartModal = () => {
+    const memberCount = Math.max(2, Math.min(Number(activeConversation?.memberCount || 2), 6))
+    setGamePlayerCount(memberCount >= 3 ? 3 : memberCount)
+    setGameStartModalOpen(true)
+  }
 
   useEffect(() => enhanceRenderedAudioPlayers(messageRootRef.current), [messages])
 
@@ -594,7 +777,8 @@ export default function PersonalHub({ onBackToChooser, embedded = false }) {
         ) : error ? (
           <div className="personal-state personal-state--error">{error}</div>
         ) : (
-          <div className="personal-layout">
+          <div className={`personal-layout ${drawGuessRoomOpen ? 'personal-layout--gameMode' : ''}`}>
+            {!drawGuessRoomOpen && (
             <aside className="chat-sidebar">
                 <div className="chat-sidebar__searchBlock">
                   <div className="chat-sidebar__titleRow">
@@ -679,12 +863,14 @@ export default function PersonalHub({ onBackToChooser, embedded = false }) {
                 )}
               </div>
             </aside>
+            )}
 
-            <main className="chat-stage">
+            <main className={`chat-stage ${drawGuessRoomOpen ? 'chat-stage--gameOnly' : ''}`}>
               {!activeConversation ? (
                 <div className="chat-stage__empty">Select a conversation or search a username to start a new chat.</div>
               ) : (
                 <>
+                  {!drawGuessRoomOpen && (
                   <div className="chat-stage__header">
                     <div>
                       <div className="chat-stage__type">{activeConversation.type === 'group' ? 'Group Chat' : 'Direct Message'}</div>
@@ -711,10 +897,42 @@ export default function PersonalHub({ onBackToChooser, embedded = false }) {
                       <button type="button" className="chat-stage__addBtn" onClick={openGroupModal}>
                         Add Members
                       </button>
+                      <button
+                        type="button"
+                        className="chat-stage__addBtn chat-stage__addBtn--game"
+                        onClick={openGameRoom}
+                      >
+                        {drawGuessGame ? 'Open Game' : 'Start Game'}
+                      </button>
                     </div>
                   </div>
+                  )}
 
-                  <div className="chat-stage__messages" ref={messageRootRef}>
+                  {drawGuessRoomOpen && (drawGuessGame || drawGuessLoading || drawGuessError) && (
+                    <div className="chat-stage__gameRoom">
+                      {drawGuessError ? (
+                        <div className="chat-stage__gameError">{drawGuessError}</div>
+                      ) : drawGuessLoading ? (
+                        <div className="chat-stage__gameLoading">Loading Draw & Guess…</div>
+                      ) : (
+                        <DrawGuessPanel
+                          game={drawGuessGame}
+                          currentUser={currentUser}
+                          onCreateLobby={() => runDrawGuessAction('createLobby')}
+                          onToggleReady={(isReady) => runDrawGuessAction('toggleReady', { isReady })}
+                          onStartGame={() => runDrawGuessAction('startGame')}
+                          onPickWord={(wordId) => runDrawGuessAction('pickWord', { wordId })}
+                          onSubmitGuess={(guess) => runDrawGuessAction('submitGuess', { guess })}
+                          onStroke={(payload) => runDrawGuessAction('stroke', { payload })}
+                          onClearCanvas={() => runDrawGuessAction('clearCanvas')}
+                          onLeaveGame={() => runDrawGuessAction('leave')}
+                          onBackToChat={closeGameRoom}
+                        />
+                      )}
+                    </div>
+                  )}
+
+                  <div className={`chat-stage__messages ${drawGuessRoomOpen ? 'is-hiddenForGame' : ''}`} ref={messageRootRef}>
                     <div className="chat-stage__messagesInner" ref={messageListRef}>
                       {messageLoading ? (
                         <div className="chat-stage__status">Loading conversation…</div>
@@ -738,7 +956,9 @@ export default function PersonalHub({ onBackToChooser, embedded = false }) {
                     </div>
                   </div>
 
-                  <MessageComposer disabled={!activeConversationId} onSend={handleSendMessage} />
+                  <div className={drawGuessRoomOpen ? 'chat-stage__composerWrap is-hiddenForGame' : 'chat-stage__composerWrap'}>
+                    <MessageComposer disabled={!activeConversationId} onSend={handleSendMessage} />
+                  </div>
                 </>
               )}
             </main>
@@ -823,6 +1043,77 @@ export default function PersonalHub({ onBackToChooser, embedded = false }) {
           >
             Delete Chat
           </button>
+        </div>
+      )}
+
+      {gameStartModalOpen && (
+        <div className="personal-modal">
+          <div className="personal-modal__backdrop" onClick={() => setGameStartModalOpen(false)} />
+          <div className="personal-modal__card personal-modal__card--compact">
+            <div className="personal-modal__header">
+              <h3>Start Draw & Guess</h3>
+              <button type="button" className="personal-modal__close" onClick={() => setGameStartModalOpen(false)}>✕</button>
+            </div>
+            <div className="personal-modal__body">
+              <p className="personal-modal__hint">
+                Choose how many people should join this round. After confirmation, an invitation will be posted automatically in this chat.
+              </p>
+              <label className="personal-modal__label">
+                Players for this round
+                <select
+                  className="personal-modal__input"
+                  value={gamePlayerCount}
+                  onChange={(event) => setGamePlayerCount(Number(event.target.value))}
+                >
+                  {Array.from({ length: Math.max(1, Math.min(Number(activeConversation?.memberCount || 2), 6)) - 1 }, (_, index) => index + 2).map((count) => (
+                    <option key={count} value={count}>{count}</option>
+                  ))}
+                </select>
+              </label>
+            </div>
+            <div className="personal-modal__footer">
+              <button type="button" className="personal-modal__secondary" onClick={() => setGameStartModalOpen(false)}>Cancel</button>
+              <button
+                type="button"
+                className="personal-modal__primary"
+                onClick={async () => {
+                  await runDrawGuessAction('createLobby', { minPlayers: gamePlayerCount })
+                  setGameStartModalOpen(false)
+                  setDrawGuessRoomOpen(true)
+                }}
+              >
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {incomingGamePrompt && (
+        <div className="personal-modal">
+          <div className="personal-modal__backdrop" onClick={() => setIncomingGamePrompt(null)} />
+          <div className="personal-modal__card personal-modal__card--compact">
+            <div className="personal-modal__header">
+              <h3>{incomingGamePrompt.title}</h3>
+              <button type="button" className="personal-modal__close" onClick={() => setIncomingGamePrompt(null)}>✕</button>
+            </div>
+            <div className="personal-modal__body">
+              <p className="personal-modal__hint">{incomingGamePrompt.description}</p>
+            </div>
+            <div className="personal-modal__footer">
+              <button type="button" className="personal-modal__secondary" onClick={() => setIncomingGamePrompt(null)}>Later</button>
+              <button
+                type="button"
+                className="personal-modal__primary"
+                onClick={() => {
+                  setIncomingGamePrompt(null)
+                  setDrawGuessRoomOpen(true)
+                }}
+              >
+                Open Game
+              </button>
+            </div>
+          </div>
         </div>
       )}
 

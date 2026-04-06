@@ -231,6 +231,920 @@
   overflow: auto;
 }
 
+.chat-stage__addBtn--game {
+  background: #1f4f91;
+  color: #ffffff;
+  border-color: #1f4f91;
+}
+
+.personal-layout--gameMode {
+  grid-template-columns: 1fr;
+  background:
+    radial-gradient(circle at top left, rgba(255, 200, 84, 0.22), transparent 24%),
+    radial-gradient(circle at top right, rgba(168, 85, 247, 0.2), transparent 20%),
+    linear-gradient(180deg, #fffaf0 0%, #ffe8b3 100%);
+}
+
+.chat-stage--gameOnly {
+  background: transparent;
+}
+
+.chat-stage__gameRoom {
+  display: grid;
+  align-content: start;
+  gap: 16px;
+  min-height: 100%;
+  padding: 28px 34px 34px;
+  background:
+    radial-gradient(circle at top left, rgba(255, 209, 102, 0.35), transparent 20%),
+    radial-gradient(circle at top right, rgba(168, 85, 247, 0.22), transparent 18%),
+    linear-gradient(180deg, #fffaf1 0%, #ffe7a9 100%);
+  overflow: auto;
+}
+
+.chat-stage__messages.is-hiddenForGame,
+.chat-stage__composerWrap.is-hiddenForGame {
+  display: none;
+}
+
+.chat-stage__gameLoading,
+.chat-stage__gameError {
+  padding: 18px 20px;
+  border-radius: 16px;
+  background: #ffffff;
+  color: #334155;
+  border: 1px solid #dbe7f5;
+}
+
+.chat-stage__gameError {
+  color: #b91c1c;
+}
+
+.draw-guess {
+  display: grid;
+  gap: 18px;
+  width: min(100%, 1400px);
+  margin: 0 auto;
+  padding: 26px;
+  border: 1px solid rgba(146, 64, 248, 0.14);
+  border-radius: 30px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(255,246,226,0.98));
+  box-shadow: 0 24px 48px rgba(113, 63, 18, 0.1), inset 0 1px 0 rgba(255,255,255,0.7);
+}
+
+.draw-guess--playful {
+  color: #3f2356;
+}
+
+.draw-guess--gameEndScreen {
+  min-height: calc(100vh - 180px);
+  align-content: start;
+}
+
+.draw-guess--empty {
+  display: grid;
+  gap: 16px;
+  align-content: center;
+  justify-items: start;
+  min-height: min(60vh, 520px);
+}
+
+.draw-guess__emptyCopy {
+  display: grid;
+  gap: 6px;
+  color: #43215d;
+}
+
+.draw-guess__topbar,
+.draw-guess__lobbyActions,
+.draw-guess__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.draw-guess__lobbyActions {
+  flex-wrap: wrap;
+}
+
+.draw-guess__meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.draw-guess__backBtn {
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(123, 61, 208, 0.18);
+  background: rgba(255, 255, 255, 0.86);
+  color: #4b2a63;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 12px 28px rgba(146, 64, 248, 0.10);
+}
+
+.draw-guess__round,
+.draw-guess__statusTag,
+.draw-guess__hint,
+.draw-guess__drawerWord {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(124, 58, 237, 0.10);
+  color: #5b21b6;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.draw-guess__hintStack {
+  display: grid;
+  gap: 10px;
+}
+
+.draw-guess__timer {
+  min-width: 72px;
+  text-align: center;
+  padding: 10px 12px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #3b1561, #1d214f);
+  color: #ffffff;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  box-shadow: 0 14px 28px rgba(59, 21, 97, 0.22);
+}
+
+.draw-guess__sectionTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: #43215d;
+}
+
+.draw-guess__helper,
+.draw-guess__waiting {
+  color: #6d5a81;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.draw-guess__playerGrid,
+.draw-guess__wordOptions {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 10px;
+}
+
+.draw-guess__playerCard,
+.draw-guess__wordBtn {
+  padding: 14px 16px;
+  border: 1px solid rgba(146, 64, 248, 0.10);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 12px 24px rgba(168, 85, 247, 0.08);
+}
+
+.draw-guess__playerCard {
+  display: grid;
+  gap: 4px;
+}
+
+.draw-guess__wordBtn {
+  cursor: pointer;
+  color: #4b2a63;
+  font-weight: 700;
+}
+
+.draw-guess__primaryBtn,
+.draw-guess__ghostBtn {
+  height: 46px;
+  padding: 0 20px;
+  border-radius: 16px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.draw-guess__primaryBtn {
+  border: 0;
+  background: linear-gradient(135deg, #8b2df6, #5f2eea);
+  color: #ffffff;
+  box-shadow: 0 16px 28px rgba(95, 46, 234, 0.24);
+}
+
+.draw-guess__ghostBtn {
+  border: 1px solid rgba(123, 61, 208, 0.18);
+  background: rgba(255, 255, 255, 0.90);
+  color: #4b2a63;
+  box-shadow: 0 10px 24px rgba(123, 61, 208, 0.10);
+}
+
+.draw-guess__primaryBtn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.draw-guess__board {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 380px);
+  gap: 24px;
+  align-items: stretch;
+}
+
+.draw-guess__canvasWrap {
+  position: relative;
+  min-height: clamp(480px, 64vh, 820px);
+  border-radius: 28px;
+  overflow: hidden;
+  border: 1px solid rgba(146, 64, 248, 0.12);
+  background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(255,244,218,0.96));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 24px 40px rgba(255, 177, 36, 0.14);
+}
+
+.draw-guess__canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: none;
+  background: #ffffff;
+}
+
+.draw-guess__canvas.is-drawer {
+  cursor: crosshair;
+}
+
+.draw-guess__sidebar {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  padding: 20px;
+  border-radius: 28px;
+  border: 1px solid rgba(146, 64, 248, 0.12);
+  background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(255,241,201,0.92));
+  box-shadow: 0 20px 36px rgba(168, 85, 247, 0.08);
+}
+
+.draw-guess__scoreList {
+  display: grid;
+  gap: 10px;
+}
+
+.draw-guess__scoreRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 14px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.74);
+  color: #4b2a63;
+}
+
+.draw-guess__tools,
+.draw-guess__toolRow,
+.draw-guess__size {
+  display: grid;
+  gap: 10px;
+}
+
+.draw-guess__toolRow {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.draw-guess__toolRow--palette {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.draw-guess__toolRow button {
+  height: 54px;
+  border-radius: 16px;
+  border: 1px solid rgba(146, 64, 248, 0.12);
+  background: rgba(255, 255, 255, 0.92);
+  color: #4b2a63;
+  cursor: pointer;
+  box-shadow: 0 10px 22px rgba(95, 46, 234, 0.08);
+}
+
+.draw-guess__toolBtn {
+  display: grid;
+  place-items: center;
+  padding: 0;
+}
+
+.draw-guess__toolBtn svg {
+  width: 22px;
+  height: 22px;
+}
+
+.draw-guess__toolRow button.is-active {
+  border-color: #7c3aed;
+  background: rgba(124, 58, 237, 0.12);
+}
+
+.draw-guess__swatch {
+  width: 100%;
+  min-height: 48px;
+  aspect-ratio: 1;
+  display: grid;
+  place-items: center;
+  border-radius: 16px;
+  border: 1px solid rgba(146, 64, 248, 0.10);
+  background: rgba(255, 255, 255, 0.94);
+  cursor: pointer;
+}
+
+.draw-guess__swatch.is-active {
+  border-color: #7c3aed;
+  box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.14);
+}
+
+.draw-guess__swatchInner {
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  min-height: 24px;
+  display: block;
+  flex: 0 0 auto;
+  border-radius: 999px;
+  background: var(--swatch);
+  box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.12);
+}
+
+.draw-guess__size input {
+  width: 100%;
+}
+
+.draw-guess__size {
+  color: #6d5a81;
+  font-weight: 600;
+}
+
+.draw-guess__guessForm {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+
+.draw-guess__guessInput {
+  flex: 1;
+  height: 48px;
+  padding: 0 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(123, 61, 208, 0.16);
+  background: rgba(255, 255, 255, 0.94);
+  color: #4b2a63;
+}
+
+.draw-guess__guessInput:focus {
+  outline: 0;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.12);
+}
+
+.draw-guess__resultBanner,
+.draw-guess__gameEnd {
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(124, 58, 237, 0.08);
+  color: #4b2a63;
+}
+
+.draw-guess__gameEnd {
+  width: 100%;
+  min-height: calc(100vh - 220px);
+  padding: 28px;
+  border-radius: 32px;
+  background: linear-gradient(180deg, rgba(122, 36, 255, 0.96), rgba(104, 33, 204, 0.96));
+  border: 0;
+  box-shadow: 0 28px 48px rgba(91, 33, 182, 0.26);
+  color: #ffffff;
+}
+
+.draw-guess__gameEndScreenBody {
+  display: grid;
+  gap: 22px;
+  align-content: start;
+}
+
+.draw-guess__endHero {
+  width: min(100%, 420px);
+  margin: 0 auto;
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+  padding: 20px 18px 18px;
+  border-radius: 28px;
+  background: radial-gradient(circle at top, rgba(255, 206, 84, 0.30), transparent 36%), linear-gradient(180deg, rgba(156, 39, 255, 0.92), rgba(126, 35, 238, 0.92));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.18);
+}
+
+.draw-guess__endBadge {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.78);
+}
+
+.draw-guess__endTrophy {
+  width: 110px;
+  height: 110px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: radial-gradient(circle at 35% 30%, #ffd86b, #ff9800);
+  font-size: 56px;
+  box-shadow: 0 18px 30px rgba(255, 166, 0, 0.22);
+}
+
+.draw-guess__endHeadline {
+  padding: 8px 18px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #ff9d00, #ffcc2a);
+  color: #7b2d12;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.draw-guess__endChampion {
+  color: rgba(255,255,255,0.90);
+  font-weight: 700;
+}
+
+.draw-guess__guessFeed {
+  display: grid;
+  gap: 10px;
+}
+
+.draw-guess__guessFeedPanel {
+  display: grid;
+  gap: 10px;
+  padding: 16px 18px;
+  border-radius: 22px;
+  border: 1px solid rgba(146, 64, 248, 0.12);
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: 0 14px 30px rgba(123, 61, 208, 0.08);
+}
+
+.draw-guess__guessFeedList {
+  display: grid;
+  gap: 8px;
+}
+
+.draw-guess__guessFeedList--scroll {
+  min-height: 132px;
+  max-height: 188px;
+  overflow: auto;
+  padding-right: 6px;
+  align-content: start;
+}
+
+.draw-guess__guessFeedItem {
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.draw-guess__guessFeedItem.is-correct {
+  background: rgba(22, 163, 74, 0.12);
+  color: #166534;
+}
+
+.draw-guess__guessFeedItem.is-wrong {
+  background: rgba(30, 64, 175, 0.08);
+  color: #1e3a8a;
+}
+
+.draw-guess__guessStatus {
+  color: #dc2626;
+  font-weight: 700;
+}
+
+.draw-guess__winnerList {
+  margin: 12px 0 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 8px;
+}
+
+.draw-guess__winnerList--cards {
+  padding-left: 0;
+  width: min(100%, 420px);
+  margin: 0 auto;
+  gap: 12px;
+}
+
+.draw-guess__winnerList li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.draw-guess__winnerList--cards li {
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.14);
+  color: #fff;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.12);
+}
+
+.draw-guess__winnerMeta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.draw-guess__winnerMeta em {
+  font-style: normal;
+  font-size: 20px;
+}
+
+.draw-guess--arcade {
+  width: min(100%, 1180px);
+  gap: 20px;
+  padding: 24px;
+  border-radius: 28px;
+  border: 1px solid rgba(132, 76, 255, 0.14);
+  background:
+    radial-gradient(circle at top left, rgba(255, 208, 87, 0.18), transparent 24%),
+    radial-gradient(circle at top right, rgba(143, 92, 255, 0.18), transparent 22%),
+    linear-gradient(180deg, #fffaf2 0%, #fff0cf 100%);
+  box-shadow: 0 24px 50px rgba(125, 84, 0, 0.10);
+}
+
+.draw-guess__heroCard,
+.draw-guess__lobbyShell,
+.draw-guess__wordChoiceShell,
+.draw-guess__waitingCard,
+.draw-guess__leaderboardCard,
+.draw-guess__stageCard,
+.draw-guess__railCard,
+.draw-guess__answerCard {
+  border-radius: 24px;
+  border: 1px solid rgba(132, 76, 255, 0.12);
+  background: rgba(255, 255, 255, 0.88);
+  box-shadow: 0 16px 32px rgba(132, 76, 255, 0.08);
+}
+
+.draw-guess__heroCard,
+.draw-guess__lobbyShell,
+.draw-guess__wordChoiceShell,
+.draw-guess__leaderboardCard {
+  padding: 28px;
+}
+
+.draw-guess__waitingCard,
+.draw-guess__answerCard {
+  padding: 18px 20px;
+}
+
+.draw-guess__heroBadge,
+.draw-guess__leaderboardBadge,
+.draw-guess__chip,
+.draw-guess__wordLabel {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: rgba(116, 58, 237, 0.10);
+  color: #6d28d9;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.draw-guess__heroTitle,
+.draw-guess__leaderboardTitle {
+  font-size: clamp(2rem, 3vw, 3rem);
+  line-height: 1;
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  color: #421c68;
+}
+
+.draw-guess__heroText,
+.draw-guess__panelCopy {
+  color: #6a5b78;
+  line-height: 1.65;
+  font-size: 15px;
+}
+
+.draw-guess__arcadeHeader {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 16px;
+}
+
+.draw-guess__headerMeta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.draw-guess__headerText {
+  color: #48235f;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.draw-guess__chip--status {
+  background: rgba(245, 158, 11, 0.14);
+  color: #b45309;
+}
+
+.draw-guess__wordBanner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  padding: 14px 18px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(255, 213, 79, 0.18), rgba(168, 85, 247, 0.10));
+  border: 1px solid rgba(245, 158, 11, 0.14);
+  color: #5b21b6;
+}
+
+.draw-guess__wordBanner strong {
+  font-size: 1.05rem;
+}
+
+.draw-guess__hintBubble {
+  display: grid;
+  gap: 6px;
+  padding: 12px 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.74);
+  border: 1px solid rgba(132, 76, 255, 0.10);
+  color: #4c1d95;
+}
+
+.draw-guess__playGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(300px, 340px);
+  gap: 18px;
+  align-items: start;
+}
+
+.draw-guess__stageCard {
+  padding: 18px;
+}
+
+.draw-guess__canvasShell {
+  border-radius: 22px;
+  overflow: hidden;
+  min-height: 460px;
+  border: 1px solid rgba(132, 76, 255, 0.10);
+  background: linear-gradient(180deg, #fffefb 0%, #fff9ef 100%);
+}
+
+.draw-guess__canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.draw-guess__rail {
+  display: grid;
+  gap: 16px;
+}
+
+.draw-guess__railCard {
+  padding: 18px;
+}
+
+.draw-guess__panelTitle {
+  font-size: 1rem;
+  font-weight: 800;
+  color: #43215d;
+  margin-bottom: 12px;
+}
+
+.draw-guess__updates {
+  display: grid;
+  gap: 10px;
+  min-height: 150px;
+  max-height: 220px;
+  overflow: auto;
+  padding-right: 6px;
+}
+
+.draw-guess__updateItem {
+  padding: 10px 12px;
+  border-radius: 14px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.draw-guess__updateItem.is-correct {
+  background: rgba(22, 163, 74, 0.12);
+  color: #166534;
+}
+
+.draw-guess__updateItem.is-wrong {
+  background: rgba(59, 130, 246, 0.10);
+  color: #1d4ed8;
+}
+
+.draw-guess__iconRow,
+.draw-guess__paletteRow {
+  display: grid;
+  gap: 10px;
+}
+
+.draw-guess__iconRow {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.draw-guess__paletteRow {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.draw-guess__iconButton {
+  height: 54px;
+  border: 1px solid rgba(132, 76, 255, 0.12);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.90);
+  color: #4b2a63;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(132, 76, 255, 0.08);
+}
+
+.draw-guess__iconButton svg {
+  width: 22px;
+  height: 22px;
+}
+
+.draw-guess__iconButton.is-active {
+  border-color: #7c3aed;
+  background: rgba(124, 58, 237, 0.12);
+}
+
+.draw-guess__sizeControl {
+  display: grid;
+  gap: 8px;
+  color: #6a5b78;
+  font-weight: 700;
+}
+
+.draw-guess__sizeControl input {
+  width: 100%;
+}
+
+.draw-guess--drawerView .draw-guess__playGrid {
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 16px;
+}
+
+.draw-guess--drawerView .draw-guess__stageCard {
+  padding: 14px;
+}
+
+.draw-guess--drawerView .draw-guess__canvasShell {
+  min-height: 400px;
+}
+
+.draw-guess--drawerView .draw-guess__rail {
+  gap: 12px;
+}
+
+.draw-guess--drawerView .draw-guess__railCard {
+  padding: 14px;
+  border-radius: 20px;
+}
+
+.draw-guess--drawerView .draw-guess__iconRow {
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.draw-guess--drawerView .draw-guess__paletteRow {
+  gap: 8px;
+}
+
+.draw-guess--drawerView .draw-guess__iconButton {
+  height: 46px;
+  border-radius: 14px;
+}
+
+.draw-guess--drawerView .draw-guess__iconButton svg {
+  width: 20px;
+  height: 20px;
+}
+
+.draw-guess--drawerView .draw-guess__swatch {
+  min-height: 42px;
+  border-radius: 14px;
+}
+
+.draw-guess--drawerView .draw-guess__swatchInner {
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  min-height: 20px;
+}
+
+.draw-guess--drawerView .draw-guess__updates {
+  min-height: 120px;
+  max-height: 180px;
+}
+
+.draw-guess__footerBar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: center;
+}
+
+.draw-guess__leaderboardCard {
+  width: min(100%, 460px);
+  margin: 0 auto;
+  display: grid;
+  gap: 18px;
+}
+
+.draw-guess__rankList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.draw-guess__rankItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.14);
+  color: #fff;
+}
+
+.draw-guess__rankMeta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.draw-guess__rankMeta em {
+  font-style: normal;
+  font-size: 20px;
+}
+
+.draw-guess__rankActions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 1080px) {
+  .draw-guess__board {
+    grid-template-columns: 1fr;
+  }
+
+  .draw-guess__canvasWrap {
+    min-height: clamp(380px, 52vh, 560px);
+  }
+}
+
+@media (max-width: 780px) {
+  .chat-stage__gameRoom {
+    padding: 14px;
+  }
+
+  .draw-guess {
+    padding: 16px;
+  }
+
+  .draw-guess__topbar,
+  .draw-guess__footer {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .draw-guess__canvasWrap {
+    min-height: 320px;
+  }
+}
+
 .chat-search-card,
 .chat-thread {
   width: 100%;
@@ -1008,6 +1922,10 @@
   width: min(700px, calc(100vw - 32px));
 }
 
+.personal-modal__card--compact {
+  width: min(440px, calc(100vw - 32px));
+}
+
 .personal-modal__header,
 .personal-modal__footer {
   display: flex;
@@ -1027,6 +1945,42 @@
   background: transparent;
   color: var(--secondary-color);
   cursor: pointer;
+}
+
+.personal-modal__body {
+  display: grid;
+  gap: 14px;
+}
+
+.personal-modal__hint {
+  margin: 0;
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.personal-modal__label {
+  display: grid;
+  gap: 8px;
+  color: #1e293b;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.personal-modal__secondary {
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  color: var(--secondary-color);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.personal-modal__secondary:hover {
+  border-color: var(--secondary-color);
 }
 
 .personal-modal__list {

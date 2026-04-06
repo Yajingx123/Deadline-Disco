@@ -3,19 +3,17 @@ declare(strict_types=1);
 
 /*
  * AcadBeat initialization order
- * 1. Import core schema: sql/101_acadbeat_core_tables.sql
- * 2. Import core seed data: sql/102_acadbeat_core_seed_data.sql
+ * 1. Import consolidated create-table SQL: sql/001_acadbeat_all_create_tables.sql
+ *    - This file drops every managed table first, then recreates all tables from scratch.
+ * 2. Import consolidated non-table SQL: sql/002_acadbeat_all_other_sql.sql
  *    - This file resets and reimports forum/chat/challenge/vocab sample data.
- *    - Do not rerun it on a working database unless you intentionally want fresh sample data.
- * 3. Import video schema only: sql/105_academic_practice_video_match_tables.sql
- *    - This file creates / upgrades video-call related tables only.
- *    - It does NOT import any video room sample/runtime data.
- * 4. Start services with start_all.php
+ *    - It also applies non-table SQL for video/resources/announcements/draw-guess.
+ * 3. Start services with start_all.php
  *
  * Important:
  * - Video call runtime data lives in peer_spaces / peer_space_members / peer_video_* tables.
  * - If you only want to reset video-call state, clear those tables only.
- * - Do not use sql/102_acadbeat_core_seed_data.sql as a "video reset" because it reloads global sample data.
+ * - Do not use sql/002_acadbeat_all_other_sql.sql as a "video reset" because it reloads global sample data too.
  */
 
 $root = __DIR__;
@@ -85,14 +83,13 @@ function ensure_local_env_file(string $root): void
 ensure_local_env_file($root);
 $config = require $root . '/Auth/backend/config/config.php';
 
-$tableSql = $root . '/sql/101_acadbeat_core_tables.sql';
-$dataSql = $root . '/sql/102_acadbeat_core_seed_data.sql';
-$videoMatchSql = $root . '/sql/105_academic_practice_video_match_tables.sql';
+$createTablesSql = $root . '/sql/001_acadbeat_all_create_tables.sql';
+$otherSql = $root . '/sql/002_acadbeat_all_other_sql.sql';
 
-if (!is_file($tableSql) || !is_file($dataSql) || !is_file($videoMatchSql)) {
+if (!is_file($createTablesSql) || !is_file($otherSql)) {
     fwrite(
         STDERR,
-        "Missing SQL files. Expected under ./sql/: 101_acadbeat_core_tables.sql, 102_acadbeat_core_seed_data.sql, 105_academic_practice_video_match_tables.sql\n"
+        "Missing SQL files. Expected under ./sql/: 001_acadbeat_all_create_tables.sql, 002_acadbeat_all_other_sql.sql\n"
     );
     exit(1);
 }
@@ -137,28 +134,22 @@ function mysql_import_command(string $host, string $port, string $user, string $
 }
 
 echo "=== AcadBeat Full Bootstrap ===\n\n";
-echo "[init-order] 1) core tables -> 2) core seed data -> 3) video schema -> 4) start services\n";
-echo "[warning] 102_acadbeat_core_seed_data.sql resets and reloads forum/chat/challenge/vocab sample data.\n";
-echo "[warning] 105_academic_practice_video_match_tables.sql only creates video-call tables and does not add video sample rooms.\n\n";
-echo "[info] Using table SQL: {$tableSql}\n";
-echo "[info] Using data SQL:  {$dataSql}\n\n";
+echo "[init-order] 1) drop and recreate all managed tables -> 2) run all non-table SQL -> 3) start services\n";
+echo "[warning] 001_acadbeat_all_create_tables.sql will drop every managed project table before recreating it.\n";
+echo "[warning] 002_acadbeat_all_other_sql.sql resets and reloads sample data for forum/chat/challenge/vocab and applies the remaining SQL bootstrap logic.\n";
+echo "[warning] If you only want to reset video-call runtime data, do NOT rerun 002; clear the peer_* video tables only.\n\n";
+echo "[info] Using create-table SQL: {$createTablesSql}\n";
+echo "[info] Using other SQL:        {$otherSql}\n\n";
 
 run_or_fail(
-    mysql_import_command($mysqlHost, $mysqlPort, $mysqlUser, $mysqlPass, $tableSql),
-    'Import tables'
+    mysql_import_command($mysqlHost, $mysqlPort, $mysqlUser, $mysqlPass, $createTablesSql),
+    'Import all create-table SQL'
 );
 
 run_or_fail(
-    mysql_import_command($mysqlHost, $mysqlPort, $mysqlUser, $mysqlPass, $dataSql),
-    'Import seed data'
+    mysql_import_command($mysqlHost, $mysqlPort, $mysqlUser, $mysqlPass, $otherSql, true),
+    'Import all non-table SQL'
 );
-
-if (is_file($videoMatchSql)) {
-    run_or_fail(
-        mysql_import_command($mysqlHost, $mysqlPort, $mysqlUser, $mysqlPass, $videoMatchSql, true),
-        'Import video match tables'
-    );
-}
 
 run_or_fail(
     escapeshellarg(PHP_BINARY ?: 'php') . ' ' . escapeshellarg($root . '/stop_all.php'),

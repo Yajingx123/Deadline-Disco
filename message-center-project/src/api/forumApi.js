@@ -1,10 +1,14 @@
 const MAIN_ORIGIN =
   (typeof window !== 'undefined' && window.ACADBEAT_LOCAL && window.ACADBEAT_LOCAL.mainOrigin)
   || (typeof window !== 'undefined' ? window.location.origin : 'http://127.0.0.1:8001')
-const API_BASE = `${MAIN_ORIGIN}/forum-project/api`
+const API_BASE = `${MAIN_ORIGIN}/message-center-project/api`
+const DEFAULT_REALTIME_HOST =
+  typeof window !== 'undefined'
+    ? `${window.location.protocol === 'https:' ? 'wss' : 'ws'}://${window.location.hostname}:3001/ws`
+    : 'ws://127.0.0.1:3001/ws'
 const REALTIME_WS_URL =
   (typeof window !== 'undefined' && window.ACADBEAT_LOCAL && window.ACADBEAT_LOCAL.voiceRoomWsUrl)
-  || `${(typeof window !== 'undefined' && window.location.protocol === 'https:') ? 'wss' : 'ws'}://${(typeof window !== 'undefined' ? window.location.host : '127.0.0.1:3001')}/ws`
+  || DEFAULT_REALTIME_HOST
 
 async function forumFetch(path, options = {}) {
   const response = await fetch(`${API_BASE}${path}`, {
@@ -205,6 +209,21 @@ export async function sendChatMessage(conversationId, content) {
       content,
     }),
   });
+}
+
+export async function fetchDrawGuessGame(conversationId) {
+  return forumFetch(`/chat-draw-guess.php?conversationId=${encodeURIComponent(conversationId)}`)
+}
+
+export async function mutateDrawGuessGame(conversationId, action, payload = {}) {
+  return forumFetch('/chat-draw-guess.php', {
+    method: 'POST',
+    body: JSON.stringify({
+      conversationId,
+      action,
+      ...payload,
+    }),
+  })
 }
 
 export async function fetchSessionUser() {
