@@ -13,6 +13,10 @@ shell/
 
 assets/
   common|academic|vocabulary|forum/   运行时 Web 使用的成品图（webp/png 等）
+  academic/listening/               Listening 选视频页壳配图说明见 README.txt
 
 本地打开壳页：经主站 8001 访问（与 shared/acadbeat-local-config.js 同源），例如：
   /newUI/shell/academic/shell.html
+
+Listening 红线布局静态预览（无需任何服务，双击 HTML）：
+  Academic-Practice/listening-preview-static.html

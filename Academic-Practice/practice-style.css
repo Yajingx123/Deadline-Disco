@@ -972,6 +972,207 @@ body[data-page="video-list"] .results-scroll-region {
   padding-right: 4px;
 }
 
+/* listening.html 布局：经典 UI 下保持「顶栏 + 筛选 + 列表」单列；Godot 主题在 game-listening-theme.css 中覆盖为草图栅格 */
+body[data-page="video-list"] .listening-layout-root {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+body[data-page="video-list"] .listening-below-header {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* 无 Godot 主题时拆层，使顶栏 + 主区仍参与经典单列流；Godot 用 html[data-ui=godot] 关闭拆层，避免与 game-listening-theme 同特异性赌加载顺序 */
+html:not([data-ui="godot"]) body[data-page="video-list"] .listening-godot-viewport,
+html:not([data-ui="godot"]) body[data-page="video-list"] .listening-godot-canvas,
+html:not([data-ui="godot"]) body[data-page="video-list"] .listening-godot-scaled-plate {
+  display: contents;
+}
+
+html:not([data-ui="godot"]) body[data-page="video-list"] .listening-row-godot-main {
+  display: contents;
+}
+
+body[data-page="video-list"] .listening-slot--mascot {
+  display: none !important;
+}
+
+/* 经典单列 UI 才隐藏右侧机台装饰；Godot 主题由 game-listening-theme 显示 power/LED */
+html:not([data-ui="godot"]) body[data-page="video-list"] .listening-filter-dock-decor {
+  display: none !important;
+}
+
+html:not([data-ui="godot"]) body[data-page="video-list"] .listening-main-stage {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+
+html:not([data-ui="godot"]) body[data-page="video-list"] .listening-center-area {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+html:not([data-ui="godot"]) body[data-page="video-list"] .listening-center-wrap {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  gap: 14px;
+}
+
+html:not([data-ui="godot"]) body[data-page="video-list"] .listening-square-stage {
+  flex: 1;
+  min-height: 0;
+  display: block;
+}
+
+html:not([data-ui="godot"]) body[data-page="video-list"] .listening-right-rail {
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  align-items: stretch;
+  gap: 14px;
+}
+
+html:not([data-ui="godot"]) body[data-page="video-list"] .listening-filter-dock {
+  width: 100%;
+  max-width: 720px;
+  align-self: center;
+}
+
+html:not([data-ui="godot"]) body[data-page="video-list"] .listening-filter-dock-frame {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  padding: 16px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.36);
+  border: 1px solid var(--line-soft);
+}
+
+html:not([data-ui="godot"]) body[data-page="video-list"] .listening-filter-dock-middle {
+  grid-column: 1 / -1;
+}
+
+html:not([data-ui="godot"]) body[data-page="video-list"] .listening-filter-dock-scroll {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+  align-content: start;
+}
+
+html:not([data-ui="godot"]) body[data-page="video-list"] .listening-filter-slot {
+  border: 1px solid var(--line-soft);
+  border-radius: 9px;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.4);
+}
+
+html:not([data-ui="godot"]) body[data-page="video-list"] .listening-filter-reset-square {
+  grid-column: 1 / -1;
+  justify-self: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 10px;
+  border: 1px solid var(--line-soft);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.45);
+}
+
+html:not([data-ui="godot"]) body[data-page="video-list"] .listening-filter-reset-btn {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  font-size: 0.75rem;
+}
+
+html:not([data-ui="godot"]) body[data-page="video-list"] .listening-frame-outer {
+  flex: 1;
+  min-height: 0;
+  border: none;
+  padding: 0;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+html:not([data-ui="godot"]) body[data-page="video-list"] .listening-frame-inner {
+  flex: 1;
+  min-height: 0;
+  border: none;
+  background: transparent;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* 贴图占位格：DOM 保留供日后对齐；任何模式默认隐藏。Godot 曾随 data-ui 拆层而重新显示方格，故不再挂在 :not(godot) 上 */
+body[data-page="video-list"] .listening-texture-cluster {
+  display: none !important;
+}
+
+html:not([data-ui="godot"]) body[data-page="video-list"] .listening-tv-stack {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+html:not([data-ui="godot"]) body[data-page="video-list"] .listening-tv-body {
+  flex: 1;
+  min-height: 0;
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  justify-content: stretch;
+}
+
+html:not([data-ui="godot"]) body[data-page="video-list"] .listening-tv-screen {
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+}
+
+html:not([data-ui="godot"]) body[data-page="video-list"] .listening-row-top {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+html:not([data-ui="godot"]) body[data-page="video-list"] .listening-slot--top-spacer {
+  display: none;
+}
+
+html:not([data-ui="godot"]) body[data-page="video-list"] .listening-slot--heading {
+  flex: 1;
+  min-width: 0;
+  text-align: left;
+}
+
 .compact-search,
 .compact-select {
   font-size: 1rem;
