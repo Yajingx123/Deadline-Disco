@@ -2,20 +2,18 @@
 declare(strict_types=1);
 
 /*
- * AcadBeat initialization order
- * 1. Import core schema: sql/101_acadbeat_core_tables.sql
- * 2. Import core seed data: sql/102_acadbeat_core_seed_data.sql
- *    - This file resets and reimports forum/chat/challenge/vocab sample data.
- *    - Do not rerun it on a working database unless you intentionally want fresh sample data.
- * 3. Import video schema only: sql/105_academic_practice_video_match_tables.sql
- *    - This file creates / upgrades video-call related tables only.
- *    - It does NOT import any video room sample/runtime data.
- * 4. Start services with start_all.php
+ * AcadBeat initialization order (supports both SQL layouts):
+ * 1) New consolidated layout (preferred):
+ *    - sql/001_acadbeat_all_create_tables.sql
+ *    - sql/002_acadbeat_all_other_sql.sql
+ * 2) Legacy split layout (fallback):
+ *    - sql/101_acadbeat_core_tables.sql
+ *    - sql/102_acadbeat_core_seed_data.sql
+ *    - sql/105_academic_practice_video_match_tables.sql
  *
  * Important:
- * - Video call runtime data lives in peer_spaces / peer_space_members / peer_video_* tables.
- * - If you only want to reset video-call state, clear those tables only.
- * - Do not use sql/102_acadbeat_core_seed_data.sql as a "video reset" because it reloads global sample data.
+ * - seed SQL resets and reloads sample data; avoid rerunning on a working DB unless intended.
+ * - video runtime state lives in peer_spaces / peer_space_members / peer_video_* tables.
  */
 
 $root = __DIR__;
@@ -85,14 +83,19 @@ function ensure_local_env_file(string $root): void
 ensure_local_env_file($root);
 $config = require $root . '/Auth/backend/config/config.php';
 
-$tableSql = $root . '/sql/101_acadbeat_core_tables.sql';
-$dataSql = $root . '/sql/102_acadbeat_core_seed_data.sql';
-$videoMatchSql = $root . '/sql/105_academic_practice_video_match_tables.sql';
+$newCreateSql = $root . '/sql/001_acadbeat_all_create_tables.sql';
+$newOtherSql = $root . '/sql/002_acadbeat_all_other_sql.sql';
+$legacyTableSql = $root . '/sql/101_acadbeat_core_tables.sql';
+$legacyDataSql = $root . '/sql/102_acadbeat_core_seed_data.sql';
+$legacyVideoMatchSql = $root . '/sql/105_academic_practice_video_match_tables.sql';
+$useConsolidatedSql = is_file($newCreateSql) && is_file($newOtherSql);
 
-if (!is_file($tableSql) || !is_file($dataSql) || !is_file($videoMatchSql)) {
+if (!$useConsolidatedSql && (!is_file($legacyTableSql) || !is_file($legacyDataSql) || !is_file($legacyVideoMatchSql))) {
     fwrite(
         STDERR,
-        "Missing SQL files. Expected under ./sql/: 101_acadbeat_core_tables.sql, 102_acadbeat_core_seed_data.sql, 105_academic_practice_video_match_tables.sql\n"
+        "Missing SQL files.\n"
+        . "Expected either consolidated files under ./sql/: 001_acadbeat_all_create_tables.sql + 002_acadbeat_all_other_sql.sql\n"
+        . "or legacy files under ./sql/: 101_acadbeat_core_tables.sql + 102_acadbeat_core_seed_data.sql + 105_academic_practice_video_match_tables.sql\n"
     );
     exit(1);
 }
@@ -137,27 +140,44 @@ function mysql_import_command(string $host, string $port, string $user, string $
 }
 
 echo "=== AcadBeat Full Bootstrap ===\n\n";
-echo "[init-order] 1) core tables -> 2) core seed data -> 3) video schema -> 4) start services\n";
-echo "[warning] 102_acadbeat_core_seed_data.sql resets and reloads forum/chat/challenge/vocab sample data.\n";
-echo "[warning] 105_academic_practice_video_match_tables.sql only creates video-call tables and does not add video sample rooms.\n\n";
-echo "[info] Using table SQL: {$tableSql}\n";
-echo "[info] Using data SQL:  {$dataSql}\n\n";
+if ($useConsolidatedSql) {
+    echo "[init-order] 1) consolidated create -> 2) consolidated other sql -> 3) start services\n";
+    echo "[warning] 002_acadbeat_all_other_sql.sql resets and reloads sample data.\n\n";
+    echo "[info] Using create SQL: {$newCreateSql}\n";
+    echo "[info] Using other SQL:  {$newOtherSql}\n\n";
 
-run_or_fail(
-    mysql_import_command($mysqlHost, $mysqlPort, $mysqlUser, $mysqlPass, $tableSql),
-    'Import tables'
-);
-
-run_or_fail(
-    mysql_import_command($mysqlHost, $mysqlPort, $mysqlUser, $mysqlPass, $dataSql),
-    'Import seed data'
-);
-
-if (is_file($videoMatchSql)) {
     run_or_fail(
-        mysql_import_command($mysqlHost, $mysqlPort, $mysqlUser, $mysqlPass, $videoMatchSql, true),
-        'Import video match tables'
+        mysql_import_command($mysqlHost, $mysqlPort, $mysqlUser, $mysqlPass, $newCreateSql),
+        'Import consolidated table schema'
     );
+
+    run_or_fail(
+        mysql_import_command($mysqlHost, $mysqlPort, $mysqlUser, $mysqlPass, $newOtherSql, true),
+        'Import consolidated seed and migration SQL'
+    );
+} else {
+    echo "[init-order] 1) core tables -> 2) core seed data -> 3) video schema -> 4) start services\n";
+    echo "[warning] 102_acadbeat_core_seed_data.sql resets and reloads forum/chat/challenge/vocab sample data.\n";
+    echo "[warning] 105_academic_practice_video_match_tables.sql only creates video-call tables and does not add video sample rooms.\n\n";
+    echo "[info] Using table SQL: {$legacyTableSql}\n";
+    echo "[info] Using data SQL:  {$legacyDataSql}\n\n";
+
+    run_or_fail(
+        mysql_import_command($mysqlHost, $mysqlPort, $mysqlUser, $mysqlPass, $legacyTableSql),
+        'Import tables'
+    );
+
+    run_or_fail(
+        mysql_import_command($mysqlHost, $mysqlPort, $mysqlUser, $mysqlPass, $legacyDataSql),
+        'Import seed data'
+    );
+
+    if (is_file($legacyVideoMatchSql)) {
+        run_or_fail(
+            mysql_import_command($mysqlHost, $mysqlPort, $mysqlUser, $mysqlPass, $legacyVideoMatchSql, true),
+            'Import video match tables'
+        );
+    }
 }
 
 run_or_fail(
