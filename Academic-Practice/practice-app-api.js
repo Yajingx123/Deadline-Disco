@@ -950,6 +950,34 @@
     });
   }
 
+  function applyListeningFilterDockChrome(mode) {
+    var docEl = document.documentElement;
+    var b = document.body;
+    if (docEl && docEl.dataset) {
+      docEl.dataset.listeningMode = mode;
+    }
+    if (b && b.dataset) {
+      b.dataset.listeningMode = mode;
+    }
+    var searchEl = qs("#smartSearch");
+    if (searchEl) {
+      if (mode === "respond") {
+        searchEl.placeholder = "Search prompt, answer, speaker…";
+        searchEl.setAttribute("aria-label", "Filter by prompt, model answer, speaker, or title");
+      } else {
+        searchEl.placeholder = "Search title, topic, transcript…";
+        searchEl.setAttribute("aria-label", "Filter by title, topic, transcript, or country");
+      }
+    }
+    var dock = document.querySelector(".listening-filter-dock");
+    if (dock) {
+      dock.setAttribute(
+        "aria-label",
+        mode === "respond" ? "Listening and Respond filters" : "Listening and Understand filters"
+      );
+    }
+  }
+
   // ==================== 视频列表页面 ====================
   async function initVideoList() {
     const mode = getParam("mode", "understand");
@@ -968,6 +996,8 @@
     if (!modeTitle || !searchEl || !typeEl || !difficultyEl || !durationEl || !sourceEl || !countryFilterEl || !clearBtn || !resultList || !resultsCount) {
       return;
     }
+
+    applyListeningFilterDockChrome(mode);
 
     // 设置返回按钮
     var backList = qs(".back-btn");

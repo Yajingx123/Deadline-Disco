@@ -9,6 +9,7 @@ if (!is_dir($runDir)) {
 
 $php = PHP_BINARY ?: 'php';
 $npm = 'npm';
+$profile = getenv('ACADBEAT_START_PROFILE') ?: 'simple';
 
 function sh_quote(string $value): string
 {
@@ -69,6 +70,11 @@ $frontendBuilds = [
         'command' => $npm . ' install && ' . $npm . ' run build',
     ],
     [
+        'name' => 'forum-v2-static',
+        'workdir' => $root . '/forum-project-v2',
+        'command' => $npm . ' install && ' . $npm . ' run build',
+    ],
+    [
         'name' => 'message-center-static',
         'workdir' => $root . '/message-center-project',
         'command' => $npm . ' install && ' . $npm . ' run build',
@@ -84,39 +90,11 @@ $services = [
         'command' => sh_quote($php) . ' -S 127.0.0.1:8001 -t .',
     ],
     [
-        'name' => 'vocab',
-        'host' => '127.0.0.1',
-        'port' => 8002,
-        'workdir' => $root . '/vocba_prac',
-        'command' => sh_quote($php) . ' -S 127.0.0.1:8002 -t .',
-    ],
-    [
-        'name' => 'forum',
-        'host' => '127.0.0.1',
-        'port' => 5173,
-        'workdir' => $root . '/forum-project',
-        'command' => $npm . ' run dev -- --host 127.0.0.1 --port 5173',
-    ],
-    [
-        'name' => 'admin',
-        'host' => '127.0.0.1',
-        'port' => 5174,
-        'workdir' => $root . '/admin_page',
-        'command' => $npm . ' run dev -- --host 127.0.0.1 --port 5174',
-    ],
-    [
         'name' => 'realtime',
         'host' => '127.0.0.1',
         'port' => 3001,
         'workdir' => $root . '/voice-room-server',
         'command' => $npm . ' start',
-    ],
-    [
-        'name' => 'scrabble_match',
-        'host' => '127.0.0.1',
-        'port' => 9000,
-        'workdir' => $root . '/Studio/Scrabble/match-server',
-        'command' => $npm . ' run start',
     ],
     [
         'name' => 'godot_ui',
@@ -127,7 +105,31 @@ $services = [
     ],
 ];
 
-echo "=== Start Services (macOS) ===\n\n";
+if ($profile === 'full') {
+    $services[] = [
+        'name' => 'forum_dev',
+        'host' => '127.0.0.1',
+        'port' => 5173,
+        'workdir' => $root . '/forum-project',
+        'command' => $npm . ' run dev -- --host 127.0.0.1 --port 5173',
+    ];
+    $services[] = [
+        'name' => 'admin_dev',
+        'host' => '127.0.0.1',
+        'port' => 5174,
+        'workdir' => $root . '/admin_page',
+        'command' => $npm . ' run dev -- --host 127.0.0.1 --port 5174',
+    ];
+    $services[] = [
+        'name' => 'scrabble_match',
+        'host' => '127.0.0.1',
+        'port' => 9000,
+        'workdir' => $root . '/Studio/Scrabble/match-server',
+        'command' => $npm . ' run start',
+    ];
+}
+
+echo "=== Start Services (macOS / {$profile}) ===\n\n";
 
 echo "=== Build Static Frontends ===\n";
 foreach ($frontendBuilds as $build) {
@@ -161,4 +163,6 @@ foreach ($services as $service) {
 echo "\nLogs are in .run\n";
 echo "Start command: php start_all_mac.php\n";
 echo "Auto-detect command: php start_all.php\n";
+echo "Full mode command: php start_all.php --full\n";
 echo "\nHome: http://127.0.0.1:8001/home.html\n";
+echo "Forum isolation: classic -> /forum-project/dist/, new shell -> /forum-project-v2/dist/\n";

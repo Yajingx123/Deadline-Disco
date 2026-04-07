@@ -11,6 +11,20 @@
     <link rel="stylesheet" href="./challenge/challenge-home.css">
     <link rel="stylesheet" href="./shared-nav.css">
     <script src="./shared/acadbeat-local-config.js"></script>
+    <script>
+        (function () {
+            try {
+                var p = new URLSearchParams(window.location.search);
+                if (p.get('exit_godot') === '1') {
+                    document.cookie = 'ui_mode=classic; path=/; max-age=2592000';
+                    var u = new URL(window.location.href);
+                    u.searchParams.delete('exit_godot');
+                    var qs = u.searchParams.toString();
+                    window.history.replaceState({}, '', u.pathname + (qs ? '?' + qs : '') + u.hash);
+                }
+            } catch (_e) {}
+        })();
+    </script>
     <style>html.acadbeat-role-guard body{visibility:hidden}</style>
     <script>
         document.documentElement.classList.add('acadbeat-role-guard');

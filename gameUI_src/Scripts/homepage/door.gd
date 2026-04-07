@@ -6,7 +6,7 @@ extends Area2D
 @export var tip_text: String = "按 Enter 进门"
 @export var door_id: String = "door_default"
 
-const MAIN_FORUM_URL := "http://127.0.0.1:5173/forum-project/dist/?view=chooser&ui=godot"
+const MAIN_FORUM_URL := "http://127.0.0.1:8001/newUI/shell/forum/shell.html"
 const MAIN_STUDIO_URL := "http://127.0.0.1:8001/Studio/studio.html?ui=godot"
 const MAIN_TECH_URL := "http://127.0.0.1:8001/technology.html?ui=godot"
 const MAIN_COMPETITION_URL := "http://127.0.0.1:8001/home.html?module=Studio&ui=godot"
@@ -53,7 +53,7 @@ func _activate_door() -> void:
 	var normalized_tip := String(tip_text).strip_edges().to_lower()
 	var target_url := _target_url_for_tip(normalized_tip)
 	if target_url != "":
-		ExternalLink.open(target_url)
+		ExternalLink.open_in_new_tab(target_url)
 	else:
 		print("📝 暂无外链映射：", tip_text)
 

@@ -1,0 +1,7 @@
+@import "../../static/shell-frame.css";
+
+:root {
+  --ab-shell-bg: #2e3542;
+  /* --ab-shell-bg-image: url("../../assets/vocabulary/bg.webp"); */
+  --ab-shell-content-inset: 8%;
+}

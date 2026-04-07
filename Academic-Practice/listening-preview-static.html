@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="zh-CN" data-ui="godot" data-listening-texture-preview="1">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Listening UI 静态预览（无服务、无接口）</title>
+  <!--
+    用法：在资源管理器中双击本文件，或用浏览器「打开文件」。
+    不跑 PHP / Node；不请求视频接口。仅用于看 Godot 红线布局 + 3×3 占位卡。
+    若浏览器拦截本地 CSS（少见），再用：python -m http.server 后访问本路径。
+  -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Playfair+Display:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="acadbeat-global.css">
+  <link rel="stylesheet" href="practice-style.css">
+  <link rel="stylesheet" href="../newUI/static/game-listening-theme.css">
+</head>
+<body data-page="video-list">
+  <script>
+    (function () {
+      try {
+        var m = new URLSearchParams(window.location.search).get("mode");
+        var lm = m === "respond" ? "respond" : "understand";
+        document.documentElement.dataset.listeningMode = lm;
+        document.body.dataset.listeningMode = lm;
+      } catch (_e) {}
+    })();
+  </script>
+  <main class="module-content page-shell">
+    <section class="video-results compact-results">
+      <div class="listening-layout-root">
+        <div class="listening-below-header">
+          <div class="listening-row-godot-main">
+            <aside class="listening-slot listening-slot--mascot" aria-hidden="true">
+              <div class="listening-art listening-art--mascot" data-ab-art="mascot"></div>
+              <p class="listening-caption">choose your video</p>
+            </aside>
+
+            <div class="listening-godot-viewport">
+            <div class="listening-godot-canvas">
+            <div class="listening-godot-scaled-plate">
+            <header class="listening-row-top compact-results-header">
+              <div class="listening-slot listening-slot--exit">
+                <button type="button" class="back-btn back-fab" disabled aria-label="Preview" title="静态预览">&#8592;</button>
+              </div>
+              <div class="listening-slot listening-slot--heading">
+                <h3 id="modeTitle">Listening · 静态预览</h3>
+                <p id="resultsCount">9 placeholder cards</p>
+              </div>
+              <div class="listening-slot listening-slot--top-spacer" aria-hidden="true"></div>
+            </header>
+            <div class="listening-main-stage">
+              <div class="listening-center-area">
+                <div class="listening-center-wrap">
+                <div class="listening-square-stage">
+                <div class="listening-frame-outer">
+                  <div class="listening-frame-inner">
+                    <div class="listening-tv-stack">
+                      <div class="listening-tv-body">
+                        <div class="listening-tv-screen">
+                          <div class="results-scroll-region">
+                            <div id="videoResultList" class="video-card-list">
+                              <article class="video-card">
+                                <div class="video-meta-row">
+                                  <span class="video-meta-pill">Campus&Life</span>
+                                  <span class="video-meta-pill">Easy</span>
+                                  <span class="video-meta-pill">0-1min</span>
+                                  <span class="video-meta-pill">Preview</span>
+                                </div>
+                                <div class="video-cover-box">
+                                  <div class="video-cover-placeholder">1</div>
+                                  <button type="button" class="btn-small video-go-btn" disabled>&#9658;</button>
+                                  <div class="video-cover-title">Placeholder A</div>
+                                </div>
+                                <p class="video-person-line"><span>UK</span></p>
+                              </article>
+                              <article class="video-card">
+                                <div class="video-meta-row">
+                                  <span class="video-meta-pill">Academic</span>
+                                  <span class="video-meta-pill">Medium</span>
+                                  <span class="video-meta-pill">1-2min</span>
+                                  <span class="video-meta-pill">Preview</span>
+                                </div>
+                                <div class="video-cover-box">
+                                  <div class="video-cover-placeholder">2</div>
+                                  <button type="button" class="btn-small video-go-btn" disabled>&#9658;</button>
+                                  <div class="video-cover-title">Placeholder B</div>
+                                </div>
+                                <p class="video-person-line"><span>US</span></p>
+                              </article>
+                              <article class="video-card">
+                                <div class="video-meta-row">
+                                  <span class="video-meta-pill">Campus&Life</span>
+                                  <span class="video-meta-pill">Easy</span>
+                                  <span class="video-meta-pill">0-1min</span>
+                                  <span class="video-meta-pill">Preview</span>
+                                </div>
+                                <div class="video-cover-box">
+                                  <div class="video-cover-placeholder">3</div>
+                                  <button type="button" class="btn-small video-go-btn" disabled>&#9658;</button>
+                                  <div class="video-cover-title">Placeholder C</div>
+                                </div>
+                                <p class="video-person-line"><span>CN</span></p>
+                              </article>
+                              <article class="video-card">
+                                <div class="video-meta-row">
+                                  <span class="video-meta-pill">Academic</span>
+                                  <span class="video-meta-pill">Hard</span>
+                                  <span class="video-meta-pill">2-3min</span>
+                                  <span class="video-meta-pill">Preview</span>
+                                </div>
+                                <div class="video-cover-box">
+                                  <div class="video-cover-placeholder">4</div>
+                                  <button type="button" class="btn-small video-go-btn" disabled>&#9658;</button>
+                                  <div class="video-cover-title">Placeholder D</div>
+                                </div>
+                                <p class="video-person-line"><span>DE</span></p>
+                              </article>
+                              <article class="video-card">
+                                <div class="video-meta-row">
+                                  <span class="video-meta-pill">Campus&Life</span>
+                                  <span class="video-meta-pill">Easy</span>
+                                  <span class="video-meta-pill">0-1min</span>
+                                  <span class="video-meta-pill">Preview</span>
+                                </div>
+                                <div class="video-cover-box">
+                                  <div class="video-cover-placeholder">5</div>
+                                  <button type="button" class="btn-small video-go-btn" disabled>&#9658;</button>
+                                  <div class="video-cover-title">Placeholder E</div>
+                                </div>
+                                <p class="video-person-line"><span>FR</span></p>
+                              </article>
+                              <article class="video-card">
+                                <div class="video-meta-row">
+                                  <span class="video-meta-pill">Academic</span>
+                                  <span class="video-meta-pill">Medium</span>
+                                  <span class="video-meta-pill">1-2min</span>
+                                  <span class="video-meta-pill">Preview</span>
+                                </div>
+                                <div class="video-cover-box">
+                                  <div class="video-cover-placeholder">6</div>
+                                  <button type="button" class="btn-small video-go-btn" disabled>&#9658;</button>
+                                  <div class="video-cover-title">Placeholder F</div>
+                                </div>
+                                <p class="video-person-line"><span>JP</span></p>
+                              </article>
+                              <article class="video-card">
+                                <div class="video-meta-row">
+                                  <span class="video-meta-pill">Campus&Life</span>
+                                  <span class="video-meta-pill">Easy</span>
+                                  <span class="video-meta-pill">0-1min</span>
+                                  <span class="video-meta-pill">Preview</span>
+                                </div>
+                                <div class="video-cover-box">
+                                  <div class="video-cover-placeholder">7</div>
+                                  <button type="button" class="btn-small video-go-btn" disabled>&#9658;</button>
+                                  <div class="video-cover-title">Placeholder G</div>
+                                </div>
+                                <p class="video-person-line"><span>KR</span></p>
+                              </article>
+                              <article class="video-card">
+                                <div class="video-meta-row">
+                                  <span class="video-meta-pill">Academic</span>
+                                  <span class="video-meta-pill">Easy</span>
+                                  <span class="video-meta-pill">0-1min</span>
+                                  <span class="video-meta-pill">Preview</span>
+                                </div>
+                                <div class="video-cover-box">
+                                  <div class="video-cover-placeholder">8</div>
+                                  <button type="button" class="btn-small video-go-btn" disabled>&#9658;</button>
+                                  <div class="video-cover-title">Placeholder H</div>
+                                </div>
+                                <p class="video-person-line"><span>ES</span></p>
+                              </article>
+                              <article class="video-card">
+                                <div class="video-meta-row">
+                                  <span class="video-meta-pill">Campus&Life</span>
+                                  <span class="video-meta-pill">Medium</span>
+                                  <span class="video-meta-pill">1-2min</span>
+                                  <span class="video-meta-pill">Preview</span>
+                                </div>
+                                <div class="video-cover-box">
+                                  <div class="video-cover-placeholder">9</div>
+                                  <button type="button" class="btn-small video-go-btn" disabled>&#9658;</button>
+                                  <div class="video-cover-title">Placeholder I</div>
+                                </div>
+                                <p class="video-person-line"><span>IT</span></p>
+                              </article>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                </div>
+                </div>
+              </div>
+              <div class="listening-right-rail">
+                  <div class="listening-texture-cluster" aria-hidden="true">
+                    <div class="listening-texture-cell" data-ab-art="tx-01"></div>
+                    <div class="listening-texture-cell" data-ab-art="tx-02"></div>
+                    <div class="listening-texture-cell listening-texture-cell--wide" data-ab-art="tx-03"></div>
+                    <div class="listening-texture-cell" data-ab-art="tx-04"></div>
+                    <div class="listening-texture-cell" data-ab-art="tx-05"></div>
+                    <div class="listening-texture-cell listening-texture-cell--tall" data-ab-art="tx-06"></div>
+                    <div class="listening-texture-cell" data-ab-art="tx-07"></div>
+                    <div class="listening-texture-cell" data-ab-art="tx-08"></div>
+                    <div class="listening-texture-cell listening-texture-cell--wide" data-ab-art="tx-09"></div>
+                    <div class="listening-texture-cell" data-ab-art="tx-10"></div>
+                    <div class="listening-texture-cell" data-ab-art="tx-11"></div>
+                    <div class="listening-texture-cell listening-texture-cell--small" data-ab-art="tx-12"></div>
+                  </div>
+                  <aside class="listening-filter-dock" aria-label="Filters (preview)">
+                    <div class="listening-filter-dock-frame">
+                      <div class="listening-filter-dock-decor" aria-hidden="true">
+                        <div class="listening-art listening-art--power" data-ab-art="dock-power"></div>
+                        <div class="listening-filter-dock-leds">
+                          <div class="listening-art listening-art--led" data-ab-art="dock-led-1"></div>
+                          <div class="listening-art listening-art--led" data-ab-art="dock-led-2"></div>
+                        </div>
+                      </div>
+                      <div class="listening-filter-dock-middle">
+                        <div class="listening-filter-dock-scroll">
+                          <div class="listening-filter-slot" data-filter="search">
+                            <input class="smart-input compact-search" type="search" placeholder="Search (preview)" disabled>
+                          </div>
+                          <div class="listening-filter-slot" data-filter="type">
+                            <select class="smart-select compact-select" disabled><option>Type: All</option></select>
+                          </div>
+                          <div class="listening-filter-slot" data-filter="difficulty">
+                            <select class="smart-select compact-select" disabled><option>Difficulty: All</option></select>
+                          </div>
+                          <div class="listening-filter-slot" data-filter="duration">
+                            <select class="smart-select compact-select" disabled><option>Duration: All</option></select>
+                          </div>
+                          <div class="listening-filter-slot" data-filter="source">
+                            <select class="smart-select compact-select" disabled><option>Source: All</option></select>
+                          </div>
+                        </div>
+                        <div class="listening-filter-slot listening-filter-slot--country" data-filter="country">
+                          <div class="compact-select country-filter" style="padding:8px;font-size:0.65rem;opacity:0.7;">Country…</div>
+                        </div>
+                      </div>
+                      <div class="listening-filter-reset-square">
+                        <button type="button" class="btn-small compact-reset-btn listening-filter-reset-btn" disabled>Reset</button>
+                      </div>
+                    </div>
+                  </aside>
+              </div>
+            </div>
+            </div>
+            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

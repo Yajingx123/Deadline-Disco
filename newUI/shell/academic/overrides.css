@@ -1,0 +1,11 @@
+@import "../../static/shell-frame.css";
+
+:root {
+  --ab-shell-bg: #3d3640;
+  /* 配图放入 ../../assets/academic/ 后取消注释，例如：
+  --ab-shell-bg-image: url("../../assets/academic/bg.webp");
+  --ab-shell-frame-image: url("../../assets/academic/frame.webp");
+  --ab-shell-overlay-image: url("../../assets/academic/vignette.webp");
+  */
+  --ab-shell-content-inset: 7%;
+}

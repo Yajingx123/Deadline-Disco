@@ -25,9 +25,13 @@
     messageCenterDistUrl: MAIN + '/message-center-project/dist/index.html',
     messageSummaryApiUrl: MAIN + '/forum-project/api/message-center.php?summaryOnly=1',
     authMeUrl: MAIN + '/Auth/backend/api/me.php',
-    /** 对应 forum-project build 后由 8001 主站托管的静态入口（直接进入论坛，不再经过 chooser 门户） */
+    /** 经典 UI（home 等）固定使用 forum-project，避免与 v2 混用 */
     forumDevChooserUrl: MAIN + '/forum-project/dist/index.html?view=forum',
+    forumClassicIndexUrl: MAIN + '/forum-project/dist/index.html',
+    /** 兼容旧键名：仍指向经典论坛 */
     forumProdIndexUrl: MAIN + '/forum-project/dist/index.html',
+    /** Godot/newUI 网页壳固定使用 forum-project-v2（仅壳内 iframe） */
+    forumGodotShellIndexUrl: MAIN + '/forum-project-v2/dist/index.html',
     godotWebEntryUrl: isLocalHost ? 'http://127.0.0.1:5500/index.html?ui=godot' : MAIN + '/gameUI_src/Release/index.html?ui=godot',
     /** Web 导出读 ?scene=academic 进入学术星球；听力页 Godot 模式返回用 */
     godotAcademicWebUrl: isLocalHost ? 'http://127.0.0.1:5500/index.html?ui=godot&scene=academic' : MAIN + '/gameUI_src/Release/index.html?ui=godot&scene=academic',
