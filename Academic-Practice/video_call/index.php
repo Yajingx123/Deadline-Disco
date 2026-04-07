@@ -533,7 +533,7 @@
         homeUrl: '../../home.html',
         ownerUrl: '../../owner.html',
         forumUrl: '../../home.html?module=Dialogue',
-        technologyUrl: '../../home.html?module=Method',
+        technologyUrl: '../../technology.html',
         studioUrl: '../../Studio/studio.html',
         messageCenterUrl: L.messageCenterDistUrl,
         adminUrl: L.adminDistUrl || window.location.origin + '/admin_page/dist/index.html',

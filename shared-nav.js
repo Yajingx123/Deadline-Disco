@@ -120,12 +120,12 @@
     const basePath = withSlashPrefix(options.basePath || './');
     const homeUrl = options.homeUrl || `${basePath}home.html`;
     const forumUrl = options.forumUrl || `${homeUrl}?module=Dialogue`;
-    const technologyUrl = options.technologyUrl || `${homeUrl}?module=Method`;
     const studioUrl = options.studioUrl || `${basePath}Studio/studio.html`;
     const authApiBase = options.authApiBase || `${basePath}Auth/backend/api`;
     const loginUrl = options.loginUrl || `${homeUrl}?login=1`;
     const ownerUrl = options.ownerUrl || `${basePath}owner.html`;
     const L = typeof window !== 'undefined' && window.ACADBEAT_LOCAL ? window.ACADBEAT_LOCAL : null;
+    const technologyUrl = options.technologyUrl || (L && L.technologyUrl) || `${homeUrl}?module=Method`;
     const currentOrigin = (typeof window !== 'undefined' && window.location) ? window.location.origin : 'http://127.0.0.1:8001';
     const adminUrl = options.adminUrl || (L && L.adminDistUrl) || `${currentOrigin}/admin_page/dist/index.html`;
     const messageCenterUrl = options.messageCenterUrl || (L && L.messageCenterDistUrl) || `${currentOrigin}/message-center-project/dist/index.html`;

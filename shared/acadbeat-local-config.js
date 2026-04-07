@@ -17,6 +17,8 @@
   var localAdminDistUrl = 'http://127.0.0.1:8001/admin_page/dist/index.html';
   g.ACADBEAT_LOCAL = {
     mainOrigin: MAIN,
+    technologyUrl: MAIN + '/technology.html',
+    technologyGodotUrl: MAIN + '/technology1.html',
     challengeApiUrl: MAIN + '/challenge/api/challenge.php',
     /** Production should use same-origin /ws via Nginx reverse proxy. */
     voiceRoomWsUrl: isLocalHost ? 'ws://127.0.0.1:3001/ws' : sameOriginWs,

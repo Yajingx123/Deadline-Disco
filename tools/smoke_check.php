@@ -3,8 +3,10 @@ declare(strict_types=1);
 
 $checks = [
     'home' => 'http://127.0.0.1:8001/home.html',
-    'forum-dev' => 'http://127.0.0.1:5173/forum-project/dist/',
-    'admin-dev' => 'http://127.0.0.1:5174/admin_page/dist/',
+    'forum-classic' => 'http://127.0.0.1:8001/forum-project/dist/index.html?view=forum',
+    'admin-static' => 'http://127.0.0.1:8001/admin_page/dist/index.html',
+    'message-center' => 'http://127.0.0.1:8001/message-center-project/dist/index.html',
+    'godot-ui' => 'http://127.0.0.1:5500/index.html',
     'realtime-health' => 'http://127.0.0.1:3001/health',
 ];
 

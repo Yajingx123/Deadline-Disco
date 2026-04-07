@@ -1073,7 +1073,7 @@
         const ADMIN_URL = L.adminDistUrl || window.location.origin + '/admin_page/dist/index.html';
         const VOCABULARY_URL = './vocba_prac/';
         const FORUM_URL = L.forumDevChooserUrl || (window.location.origin + '/forum-project/dist/index.html?view=forum');
-        const TECHNOLOGY_URL = './technology.html';
+        const TECHNOLOGY_URL = L.technologyUrl || './technology.html';
         const ACADEMIC_PRACTICE_URL = './Academic-Practice/training.html';
         const AUTH_API_BASE = './Auth/backend/api';
         const authState = { user: null, mode: 'login' };
@@ -1186,7 +1186,7 @@
                 ownerUrl: './owner.html',
                 adminUrl: L.adminDistUrl || window.location.origin + '/admin_page/dist/index.html',
                 forumUrl: './home.html?module=Dialogue',
-                technologyUrl: './home.html?module=Method',
+                technologyUrl: L.technologyUrl || './technology.html',
                 studioUrl: './Studio/studio.html',
                 messageCenterUrl: L.messageCenterDistUrl || (window.location.origin + '/message-center-project/dist/index.html'),
                 redirectAdmins: true,

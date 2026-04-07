@@ -62,7 +62,7 @@
             ownerUrl: MAIN + '/owner.html',
             authApiBase: MAIN + '/Auth/backend/api',
             forumUrl: MAIN + '/home.html?module=Dialogue',
-            technologyUrl: MAIN + '/home.html?module=Method',
+            technologyUrl: MAIN + '/technology.html',
             studioUrl: MAIN + '/Studio/studio.html',
             messageCenterUrl: L.messageCenterDistUrl,
             adminUrl: L.adminDistUrl,
