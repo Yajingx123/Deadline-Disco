@@ -163,6 +163,21 @@ function forum_is_admin(?array $user): bool {
     return is_array($user) && (string)($user['role'] ?? 'user') === 'admin';
 }
 
+function forum_is_regular_user(?array $user): bool {
+    return is_array($user) && (string)($user['role'] ?? '') === 'user';
+}
+
+function forum_require_regular_user(): array {
+    $user = forum_require_user();
+    if (!forum_is_regular_user($user)) {
+        forum_json([
+            'ok' => false,
+            'message' => 'Only regular user accounts can use this feature.',
+        ], 403);
+    }
+    return $user;
+}
+
 function forum_require_admin(): array {
     $user = forum_require_user();
     if (!forum_is_admin($user)) {

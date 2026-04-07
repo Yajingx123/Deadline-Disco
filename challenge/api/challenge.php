@@ -20,10 +20,10 @@ function challenge_default_team_name(array $user): string {
 }
 
 function challenge_require_non_admin(array $user): void {
-    if (forum_is_admin($user)) {
+    if ((string)($user['role'] ?? '') !== 'user') {
         forum_json([
             'ok' => false,
-            'message' => 'Admins do not participate in weekly challenge teams.',
+            'message' => 'Only regular user accounts can participate in weekly challenge teams.',
         ], 403);
     }
 }
@@ -231,7 +231,7 @@ function challenge_build_state(PDO $pdo, array $user, array $cycle): array {
         ],
         'access' => [
             'isAdmin' => forum_is_admin($user),
-            'canParticipate' => !forum_is_admin($user),
+            'canParticipate' => (string)($user['role'] ?? '') === 'user',
         ],
     ];
 }
@@ -396,8 +396,8 @@ if ($action === 'send_invite') {
     if ($inviteeId === $userId) {
         forum_json(['ok' => false, 'message' => 'You cannot invite yourself.'], 422);
     }
-    if ((string)($invitee['role'] ?? 'user') === 'admin') {
-        forum_json(['ok' => false, 'message' => 'Admins are excluded from challenge teams.'], 422);
+    if ((string)($invitee['role'] ?? '') !== 'user') {
+        forum_json(['ok' => false, 'message' => 'Only regular user accounts can be invited to challenge teams.'], 422);
     }
     if (!challenge_signup_is_active($pdo, $inviteeId, $weekStartDate)) {
         forum_json(['ok' => false, 'message' => 'That user has not signed up for this week’s challenge.'], 422);

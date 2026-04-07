@@ -315,6 +315,7 @@ function draw_guess_conversation_members(PDO $pdo, int $conversationId): array {
         FROM chat_conversation_members ccm
         INNER JOIN users u ON u.user_id = ccm.user_id
         WHERE ccm.conversation_id = :conversationId
+          AND u.role = 'user'
         ORDER BY ccm.joined_at ASC, ccm.conversation_member_id ASC
     ");
     $stmt->execute([':conversationId' => $conversationId]);

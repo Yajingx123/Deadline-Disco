@@ -4,7 +4,7 @@ declare(strict_types=1);
 require __DIR__ . '/video-helpers.php';
 
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
-$user = video_require_user();
+$user = video_require_regular_user();
 $pdo = video_db();
 
 try {

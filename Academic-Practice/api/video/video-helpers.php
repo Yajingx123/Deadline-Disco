@@ -738,6 +738,7 @@ function video_call_find_space_by_room_id(PDO $pdo, string $roomId, bool $forUpd
         FROM peer_spaces s
         JOIN users owner ON owner.user_id = s.created_by_user_id
         WHERE s.space_type = 'voice_room'
+          AND owner.role = 'user'
           AND JSON_UNQUOTE(JSON_EXTRACT(s.metadata_json, '$.source')) = 'video_call'
           AND JSON_UNQUOTE(JSON_EXTRACT(s.metadata_json, '$.roomId')) = ?
         ORDER BY s.space_id DESC
@@ -762,6 +763,7 @@ function video_call_load_members(PDO $pdo, int $spaceId, bool $forUpdate = false
         FROM peer_space_members m
         JOIN users u ON u.user_id = m.user_id
         WHERE m.space_id = ?
+          AND u.role = 'user'
         ORDER BY
             CASE WHEN m.member_role = 'owner' THEN 0 ELSE 1 END,
             m.membership_id ASC
@@ -808,6 +810,7 @@ function video_call_find_user_by_username(PDO $pdo, string $username, int $exclu
         FROM users
         WHERE LOWER(username) = LOWER(?)
           AND user_id <> ?
+          AND role = 'user'
         LIMIT 1
     ");
     $stmt->execute([$trimmed, $excludeUserId]);
@@ -1350,6 +1353,7 @@ function video_call_list_rooms(PDO $pdo, int $currentUserId): array
         FROM peer_spaces s
         JOIN users owner ON owner.user_id = s.created_by_user_id
         WHERE s.space_type = 'voice_room'
+          AND owner.role = 'user'
           AND s.status = 'active'
           AND JSON_UNQUOTE(JSON_EXTRACT(s.metadata_json, '$.source')) = 'video_call'
         ORDER BY s.created_at DESC, s.space_id DESC
@@ -1455,7 +1459,7 @@ function video_call_create_room(PDO $pdo, int $userId, array $input): array
         if ($inviteUsername !== '') {
             $invitee = video_call_find_user_by_username($pdo, $inviteUsername, $userId);
             if (!$invitee) {
-                video_fail('Invite username not found.', 404);
+                video_fail('Only regular user accounts can be invited.', 422);
             }
         }
 
@@ -1789,7 +1793,7 @@ function video_call_manage_room(PDO $pdo, int $userId, string $roomId, array $in
 
             $invitee = video_call_find_user_by_username($pdo, $inviteUsername, $userId);
             if (!$invitee) {
-                video_fail('Invite username not found.', 404);
+                video_fail('Only regular user accounts can be invited.', 422);
             }
 
             $existingMember = video_call_find_member($members, (int) $invitee['user_id']);
