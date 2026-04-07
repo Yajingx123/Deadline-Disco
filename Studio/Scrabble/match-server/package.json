@@ -9,6 +9,7 @@
     "dev": "node server.js"
   },
   "dependencies": {
-    "socket.io": "^4.7.5"
+    "socket.io": "^4.7.5",
+    "mysql2": "^3.9.7"
   }
 }

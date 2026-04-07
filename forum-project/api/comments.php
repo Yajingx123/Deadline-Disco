@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 require __DIR__ . '/bootstrap.php';
+require __DIR__ . '/../../challenge/api/score-lib.php';
 
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST') {
     forum_json(['ok' => false, 'message' => 'Method not allowed.'], 405);
@@ -153,6 +154,8 @@ try {
     }
 
     $pdo->commit();
+
+    score_add_routine_points($pdo, (int)$user['user_id'], 'routine4', 'Comment created');
 
     $stmt = $pdo->prepare("
         SELECT

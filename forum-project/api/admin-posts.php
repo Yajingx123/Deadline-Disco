@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 require __DIR__ . '/bootstrap.php';
+require __DIR__ . '/../../challenge/api/score-lib.php';
 
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 $pdo = forum_db();
@@ -332,6 +333,13 @@ if ($postRow) {
         'action' => admin_posts_action_label($action),
         'postId' => (int)($postRow['post_id'] ?? 0),
     ]);
+
+    if ($action === 'approve') {
+        $authorUserId = (int)($postRow['author_user_id'] ?? 0);
+        if ($authorUserId > 0) {
+            score_add_routine_points($pdo, $authorUserId, 'routine3', 'Post approved');
+        }
+    }
 }
 
 $payload = $postRow ? forum_post_row_to_payload($postRow) : null;

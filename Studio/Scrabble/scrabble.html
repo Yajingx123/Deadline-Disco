@@ -388,13 +388,15 @@
             gap: 10px;
         }
         .mode-actions button { width: 100%; }
-        #match-panel {
+        #match-panel,
+        #weekly-match-panel {
             margin-top: 18px;
             padding-top: 18px;
             border-top: 1px dashed rgba(58, 78, 107, 0.2);
             display: none;
         }
-        #match-panel.is-visible { display: block; }
+        #match-panel.is-visible,
+        #weekly-match-panel.is-visible { display: block; }
         #match-status {
             font-size: 0.88rem;
             font-weight: 600;
@@ -679,12 +681,20 @@
             <div class="mode-actions">
                 <button type="button" class="primary" onclick="chooseAiMode()">Play vs AI</button>
                 <button type="button" onclick="showOnlineMatchPanel()">Online match (2 players)</button>
+                <button type="button" onclick="showWeeklyMatchPanel()">Weekly match (Team competition)</button>
             </div>
             <div id="match-panel">
                 <div id="match-status">Click “Find match” to join the queue.</div>
                 <div class="match-row">
                     <button type="button" class="primary" id="btn-find-match" onclick="findOnlineMatch()">Find match</button>
                     <button type="button" onclick="cancelOnlineMatch()">Cancel</button>
+                </div>
+            </div>
+            <div id="weekly-match-panel">
+                <div id="weekly-match-status">Click “Join weekly match” to participate in team competition.</div>
+                <div class="match-row">
+                    <button type="button" class="primary" id="btn-find-weekly-match" onclick="findWeeklyMatch()">Join weekly match</button>
+                    <button type="button" onclick="cancelWeeklyMatch()">Cancel</button>
                 </div>
             </div>
             <p class="server-hint" id="server-hint"></p>
@@ -896,8 +906,24 @@
             mySeat: 0,
             isMyTurn: true,
             endReason: null,
-            vocabBank: new Set(loadVocabularyBankWords())
+            vocabBank: new Set(loadVocabularyBankWords()),
+            currentUser: null
         };
+
+        async function fetchCurrentUser() {
+            try {
+                const response = await fetch('/challenge/api/user-info.php?' + Date.now());
+                const data = await response.json();
+                console.log('User info response:', data);
+                if (data.status === 'success' && data.user) {
+                    state.currentUser = data.user;
+                    return data.user;
+                }
+            } catch (e) {
+                console.warn('Could not fetch user info:', e);
+            }
+            return null;
+        }
 
         function openRulesModal() {
             const el = document.getElementById("rules-modal");
@@ -980,7 +1006,10 @@
             state.vocabBank = new Set(cleaned);
             saveVocabularyBankWords();
             renderVocabularyBankModal();
-            render();
+            // 只有在游戏已经初始化时才调用render()
+            if (state.board && Array.isArray(state.board)) {
+                render();
+            }
         }
 
         function editVocabularyBank(op) {
@@ -1054,7 +1083,7 @@
         }
 
         function isOnline() {
-            return state.mode === "online";
+            return state.mode === "online" || state.mode === "weekly";
         }
 
         function showGameRoot() {
@@ -1091,10 +1120,34 @@
 
         function showOnlineMatchPanel() {
             document.getElementById("match-panel")?.classList.add("is-visible");
+            document.getElementById("weekly-match-panel")?.classList.remove("is-visible");
             document.getElementById("match-status").textContent = "Click “Find match” to queue. Two browsers can open this page.";
         }
 
-        function ensureOnlineSocket() {
+        async function checkWeeklyEligibility() {
+            try {
+                const response = await fetch('/Academic-Practice/api/weekly-eligibility.php?' + Date.now());
+                const data = await response.json();
+                if (data.ok && data.data) {
+                    return {
+                        isEligible: data.data.is_eligible,
+                        isInTeam: data.data.is_in_team,
+                        isFirstTime: data.data.is_first_time,
+                        teamId: data.data.team_id
+                    };
+                }
+            } catch (e) {
+                console.error(e);
+            }
+            return { isEligible: false, isInTeam: false, isFirstTime: false, teamId: null };
+        }
+
+        function showWeeklyMatchPanel() {
+            document.getElementById("weekly-match-panel")?.classList.add("is-visible");
+            document.getElementById("match-panel")?.classList.remove("is-visible");
+        }
+
+        async function ensureOnlineSocket() {
             if (typeof io === "undefined") {
                 document.getElementById("match-status").textContent = "Socket.IO failed to load. Check your network.";
                 return null;
@@ -1104,9 +1157,23 @@
                 state.onlineSocket.removeAllListeners();
                 state.onlineSocket.disconnect();
             }
+            
+            if (!state.currentUser) {
+                await fetchCurrentUser();
+            }
+            
+            const authData = {};
+            if (state.currentUser) {
+                authData.userId = state.currentUser.user_id;
+                authData.teamId = state.currentUser.team_id;
+                authData.username = state.currentUser.username;
+            }
+            console.log('Socket auth data:', authData);
+            
             const s = io(SCRABBLE_SOCKET_ORIGIN, {
                 path: SCRABBLE_SOCKET_PATH,
-                transports: ["websocket", "polling"]
+                transports: ["websocket", "polling"],
+                query: authData
             });
             state.onlineSocket = s;
             s.on("connect", () => {
@@ -1129,6 +1196,25 @@
             });
             s.on("match:cancelled", () => {
                 document.getElementById("match-status").textContent = "Left queue.";
+                document.getElementById("weekly-match-status").textContent = "Left weekly queue.";
+            });
+            s.on("weekly:waiting", () => {
+                document.getElementById("weekly-match-status").textContent = "Waiting for another player in weekly match…";
+            });
+            s.on("weekly:found", () => {
+                hideModeOverlay();
+                showGameRoot();
+                state.mode = "weekly";
+                setAiUiVisible(false);
+                state.players[AI].name = "Weekly Opponent";
+                state.players[AI].isAI = false;
+                document.getElementById("weekly-match-status").textContent = "Matched! Loading weekly game…";
+            });
+            s.on("weekly:cancelled", () => {
+                document.getElementById("weekly-match-status").textContent = "Left weekly queue.";
+            });
+            s.on("weekly:error", (payload) => {
+                document.getElementById("weekly-match-status").textContent = payload?.message || "Error joining weekly match.";
             });
             s.on("bank:state", (payload) => {
                 if (Array.isArray(payload?.words)) {
@@ -1157,9 +1243,9 @@
             return s;
         }
 
-        function findOnlineMatch() {
+        async function findOnlineMatch() {
             document.getElementById("match-panel")?.classList.add("is-visible");
-            const sock = ensureOnlineSocket();
+            const sock = await ensureOnlineSocket();
             if (!sock) return;
             document.getElementById("match-status").textContent = "Connecting…";
             if (!state.dictReady) loadDictionary();
@@ -1169,6 +1255,35 @@
         function cancelOnlineMatch() {
             state.onlineSocket?.emit("match:cancel");
             document.getElementById("match-status").textContent = "Queue cancelled.";
+        }
+
+        async function findWeeklyMatch() {
+            const eligibility = await checkWeeklyEligibility();
+            const statusEl = document.getElementById("weekly-match-status");
+            const btnEl = document.getElementById("btn-find-weekly-match");
+            
+            if (!eligibility.isEligible) {
+                let errorMsg = "Cannot join weekly match.";
+                if (!eligibility.isInTeam) {
+                    errorMsg = "You must be in a team to join weekly match.";
+                } else if (!eligibility.isFirstTime) {
+                    errorMsg = "You can only participate in weekly match once per week.";
+                }
+                if (statusEl) statusEl.textContent = errorMsg;
+                if (btnEl) btnEl.disabled = true;
+                return;
+            }
+            
+            const sock = await ensureOnlineSocket();
+            if (!sock) return;
+            if (statusEl) statusEl.textContent = "Connecting…";
+            if (!state.dictReady) loadDictionary();
+            sock.emit("weekly:join");
+        }
+
+        function cancelWeeklyMatch() {
+            state.onlineSocket?.emit("weekly:cancel");
+            document.getElementById("weekly-match-status").textContent = "Weekly queue cancelled.";
         }
 
         function teardownOnlineAndReturnToMenu() {
@@ -2233,10 +2348,23 @@
             const boardEl = document.getElementById("board");
             const html = [];
             const ph = state.previewHighlight;
+            
+            // 保护：检查board是否已初始化
+            if (!state.board || !Array.isArray(state.board)) {
+                return;
+            }
+            
             for (let r = 0; r < BOARD_SIZE; r += 1) {
                 for (let c = 0; c < BOARD_SIZE; c += 1) {
                     const key = cellKey(r, c);
                     const temp = state.temp.get(key);
+                    
+                    // 保护：检查单元格是否存在
+                    if (!state.board[r] || !state.board[r][c]) {
+                        html.push(`<div class="cell" data-r="${r}" data-c="${c}"></div>`);
+                        continue;
+                    }
+                    
                     const cell = state.board[r][c];
                     const showLetter = temp?.letter || cell.letter;
                     const isBlank = temp ? temp.isBlank : cell.isBlank;
