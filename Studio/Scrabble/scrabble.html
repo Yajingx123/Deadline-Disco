@@ -597,6 +597,78 @@
         .rules-modal__body p { margin: 0 0 10px; }
         .rules-modal__body ul { margin: 0 0 10px 1.1rem; padding: 0; }
         .rules-modal__body li { margin-bottom: 4px; }
+
+        .vocab-bank-btn {
+            margin-top: 8px;
+            width: 100%;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+        .vocab-modal__panel { max-width: 640px; }
+        .vocab-bank-list {
+            max-height: 280px;
+            overflow: auto;
+            border: 1px solid rgba(58, 78, 107, 0.14);
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.72);
+            padding: 10px;
+            margin-bottom: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .vocab-chip {
+            display: inline-flex;
+            align-items: center;
+            padding: 5px 9px;
+            border-radius: 999px;
+            border: 1px solid rgba(58, 78, 107, 0.16);
+            background: rgba(155, 183, 212, 0.12);
+            font-size: 0.72rem;
+            font-weight: 600;
+            letter-spacing: 0.03em;
+            color: var(--secondary-color);
+        }
+        .vocab-empty {
+            font-size: 0.8rem;
+            opacity: 0.65;
+            padding: 4px 2px;
+        }
+        .vocab-edit-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .vocab-edit-row input {
+            width: 100%;
+            border: 1px solid rgba(58, 78, 107, 0.2);
+            background: #fff;
+            border-radius: 9px;
+            padding: 9px 11px;
+            font-size: 0.82rem;
+            color: var(--secondary-color);
+        }
+        .vocab-edit-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .vocab-edit-actions button {
+            min-width: 120px;
+        }
+        .vocab-edit-status {
+            min-height: 18px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            opacity: 0.85;
+            color: #2f7a3f;
+        }
+        .vocab-edit-status.error {
+            color: #b24b5e;
+        }
     </style>
 </head>
 <body>
@@ -677,6 +749,7 @@
             </div>
 
             <div class="log-box" id="log-box"></div>
+            <button type="button" class="vocab-bank-btn" onclick="openVocabularyBankModal()">Vocabulary Bank</button>
         </aside>
     </div>
     </div>
@@ -714,6 +787,31 @@
         </div>
     </div>
 
+    <div id="vocab-modal" class="rules-modal hidden" role="dialog" aria-modal="true" aria-labelledby="vocab-title">
+        <div class="rules-modal__backdrop" onclick="closeVocabularyBankModal()"></div>
+        <div class="rules-modal__panel vocab-modal__panel" onclick="event.stopPropagation()">
+            <div class="rules-modal__head">
+                <h2 id="vocab-title">Vocabulary Bank</h2>
+                <button type="button" class="rules-modal__close" onclick="closeVocabularyBankModal()" aria-label="Close">&times;</button>
+            </div>
+            <div class="rules-modal__body">
+                <p>Words in the Vocabulary Bank score <strong>double points</strong> when formed in a valid move.</p>
+                <div id="vocab-bank-list" class="vocab-bank-list"></div>
+                <h3>Edit (Admin)</h3>
+                <p>Enter the admin key to add or remove words. Development key: <strong>123456</strong>.</p>
+                <div class="vocab-edit-row">
+                    <input id="vocab-admin-key" type="password" placeholder="Admin key">
+                    <input id="vocab-word-input" type="text" placeholder="Word to add/remove (A-Z)">
+                    <div class="vocab-edit-actions">
+                        <button type="button" class="primary" onclick="editVocabularyBank('add')">Add Word</button>
+                        <button type="button" onclick="editVocabularyBank('remove')">Remove Word</button>
+                    </div>
+                    <div id="vocab-edit-status" class="vocab-edit-status" aria-live="polite"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.socket.io/4.7.5/socket.io.min.js" crossorigin="anonymous"></script>
     <script>
         const BOARD_SIZE = 15;
@@ -731,6 +829,18 @@
             "BA","BE","BI","BO","BY","CAT","DOG","THE","AND","FOR","ARE","BUT","NOT","YOU","ALL","CAN","HER","WAS","ONE","OUR","OUT",
             "DAY","GET","HAS","HIM","HIS","HOW","ITS","LET","MAY","NEW","NOW","OLD","SEE","WAY","WHO","BOY","DID","OWN","SAW","SAY","TOO","TWO",
             "HELLO","WORLD","QUIZ","GAME","PLAY","WORD","WORK","HOME","TIME","YEAR","GOOD","LIFE","HAND","BACK","LONG","GREAT","SMALL","LARGE"
+        ];
+        const DEV_ADMIN_KEY = "123456";
+        const VOCAB_STORAGE_KEY = "scrabble_vocab_bank_v1";
+        const DEFAULT_VOCAB_BANK = [
+            "ANALYZE", "APPROACH", "ASSUME", "BENEFIT", "CHALLENGE",
+            "COMMUNITY", "CONCEPT", "CONCLUDE", "CONTEXT", "CONTRAST",
+            "CRITICAL", "DATA", "DISTRIBUTE", "EVIDENCE", "FACTOR",
+            "FRAMEWORK", "FUNCTION", "IDENTIFY", "IMPACT", "INDICATE",
+            "INTERPRET", "ISSUE", "METHOD", "OUTCOME", "PERSPECTIVE",
+            "POLICY", "PRINCIPLE", "PROCESS", "RELEVANT", "RESEARCH",
+            "RESOURCE", "RESPONSE", "SIGNIFICANT", "SIMILAR", "STRATEGY",
+            "STRUCTURE", "THEORY", "VARIABLE"
         ];
 
         const LETTER_SPECS = {
@@ -785,7 +895,8 @@
             onlineSocket: null,
             mySeat: 0,
             isMyTurn: true,
-            endReason: null
+            endReason: null,
+            vocabBank: new Set(loadVocabularyBankWords())
         };
 
         function openRulesModal() {
@@ -798,6 +909,110 @@
             const el = document.getElementById("rules-modal");
             if (!el) return;
             el.classList.add("hidden");
+        }
+
+        function normalizeVocabWord(raw) {
+            return String(raw || "").trim().toUpperCase().replace(/[^A-Z]/g, "");
+        }
+
+        function getSortedVocabWords() {
+            return [...state.vocabBank].sort();
+        }
+
+        function loadVocabularyBankWords() {
+            try {
+                const txt = localStorage.getItem(VOCAB_STORAGE_KEY);
+                if (!txt) return [...DEFAULT_VOCAB_BANK];
+                const parsed = JSON.parse(txt);
+                if (!Array.isArray(parsed)) return [...DEFAULT_VOCAB_BANK];
+                const words = parsed
+                    .map((w) => normalizeVocabWord(w))
+                    .filter((w) => w.length >= 2 && w.length <= 15);
+                if (!words.length) return [...DEFAULT_VOCAB_BANK];
+                return [...new Set(words)];
+            } catch (_e) {
+                return [...DEFAULT_VOCAB_BANK];
+            }
+        }
+
+        function saveVocabularyBankWords() {
+            try {
+                localStorage.setItem(VOCAB_STORAGE_KEY, JSON.stringify(getSortedVocabWords()));
+            } catch (_e) {
+                /* storage may be unavailable */
+            }
+        }
+
+        function setVocabEditStatus(message, isError = false) {
+            const el = document.getElementById("vocab-edit-status");
+            if (!el) return;
+            el.textContent = message || "";
+            el.classList.toggle("error", !!isError);
+        }
+
+        function renderVocabularyBankModal() {
+            const host = document.getElementById("vocab-bank-list");
+            if (!host) return;
+            const words = getSortedVocabWords();
+            if (!words.length) {
+                host.innerHTML = `<div class="vocab-empty">No vocabulary words configured.</div>`;
+                return;
+            }
+            host.innerHTML = words.map((w) => `<span class="vocab-chip">${w}</span>`).join("");
+        }
+
+        function openVocabularyBankModal() {
+            renderVocabularyBankModal();
+            setVocabEditStatus("");
+            document.getElementById("vocab-modal")?.classList.remove("hidden");
+        }
+
+        function closeVocabularyBankModal() {
+            document.getElementById("vocab-modal")?.classList.add("hidden");
+        }
+
+        function applyVocabularyBankWords(words) {
+            if (!Array.isArray(words)) return;
+            const cleaned = words
+                .map((w) => normalizeVocabWord(w))
+                .filter((w) => w.length >= 2 && w.length <= 15);
+            if (!cleaned.length) return;
+            state.vocabBank = new Set(cleaned);
+            saveVocabularyBankWords();
+            renderVocabularyBankModal();
+            render();
+        }
+
+        function editVocabularyBank(op) {
+            const key = String(document.getElementById("vocab-admin-key")?.value || "").trim();
+            if (key !== DEV_ADMIN_KEY) {
+                setVocabEditStatus("Invalid admin key.", true);
+                return;
+            }
+            const input = document.getElementById("vocab-word-input");
+            const word = normalizeVocabWord(input?.value);
+            if (!word || word.length < 2 || word.length > 15) {
+                setVocabEditStatus("Word must be 2-15 letters (A-Z).", true);
+                return;
+            }
+            if (op !== "add" && op !== "remove") {
+                setVocabEditStatus("Unsupported edit operation.", true);
+                return;
+            }
+
+            if (isOnline() && state.onlineSocket?.connected) {
+                state.onlineSocket.emit("bank:edit", { key, op, word });
+                setVocabEditStatus("Sent update to match server...");
+                return;
+            }
+
+            if (op === "add") state.vocabBank.add(word);
+            if (op === "remove") state.vocabBank.delete(word);
+            saveVocabularyBankWords();
+            renderVocabularyBankModal();
+            render();
+            if (input) input.value = "";
+            setVocabEditStatus(`Vocabulary Bank updated (${op}: ${word}).`);
         }
 
         function getDisplayRound() {
@@ -915,6 +1130,21 @@
             s.on("match:cancelled", () => {
                 document.getElementById("match-status").textContent = "Left queue.";
             });
+            s.on("bank:state", (payload) => {
+                if (Array.isArray(payload?.words)) {
+                    applyVocabularyBankWords(payload.words);
+                }
+            });
+            s.on("bank:edit:result", (payload) => {
+                if (payload?.ok && Array.isArray(payload?.words)) {
+                    applyVocabularyBankWords(payload.words);
+                }
+                setVocabEditStatus(payload?.message || "Vocabulary edit rejected.", !payload?.ok);
+                if (payload?.ok) {
+                    const input = document.getElementById("vocab-word-input");
+                    if (input) input.value = "";
+                }
+            });
             s.on("game:state", (snap) => applyOnlineSnapshot(snap));
             s.on("game:error", (payload) => {
                 setStatus(payload?.message || "Server rejected move.");
@@ -985,6 +1215,7 @@
             state.players[AI].score = snap.scores[1 - seat];
             state.players[HUMAN].rack = snap.myRack || [];
             state.players[AI].rack = Array(Math.max(0, snap.opponentRackCount)).fill("?");
+            if (Array.isArray(snap.vocabBank)) applyVocabularyBankWords(snap.vocabBank);
             state.isMyTurn = !!snap.isMyTurn;
             state.turn = snap.turnNumber || 1;
             state.passStreak = snap.passStreak || 0;
@@ -1329,9 +1560,11 @@
                 if (!DICTIONARY.has(w)) {
                     return { valid: false, message: `Word "${w}" is not in dictionary.`, highlightCells: [] };
                 }
-                const score = scoreWord(wordData, placementMap);
+                const baseScore = scoreWord(wordData, placementMap);
+                const vocabBonus = state.vocabBank.has(w);
+                const score = vocabBonus ? baseScore * 2 : baseScore;
                 total += score;
-                words.push({ word: w, score });
+                words.push({ word: w, score, vocabBonus });
                 for (const [rr, cc] of wordData.coords) {
                     highlightCells.push(cellKey(rr, cc));
                 }
@@ -1363,7 +1596,7 @@
             player.score += evalResult.total;
             state.passStreak = 0;
 
-            const wordsDesc = evalResult.words.map((w) => `${w.word}(+${w.score})`).join(", ");
+            const wordsDesc = evalResult.words.map((w) => `${w.word}(+${w.score}${w.vocabBonus ? ",VBx2" : ""})`).join(", ");
             pushLog(`${player.name} played ${wordsDesc}${evalResult.bingo ? " + Bingo 50" : ""}.`);
         }
 
@@ -2077,7 +2310,10 @@
         }
 
         document.addEventListener("keydown", (e) => {
-            if (e.key === "Escape") closeRulesModal();
+            if (e.key === "Escape") {
+                closeRulesModal();
+                closeVocabularyBankModal();
+            }
         });
 
         loadDictionary();
