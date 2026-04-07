@@ -8,7 +8,7 @@
     <script src="./shared/acadbeat-local-config.js"></script>
     <style>html.acadbeat-role-guard body{visibility:hidden}</style>
     <script>
-        // 保留原有的管理员权限校验逻辑（不影响UI）
+        // Keep the existing admin-role guard without affecting the page UI.
         document.documentElement.classList.add('acadbeat-role-guard');
         (async function guardAdminTechnology() {
             try {
@@ -37,7 +37,7 @@
         }
 
         body {
-            background-image: url('1775568213719.png');
+            background-image: url('technology-toolkit-background.png');
             background-size: 100% 100%;
             background-position: center;
             background-repeat: no-repeat;
@@ -52,7 +52,7 @@
             display: flex;
             width: 100%;
             min-height: 100vh;
-            /* 删除了 padding-top: 80px，因为导航栏没了，让内容完全垂直居中 */
+            /* No top padding is needed here because this layout has no nav bar. */
         }
 
         .left-spacer {
@@ -151,27 +151,27 @@
             <div class="boxes-grid">
                 
                     <a href="https://support.microsoft.com/en-us/teams" target="_blank" class="box-item">
-                        <img src="./1775568295552_boxes/1.png" class="box-bg" alt="Microsoft Teams">
+                        <img src="./technology-toolkit-boxes/microsoft-teams.png" class="box-bg" alt="Microsoft Teams">
                     </a>
 
                     <a href="https://docs.github.com/en/get-started" target="_blank" class="box-item">
-                        <img src="./1775568295552_boxes/2.png" class="box-bg" alt="GitHub">
+                        <img src="./technology-toolkit-boxes/github.png" class="box-bg" alt="GitHub">
                     </a>
 
                     <a href="https://help.autodesk.com/view/ACD/2024/ENU/" target="_blank" class="box-item">
-                        <img src="./1775568295552_boxes/3.png" class="box-bg" alt="AutoCAD">
+                        <img src="./technology-toolkit-boxes/autocad.png" class="box-bg" alt="AutoCAD">
                     </a>
 
                     <a href="https://matlabacademy.mathworks.com/" target="_blank" class="box-item">
-                        <img src="./1775568295552_boxes/4.png" class="box-bg" alt="MATLAB">
+                        <img src="./technology-toolkit-boxes/matlab.png" class="box-bg" alt="MATLAB">
                     </a>
 
                     <a href="https://www.originlab.com/index.aspx?go=Support/VideoTutorials" target="_blank" class="box-item">
-                        <img src="./1775568295552_boxes/5.png" class="box-bg" alt="OriginLab">
+                        <img src="./technology-toolkit-boxes/originlab.png" class="box-bg" alt="OriginLab">
                     </a>
 
                     <a href="./dundee.html?from=technology1" class="box-item">
-                        <img src="./1775568295552_boxes/6.png" class="box-bg" alt="Dundee">
+                        <img src="./technology-toolkit-boxes/dundee-student-hub.png" class="box-bg" alt="Dundee">
                     </a>
             </div>
         </div>
