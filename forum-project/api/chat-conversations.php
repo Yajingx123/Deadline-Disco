@@ -87,7 +87,7 @@ function chat_load_conversation(PDO $pdo, int $conversationId, int $currentUserI
 }
 
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
-$user = forum_require_user();
+$user = forum_require_regular_user();
 $currentUserId = (int)$user['user_id'];
 $pdo = forum_db();
 
@@ -167,10 +167,16 @@ if ($action === 'direct') {
         forum_json(['ok' => false, 'message' => 'Choose a valid user.'], 422);
     }
 
-    $targetStmt = $pdo->prepare("SELECT user_id FROM users WHERE user_id = ? LIMIT 1");
+    $targetStmt = $pdo->prepare("
+        SELECT user_id
+        FROM users
+        WHERE user_id = ?
+          AND role = 'user'
+        LIMIT 1
+    ");
     $targetStmt->execute([$targetUserId]);
     if (!$targetStmt->fetch()) {
-        forum_json(['ok' => false, 'message' => 'User not found.'], 404);
+        forum_json(['ok' => false, 'message' => 'Only regular user accounts can be invited to chat.'], 422);
     }
 
     $existingStmt = $pdo->prepare("
@@ -285,6 +291,7 @@ if ($action === 'group') {
         SELECT user_id
         FROM users
         WHERE user_id IN ({$placeholders})
+          AND role = 'user'
     ");
     $usersStmt->execute($memberIds);
     $validUserIds = array_map('intval', $usersStmt->fetchAll(PDO::FETCH_COLUMN));
@@ -292,7 +299,7 @@ if ($action === 'group') {
     $expectedUserIds = $memberIds;
     sort($expectedUserIds);
     if ($validUserIds !== $expectedUserIds) {
-        forum_json(['ok' => false, 'message' => 'One or more members do not exist.'], 404);
+        forum_json(['ok' => false, 'message' => 'Only regular user accounts can be invited to group chat.'], 422);
     }
 
     if ($sourceConversationId > 0 && $sourceConversationType === 'group') {

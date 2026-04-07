@@ -7,7 +7,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST') {
     video_json_response(['ok' => false, 'message' => 'Method not allowed.'], 405);
 }
 
-$user = video_require_user();
+$user = video_require_regular_user();
 $pdo = video_db();
 $input = video_input();
 

@@ -7,7 +7,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'GET') {
     forum_json(['ok' => false, 'message' => 'Method not allowed.'], 405);
 }
 
-$user = forum_require_user();
+$user = forum_require_regular_user();
 $currentUserId = (int)$user['user_id'];
 $query = trim((string)($_GET['q'] ?? ''));
 
@@ -18,6 +18,7 @@ if ($query !== '') {
         SELECT user_id, username, email
         FROM users
         WHERE user_id <> ?
+          AND role = 'user'
           AND (username LIKE ? OR email LIKE ?)
         ORDER BY username ASC
         LIMIT 12
@@ -29,6 +30,7 @@ if ($query !== '') {
         SELECT u.user_id, u.username, u.email
         FROM users u
         WHERE u.user_id <> ?
+          AND u.role = 'user'
         ORDER BY u.username ASC
         LIMIT 8
     ");

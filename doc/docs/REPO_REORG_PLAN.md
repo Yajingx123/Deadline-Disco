@@ -58,7 +58,7 @@ Rollback:
 ### Phase 2 - Non-runtime Asset Consolidation
 
 Actions:
-- Introduce `database/bootstrap/` and move root SQL there
+- Keep SQL centralized in root `sql/` and avoid module-level duplication
 - Keep root compatibility files or explicit migration notes before removal
 - Move clearly obsolete duplicate static files to `archive/`
 

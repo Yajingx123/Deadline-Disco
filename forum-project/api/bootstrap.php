@@ -17,7 +17,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
 $config = require __DIR__ . '/../../Auth/backend/config/config.php';
 
-/** Canonical forum_labels.name for admin-managed announcements (must match sql/102_acadbeat_core_seed_data.sql). */
+/** Canonical forum_labels.name for admin-managed announcements (must match consolidated SQL bootstrap data). */
 if (!defined('FORUM_ANNOUNCEMENT_LABEL_NAME')) {
     define('FORUM_ANNOUNCEMENT_LABEL_NAME', 'Announcement');
 }
@@ -161,6 +161,21 @@ function forum_require_user(): array {
 
 function forum_is_admin(?array $user): bool {
     return is_array($user) && (string)($user['role'] ?? 'user') === 'admin';
+}
+
+function forum_is_regular_user(?array $user): bool {
+    return is_array($user) && (string)($user['role'] ?? '') === 'user';
+}
+
+function forum_require_regular_user(): array {
+    $user = forum_require_user();
+    if (!forum_is_regular_user($user)) {
+        forum_json([
+            'ok' => false,
+            'message' => 'Only regular user accounts can use this feature.',
+        ], 403);
+    }
+    return $user;
 }
 
 function forum_require_admin(): array {

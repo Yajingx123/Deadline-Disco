@@ -110,7 +110,7 @@ function video_build_payload(string $roomId): string
     ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 }
 
-$user = video_require_user();
+$user = video_require_regular_user();
 $zegoConfig = require __DIR__ . '/zego-config.php';
 $appId = (int) ($zegoConfig['app_id'] ?? 0);
 $serverSecret = trim((string) ($zegoConfig['server_secret'] ?? ''));

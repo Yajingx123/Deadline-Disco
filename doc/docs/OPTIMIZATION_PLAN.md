@@ -8,7 +8,7 @@ Improve maintainability and consistency without introducing runtime regressions.
 
 - Keep one architecture source of truth (`docs/ARCHITECTURE.md`)
 - Keep one startup source of truth (`start_all.php`)
-- Keep one SQL canonical directory (`database/bootstrap/`)
+- Keep one SQL canonical directory (`sql/`)
 - Add/maintain migration and runbook docs
 - Remove duplicate, unreferenced assets only after search verification
 
@@ -17,7 +17,7 @@ Improve maintainability and consistency without introducing runtime regressions.
 - Add a lightweight smoke test checklist script (URL reachability + health checks)
 - Add a repository conventions document:
   - no new business files at repo root
-  - new SQL must go under `database/`
+  - new SQL must go under `sql/`
   - avoid committing runtime log noise
 - Normalize docs location (`doc/` -> `docs/` migration map)
 

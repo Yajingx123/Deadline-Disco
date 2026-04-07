@@ -37,6 +37,18 @@ function video_require_user(): array
     return listening_require_user();
 }
 
+function video_require_regular_user(): array
+{
+    $user = video_require_user();
+    if ((string) ($user['role'] ?? '') !== 'user') {
+        video_json_response([
+            'ok' => false,
+            'message' => 'Only regular user accounts can use video rooms.',
+        ], 403);
+    }
+    return $user;
+}
+
 function video_now(): string
 {
     return (new DateTimeImmutable('now', video_timezone()))->format('Y-m-d H:i:s');
