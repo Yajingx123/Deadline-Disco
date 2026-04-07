@@ -1141,43 +1141,59 @@ CREATE TABLE IF NOT EXISTS peer_video_session_events (
         ))
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- ===== Source: 210_academic_practice_video_resources.sql =====
+-- =========================================
+-- Video Resources Table (你的原版表，无任何修改)
+-- =========================================
 CREATE TABLE IF NOT EXISTS video_resources (
-    video_id VARCHAR(50) PRIMARY KEY COMMENT '视频唯一标识，如 u1, s1',
-    mode VARCHAR(20) NOT NULL COMMENT '模式: understand( Listening and Understand) / respond( Listening and Respond)',
-    title VARCHAR(255) NOT NULL COMMENT '视频标题',
-    video_type VARCHAR(50) NOT NULL COMMENT '视频类型: Campus, Academic, Study Skills',
-    difficulty VARCHAR(20) NOT NULL COMMENT '难度: Easy, Medium, Hard',
-    duration VARCHAR(20) NOT NULL COMMENT '时长: 0-1min, 1-2min, 2-3min',
-    source VARCHAR(50) NOT NULL COMMENT '来源: ELLLO, OpenLearn',
-    country VARCHAR(50) NOT NULL COMMENT '国家',
-    author VARCHAR(100) NULL COMMENT '作者名字',
-    time_specific VARCHAR(20) NULL COMMENT '具体时间点，如 00:40',
-    
-    -- 外网服务器上的文件路径
-    video_url VARCHAR(500) NOT NULL COMMENT '视频文件完整URL',
-    transcript_url VARCHAR(500) NOT NULL COMMENT '转录文本文件URL',
-    vtt_url VARCHAR(500) NULL COMMENT '字幕文件URL',
-    labels_url VARCHAR(500) NULL COMMENT '标签信息文件URL',
-    sample_notes_url VARCHAR(500) NULL COMMENT '示例笔记文件URL',
-    cover_url VARCHAR(500) NOT NULL COMMENT '封面图片URL',
-    flag_url VARCHAR(500) NOT NULL COMMENT '国旗图片URL',
-    
-    -- 文本内容（可选，可以存在数据库里也可以只存路径）
-    transcript_text TEXT NULL COMMENT '转录文本内容',
-    question TEXT NULL COMMENT 'respond模式的问题',
-    answer_text TEXT NULL COMMENT '参考答案文本',
-    
-    -- 状态和管理
-    status VARCHAR(20) NOT NULL DEFAULT 'active' COMMENT '状态: active, inactive',
-    sort_order INT NOT NULL DEFAULT 0 COMMENT '排序顺序',
-    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    
-    CONSTRAINT chk_video_resources_mode CHECK (mode IN ('understand', 'respond')),
-    CONSTRAINT chk_video_resources_difficulty CHECK (difficulty IN ('Easy', 'Medium', 'Hard')),
-    CONSTRAINT chk_video_resources_status CHECK (status IN ('active', 'inactive'))
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='视频资源管理表';
+    -- 主键（数据库内部用）
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    -- 前端生成的业务ID（u13 / s13）
+    video_id VARCHAR(20) NOT NULL UNIQUE,
+
+    -- 基本信息
+    mode ENUM('understand', 'respond') NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    type VARCHAR(50) DEFAULT 'Campus',
+    difficulty ENUM('Easy', 'Medium', 'Hard') DEFAULT 'Easy',
+    duration VARCHAR(50),
+
+    -- 来源信息
+    source VARCHAR(100) DEFAULT 'ELLLO',
+    country VARCHAR(50),
+    author VARCHAR(100),
+    time_specific VARCHAR(50),
+
+    -- 文本内容
+    transcript_text LONGTEXT,
+    question TEXT,
+    answer_text TEXT,
+
+    -- =========================
+    -- 文件 URL（核心）
+    -- =========================
+    video_url VARCHAR(500),
+    transcript_url VARCHAR(500),
+    vtt_url VARCHAR(500),
+    labels_url VARCHAR(500),
+    sample_notes_url VARCHAR(500),
+    cover_url VARCHAR(500),
+    flag_url VARCHAR(500),
+
+    -- JSON标签（可选冗余存储）
+    labels_json JSON,
+
+    -- 时间
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    -- =========================
+    -- 索引（提升性能）
+    -- =========================
+    INDEX idx_mode (mode),
+    INDEX idx_difficulty (difficulty),
+    INDEX idx_video_id (video_id)
+);
 
 -- ===== Source: 220_forum_announcements.sql =====
 CREATE TABLE IF NOT EXISTS forum_announcements (

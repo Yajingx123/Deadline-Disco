@@ -1,0 +1,45 @@
+[2026-04-07 12:39:37] 收到 create 请求：
+Array
+(
+    [action] => create
+)
+
+
+[2026-04-07 12:40:26] 收到 create 请求：
+Array
+(
+    [action] => create
+)
+
+
+[2026-04-07 12:43:09] 收到 create 请求：
+Array
+(
+    [action] => create
+    [video_id] => u13
+    [mode] => understand
+    [title] => What is the secret to learning English?
+    [type] => Campus
+    [difficulty] => Easy
+    [duration] => 0-1min
+    [source] => ELLLO
+    [country] => Germany
+    [author] => Christina
+    [time_specific] => 2024
+    [video_url] => 
+    [transcript_url] => 
+    [vtt_url] => 
+    [labels_url] => 
+    [sample_notes_url] => 
+    [cover_url] => 
+    [flag_url] => 
+    [transcript_text] => Hi, my name is Christina and I'm from Germany. My question is what is the best way to learn English?
+
+Well, I was really lucky because I lived abroad in New Zealand for one year, so I've spoken a lot of English there, and I really improved my English but what is really really important before you do that is learn some basics, so I learned the basics at school with a lot of listenings and readings, so exactly what those kind of videos are for, so I think it's a good combination if your first do the basic stuff and then just go over there and try to speak English all the time.
+    [question] => 
+    [answer_text] => 
+    [sort_order] => 
+    [status] => active
+)
+
+
