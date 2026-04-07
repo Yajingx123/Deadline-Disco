@@ -8,7 +8,7 @@ function VideoResourceManager() {
   const [error, setError] = useState(null)
   const [success, setSuccess] = useState(null)
   const [editingId, setEditingId] = useState(null)
-  
+
   // 表单数据
   const [formData, setFormData] = useState({
     video_id: '',
@@ -21,11 +21,23 @@ function VideoResourceManager() {
     country: '',
     author: '',
     time_specific: '',
-    question: '',
+
+    // 以下是数据库真实字段 ↓
+    video_url: '',
+    transcript_url: '',
+    vtt_url: '',
+    labels_url: '',
+    sample_notes_url: '',
+    cover_url: '',
+    flag_url: '',
+
     transcript_text: '',
-    answer_text: ''
+    question: '',
+    answer_text: '',
+    sort_order: '',
+    status: 'active'
   })
-  
+
   // 文件引用
   const fileRefs = {
     video: useRef(null),
@@ -36,7 +48,7 @@ function VideoResourceManager() {
     cover: useRef(null),
     flag: useRef(null)
   }
-  
+
   // 文件状态
   const [files, setFiles] = useState({
     video: null,
@@ -56,11 +68,27 @@ function VideoResourceManager() {
     setLoading(true)
     setError(null)
     try {
-      const response = await adminFetch('/Academic-Practice/api/videos.php?action=list')
-      setVideos(response.data || [])
+      // 👇 直接用原生 fetch，不经过任何封装！
+      const rawResponse = await fetch('/Academic-Practice/api/video_resources.php?action=list')
+      console.log("📶 HTTP 状态码：", rawResponse.status)
+
+      const response = await rawResponse.json()
+      console.log("✅ 真实后端返回：", response) // 看这里！看这里！
+
+      // 正确读取数据（不管后端是什么结构，我们都能拿到）
+      let data = []
+      if (response.video_resources) {
+        data = Object.values(response.video_resources)
+      } else if (Array.isArray(response)) {
+        data = response
+      } else if (response.data) {
+        data = response.data
+      }
+
+      setVideos(data)
     } catch (err) {
-      setError('Failed to load video resources')
-      console.error('Error fetching videos:', err)
+      console.error("❌ 请求失败：", err)
+      setError("无法连接服务器：" + err.message)
     } finally {
       setLoading(false)
     }
@@ -75,12 +103,90 @@ function VideoResourceManager() {
   }
 
   function handleFileChange(type, e) {
-    const file = e.target.files[0]
-    if (file) {
-      setFiles(prev => ({
+    const file = e.target.files[0];
+    if (!file) return;
+
+    // 先保存文件
+    setFiles(prev => ({
+      ...prev,
+      [type]: file
+    }));
+
+    // ==============================================
+    // 上传视频 → 自动填标题 + 时长（已正常工作）
+    // ==============================================
+    if (type === 'video') {
+      const rawTitle = file.name.replace(/\.[^/.]+$/, "");
+      setFormData(prev => ({
         ...prev,
-        [type]: file
-      }))
+        title: rawTitle
+      }));
+
+      const video = document.createElement('video');
+      video.preload = 'metadata';
+
+      video.onloadedmetadata = function () {
+        window.URL.revokeObjectURL(video.src);
+        const seconds = video.duration;
+        const minutes = (seconds / 60).toFixed(1);
+        const durationText = `${minutes}min`;
+
+        setFormData(prev => ({
+          ...prev,
+          duration: durationText
+        }));
+      };
+
+      video.src = URL.createObjectURL(file);
+      video.load();
+    }
+
+    // ==============================================
+    // 上传 transcript → 自动填文本（已正常工作）
+    // ==============================================
+    if (type === 'transcript') {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        setFormData(prev => ({
+          ...prev,
+          transcript_text: event.target.result
+        }));
+      };
+      reader.readAsText(file);
+    }
+
+    // ==============================================
+    // ✅ 终极修复：完美匹配你当前的 JSON 结构
+    // ==============================================
+    if (type === 'labels') {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        try {
+          const json = JSON.parse(event.target.result);
+          console.log("✅ JSON 解析成功", json);
+
+          setFormData(prev => ({
+            ...prev,
+            mode: json.mode === "Listening and Understand" ? "understand" : json.mode || prev.mode,
+            title: json.title ?? prev.title,
+            type: json.type ?? prev.type,
+            difficulty: json.difficulty ?? prev.difficulty,
+            duration: json.duration ?? prev.duration,
+            source: json.source ?? prev.source,
+            country: json.country ?? prev.country,
+            author: json.author ?? prev.author,
+            time_specific: json.timeSpecific ?? prev.time_specific, // 必识别
+            transcript_text: json.transcript ?? json.transcript_text ?? json.transcriptText ?? prev.transcript_text, // ✅ 必识别
+            question: json.question ?? prev.question,
+            answer_text: json.answer_text ?? json.answerText ?? prev.answer_text
+          }));
+
+        } catch (err) {
+          console.error("❌ JSON 格式错误", err);
+          alert("JSON 格式不正确！");
+        }
+      };
+      reader.readAsText(file);
     }
   }
 
@@ -108,7 +214,7 @@ function VideoResourceManager() {
 
   async function handleSubmit(e) {
     e.preventDefault()
-    
+
     if (!formData.title.trim()) {
       setError('Title is required')
       return
@@ -117,21 +223,22 @@ function VideoResourceManager() {
     setUploading(true)
     setError(null)
     setSuccess(null)
-    
+
     try {
       const submitData = new FormData()
-      
-      // 添加表单字段
+
+      // ✅ 强制先生成 video_id
+      const newId = generateVideoId()
+      console.log("✅ 最终提交的 video_id：", newId)
+
+      // 添加所有表单字段
       Object.keys(formData).forEach(key => {
         submitData.append(key, formData[key])
       })
-      
-      // 如果是新建，生成视频ID
-      if (!editingId) {
-        const newId = generateVideoId()
-        submitData.append('video_id', newId)
-      }
-      
+
+      // ✅ 强制写入 video_id，确保后端一定收到
+      submitData.append('video_id', newId)
+
       // 添加文件
       Object.keys(files).forEach(key => {
         if (files[key]) {
@@ -139,45 +246,58 @@ function VideoResourceManager() {
         }
       })
 
-      const url = editingId 
-        ? `/Academic-Practice/api/videos.php?action=update&id=${editingId}`
-        : '/Academic-Practice/api/videos.php?action=create'
-      
-      const response = await adminFetch(url, {
+      const url = '/Academic-Practice/api/video_resources.php?action=create'
+
+      const response = await fetch(url, {
         method: 'POST',
         body: submitData
       })
-      
-      setSuccess(editingId ? 'Video resource updated successfully!' : 'Video resource created successfully!')
+
+      const result = await response.json()
+      console.log("后端返回：", result)
+
+      if (!result.ok) throw new Error(result.error)
+
+      setSuccess('Upload the resource successfully！')
       resetForm()
-      await fetchVideos()
-      
-      // 3秒后清除成功消息
+      setTimeout(fetchVideos, 1000)
       setTimeout(() => setSuccess(null), 3000)
+
     } catch (err) {
-      setError(err.message || 'Failed to save video resource')
-      console.error('Error saving video:', err)
+      setError('失败：' + err.message)
+      console.error(err)
     } finally {
       setUploading(false)
     }
   }
 
   function handleEdit(video) {
-    setEditingId(video.id)
+    setEditingId(video.video_id)
     setFormData({
-      video_id: video.id,
+      video_id: video.video_id,
       mode: video.mode,
       title: video.title,
       type: video.type,
       difficulty: video.difficulty,
-      duration: video.duration || '',
-      source: video.source || 'ELLLO',
-      country: video.country || '',
-      author: video.author || '',
-      time_specific: video.timeSpecific || '',
+      duration: video.duration,
+      source: video.source,
+      country: video.country,
+      author: video.author,
+      time_specific: video.time_specific,
+
+      video_url: video.video_url || '',
+      transcript_url: video.transcript_url || '',
+      vtt_url: video.vtt_url || '',
+      labels_url: video.labels_url || '',
+      sample_notes_url: video.sample_notes_url || '',
+      cover_url: video.cover_url || '',
+      flag_url: video.flag_url || '',
+
+      transcript_text: video.transcript_text || '',
       question: video.question || '',
-      transcript_text: video.transcriptText || '',
-      answer_text: video.answerText || ''
+      answer_text: video.answer_text || '',
+      sort_order: video.sort_order || '',
+      status: video.status || 'active'
     })
     setFiles({
       video: null,
@@ -204,9 +324,20 @@ function VideoResourceManager() {
       country: '',
       author: '',
       time_specific: '',
-      question: '',
+
+      video_url: '',
+      transcript_url: '',
+      vtt_url: '',
+      labels_url: '',
+      sample_notes_url: '',
+      cover_url: '',
+      flag_url: '',
+
       transcript_text: '',
-      answer_text: ''
+      question: '',
+      answer_text: '',
+      sort_order: '',
+      status: 'active'
     })
     setFiles({
       video: null,
@@ -217,7 +348,6 @@ function VideoResourceManager() {
       cover: null,
       flag: null
     })
-    // 清空文件输入
     Object.values(fileRefs).forEach(ref => {
       if (ref.current) ref.current.value = ''
     })
@@ -230,9 +360,9 @@ function VideoResourceManager() {
 
     setLoading(true)
     setError(null)
-    
+
     try {
-      await adminFetch(`/Academic-Practice/api/videos.php?action=delete&id=${id}`, {
+      await adminFetch(`/Academic-Practice/api/video_resources.php?action=delete&id=${id}`, {
         method: 'DELETE'
       })
       setSuccess('Video resource deleted successfully!')
@@ -247,13 +377,7 @@ function VideoResourceManager() {
   }
 
   const fileInputs = [
-    { key: 'video', label: 'Video File (MP4)', accept: '.mp4,video/mp4', required: !editingId },
-    { key: 'transcript', label: 'Transcript (TXT)', accept: '.txt,text/plain' },
-    { key: 'vtt', label: 'VTT Subtitles', accept: '.vtt' },
-    { key: 'labels', label: 'Labels (JSON)', accept: '.json,application/json' },
-    { key: 'sampleNotes', label: 'Sample Notes (TXT)', accept: '.txt,text/plain' },
-    { key: 'cover', label: 'Cover Image', accept: 'image/*' },
-    { key: 'flag', label: 'Country Flag', accept: 'image/*' }
+    { key: 'labels', label: 'Labels File (JSON Only)', accept: '.json,application/json', required: false }
   ]
 
   return (
@@ -284,15 +408,15 @@ function VideoResourceManager() {
         <h2 style={styles.sectionTitle}>
           {editingId ? 'Edit Video Resource' : 'Add New Video Resource'}
         </h2>
-        
+
         <form onSubmit={handleSubmit} style={styles.form}>
           <div style={styles.formGrid}>
             {/* 基本信息 */}
             <div style={styles.formGroup}>
               <label style={styles.label}>Mode *</label>
-              <select 
-                name="mode" 
-                value={formData.mode} 
+              <select
+                name="mode"
+                value={formData.mode}
                 onChange={handleInputChange}
                 style={styles.select}
                 disabled={editingId}
@@ -304,20 +428,20 @@ function VideoResourceManager() {
 
             <div style={styles.formGroup}>
               <label style={styles.label}>Video ID</label>
-              <input 
-                type="text" 
+              <input
+                type="text"
                 value={editingId || (formData.mode ? generateVideoId() : 'Auto-generated')}
-                style={{...styles.input, backgroundColor: 'var(--bg-2)'}}
+                style={{ ...styles.input, backgroundColor: 'var(--bg-2)' }}
                 disabled
               />
             </div>
 
-            <div style={styles.formGroup} style={{...styles.formGroup, gridColumn: 'span 2'}}>
+            <div style={styles.formGroup} style={{ ...styles.formGroup, gridColumn: 'span 2' }}>
               <label style={styles.label}>Title *</label>
-              <input 
-                type="text" 
-                name="title" 
-                value={formData.title} 
+              <input
+                type="text"
+                name="title"
+                value={formData.title}
                 onChange={handleInputChange}
                 style={styles.input}
                 placeholder="Enter video title"
@@ -326,9 +450,9 @@ function VideoResourceManager() {
 
             <div style={styles.formGroup}>
               <label style={styles.label}>Type</label>
-              <select 
-                name="type" 
-                value={formData.type} 
+              <select
+                name="type"
+                value={formData.type}
                 onChange={handleInputChange}
                 style={styles.select}
               >
@@ -340,9 +464,9 @@ function VideoResourceManager() {
 
             <div style={styles.formGroup}>
               <label style={styles.label}>Difficulty</label>
-              <select 
-                name="difficulty" 
-                value={formData.difficulty} 
+              <select
+                name="difficulty"
+                value={formData.difficulty}
                 onChange={handleInputChange}
                 style={styles.select}
               >
@@ -354,10 +478,10 @@ function VideoResourceManager() {
 
             <div style={styles.formGroup}>
               <label style={styles.label}>Duration</label>
-              <input 
-                type="text" 
-                name="duration" 
-                value={formData.duration} 
+              <input
+                type="text"
+                name="duration"
+                value={formData.duration}
                 onChange={handleInputChange}
                 style={styles.input}
                 placeholder="e.g., 2-3min"
@@ -366,10 +490,10 @@ function VideoResourceManager() {
 
             <div style={styles.formGroup}>
               <label style={styles.label}>Source</label>
-              <input 
-                type="text" 
-                name="source" 
-                value={formData.source} 
+              <input
+                type="text"
+                name="source"
+                value={formData.source}
                 onChange={handleInputChange}
                 style={styles.input}
                 placeholder="e.g., ELLLO"
@@ -378,10 +502,10 @@ function VideoResourceManager() {
 
             <div style={styles.formGroup}>
               <label style={styles.label}>Country</label>
-              <input 
-                type="text" 
-                name="country" 
-                value={formData.country} 
+              <input
+                type="text"
+                name="country"
+                value={formData.country}
                 onChange={handleInputChange}
                 style={styles.input}
                 placeholder="e.g., US, UK, Australia"
@@ -390,10 +514,10 @@ function VideoResourceManager() {
 
             <div style={styles.formGroup}>
               <label style={styles.label}>Author</label>
-              <input 
-                type="text" 
-                name="author" 
-                value={formData.author} 
+              <input
+                type="text"
+                name="author"
+                value={formData.author}
                 onChange={handleInputChange}
                 style={styles.input}
                 placeholder="Speaker name"
@@ -402,23 +526,34 @@ function VideoResourceManager() {
 
             <div style={styles.formGroup}>
               <label style={styles.label}>Time Specific</label>
-              <input 
-                type="text" 
-                name="time_specific" 
-                value={formData.time_specific} 
+              <input
+                type="text"
+                name="time_specific"
+                value={formData.time_specific}
                 onChange={handleInputChange}
                 style={styles.input}
                 placeholder="e.g., 2024"
               />
             </div>
 
+            <div style={{ ...styles.formGroup, gridColumn: 'span 3' }}>
+              <label style={styles.label}>Transcript</label>
+              <textarea
+                name="transcript_text"
+                value={formData.transcript_text}
+                onChange={handleInputChange}
+                style={{ ...styles.textarea, minHeight: '180px' }}
+                placeholder="Paste transcript text here..."
+              />
+            </div>
+
             {formData.mode === 'respond' && (
-              <div style={styles.formGroup} style={{...styles.formGroup, gridColumn: 'span 2'}}>
+              <div style={styles.formGroup} style={{ ...styles.formGroup, gridColumn: 'span 2' }}>
                 <label style={styles.label}>Question (for Respond mode)</label>
-                <input 
-                  type="text" 
-                  name="question" 
-                  value={formData.question} 
+                <input
+                  type="text"
+                  name="question"
+                  value={formData.question}
                   onChange={handleInputChange}
                   style={styles.input}
                   placeholder="Enter the question for this video"
@@ -429,7 +564,7 @@ function VideoResourceManager() {
 
           {/* 文件上传区域 */}
           <div style={styles.fileSection}>
-            <h3 style={styles.fileSectionTitle}>Resource Files</h3>
+            <h3 style={styles.fileSectionTitle}>Upload Labels (JSON Only)</h3>
             <div style={styles.fileGrid}>
               {fileInputs.map(({ key, label, accept, required }) => (
                 <div key={key} style={styles.fileInputGroup}>
@@ -438,9 +573,9 @@ function VideoResourceManager() {
                     {files[key] && <span style={styles.fileSelected}> ✓</span>}
                   </label>
                   <div style={styles.fileUploadWrapper}>
-                    <input 
+                    <input
                       ref={fileRefs[key]}
-                      type="file" 
+                      type="file"
                       accept={accept}
                       onChange={(e) => handleFileChange(key, e)}
                       style={styles.fileInputHidden}
@@ -458,47 +593,19 @@ function VideoResourceManager() {
             </div>
           </div>
 
-          {/* 文本内容区域 */}
-          <div style={styles.textSection}>
-            <h3 style={styles.fileSectionTitle}>Text Content</h3>
-            
-            <div style={styles.formGroup}>
-              <label style={styles.label}>Transcript</label>
-              <textarea 
-                name="transcript_text" 
-                value={formData.transcript_text} 
-                onChange={handleInputChange}
-                style={{...styles.textarea, minHeight: '150px'}}
-                placeholder="Paste transcript text here..."
-              />
-            </div>
-
-            {formData.mode === 'respond' && (
-              <div style={styles.formGroup}>
-                <label style={styles.label}>Sample Answer</label>
-                <textarea 
-                  name="answer_text" 
-                  value={formData.answer_text} 
-                  onChange={handleInputChange}
-                  style={{...styles.textarea, minHeight: '100px'}}
-                  placeholder="Paste sample answer here..."
-                />
-              </div>
-            )}
-          </div>
 
           {/* 按钮 */}
           <div style={styles.buttonGroup}>
-            <button 
-              type="submit" 
+            <button
+              type="submit"
               style={styles.submitButton}
               disabled={uploading}
             >
               {uploading ? 'Uploading...' : (editingId ? 'Update Resource' : 'Create Resource')}
             </button>
             {editingId && (
-              <button 
-                type="button" 
+              <button
+                type="button"
                 style={styles.cancelButton}
                 onClick={resetForm}
                 disabled={uploading}
@@ -513,7 +620,7 @@ function VideoResourceManager() {
       {/* 视频列表 */}
       <div style={styles.listSection}>
         <h2 style={styles.sectionTitle}>Existing Video Resources ({videos.length})</h2>
-        
+
         {loading ? (
           <div style={styles.loading}>Loading...</div>
         ) : videos.length === 0 ? (
@@ -521,10 +628,11 @@ function VideoResourceManager() {
         ) : (
           <div style={styles.videoList}>
             {videos.map(video => (
-              <div key={video.id} style={styles.videoCard}>
+              <div key={video.video_id} style={styles.videoCard}>
                 <div style={styles.videoHeader}>
-                  <span style={styles.videoId}>{video.id}</span>
-                  <span style={{...styles.modeBadge, 
+                  <span style={styles.videoId}>{video.video_id}</span>
+                  <span style={{
+                    ...styles.modeBadge,
                     backgroundColor: video.mode === 'understand' ? '#dbeafe' : '#dcfce7',
                     color: video.mode === 'understand' ? '#1e40af' : '#166534'
                   }}>
@@ -532,39 +640,36 @@ function VideoResourceManager() {
                   </span>
                   <span style={styles.difficultyBadge}>{video.difficulty}</span>
                 </div>
-                
+
                 <h3 style={styles.videoTitle}>{video.title}</h3>
-                
+
                 <div style={styles.videoMeta}>
+                  <span>{video.mode}</span>
+                  <span>{video.difficulty}</span>
                   <span>{video.type}</span>
-                  <span>•</span>
-                  <span>{video.duration || 'N/A'}</span>
-                  <span>•</span>
-                  <span>{video.country || 'N/A'}</span>
-                  <span>•</span>
-                  <span>{video.author || 'N/A'}</span>
+                  <span>{video.duration}</span>
+                  <span>{video.country}</span>
                 </div>
 
                 <div style={styles.videoFiles}>
-                  {video.videoUrl && <span style={styles.fileTag}>🎬 Video</span>}
-                  {video.transcriptUrl && <span style={styles.fileTag}>📝 Transcript</span>}
-                  {video.vttUrl && <span style={styles.fileTag}>📄 VTT</span>}
-                  {video.labelsUrl && <span style={styles.fileTag}>🏷️ Labels</span>}
-                  {video.sampleNotesUrl && <span style={styles.fileTag}>📋 Notes</span>}
-                  {video.coverUrl && <span style={styles.fileTag}>🖼️ Cover</span>}
-                  {video.flagUrl && <span style={styles.fileTag}>🏳️ Flag</span>}
+                  {video.video_url && <span>🎬 Video</span>}
+                  {video.transcript_url && <span>📝 Transcript</span>}
+                  {video.vtt_url && <span>📄 VTT</span>}
+                  {video.labels_url && <span>🏷️ Labels</span>}
+                  {video.cover_url && <span>🖼️ Cover</span>}
+                  {video.flag_url && <span>🏳️ Flag</span>}
                 </div>
-                
+
                 <div style={styles.videoActions}>
-                  <button 
+                  <button
                     style={styles.editButton}
                     onClick={() => handleEdit(video)}
                   >
                     Edit
                   </button>
-                  <button 
+                  <button
                     style={styles.deleteButton}
-                    onClick={() => handleDelete(video.id)}
+                    onClick={() => handleDelete(video.video_id)}
                   >
                     Delete
                   </button>
