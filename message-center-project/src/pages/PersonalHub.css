@@ -1842,7 +1842,17 @@
   border: none;
   background: transparent;
   color: var(--secondary-color);
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
+}
+
+.personal-modal__close:hover {
+  background: #f3f4f6;
 }
 
 .personal-modal__body {
@@ -1882,18 +1892,17 @@
 }
 
 .personal-modal__list {
-  max-height: 360px;
+  max-height: 320px;
   overflow: auto;
   display: grid;
-  gap: 8px;
+  gap: 6px;
 }
 
 .personal-modal__user {
-  display: grid;
-  grid-template-columns: auto 1fr;
+  display: flex;
   gap: 12px;
   align-items: center;
-  padding: 12px;
+  padding: 10px 12px;
   border-radius: 8px;
   background: rgba(228, 223, 216, 0.28);
 }
@@ -1901,7 +1910,253 @@
 .personal-modal__user span {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
+  min-width: 0;
+}
+
+.personal-modal__user strong,
+.personal-modal__user small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.personal-modal__user input[type='checkbox'] {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+}
+
+.personal-modal__card--groupInvite {
+  width: min(640px, calc(100vw - 32px));
+  margin: 8vh auto 0;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  gap: 12px;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.personal-modal__card--groupInvite .personal-modal__header {
+  margin-bottom: 8px;
+}
+
+.personal-modal__card--groupInvite .personal-modal__header h3 {
+  margin: 0 0 4px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.personal-modal__searchWrap {
+  position: relative;
+  display: block;
+}
+
+.personal-modal__searchIcon {
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  font-size: 15px;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.personal-modal__card--groupInvite .personal-modal__input {
+  height: 44px;
+  min-height: 44px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  padding: 0 12px 0 38px;
+  font-size: 14px;
+}
+
+.personal-modal__card--groupInvite .personal-modal__input::placeholder {
+  color: #9ca3af;
+}
+
+.personal-modal__card--groupInvite .personal-modal__input:focus {
+  border-color: #1e40af;
+  box-shadow: 0 0 0 3px rgba(30, 64, 175, 0.14);
+}
+
+.personal-modal__listTools {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.personal-modal__selectAll {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #4b5563;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.personal-modal__checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 1px solid #cbd5e1;
+  border-radius: 4px;
+  background: #ffffff;
+  display: inline-grid;
+  place-items: center;
+  cursor: pointer;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+.personal-modal__checkbox::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  transform: scale(0);
+  transition: transform 0.12s ease;
+  background: #ffffff;
+}
+
+.personal-modal__checkbox:checked {
+  border-color: #1e40af;
+  background: #1e40af;
+}
+
+.personal-modal__checkbox:checked::after {
+  transform: scale(1);
+}
+
+.personal-modal__checkbox:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.personal-modal__card--groupInvite .personal-modal__list {
+  max-height: 332px;
+  gap: 12px;
+  padding-right: 4px;
+}
+
+.personal-modal__user--selectable {
+  display: grid;
+  grid-template-columns: auto auto minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  min-height: 72px;
+  padding: 16px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: #f9fafb;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.personal-modal__user--selectable:hover {
+  background: #f3f4f6;
+}
+
+.personal-modal__user--selectable.is-selected {
+  background: #eff6ff;
+  border-color: #1e40af;
+}
+
+.personal-modal__user--selectable .personal-modal__avatar {
+  width: 40px;
+  height: 40px;
+  background: #dbeafe;
+  color: #1e40af;
+  font-size: 16px;
+}
+
+.personal-modal__user--selectable strong {
+  color: #1f2937;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.personal-modal__user--selectable small {
+  color: #6b7280;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.personal-modal__emptyState {
+  min-height: 112px;
+  display: grid;
+  place-items: center;
+  gap: 8px;
+  border: 1px dashed #d1d5db;
+  border-radius: 8px;
+  color: #6b7280;
+  font-size: 14px;
+  background: #f9fafb;
+}
+
+.personal-modal__emptyIcon {
+  color: #9ca3af;
+  font-size: 18px;
+}
+
+.personal-modal__card--groupInvite .personal-modal__footer {
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.personal-modal__card--groupInvite .personal-modal__ghost,
+.personal-modal__card--groupInvite .personal-modal__primary {
+  height: 44px;
+  border-radius: 8px;
+  padding: 0 16px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.personal-modal__card--groupInvite .personal-modal__ghost {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  color: #4b5563;
+}
+
+.personal-modal__card--groupInvite .personal-modal__ghost:hover {
+  background: #f9fafb;
+  border-color: #e5e7eb;
+}
+
+.personal-modal__card--groupInvite .personal-modal__primary {
+  background: #1e40af;
+  color: #ffffff;
+}
+
+.personal-modal__card--groupInvite .personal-modal__primary:hover {
+  background: #1e3a8a;
+}
+
+.personal-modal__card--groupInvite .personal-modal__primary:disabled {
+  background: #cbd5e1;
+  color: #f8fafc;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.personal-modal__card--groupInvite .personal-modal__list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.personal-modal__card--groupInvite .personal-modal__list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.personal-modal__card--groupInvite .personal-modal__list::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 999px;
+}
+
+.personal-modal__card--groupInvite .personal-modal__list::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
 }
 
 .forumAudioPlayer {

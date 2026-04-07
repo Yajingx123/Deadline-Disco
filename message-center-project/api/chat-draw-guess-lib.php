@@ -474,6 +474,12 @@ function draw_guess_find_player(array $players, int $userId): ?array {
     return null;
 }
 
+function draw_guess_active_players(array $players): array {
+    return array_values(array_filter($players, static function (array $player): bool {
+        return ($player['player_status'] ?? 'active') === 'active';
+    }));
+}
+
 function draw_guess_sync_game(PDO $pdo, array $game): array {
     $now = draw_guess_now();
     $current = $game;
@@ -604,7 +610,7 @@ function draw_guess_create_or_resume_lobby(PDO $pdo, array $conversation, array 
                 :joinOrder,
                 :drawerOrder,
                 0,
-                'active',
+                :playerStatus,
                 'online',
                 0
             )
@@ -612,11 +618,13 @@ function draw_guess_create_or_resume_lobby(PDO $pdo, array $conversation, array 
 
         $order = 1;
         foreach ($members as $member) {
+            $memberUserId = (int)$member['user_id'];
             $playerStmt->execute([
                 ':gameId' => $gameId,
-                ':userId' => (int)$member['user_id'],
+                ':userId' => $memberUserId,
                 ':joinOrder' => $order,
                 ':drawerOrder' => $order,
+                ':playerStatus' => $memberUserId === (int)$user['user_id'] ? 'active' : 'spectator',
             ]);
             $order += 1;
         }
@@ -644,9 +652,25 @@ function draw_guess_toggle_ready(PDO $pdo, array $game, int $userId, bool $isRea
         forum_json(['ok' => false, 'message' => 'Ready state can only be updated in the lobby.'], 422);
     }
 
+    $players = draw_guess_players($pdo, (int)$game['game_id']);
+    $viewerPlayer = draw_guess_find_player($players, $userId);
+    if (!$viewerPlayer || ($viewerPlayer['player_status'] ?? '') === 'left') {
+        forum_json(['ok' => false, 'message' => 'You are not part of this game.'], 403);
+    }
+
+    $nextPlayerStatus = (string)($viewerPlayer['player_status'] ?? 'spectator');
+    if ($isReady && $nextPlayerStatus !== 'active') {
+        $activePlayers = draw_guess_active_players($players);
+        if (count($activePlayers) >= (int)$game['min_players']) {
+            forum_json(['ok' => false, 'message' => 'Player limit reached for this round.'], 422);
+        }
+        $nextPlayerStatus = 'active';
+    }
+
     $stmt = $pdo->prepare("
         UPDATE chat_draw_guess_players
         SET is_ready = :isReady,
+            player_status = :playerStatus,
             connection_status = 'online'
         WHERE game_id = :gameId
           AND user_id = :userId
@@ -654,6 +678,7 @@ function draw_guess_toggle_ready(PDO $pdo, array $game, int $userId, bool $isRea
     ");
     $stmt->execute([
         ':isReady' => $isReady ? 1 : 0,
+        ':playerStatus' => $nextPlayerStatus,
         ':gameId' => (int)$game['game_id'],
         ':userId' => $userId,
     ]);
@@ -668,9 +693,7 @@ function draw_guess_start_game(PDO $pdo, array $game, int $userId): array {
         forum_json(['ok' => false, 'message' => 'Game has already started.'], 422);
     }
 
-    $players = array_values(array_filter(draw_guess_players($pdo, (int)$game['game_id']), static function (array $player): bool {
-        return ($player['player_status'] ?? 'active') === 'active';
-    }));
+    $players = draw_guess_active_players(draw_guess_players($pdo, (int)$game['game_id']));
     $readyPlayers = array_values(array_filter($players, static function (array $player): bool {
         return (int)($player['is_ready'] ?? 0) === 1;
     }));
@@ -703,9 +726,7 @@ function draw_guess_start_game(PDO $pdo, array $game, int $userId): array {
 }
 
 function draw_guess_begin_next_round(PDO $pdo, array $game): array {
-    $players = array_values(array_filter(draw_guess_players($pdo, (int)$game['game_id']), static function (array $player): bool {
-        return ($player['player_status'] ?? 'active') === 'active';
-    }));
+    $players = draw_guess_active_players(draw_guess_players($pdo, (int)$game['game_id']));
     $undrawn = array_values(array_filter($players, static function (array $player): bool {
         return (int)($player['has_drawn'] ?? 0) !== 1;
     }));
@@ -1359,6 +1380,7 @@ function draw_guess_add_stroke(PDO $pdo, array $game, int $userId, string $event
 
 function draw_guess_public_state(PDO $pdo, array $game, int $viewerUserId): array {
     $players = draw_guess_players($pdo, (int)$game['game_id']);
+    $activePlayers = draw_guess_active_players($players);
     $round = draw_guess_current_round($pdo, (int)$game['game_id']);
     $correctIds = $round ? draw_guess_round_correct_user_ids($pdo, (int)$round['round_id']) : [];
     $viewerPlayer = draw_guess_find_player($players, $viewerUserId);
@@ -1382,12 +1404,14 @@ function draw_guess_public_state(PDO $pdo, array $game, int $viewerUserId): arra
     $roundEndsAt = $round['ends_at'] ?? null;
     $selectionDeadline = $round['selection_deadline_at'] ?? null;
 
+    $playersForView = $activePlayers;
+
     return [
         'roomId' => (int)$game['game_id'],
         'chatId' => (int)$game['conversation_id'],
         'status' => (string)$game['status'],
         'minPlayers' => (int)$game['min_players'],
-        'readyCount' => count(array_filter($players, static fn(array $player): bool => (int)($player['is_ready'] ?? 0) === 1)),
+        'readyCount' => count(array_filter($playersForView, static fn(array $player): bool => (int)($player['is_ready'] ?? 0) === 1)),
         'players' => array_map(static function (array $player) use ($drawerId, $correctIds): array {
             $playerUserId = (int)$player['user_id'];
             return [
@@ -1402,9 +1426,9 @@ function draw_guess_public_state(PDO $pdo, array $game, int $viewerUserId): arra
                 'playerStatus' => (string)$player['player_status'],
                 'hasDrawn' => (int)$player['has_drawn'] === 1,
             ];
-        }, $players),
+        }, $playersForView),
         'roundIndex' => (int)$game['round_index'],
-        'drawerOrder' => array_map(static fn(array $player): int => (int)$player['user_id'], $players),
+        'drawerOrder' => array_map(static fn(array $player): int => (int)$player['user_id'], $playersForView),
         'currentDrawerId' => $drawerId,
         'roundStartTime' => $round['started_at'] ?? null,
         'roundEndsAt' => $roundEndsAt,
@@ -1423,6 +1447,7 @@ function draw_guess_public_state(PDO $pdo, array $game, int $viewerUserId): arra
             'isDrawer' => $drawerId === $viewerUserId,
             'hasGuessedCorrectly' => in_array($viewerUserId, $correctIds, true),
             'canGuess' => ($drawerId !== $viewerUserId)
+                && (($viewerPlayer['player_status'] ?? 'spectator') === 'active')
                 && (($game['status'] ?? '') === DRAW_GUESS_STATUS_PLAYING)
                 && !in_array($viewerUserId, $correctIds, true),
         ],

@@ -853,10 +853,11 @@ export default function PersonalHub({ onBackToChooser, embedded = false }) {
   }
 
   const toggleGroupMember = (userId) => {
+    const normalizedUserId = Number(userId)
     setSelectedGroupMembers((prev) => (
-      prev.includes(userId)
-        ? prev.filter((item) => item !== userId)
-        : [...prev, userId]
+      prev.includes(normalizedUserId)
+        ? prev.filter((item) => Number(item) !== normalizedUserId)
+        : [...prev, normalizedUserId]
     ))
   }
 
@@ -865,6 +866,33 @@ export default function PersonalHub({ onBackToChooser, embedded = false }) {
     [activeConversation],
   )
   const isExistingGroupChat = activeConversation?.type === 'group'
+  const visibleGroupCandidates = useMemo(
+    () => groupResults.filter((user) => !existingMemberIds.has(Number(user.id))),
+    [groupResults, existingMemberIds],
+  )
+  const allVisibleCandidatesSelected = useMemo(
+    () => (
+      visibleGroupCandidates.length > 0
+      && visibleGroupCandidates.every((user) => selectedGroupMembers.includes(Number(user.id)))
+    ),
+    [visibleGroupCandidates, selectedGroupMembers],
+  )
+
+  const toggleSelectAllGroupMembers = () => {
+    const visibleIds = visibleGroupCandidates.map((user) => Number(user.id))
+    if (!visibleIds.length) {
+      return
+    }
+    setSelectedGroupMembers((prev) => {
+      const prevSet = new Set(prev.map((id) => Number(id)))
+      const shouldUnselect = visibleIds.every((id) => prevSet.has(id))
+      if (shouldUnselect) {
+        return prev.filter((id) => !visibleIds.includes(Number(id)))
+      }
+      visibleIds.forEach((id) => prevSet.add(id))
+      return Array.from(prevSet)
+    })
+  }
 
   const openProfileModal = () => {
     if (!activeConversation || activeConversation.type !== 'group') {
@@ -1158,7 +1186,7 @@ export default function PersonalHub({ onBackToChooser, embedded = false }) {
       {groupModalOpen && (
         <div className="personal-modal">
           <div className="personal-modal__backdrop" onClick={() => setGroupModalOpen(false)} />
-            <div className="personal-modal__card">
+            <div className="personal-modal__card personal-modal__card--groupInvite">
             <div className="personal-modal__header">
               <h3>{isExistingGroupChat ? 'Add Members To Group' : 'Start Group Chat'}</h3>
               <button type="button" className="personal-modal__close" onClick={() => setGroupModalOpen(false)}>✕</button>
@@ -1174,23 +1202,41 @@ export default function PersonalHub({ onBackToChooser, embedded = false }) {
               />
             )}
 
-            <input
-              className="personal-modal__input"
-              type="text"
-              value={groupSearch}
-              onChange={(event) => setGroupSearch(event.target.value)}
-              placeholder="Search people to add"
-            />
+            <label className="personal-modal__searchWrap" aria-label="Search people to add">
+              <span className="personal-modal__searchIcon" aria-hidden="true">⌕</span>
+              <input
+                className="personal-modal__input"
+                type="text"
+                value={groupSearch}
+                onChange={(event) => setGroupSearch(event.target.value)}
+                placeholder="Search people to add"
+              />
+            </label>
+
+            <div className="personal-modal__listTools">
+              <label className="personal-modal__selectAll">
+                <input
+                  type="checkbox"
+                  className="personal-modal__checkbox"
+                  checked={allVisibleCandidatesSelected}
+                  onChange={toggleSelectAllGroupMembers}
+                  disabled={!visibleGroupCandidates.length}
+                />
+                <span>Select all</span>
+              </label>
+            </div>
 
             <div className="personal-modal__list">
-              {groupResults
-                .filter((user) => !existingMemberIds.has(Number(user.id)))
-                .map((user) => (
-                  <label key={user.id} className="personal-modal__user">
+              {visibleGroupCandidates
+                .map((user) => {
+                  const isChecked = selectedGroupMembers.includes(Number(user.id))
+                  return (
+                  <label key={user.id} className={`personal-modal__user personal-modal__user--selectable ${isChecked ? 'is-selected' : ''}`.trim()}>
                     <input
                       type="checkbox"
-                      checked={selectedGroupMembers.includes(user.id)}
-                      onChange={() => toggleGroupMember(user.id)}
+                      className="personal-modal__checkbox"
+                      checked={isChecked}
+                      onChange={() => toggleGroupMember(Number(user.id))}
                     />
                     <span className="personal-modal__avatar">{user.avatar}</span>
                     <span>
@@ -1198,9 +1244,13 @@ export default function PersonalHub({ onBackToChooser, embedded = false }) {
                       <small>{user.email}</small>
                     </span>
                   </label>
-                ))}
-              {!groupResults.filter((user) => !existingMemberIds.has(Number(user.id))).length && (
-                <div className="chat-sidebar__empty">No extra members available.</div>
+                  )
+                })}
+              {!visibleGroupCandidates.length && (
+                <div className="personal-modal__emptyState">
+                  <span className="personal-modal__emptyIcon" aria-hidden="true">⌕</span>
+                  <span>No users found</span>
+                </div>
               )}
             </div>
 
