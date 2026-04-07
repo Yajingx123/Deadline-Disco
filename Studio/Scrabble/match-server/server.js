@@ -8,7 +8,19 @@ const engine = require("./gameEngine.cjs");
 
 const PORT = Number(process.env.SCRABBLE_PORT || 9000);
 const MAX_FULL_ROUNDS = 20;
+const DEV_ADMIN_KEY = process.env.SCRABBLE_BANK_KEY || "123456";
 const ENABLE_PATH = process.env.SCRABBLE_DICT || path.join(__dirname, "..", "enable.txt");
+const DEFAULT_VOCAB_BANK = [
+  "ANALYZE", "APPROACH", "ASSUME", "BENEFIT", "CHALLENGE",
+  "COMMUNITY", "CONCEPT", "CONCLUDE", "CONTEXT", "CONTRAST",
+  "CRITICAL", "DATA", "DISTRIBUTE", "EVIDENCE", "FACTOR",
+  "FRAMEWORK", "FUNCTION", "IDENTIFY", "IMPACT", "INDICATE",
+  "INTERPRET", "ISSUE", "METHOD", "OUTCOME", "PERSPECTIVE",
+  "POLICY", "PRINCIPLE", "PROCESS", "RELEVANT", "RESEARCH",
+  "RESOURCE", "RESPONSE", "SIGNIFICANT", "SIMILAR", "STRATEGY",
+  "STRUCTURE", "THEORY", "VARIABLE"
+];
+const VOCAB_BANK = new Set(DEFAULT_VOCAB_BANK);
 
 function loadDictionary() {
   const set = new Set();
@@ -63,6 +75,29 @@ function addLog(game, msg) {
   if (game.log.length > 40) game.log = game.log.slice(0, 40);
 }
 
+function getVocabularyBankWords() {
+  return [...VOCAB_BANK].sort();
+}
+
+function sanitizeVocabWord(raw) {
+  return String(raw || "").trim().toUpperCase().replace(/[^A-Z]/g, "");
+}
+
+function applyVocabularyBonus(ev) {
+  if (!ev || !ev.valid || !Array.isArray(ev.words)) return ev;
+  let bonus = 0;
+  ev.words = ev.words.map((w) => {
+    if (!VOCAB_BANK.has(w.word)) {
+      return { ...w, vocabBonus: false };
+    }
+    bonus += w.score;
+    return { ...w, score: w.score * 2, vocabBonus: true };
+  });
+  ev.total += bonus;
+  ev.vocabBonusTotal = bonus;
+  return ev;
+}
+
 function serializeBoard(board) {
   const out = [];
   for (let r = 0; r < engine.BOARD_SIZE; r += 1) {
@@ -95,6 +130,7 @@ function snapshotFor(room, socketId) {
     gameOver: g.gameOver,
     winnerSeat: g.winnerSeat,
     endReason: g.gameOver ? g.endReason : null,
+    vocabBank: getVocabularyBankWords(),
     log: [...g.log]
   };
 }
@@ -191,6 +227,30 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
   socket.data.roomId = null;
   socket.data.seat = null;
+  socket.emit("bank:state", { words: getVocabularyBankWords() });
+
+  socket.on("bank:edit", (payload) => {
+    const key = String(payload?.key || "");
+    if (key !== DEV_ADMIN_KEY) {
+      socket.emit("bank:edit:result", { ok: false, message: "Invalid admin key." });
+      return;
+    }
+    const op = payload?.op;
+    const word = sanitizeVocabWord(payload?.word);
+    if (!word || word.length < 2 || word.length > 15) {
+      socket.emit("bank:edit:result", { ok: false, message: "Word must be 2-15 letters (A-Z)." });
+      return;
+    }
+    if (op !== "add" && op !== "remove") {
+      socket.emit("bank:edit:result", { ok: false, message: "Unsupported edit operation." });
+      return;
+    }
+    if (op === "add") VOCAB_BANK.add(word);
+    if (op === "remove") VOCAB_BANK.delete(word);
+    const words = getVocabularyBankWords();
+    socket.emit("bank:edit:result", { ok: true, message: `Vocabulary Bank updated (${op}: ${word}).`, words });
+    io.emit("bank:state", { words });
+  });
 
   socket.on("match:join", () => {
     if (socket.data.roomId) return;
@@ -261,12 +321,13 @@ io.on("connection", (socket) => {
       socket.emit("game:error", { message: ev.message });
       return;
     }
+    applyVocabularyBonus(ev);
     g.scores[seat] += ev.total;
     engine.commitMove(g.board, rack, g.bag, placements, ev);
     g.passStreak = 0;
     const name = `Player ${seat + 1}`;
-    const wordsDesc = ev.words.map((w) => `${w.word}(+${w.score})`).join(", ");
-    addLog(g, `${name} played ${wordsDesc}${ev.bingo ? " + Bingo 50" : ""}.`);
+    const wordsDesc = ev.words.map((w) => `${w.word}(+${w.score}${w.vocabBonus ? ",VBx2" : ""})`).join(", ");
+    addLog(g, `${name} played ${wordsDesc}${ev.bingo ? " + Bingo 50" : ""}${ev.vocabBonusTotal ? ` + Vocab Bonus ${ev.vocabBonusTotal}` : ""}.`);
     g.turnNumber += 1;
     g.current = 1 - seat;
     checkGameOverAfterPlay(room);
