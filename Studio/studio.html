@@ -8,12 +8,12 @@
     <link rel="stylesheet" href="../shared-nav.css">
     <style>
         :root {
-            --bg-color: #E4DFD8;
-            --primary-color: #9BB7D4;
-            --secondary-color: #3A4E6B;
+            --bg-color: #f4efff;
+            --primary-color: #facc15;
+            --secondary-color: #5b2a86;
             --white: #ffffff;
             --card-bg: rgba(255, 255, 255, 0.68);
-            --panel-border: rgba(58, 78, 107, 0.1);
+            --panel-border: rgba(91, 42, 134, 0.16);
         }
 
         * {
@@ -25,11 +25,42 @@
 
         body {
             background:
-                radial-gradient(circle at top, rgba(155, 183, 212, 0.16), transparent 28%),
+                radial-gradient(circle at top, rgba(250, 204, 21, 0.22), transparent 28%),
                 var(--bg-color);
             color: var(--secondary-color);
             min-height: 100vh;
             padding: 0 5% 48px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before,
+        body::after {
+            content: "";
+            position: fixed;
+            pointer-events: none;
+            z-index: -1;
+            border-radius: 50%;
+        }
+
+        body::before {
+            width: 52vw;
+            height: 52vw;
+            left: -18vw;
+            top: -18vw;
+            background: radial-gradient(circle, rgba(250, 204, 21, 0.24), transparent 70%);
+            filter: blur(8px);
+            animation: studioFloatA 11s ease-in-out infinite alternate;
+        }
+
+        body::after {
+            width: 40vw;
+            height: 40vw;
+            right: -12vw;
+            bottom: -12vw;
+            background: radial-gradient(circle, rgba(91, 42, 134, 0.26), transparent 68%);
+            filter: blur(10px);
+            animation: studioFloatB 13s ease-in-out infinite alternate;
         }
 
         .studio-hero {
@@ -40,7 +71,7 @@
             background: rgba(255, 255, 255, 0.6);
             border-radius: 20px;
             backdrop-filter: blur(8px);
-            box-shadow: 0 18px 44px rgba(58, 78, 107, 0.08);
+            box-shadow: 0 18px 44px rgba(91, 42, 134, 0.14);
         }
 
         .studio-hero h1 {
@@ -50,7 +81,7 @@
         }
 
         .studio-hero p {
-            color: rgba(58, 78, 107, 0.74);
+            color: rgba(91, 42, 134, 0.78);
             max-width: 760px;
             line-height: 1.7;
             font-size: 0.95rem;
@@ -80,9 +111,14 @@
 
         .game-card:hover {
             transform: translateY(-8px);
-            box-shadow: 0 20px 36px rgba(58, 78, 107, 0.1);
+            box-shadow: 0 20px 36px rgba(91, 42, 134, 0.16);
             background: rgba(255, 255, 255, 0.9);
         }
+
+        .game-card {
+            animation: studioCardIn 0.75s ease both;
+        }
+        .game-card:nth-child(2) { animation-delay: 0.12s; }
 
         .game-icon {
             width: 54px;
@@ -91,7 +127,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: rgba(155, 183, 212, 0.2);
+            background: rgba(250, 204, 21, 0.24);
             color: var(--secondary-color);
             font-size: 1.4rem;
             font-weight: 800;
@@ -106,19 +142,19 @@
         .game-tag {
             display: inline-flex;
             width: fit-content;
-            border: 1px solid rgba(58, 78, 107, 0.2);
+            border: 1px solid rgba(91, 42, 134, 0.22);
             border-radius: 999px;
             padding: 4px 10px;
             font-size: 0.72rem;
             letter-spacing: 0.08rem;
             text-transform: uppercase;
             font-weight: 700;
-            color: rgba(58, 78, 107, 0.75);
+            color: rgba(91, 42, 134, 0.78);
         }
 
         .game-desc {
             line-height: 1.65;
-            color: rgba(58, 78, 107, 0.74);
+            color: rgba(91, 42, 134, 0.78);
             font-size: 0.9rem;
             flex-grow: 1;
         }
@@ -159,6 +195,19 @@
                 margin-top: 152px;
                 padding: 24px;
             }
+        }
+
+        @keyframes studioFloatA {
+            from { transform: translate3d(0, 0, 0) scale(1); }
+            to { transform: translate3d(4vw, 2vh, 0) scale(1.08); }
+        }
+        @keyframes studioFloatB {
+            from { transform: translate3d(0, 0, 0) scale(1); }
+            to { transform: translate3d(-3vw, -2vh, 0) scale(1.1); }
+        }
+        @keyframes studioCardIn {
+            from { opacity: 0; transform: translateY(24px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
     </style>
 </head>

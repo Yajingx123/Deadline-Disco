@@ -43,10 +43,10 @@
     </script>
     <style>
         :root {
-            --bg-color: #E4DFD8;
-            --primary-color: #9BB7D4;
-            --secondary-color: #3A4E6B;
-            --accent-gold: #C5A059; /* 增加金色用于排名 */
+            --bg-color: #f4efff;
+            --primary-color: #facc15;
+            --secondary-color: #5b2a86;
+            --accent-gold: #facc15; /* 增加金色用于排名 */
             --white: #ffffff;
             --transition-slow: all 2.2s cubic-bezier(0.16, 1, 0.3, 1);
             --transition-fast: all 0.4s ease;
@@ -60,10 +60,243 @@
         }
 
         body {
-            background-color: var(--bg-color);
+            background:
+                radial-gradient(circle at 12% 18%, rgba(250, 204, 21, 0.24), transparent 30%),
+                radial-gradient(circle at 84% 14%, rgba(91, 42, 134, 0.2), transparent 32%),
+                linear-gradient(140deg, #f8f4ff 0%, #efe6ff 52%, #fff7d1 100%);
             color: var(--secondary-color);
             overflow: hidden;
             height: 100vh;
+            position: relative;
+        }
+
+        .entry-cover {
+            position: fixed;
+            inset: 0;
+            z-index: 9000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background:
+                radial-gradient(circle at 18% 18%, rgba(255, 214, 79, 0.34), transparent 34%),
+                radial-gradient(circle at 84% 74%, rgba(121, 83, 202, 0.34), transparent 38%),
+                linear-gradient(145deg, #f8f4ff 0%, #efe6ff 46%, #fffbe6 100%);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+        }
+
+        .entry-cover::before,
+        .entry-cover::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            filter: blur(14px);
+        }
+
+        .entry-cover::before {
+            width: 54vw;
+            height: 54vw;
+            left: -18vw;
+            top: -16vw;
+            background: radial-gradient(circle, rgba(255, 214, 79, 0.3), transparent 70%);
+            animation: coverAuroraA 12s ease-in-out infinite alternate;
+        }
+
+        .entry-cover::after {
+            width: 46vw;
+            height: 46vw;
+            right: -14vw;
+            bottom: -14vw;
+            background: radial-gradient(circle, rgba(121, 83, 202, 0.32), transparent 72%);
+            animation: coverAuroraB 14s ease-in-out infinite alternate;
+        }
+
+        .entry-cover.is-hidden {
+            display: none;
+        }
+
+        .entry-cover__card {
+            width: min(900px, calc(100% - 40px));
+            border-radius: 34px;
+            border: 1px solid rgba(255, 255, 255, 0.78);
+            background:
+                linear-gradient(145deg, rgba(255, 255, 255, 0.78), rgba(245, 239, 255, 0.56)),
+                linear-gradient(180deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0));
+            box-shadow:
+                0 36px 90px rgba(61, 35, 96, 0.22),
+                inset 0 1px 0 rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(22px) saturate(1.15);
+            padding: 54px 34px 38px;
+            text-align: center;
+            position: relative;
+        }
+
+        .entry-cover__card::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            background: linear-gradient(120deg, rgba(255,255,255,0.24), rgba(255,255,255,0));
+            pointer-events: none;
+        }
+
+        .entry-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.5rem, 8vw, 5.6rem);
+            line-height: 1.02;
+            letter-spacing: -0.03em;
+            color: var(--secondary-color);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-shadow: 0 12px 34px rgba(91, 42, 134, 0.22);
+            position: relative;
+            animation: titleFloat 3.4s ease-in-out infinite;
+        }
+
+        .entry-heart {
+            display: inline-block;
+            font-size: clamp(1.9rem, 5.2vw, 3.2rem);
+            transform-origin: center;
+            animation: introHeartBeat 1.15s ease-in-out infinite;
+            filter: drop-shadow(0 2px 10px rgba(120, 20, 20, 0.45));
+        }
+
+        .entry-beat {
+            display: inline-block;
+            animation: introHeartBeat 1.15s ease-in-out infinite;
+            transform-origin: center bottom;
+        }
+
+        .entry-plus {
+            position: absolute;
+            right: -8px;
+            top: 4px;
+            transform: translateX(100%);
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(0.72rem, 1.8vw, 1.02rem);
+            letter-spacing: 0.14em;
+            font-weight: 800;
+            text-transform: none;
+            color: rgba(77, 36, 118, 0.92);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 248, 214, 0.92));
+            border: 1px solid rgba(250, 204, 21, 0.58);
+            border-radius: 999px;
+            padding: 5px 12px;
+            backdrop-filter: blur(6px);
+            box-shadow: 0 10px 22px rgba(250, 204, 21, 0.26);
+        }
+
+        .entry-actions {
+            margin-top: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .entry-typing {
+            margin: 18px auto 0;
+            width: min(980px, 94%);
+            min-height: 52px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter', sans-serif;
+            font-size: clamp(1.22rem, 2.8vw, 2rem);
+            letter-spacing: 0.02em;
+            color: rgba(91, 42, 134, 0.92);
+            text-shadow: 0 8px 24px rgba(91, 42, 134, 0.18);
+        }
+
+        .entry-typing-track {
+            position: relative;
+            display: inline-flex;
+            align-items: baseline;
+            gap: 0;
+            padding: 0 10px 0 20px;
+        }
+
+        .entry-typing-char {
+            opacity: 0;
+            transform: translateY(3px);
+            transition: opacity 0.12s ease, transform 0.12s ease;
+            white-space: pre;
+        }
+
+        .entry-typing-char.is-on {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .entry-typing-heart {
+            position: absolute;
+            left: 0;
+            top: -2px;
+            transform: translateX(0);
+            font-size: 1.08em;
+            line-height: 1;
+            filter: drop-shadow(0 2px 6px rgba(125, 24, 24, 0.42));
+            transition: left 0.12s linear;
+            animation: typingHeartBounce 0.38s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        .entry-btn {
+            min-height: 50px;
+            padding: 0 24px;
+            border-radius: 999px;
+            border: 1px solid rgba(91, 42, 134, 0.24);
+            background: rgba(255, 255, 255, 0.72);
+            color: var(--secondary-color);
+            font-size: 0.8rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            font-weight: 800;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+        }
+
+        .entry-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 28px rgba(91, 42, 134, 0.16);
+        }
+
+        .entry-btn--primary {
+            background: linear-gradient(135deg, #facc15 0%, #ffd84a 100%);
+            border-color: rgba(250, 204, 21, 0.82);
+        }
+
+        @keyframes introHeartBeat {
+            0%, 100% { transform: scale(1); }
+            18% { transform: scale(1.22); }
+            36% { transform: scale(0.98); }
+            54% { transform: scale(1.16); }
+            72% { transform: scale(1); }
+        }
+
+        @keyframes typingHeartBounce {
+            0%, 100% { margin-top: 0; }
+            50% { margin-top: -6px; }
+        }
+
+        @keyframes coverAuroraA {
+            from { transform: translate3d(0,0,0) scale(1); }
+            to { transform: translate3d(3vw,2vh,0) scale(1.12); }
+        }
+
+        @keyframes coverAuroraB {
+            from { transform: translate3d(0,0,0) scale(1); }
+            to { transform: translate3d(-3vw,-2vh,0) scale(1.1); }
+        }
+
+        @keyframes titleFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-3px); }
         }
 
         /* --- MAIN VIEWPORT --- */
@@ -76,22 +309,162 @@
             justify-content: center;
             padding: 0 5%;
             text-align: center;
+            position: relative;
+            z-index: 2;
         }
 
         .module-label {
-            font-size: 0.75rem;
-            letter-spacing: 5px;
+            font-size: 0.72rem;
+            letter-spacing: 0.22em;
             text-transform: uppercase;
-            opacity: 0.4;
-            margin-bottom: 1.5rem;
-            font-weight: 300;
+            opacity: 0.7;
+            margin-bottom: 0.8rem;
+            font-weight: 700;
         }
 
         .module-content {
             display: flex;
             flex-direction: column;
             align-items: center;
-            animation: moduleReveal 2.2s cubic-bezier(0.16, 1, 0.3, 1);
+            width: min(1180px, 100%);
+            animation: moduleReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+            gap: 22px;
+        }
+
+        .home-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .home-bg::before,
+        .home-bg::after {
+            content: "";
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(18px);
+            animation: drift 16s ease-in-out infinite alternate;
+        }
+
+        .home-bg::before {
+            width: 46vw;
+            height: 46vw;
+            top: -12vw;
+            left: -8vw;
+            background: radial-gradient(circle, rgba(250, 204, 21, 0.24), rgba(250, 204, 21, 0.04) 60%, transparent 74%);
+        }
+
+        .home-bg::after {
+            width: 38vw;
+            height: 38vw;
+            right: -12vw;
+            bottom: -10vw;
+            background: radial-gradient(circle, rgba(91, 42, 134, 0.24), rgba(91, 42, 134, 0.05) 62%, transparent 76%);
+            animation-delay: -4s;
+        }
+
+        .home-gridline {
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(rgba(91, 42, 134, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(91, 42, 134, 0.04) 1px, transparent 1px);
+            background-size: 34px 34px;
+            mask-image: radial-gradient(circle at center, rgba(0, 0, 0, 0.85), transparent 72%);
+        }
+
+        .hero-panel {
+            width: min(1020px, 100%);
+            padding: 34px 38px;
+            border-radius: 28px;
+            border: 1px solid rgba(91, 42, 134, 0.18);
+            background: linear-gradient(160deg, rgba(255, 255, 255, 0.82), rgba(250, 247, 255, 0.56));
+            backdrop-filter: blur(12px);
+            text-align: left;
+            box-shadow: 0 28px 58px rgba(91, 42, 134, 0.16);
+        }
+
+        .hero-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.4rem, 4.2vw, 4rem);
+            line-height: 1.02;
+            letter-spacing: -0.03em;
+            margin-bottom: 14px;
+        }
+
+        .hero-subtitle {
+            max-width: 78ch;
+            font-size: 1rem;
+            line-height: 1.8;
+            color: rgba(91, 42, 134, 0.8);
+        }
+
+        .module-spotlight {
+            width: min(1020px, 100%);
+            display: grid;
+            grid-template-columns: 1.25fr 0.75fr;
+            gap: 18px;
+        }
+
+        .spot-card {
+            border-radius: 22px;
+            border: 1px solid rgba(91, 42, 134, 0.16);
+            background: rgba(255, 255, 255, 0.7);
+            box-shadow: 0 16px 36px rgba(91, 42, 134, 0.12);
+            padding: 24px;
+            text-align: left;
+        }
+
+        .spot-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.52rem;
+            margin-bottom: 8px;
+        }
+
+        .spot-card p {
+            color: rgba(91, 42, 134, 0.76);
+            line-height: 1.72;
+            font-size: 0.95rem;
+        }
+
+        .spot-badges {
+            margin-top: 14px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .spot-badge {
+            display: inline-flex;
+            align-items: center;
+            min-height: 30px;
+            padding: 0 11px;
+            border-radius: 999px;
+            border: 1px solid rgba(91, 42, 134, 0.16);
+            background: rgba(250, 204, 21, 0.22);
+            font-size: 0.72rem;
+            letter-spacing: 0.08em;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .signal-orb {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            margin: 4px auto 14px;
+            background:
+                radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.96), rgba(250, 204, 21, 0.88) 55%, rgba(91, 42, 134, 0.8));
+            box-shadow: 0 24px 44px rgba(91, 42, 134, 0.2);
+            animation: pulseOrb 2.6s ease-in-out infinite;
+        }
+
+        .module-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
         }
 
         /* --- LEXIS (VOCABULARY) --- */
@@ -166,7 +539,7 @@
         }
 
         .bubble {
-            background: rgba(155, 183, 212, 0.15);
+            background: rgba(250, 204, 21, 0.16);
             border: 1.5px solid var(--primary-color);
             border-radius: 12px;
             position: relative;
@@ -271,7 +644,7 @@
         /* --- DAILY FOCUS CARD --- */
         .daily-focus-card {
             background: rgba(255, 255, 255, 0.4);
-            border: 1px solid rgba(58, 78, 107, 0.1);
+            border: 1px solid rgba(91, 42, 134, 0.16);
             padding: 2.2rem 3rem;
             border-radius: 2px;
             display: flex;
@@ -372,7 +745,7 @@
             min-height: 34px;
             padding: 0 12px;
             border-radius: 999px;
-            border: 1px solid rgba(58, 78, 107, 0.18);
+            border: 1px solid rgba(91, 42, 134, 0.24);
             background: rgba(255, 255, 255, 0.72);
             color: var(--secondary-color);
             text-decoration: none;
@@ -384,14 +757,14 @@
         .logout-link:hover {
             transform: translateY(-1px);
             background: rgba(255, 255, 255, 0.94);
-            border-color: rgba(58, 78, 107, 0.3);
+            border-color: rgba(91, 42, 134, 0.4);
         }
 
         .auth-modal {
             position: fixed;
             inset: 0;
             background:
-                radial-gradient(circle at top, rgba(155, 183, 212, 0.18), transparent 34%),
+                radial-gradient(circle at top, rgba(250, 204, 21, 0.24), transparent 34%),
                 rgba(34, 41, 55, 0.22);
             display: none;
             align-items: center;
@@ -410,10 +783,10 @@
             background:
                 linear-gradient(180deg, rgba(255, 255, 255, 0.82), rgba(248, 244, 238, 0.92)),
                 var(--bg-color);
-            border: 1px solid rgba(58, 78, 107, 0.14);
+            border: 1px solid rgba(91, 42, 134, 0.2);
             border-radius: 28px;
             box-shadow:
-                0 28px 90px rgba(58, 78, 107, 0.16),
+                0 28px 90px rgba(91, 42, 134, 0.22),
                 inset 0 1px 0 rgba(255, 255, 255, 0.7);
             padding: 30px 30px 28px;
             backdrop-filter: blur(18px);
@@ -427,7 +800,7 @@
             font-size: 0.72rem;
             letter-spacing: 0.32rem;
             font-weight: 800;
-            color: rgba(58, 78, 107, 0.4);
+            color: rgba(91, 42, 134, 0.48);
             margin-bottom: 16px;
         }
 
@@ -441,7 +814,7 @@
         }
 
         .auth-sub {
-            color: rgba(58, 78, 107, 0.72);
+            color: rgba(91, 42, 134, 0.78);
             font-size: 0.92rem;
             line-height: 1.6;
             margin-bottom: 22px;
@@ -453,8 +826,8 @@
             margin-bottom: 20px;
             padding: 6px;
             border-radius: 999px;
-            background: rgba(58, 78, 107, 0.06);
-            border: 1px solid rgba(58, 78, 107, 0.08);
+            background: rgba(91, 42, 134, 0.1);
+            border: 1px solid rgba(91, 42, 134, 0.14);
         }
 
         .auth-tab {
@@ -473,7 +846,7 @@
         .auth-tab.active {
             background: var(--secondary-color);
             color: white;
-            box-shadow: 0 10px 24px rgba(58, 78, 107, 0.16);
+            box-shadow: 0 10px 24px rgba(91, 42, 134, 0.22);
         }
 
         .auth-field {
@@ -487,12 +860,12 @@
             letter-spacing: 0.12rem;
             text-transform: uppercase;
             margin-bottom: 7px;
-            color: rgba(58, 78, 107, 0.72);
+            color: rgba(91, 42, 134, 0.8);
         }
 
         .auth-field input {
             width: 100%;
-            border: 1px solid rgba(58, 78, 107, 0.14);
+            border: 1px solid rgba(91, 42, 134, 0.2);
             background: rgba(255, 255, 255, 0.82);
             border-radius: 16px;
             padding: 13px 15px;
@@ -503,8 +876,8 @@
 
         .auth-field input:focus {
             outline: none;
-            border-color: rgba(155, 183, 212, 0.95);
-            box-shadow: 0 0 0 4px rgba(155, 183, 212, 0.18);
+            border-color: rgba(250, 204, 21, 0.95);
+            box-shadow: 0 0 0 4px rgba(250, 204, 21, 0.24);
             background: rgba(255, 255, 255, 0.96);
         }
 
@@ -526,7 +899,7 @@
             min-width: 110px;
             border-radius: 999px;
             background: rgba(255, 255, 255, 0.7);
-            border-color: rgba(58, 78, 107, 0.14);
+            border-color: rgba(91, 42, 134, 0.2);
         }
 
         .auth-actions .btn-primary-small {
@@ -543,7 +916,7 @@
             position: fixed;
             inset: 0;
             background:
-                radial-gradient(circle at top, rgba(155, 183, 212, 0.14), transparent 32%),
+                radial-gradient(circle at top, rgba(250, 204, 21, 0.2), transparent 32%),
                 rgba(34, 41, 55, 0.2);
             backdrop-filter: blur(10px);
             display: none;
@@ -562,10 +935,10 @@
             background:
                 linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(249, 245, 239, 0.96)),
                 var(--bg-color);
-            border: 1px solid rgba(58, 78, 107, 0.1);
+            border: 1px solid rgba(91, 42, 134, 0.16);
             border-radius: 30px;
             box-shadow:
-                0 28px 80px rgba(58, 78, 107, 0.12),
+                0 28px 80px rgba(91, 42, 134, 0.18),
                 inset 0 1px 0 rgba(255, 255, 255, 0.78);
             padding: 30px 30px 24px;
         }
@@ -581,7 +954,7 @@
         .site-modal__body {
             font-size: 0.95rem;
             line-height: 1.7;
-            color: rgba(58, 78, 107, 0.72);
+            color: rgba(91, 42, 134, 0.8);
         }
 
         .site-modal__actions {
@@ -594,7 +967,7 @@
             min-width: 118px;
             min-height: 44px;
             border-radius: 999px;
-            box-shadow: 0 12px 28px rgba(58, 78, 107, 0.12);
+            box-shadow: 0 12px 28px rgba(91, 42, 134, 0.18);
         }
 
         /* --- 醒目的 TEAM 入口 --- */
@@ -609,19 +982,19 @@
             cursor: pointer;
             transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             border: none;
-            box-shadow: 0 0 0 rgba(58, 78, 107, 0);
+            box-shadow: 0 0 0 rgba(91, 42, 134, 0);
             animation: pulseGlow 3s infinite;
         }
 
         @keyframes pulseGlow {
-            0% { box-shadow: 0 0 0 0 rgba(58, 78, 107, 0.4); }
-            70% { box-shadow: 0 0 0 15px rgba(58, 78, 107, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(58, 78, 107, 0); }
+            0% { box-shadow: 0 0 0 0 rgba(91, 42, 134, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(91, 42, 134, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(91, 42, 134, 0); }
         }
 
         .challenge-btn:hover {
             transform: scale(1.05) translateY(-2px);
-            background: #2A3B54;
+            background: #4a1f72;
         }
 
         .user-group { display: flex; align-items: center; gap: 30px; }
@@ -642,7 +1015,7 @@
 
         /* 成功参赛的激昂状态 */
         .team-modal.is-ready {
-            background: linear-gradient(135deg, #E4DFD8 0%, #D8E0E4 100%);
+            background: linear-gradient(135deg, #f4efff 0%, #e9dcff 100%);
             border: 2px solid var(--primary-color);
         }
 
@@ -650,7 +1023,7 @@
 
         /* 排行榜样式升级 */
         .leaderboard-aside {
-            background: #3A4E6B; color: #E4DFD8; padding: 3.5rem 2rem;
+            background: #5b2a86; color: #f4efff; padding: 3.5rem 2rem;
             display: flex; flex-direction: column; box-shadow: -10px 0 30px rgba(0,0,0,0.1);
         }
 
@@ -676,7 +1049,7 @@
         /* 席位样式 */
         .slots-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin: 3rem 0; }
         .slot-card {
-            aspect-ratio: 1/1.2; background: rgba(255,255,255,0.4); border: 1px solid rgba(58, 78, 107, 0.1);
+            aspect-ratio: 1/1.2; background: rgba(255,255,255,0.4); border: 1px solid rgba(91, 42, 134, 0.16);
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             transition: var(--transition-fast); position: relative;
         }
@@ -721,7 +1094,7 @@
           transition: 0.3s ease;
         }
         .btn-publish:hover {
-          background: #2a3b54;
+          background: #4a1f72;
           transform: translateY(-2px);
         }
         .btn-publish:disabled {
@@ -832,6 +1205,26 @@
             }
         }
 
+        @keyframes drift {
+            from {
+                transform: translate3d(0, 0, 0) scale(1);
+            }
+            to {
+                transform: translate3d(16px, -12px, 0) scale(1.06);
+            }
+        }
+
+        @keyframes pulseOrb {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 24px 44px rgba(91, 42, 134, 0.2);
+            }
+            50% {
+                transform: scale(1.06);
+                box-shadow: 0 30px 54px rgba(91, 42, 134, 0.28);
+            }
+        }
+
         @keyframes rotateCW {
             from {
                 transform: rotate(0deg);
@@ -887,10 +1280,228 @@
                 transform: rotateX(45deg) rotateZ(-25deg) translateY(-20px);
             }
         }
+
+        /* --- Fullscreen module effects (large-range) --- */
+        .module-content {
+            position: relative;
+            width: 100%;
+            height: calc(100vh - 80px);
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .fx-stage {
+            position: absolute;
+            inset: -12vh -8vw -12vh -8vw;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .module-core {
+            position: relative;
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .module-title {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2.6rem, 6.2vw, 5.6rem);
+            line-height: 1.02;
+            letter-spacing: -0.03em;
+            text-align: center;
+            text-shadow: 0 8px 28px rgba(91, 42, 134, 0.2);
+        }
+
+        .module-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .module-actions .btn-small {
+            min-width: 220px;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 12px 34px rgba(91, 42, 134, 0.18);
+            border-color: rgba(91, 42, 134, 0.35);
+            background: rgba(255, 255, 255, 0.34);
+        }
+
+        .module-actions .btn-primary-small {
+            background: linear-gradient(135deg, #facc15 0%, #ffd84a 100%);
+            color: #5b2a86;
+            border-color: rgba(250, 204, 21, 0.8);
+            box-shadow: 0 18px 40px rgba(250, 204, 21, 0.28);
+        }
+
+        .gate-enter-btn {
+            min-height: 52px;
+            padding: 0 28px;
+            border-radius: 999px;
+            font-size: 0.84rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+
+        .module-actions .btn-primary-small:hover {
+            transform: translateY(-2px) scale(1.02);
+            background: linear-gradient(135deg, #ffd84a 0%, #facc15 100%);
+        }
+
+        .fx-particle {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(1px);
+            opacity: 0.75;
+        }
+
+        /* Lexis: word orbit field */
+        .fx-lexis .ring {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            border: 1px dashed rgba(91, 42, 134, 0.28);
+            animation: spinSlow 26s linear infinite;
+        }
+        .fx-lexis .ring.r1 { width: min(78vw, 860px); height: min(78vw, 860px); }
+        .fx-lexis .ring.r2 { width: min(58vw, 640px); height: min(58vw, 640px); animation-direction: reverse; }
+        .fx-lexis .ring.r3 { width: min(38vw, 420px); height: min(38vw, 420px); }
+        .fx-lexis .token {
+            position: absolute;
+            color: rgba(91, 42, 134, 0.7);
+            font-size: clamp(0.72rem, 1.2vw, 1rem);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            animation: floatY 7s ease-in-out infinite;
+        }
+
+        /* Insight: cinematic scan grid */
+        .fx-insight {
+            background:
+                linear-gradient(rgba(91, 42, 134, 0.06) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(91, 42, 134, 0.06) 1px, transparent 1px);
+            background-size: 44px 44px;
+        }
+        .fx-insight::before {
+            content: "";
+            position: absolute;
+            inset: -20% -10%;
+            background: radial-gradient(circle at 50% 46%, rgba(250, 204, 21, 0.3), rgba(250, 204, 21, 0.02) 48%, transparent 72%);
+            animation: breathe 4s ease-in-out infinite;
+        }
+        .fx-insight::after {
+            content: "";
+            position: absolute;
+            top: -15%;
+            left: -30%;
+            width: 40%;
+            height: 130%;
+            background: linear-gradient(90deg, transparent, rgba(250, 204, 21, 0.22), transparent);
+            transform: skewX(-14deg);
+            animation: scanMove 5.4s ease-in-out infinite;
+        }
+
+        /* Dialogue: pulse thread network */
+        .fx-dialogue .node {
+            position: absolute;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: rgba(91, 42, 134, 0.84);
+            box-shadow: 0 0 0 10px rgba(250, 204, 21, 0.12);
+            animation: nodePulse 2.2s ease-in-out infinite;
+        }
+        .fx-dialogue .link {
+            position: absolute;
+            height: 2px;
+            transform-origin: left center;
+            background: linear-gradient(90deg, rgba(91, 42, 134, 0.12), rgba(91, 42, 134, 0.58), rgba(91, 42, 134, 0.12));
+        }
+        .fx-dialogue .pulse {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: rgba(250, 204, 21, 0.9);
+            filter: blur(0.5px);
+            animation: travel 4.6s linear infinite;
+        }
+
+        /* Method: blueprint circuit flow */
+        .fx-method .circuit {
+            position: absolute;
+            border: 1px solid rgba(91, 42, 134, 0.28);
+            border-radius: 10px;
+            animation: breathe 4.8s ease-in-out infinite;
+        }
+        .fx-method .trace {
+            position: absolute;
+            height: 2px;
+            background: rgba(91, 42, 134, 0.26);
+        }
+        .fx-method .signal {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(250, 204, 21, 0.95);
+            box-shadow: 0 0 18px rgba(250, 204, 21, 0.6);
+            animation: signalRun 4.4s ease-in-out infinite;
+        }
+
+        @keyframes spinSlow { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
+        @keyframes floatY { 0%,100%{ transform: translateY(0);} 50%{ transform: translateY(-18px);} }
+        @keyframes breathe { 0%,100%{ opacity: 0.68; transform: scale(1);} 50%{ opacity: 1; transform: scale(1.04);} }
+        @keyframes scanMove { 0%{ left: -35%; } 55%{ left: 115%; } 100%{ left: 115%; } }
+        @keyframes nodePulse { 0%,100%{ transform: scale(1);} 50%{ transform: scale(1.25);} }
+        @keyframes travel {
+            0% { transform: translate(-32vw, -18vh); opacity: 0; }
+            10% { opacity: 1; }
+            50% { transform: translate(0vw, 0vh); opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translate(32vw, 18vh); opacity: 0; }
+        }
+        @keyframes signalRun {
+            0% { transform: translate(0, 0); }
+            25% { transform: translate(28vw, 0); }
+            50% { transform: translate(28vw, 18vh); }
+            75% { transform: translate(0, 18vh); }
+            100% { transform: translate(0, 0); }
+        }
     </style>
 </head>
 
 <body>
+    <div class="entry-cover" id="entryCover" aria-hidden="false">
+        <div class="entry-cover__card">
+            <h1 class="entry-title">
+                Acad<span class="entry-beat">Beat</span>
+                <span class="entry-heart" aria-hidden="true">🫀</span>
+                <span class="entry-plus">Pro Max</span>
+            </h1>
+            <div class="entry-actions">
+                <button type="button" class="entry-btn" onclick="openEntryLogin()">Login / Register</button>
+                <button type="button" class="entry-btn entry-btn--primary" onclick="chooseClassicUi()">Classic UI</button>
+                <button type="button" class="entry-btn entry-btn--primary" onclick="playGodotUi()">Play!</button>
+            </div>
+        </div>
+        <div class="entry-typing" aria-hidden="true">
+            <div class="entry-typing-track" id="entryTypingTrack">
+                <span class="entry-typing-heart" id="entryTypingHeart">🫀</span>
+                <span id="entryTypingText"></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="home-bg" aria-hidden="true">
+        <div class="home-gridline"></div>
+    </div>
 
     <div id="acadbeatNav"></div>
 
@@ -961,12 +1572,14 @@
         const ADMIN_URL = L.adminDistUrl || window.location.origin + '/admin_page/dist/index.html';
         const VOCABULARY_URL = './vocba_prac/';
         const FORUM_URL = L.forumDevChooserUrl || (window.location.origin + '/forum-project/dist/index.html?view=forum');
-        const TECHNOLOGY_URL = L.technologyUrl || './technology.html';
+        const TECHNOLOGY_URL = L.technologyUrl || './technology-gate.html';
         const ACADEMIC_PRACTICE_URL = './Academic-Practice/training.html';
         const AUTH_API_BASE = './Auth/backend/api';
         const authState = { user: null, mode: 'login' };
         let currentHomeModule = 'Insight';
         let pendingGodotSwitch = false;
+        let coverHidden = false;
+        let typingTimer = null;
 
         function setUiMode(mode) {
             document.cookie = `ui_mode=${encodeURIComponent(mode)}; path=/; max-age=2592000`;
@@ -977,6 +1590,78 @@
             setUiMode('godot');
             window.location.href = L.godotWebEntryUrl || 'http://127.0.0.1:5500/index.html?ui=godot';
             return false;
+        }
+
+        function hideEntryCover() {
+            if (coverHidden) return;
+            coverHidden = true;
+            const cover = document.getElementById('entryCover');
+            if (!cover) return;
+            cover.classList.add('is-hidden');
+            cover.setAttribute('aria-hidden', 'true');
+        }
+
+        function openEntryLogin() {
+            hideEntryCover();
+            openAuthModal('login');
+        }
+
+        function chooseClassicUi() {
+            setUiMode('classic');
+            hideEntryCover();
+        }
+
+        function playGodotUi() {
+            setUiMode('godot');
+            hideEntryCover();
+            requestSwitchToGodot();
+        }
+
+        function initEntryTyping() {
+            const phrase = 'Help you successfully enroll in Diicsu.';
+            const textMount = document.getElementById('entryTypingText');
+            const heart = document.getElementById('entryTypingHeart');
+            if (!textMount || !heart) return;
+
+            textMount.innerHTML = '';
+            const chars = Array.from(phrase).map((ch) => {
+                const span = document.createElement('span');
+                span.className = 'entry-typing-char';
+                span.textContent = ch;
+                textMount.appendChild(span);
+                return span;
+            });
+
+            function positionHeart(index) {
+                if (!chars.length) return;
+                const safe = Math.max(0, Math.min(index, chars.length - 1));
+                const target = chars[safe];
+                heart.style.left = `${target.offsetLeft - 16}px`;
+            }
+
+            function clearLine() {
+                chars.forEach((el) => el.classList.remove('is-on'));
+                heart.style.left = `0px`;
+            }
+
+            let i = 0;
+            function loopTyping() {
+                clearLine();
+                i = 0;
+                if (typingTimer) window.clearInterval(typingTimer);
+                typingTimer = window.setInterval(() => {
+                    if (i < chars.length) {
+                        chars[i].classList.add('is-on');
+                        positionHeart(i);
+                        i += 1;
+                        return;
+                    }
+                    window.clearInterval(typingTimer);
+                    typingTimer = window.setTimeout(loopTyping, 900);
+                }, 85);
+            }
+
+            loopTyping();
         }
 
         function requestSwitchToGodot() {
@@ -1073,13 +1758,16 @@
                 mountId: 'acadbeatNav',
                 basePath: './',
                 active: navActiveForModule(currentHomeModule),
+                showSwitchButton: false,
+                academicUrl: './academic-gate.html',
                 authApiBase: './Auth/backend/api',
                 homeUrl: './home.html',
                 ownerUrl: './owner.html',
                 adminUrl: L.adminDistUrl || window.location.origin + '/admin_page/dist/index.html',
-                forumUrl: './home.html?module=Dialogue',
-                technologyUrl: L.technologyUrl || './technology.html',
-                studioUrl: './Studio/studio.html',
+                forumUrl: './forum-gate.html',
+                technologyUrl: L.technologyUrl || './technology-gate.html',
+                studioUrl: './studio-gate.html',
+                rankUrl: './rank-gate.html',
                 messageCenterUrl: L.messageCenterDistUrl || (window.location.origin + '/message-center-project/dist/index.html'),
                 redirectAdmins: true,
                 showChallengeButton: true,
@@ -1281,66 +1969,67 @@
             currentHomeModule = name;
             const viewport = document.getElementById('app-viewport');
             const m = data[name];
+            const titleMap = {
+                Lexis: 'Lexis',
+                Insight: 'Academic',
+                Dialogue: 'Dialogue',
+                Method: 'Method'
+            };
 
-            let html = `<div class="module-content">`;
-            html += `<div class="module-label">${m.label}</div>`;
-
-            if (name === 'Lexis') {
-                const quotes = [
-                    { text: "The limits of my language mean the limits of my world.", author: "— Ludwig Wittgenstein" },
-                    { text: "Language is the dress of thought.", author: "— Samuel Johnson" }
-                ];
-                const q = quotes[Math.floor(Math.random() * quotes.length)];
-                html += `<div class="quote-wrap">
-                            <p class="quote-text">"${q.text}"</p>
-                            <p class="quote-author">${q.author}</p>
-                         </div>`;
-            }
-            else if (name === 'Insight') {
-                let bars = '';
-                for (let i = 0; i < 12; i++) bars += `<div class="video-bar" style="animation-delay:${i * 0.1}s"></div>`;
-                html += `<div class="lens-visual">
-                            <div class="lens-ring ring-1"></div>
-                            <div class="lens-ring ring-2"></div>
-                            ${bars}
-                         </div>`;
-            }
-            else if (name === 'Dialogue') {
-                html += `<div class="vocal-dialogue">
-                            <div class="bubble bubble-left"></div>
-                            <div class="bubble bubble-right"></div>
-                         </div>`;
-            }
-            else if (name === 'Method') {
-                html += `<div class="method-isometric">
-                            <div class="iso-card" style="left: 60px; top: 20px;">
-                                <div class="iso-ui-header"></div>
-                                <div class="iso-ui-element"></div>
-                                <div class="iso-ui-element" style="width: 70%;"></div>
-                            </div>
-                            <div class="iso-card" style="left: 200px; top: 40px; animation-delay: -2s; border-color: var(--primary-color);">
-                                <div class="iso-ui-header" style="background:var(--primary-color);"></div>
-                                <div class="iso-ui-element"></div>
-                                <div class="iso-ui-element"></div>
-                            </div>
+            function fxMarkup(moduleName) {
+                if (moduleName === 'Lexis') {
+                    return `
+                        <div class="fx-stage fx-lexis">
+                            <div class="ring r1"></div><div class="ring r2"></div><div class="ring r3"></div>
+                            <span class="token" style="left:18%;top:22%;animation-delay:-0.4s;">syntax</span>
+                            <span class="token" style="left:74%;top:18%;animation-delay:-1.1s;">nuance</span>
+                            <span class="token" style="left:12%;top:68%;animation-delay:-1.8s;">semantic</span>
+                            <span class="token" style="left:80%;top:70%;animation-delay:-2.3s;">lexicon</span>
+                            <span class="token" style="left:46%;top:10%;animation-delay:-0.9s;">context</span>
+                            <span class="token" style="left:44%;top:82%;animation-delay:-2.6s;">precision</span>
                         </div>`;
-            }
-            if (name !== 'Lexis') {
-                html += `<div class="daily-focus-card">
-                            <div class="card-number">${m.id}</div>
-                            <div class="card-content">
-                                <h4>Academic Content</h4>
-                                <p>${m.topic}</p>
-                            </div>
+                }
+                if (moduleName === 'Insight') {
+                    return `<div class="fx-stage fx-insight"></div>`;
+                }
+                if (moduleName === 'Dialogue') {
+                    return `
+                        <div class="fx-stage fx-dialogue">
+                            <div class="link" style="left:16%;top:34%;width:34%;transform:rotate(18deg)"></div>
+                            <div class="link" style="left:48%;top:44%;width:30%;transform:rotate(-16deg)"></div>
+                            <div class="link" style="left:20%;top:64%;width:44%;transform:rotate(-8deg)"></div>
+                            <div class="link" style="left:56%;top:64%;width:24%;transform:rotate(22deg)"></div>
+                            <div class="node" style="left:16%;top:34%;animation-delay:-0.3s"></div>
+                            <div class="node" style="left:48%;top:44%;animation-delay:-1.1s"></div>
+                            <div class="node" style="left:78%;top:36%;animation-delay:-0.8s"></div>
+                            <div class="node" style="left:20%;top:64%;animation-delay:-1.6s"></div>
+                            <div class="node" style="left:56%;top:64%;animation-delay:-2.2s"></div>
+                            <div class="node" style="left:80%;top:72%;animation-delay:-1.9s"></div>
+                            <div class="pulse" style="left:50%;top:50%;animation-delay:-0.2s"></div>
+                            <div class="pulse" style="left:50%;top:50%;animation-delay:-2.2s"></div>
                         </div>`;
-            }
-
-            // 修复点 3: 统一渲染底部按钮，使用 m.btn
-            html += `<div class="bottom-actions">
-                        <button class="btn-small btn-primary-small" style="min-width:220px;" onclick="handleModuleAction('${name}')">${m.btn}</button>
+                }
+                return `
+                    <div class="fx-stage fx-method">
+                        <div class="circuit" style="left:8%;top:18%;width:34%;height:26%;animation-delay:-0.6s"></div>
+                        <div class="circuit" style="left:52%;top:20%;width:38%;height:30%;animation-delay:-1.8s"></div>
+                        <div class="circuit" style="left:20%;top:56%;width:56%;height:28%;animation-delay:-2.4s"></div>
+                        <div class="trace" style="left:42%;top:31%;width:12%"></div>
+                        <div class="trace" style="left:40%;top:70%;width:22%"></div>
+                        <div class="signal" style="left:20%;top:56%"></div>
                     </div>`;
+            }
 
-            html += `</div>`;
+            const title = titleMap[name] || 'Insight';
+            let html = `<div class="module-content">
+                ${fxMarkup(name)}
+                <div class="module-core">
+                    <div class="module-title">${title}</div>
+                    <div class="module-actions">
+                        <button class="btn-small btn-primary-small gate-enter-btn" onclick="handleModuleAction('${name}')">${m.btn}</button>
+                    </div>
+                </div>
+            </div>`;
             viewport.innerHTML = html;
         }
 
@@ -1363,6 +2052,7 @@
 
         // 初始化加载
         window.onload = async () => {
+            initEntryTyping();
             try {
                 await loadChallengeBundle();
             } catch (error) {
@@ -1383,6 +2073,7 @@
                 } catch (_err) {}
             }
             if (params.get('login') === '1' && !authState.user) {
+                hideEntryCover();
                 openAuthModal('login', 'Please log in first.');
             }
             if (window.challengeHome && typeof window.challengeHome.handleInitialRoute === 'function') {

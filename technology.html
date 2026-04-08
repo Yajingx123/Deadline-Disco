@@ -25,9 +25,9 @@
     </script>
     <style>
         :root {
-            --bg-color: #E4DFD8;
-            --primary-color: #9BB7D4;
-            --secondary-color: #3A4E6B;
+            --bg-color: #f4efff;
+            --primary-color: #facc15;
+            --secondary-color: #5b2a86;
             --white: #ffffff;
             --card-bg: rgba(255, 255, 255, 0.6);
         }
@@ -41,11 +41,41 @@
 
         body {
             background:
-                radial-gradient(circle at top, rgba(155, 183, 212, 0.16), transparent 28%),
+                radial-gradient(circle at top, rgba(250, 204, 21, 0.22), transparent 28%),
                 var(--bg-color);
             color: var(--secondary-color);
             min-height: 100vh;
             padding: 0 5% 48px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before,
+        body::after {
+            content: "";
+            position: fixed;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: -1;
+            filter: blur(12px);
+        }
+
+        body::before {
+            width: 44vw;
+            height: 44vw;
+            left: -12vw;
+            top: -10vw;
+            background: radial-gradient(circle, rgba(250, 204, 21, 0.28), transparent 68%);
+            animation: techDriftA 12s ease-in-out infinite alternate;
+        }
+
+        body::after {
+            width: 36vw;
+            height: 36vw;
+            right: -10vw;
+            bottom: -8vw;
+            background: radial-gradient(circle, rgba(91, 42, 134, 0.24), transparent 70%);
+            animation: techDriftB 14s ease-in-out infinite alternate;
         }
 
         .tools-grid {
@@ -58,7 +88,7 @@
 
         .tool-card {
             background: var(--card-bg);
-            border: 1px solid rgba(58, 78, 107, 0.1);
+            border: 1px solid rgba(91, 42, 134, 0.14);
             border-radius: 16px;
             padding: 30px;
             cursor: pointer;
@@ -71,8 +101,30 @@
 
         .tool-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 15px 30px rgba(58, 78, 107, 0.1);
+            box-shadow: 0 15px 30px rgba(91, 42, 134, 0.16);
             background: var(--white);
+        }
+
+        .tool-card {
+            animation: techCardIn 0.8s ease both;
+        }
+        .tool-card:nth-child(2) { animation-delay: 0.08s; }
+        .tool-card:nth-child(3) { animation-delay: 0.16s; }
+        .tool-card:nth-child(4) { animation-delay: 0.24s; }
+        .tool-card:nth-child(5) { animation-delay: 0.32s; }
+        .tool-card:nth-child(6) { animation-delay: 0.4s; }
+
+        @keyframes techDriftA {
+            from { transform: translate3d(0, 0, 0) scale(1); }
+            to { transform: translate3d(3vw, 2vh, 0) scale(1.08); }
+        }
+        @keyframes techDriftB {
+            from { transform: translate3d(0, 0, 0) scale(1); }
+            to { transform: translate3d(-3vw, -2vh, 0) scale(1.1); }
+        }
+        @keyframes techCardIn {
+            from { opacity: 0; transform: translateY(22px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .tool-icon {
@@ -82,7 +134,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background-color: rgba(155, 183, 212, 0.2);
+            background-color: rgba(250, 204, 21, 0.24);
             color: var(--secondary-color);
         }
 

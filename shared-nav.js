@@ -119,14 +119,29 @@
 
     const basePath = withSlashPrefix(options.basePath || './');
     const homeUrl = options.homeUrl || `${basePath}home.html`;
-    const forumUrl = options.forumUrl || `${homeUrl}?module=Dialogue`;
-    const studioUrl = options.studioUrl || `${basePath}Studio/studio.html`;
-    const rankUrl = options.rankUrl || `${basePath}rank/index.html`;
+    const academicUrl = options.academicUrl || `${basePath}academic-gate.html`;
+    const forumUrl = options.forumUrl || `${basePath}forum-gate.html`;
+    const studioUrl = options.studioUrl || `${basePath}studio-gate.html`;
+    const rankUrl = options.rankUrl || `${basePath}rank-gate.html`;
     const authApiBase = options.authApiBase || `${basePath}Auth/backend/api`;
     const loginUrl = options.loginUrl || `${homeUrl}?login=1`;
     const ownerUrl = options.ownerUrl || `${basePath}owner.html`;
     const L = typeof window !== 'undefined' && window.ACADBEAT_LOCAL ? window.ACADBEAT_LOCAL : null;
-    const technologyUrl = options.technologyUrl || (L && L.technologyUrl) || `${homeUrl}?module=Method`;
+    const technologyUrl = options.technologyUrl || (L && L.technologyUrl) || `${basePath}technology-gate.html`;
+    const academicTrainingUrl = options.academicTrainingUrl || `${basePath}Academic-Practice/training.html`;
+    const academicListeningUrl = options.academicListeningUrl || `${basePath}Academic-Practice/listening.html`;
+    const academicRespondUrl = options.academicRespondUrl || `${basePath}Academic-Practice/respond_training.html`;
+    const academicNoteUrl = options.academicNoteUrl || `${basePath}Academic-Practice/note_training.html`;
+    const forumPublishUrl = options.forumPublishUrl || ((L && L.forumDevChooserUrl) ? `${L.forumDevChooserUrl}&compose=1` : `${currentOrigin}/forum-project/dist/index.html?view=forum&compose=1`);
+    const forumMineUrl = options.forumMineUrl || ((L && L.forumDevChooserUrl) ? `${L.forumDevChooserUrl.replace('view=forum', 'view=personal')}` : `${currentOrigin}/forum-project/dist/index.html?view=personal`);
+    const technologyTeamsUrl = options.technologyTeamsUrl || 'https://support.microsoft.com/en-us/teams';
+    const technologyGithubUrl = options.technologyGithubUrl || 'https://docs.github.com/en/get-started';
+    const technologyMatlabUrl = options.technologyMatlabUrl || 'https://matlabacademy.mathworks.com/';
+    const technologyAutocadUrl = options.technologyAutocadUrl || 'https://help.autodesk.com/view/ACD/2024/ENU/';
+    const technologyOriginlabUrl = options.technologyOriginlabUrl || 'https://www.originlab.com/index.aspx?go=Support/VideoTutorials';
+    const technologyDundeeUrl = options.technologyDundeeUrl || `${basePath}dundee.html?from=technology`;
+    const studioScrabbleUrl = options.studioScrabbleUrl || `${basePath}Studio/Scrabble/scrabble.html`;
+    const studio2dUrl = options.studio2dUrl || ((L && L.godotWebEntryUrl) ? L.godotWebEntryUrl : `${basePath}gameUI_src/Release/index.html?ui=godot`);
     const currentOrigin = (typeof window !== 'undefined' && window.location) ? window.location.origin : 'http://127.0.0.1:8001';
     const adminUrl = options.adminUrl || (L && L.adminDistUrl) || `${currentOrigin}/admin_page/dist/index.html`;
     const messageCenterUrl = options.messageCenterUrl || (L && L.messageCenterDistUrl) || `${currentOrigin}/message-center-project/dist/index.html`;
@@ -134,7 +149,9 @@
     const active = String(options.active || '').toLowerCase();
     const showChallengeButton = Boolean(options.showChallengeButton !== false); // 默认显示挑战按钮
     const challengeButtonLabel = options.challengeButtonLabel || 'CHALLENGE';
-    const showSwitchButton = active === 'academic'; // 只在 academic 页面显示切换按钮
+    const showSwitchButton = options.showSwitchButton !== undefined
+      ? Boolean(options.showSwitchButton)
+      : active === 'academic'; // 默认只在 academic 页面显示切换按钮
     const redirectAdmins = Boolean(options.redirectAdmins);
     const requireLogin = Boolean(options.requireLogin);
     const loginReturnUrl = String(options.loginReturnUrl || '').trim();
@@ -145,12 +162,42 @@
 
     mount.innerHTML = `
       <nav class="acadbeat-shared-nav">
-        <a class="logo" href="${homeUrl}">Acad<span>Beat</span></a>
+        <a class="logo" href="${homeUrl}">Acad<span>Beat</span><span class="logo-heart" aria-hidden="true">🫀</span></a>
         <div class="nav-menu">
-          <a class="nav-item" data-nav="academic" href="${homeUrl}?module=Insight">Academic</a>
-          <a class="nav-item" data-nav="forum" href="${forumUrl}">Forum</a>
-          <a class="nav-item" data-nav="technology" href="${technologyUrl}">Technology</a>
-          <a class="nav-item" data-nav="studio" href="${studioUrl}">Studio</a>
+          <div class="nav-dropdown">
+            <a class="nav-item" data-nav="academic" href="${academicUrl}">Academic</a>
+            <div class="nav-submenu">
+              <a class="nav-subitem" href="${academicTrainingUrl}">Vocabulary</a>
+              <a class="nav-subitem" href="${academicListeningUrl}">Understand</a>
+              <a class="nav-subitem" href="${academicRespondUrl}">Respond</a>
+              <a class="nav-subitem" href="${academicNoteUrl}">Room</a>
+            </div>
+          </div>
+          <div class="nav-dropdown">
+            <a class="nav-item" data-nav="forum" href="${forumUrl}">Forum</a>
+            <div class="nav-submenu">
+              <a class="nav-subitem" href="${forumPublishUrl}">Publish</a>
+              <a class="nav-subitem" href="${forumMineUrl}">Mine</a>
+            </div>
+          </div>
+          <div class="nav-dropdown">
+            <a class="nav-item" data-nav="technology" href="${technologyUrl}">Technology</a>
+            <div class="nav-submenu">
+              <a class="nav-subitem" href="${technologyTeamsUrl}" target="_blank" rel="noopener noreferrer">Teams</a>
+              <a class="nav-subitem" href="${technologyGithubUrl}" target="_blank" rel="noopener noreferrer">Github</a>
+              <a class="nav-subitem" href="${technologyMatlabUrl}" target="_blank" rel="noopener noreferrer">Matlab</a>
+              <a class="nav-subitem" href="${technologyAutocadUrl}" target="_blank" rel="noopener noreferrer">AutoCAD</a>
+              <a class="nav-subitem" href="${technologyOriginlabUrl}" target="_blank" rel="noopener noreferrer">Originlab</a>
+              <a class="nav-subitem" href="${technologyDundeeUrl}">My Dundee</a>
+            </div>
+          </div>
+          <div class="nav-dropdown">
+            <a class="nav-item" data-nav="studio" href="${studioUrl}">Studio</a>
+            <div class="nav-submenu">
+              <a class="nav-subitem" href="${studioScrabbleUrl}">Scrabble</a>
+              <a class="nav-subitem nav-subitem--disabled" href="javascript:void(0)" aria-disabled="true" tabindex="-1">2D</a>
+            </div>
+          </div>
           <a class="nav-item" data-nav="rank" href="${rankUrl}">Rank</a>
         </div>
         <div class="user-group">
@@ -211,8 +258,20 @@
       }
     }
 
-    if (challengeButton && typeof options.onChallengeClick === 'function') {
-      challengeButton.addEventListener('click', options.onChallengeClick);
+    if (challengeButton) {
+      if (typeof options.onChallengeClick === 'function') {
+        challengeButton.addEventListener('click', options.onChallengeClick);
+      } else {
+        challengeButton.addEventListener('click', () => {
+          try {
+            const next = new URL(homeUrl, window.location.origin);
+            next.searchParams.set('challenge', '1');
+            window.location.href = next.toString();
+          } catch (_err) {
+            window.location.href = `${homeUrl}?challenge=1`;
+          }
+        });
+      }
     }
 
     if (switchButton) {

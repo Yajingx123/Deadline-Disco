@@ -7,9 +7,9 @@ AcadBeat 统一视觉风格系统
 
 :root {
   /* 配色系统 */
-  --bg-color: #E4DFD8;
-  --primary-color: #9BB7D4;
-  --secondary-color: #3A4E6B;
+  --bg-color: #f4efff;
+  --primary-color: #facc15;
+  --secondary-color: #5b2a86;
   --white: #ffffff;
 
   /* 动画速度 */
@@ -81,7 +81,7 @@ body {
 /* 卡片组件 */
 .daily-focus-card {
   background: rgba(255, 255, 255, 0.4);
-  border: 1px solid rgba(58, 78, 107, 0.1);
+  border: 1px solid rgba(91, 42, 134, 0.16);
   padding: 2.2rem 3rem;
   border-radius: 2px;
   backdrop-filter: blur(8px);
@@ -121,7 +121,7 @@ nav {
   padding: 0 5%;
   height: 80px;
   background-color: var(--bg-color);
-  border-bottom: 1px solid rgba(58, 78, 107, 0.1);
+  border-bottom: 1px solid rgba(91, 42, 134, 0.16);
   position: fixed;
   top: 0;
   width: 100%;
@@ -184,19 +184,19 @@ nav {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  border: 1px solid rgba(58, 78, 107, 0.16);
+  border: 1px solid rgba(91, 42, 134, 0.22);
   background: rgba(255, 255, 255, 0.74);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   color: var(--secondary-color);
   text-decoration: none;
-  box-shadow: 0 8px 20px rgba(58, 78, 107, 0.08);
+  box-shadow: 0 8px 20px rgba(91, 42, 134, 0.12);
   transition: 0.25s ease;
 }
 
 .message-link:hover {
-  background: rgba(155, 183, 212, 0.22);
+  background: rgba(250, 204, 21, 0.26);
   transform: translateY(-1px);
 }
 
@@ -264,7 +264,7 @@ nav {
   min-height: 34px;
   padding: 0 12px;
   border-radius: 999px;
-  border: 1px solid rgba(58, 78, 107, 0.18);
+  border: 1px solid rgba(91, 42, 134, 0.24);
   background: rgba(255, 255, 255, 0.72);
   color: var(--secondary-color);
   text-decoration: none;
@@ -276,7 +276,7 @@ nav {
 .logout-link:hover {
   transform: translateY(-1px);
   background: rgba(255, 255, 255, 0.94);
-  border-color: rgba(58, 78, 107, 0.3);
+  border-color: rgba(91, 42, 134, 0.4);
 }
 
 /* 布局容器 */

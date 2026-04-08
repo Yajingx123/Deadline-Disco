@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rank</title>
+  <link rel="stylesheet" href="./shared-nav.css">
+  <script src="./shared/acadbeat-local-config.js"></script>
+  <style>
+    :root {
+      --bg: #f4efff;
+      --primary: #facc15;
+      --secondary: #5b2a86;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 16% 12%, rgba(250, 204, 21, 0.25), transparent 34%),
+        radial-gradient(circle at 84% 84%, rgba(91, 42, 134, 0.24), transparent 36%),
+        linear-gradient(145deg, #f8f4ff 0%, #eee2ff 56%, #fff8df 100%);
+      cursor: pointer;
+    }
+    .gate-main {
+      margin-top: 80px;
+      min-height: calc(100vh - 80px);
+      display: grid;
+      place-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .wave {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 24vmin;
+      height: 24vmin;
+      margin-left: -12vmin;
+      margin-top: -12vmin;
+      border-radius: 50%;
+      border: 2px solid rgba(91, 42, 134, 0.26);
+      animation: ripple 3.4s ease-out infinite;
+      pointer-events: none;
+    }
+    .wave.w2 { animation-delay: 1.1s; }
+    .wave.w3 { animation-delay: 2.2s; }
+    .beam {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 2px;
+      height: 52vh;
+      transform-origin: center bottom;
+      background: linear-gradient(180deg, rgba(250, 204, 21, 0.9), rgba(250, 204, 21, 0));
+      animation: sweep 6.2s linear infinite;
+      pointer-events: none;
+    }
+    h1 {
+      position: relative;
+      z-index: 3;
+      font-family: "Playfair Display", serif;
+      font-size: clamp(3rem, 9vw, 7rem);
+      letter-spacing: -0.03em;
+      color: var(--secondary);
+      text-shadow: 0 14px 44px rgba(91, 42, 134, 0.25);
+    }
+    .gate-enter-btn {
+      position: relative;
+      z-index: 3;
+      margin-top: 22px;
+      min-height: 52px;
+      padding: 0 28px;
+      border: 1px solid rgba(250, 204, 21, 0.85);
+      border-radius: 999px;
+      background: linear-gradient(135deg, #facc15 0%, #ffd84a 100%);
+      color: #5b2a86;
+      font-size: 0.84rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 18px 40px rgba(250, 204, 21, 0.28);
+    }
+    .gate-enter-btn:hover {
+      transform: translateY(-2px) scale(1.02);
+      background: linear-gradient(135deg, #ffd84a 0%, #facc15 100%);
+    }
+    @keyframes ripple {
+      0% { transform: scale(0.8); opacity: 0.8; }
+      100% { transform: scale(5.8); opacity: 0; }
+    }
+    @keyframes sweep {
+      from { transform: translate(-50%, -100%) rotate(0deg); }
+      to { transform: translate(-50%, -100%) rotate(360deg); }
+    }
+  </style>
+</head>
+<body onclick="enterPage()" onkeydown="enterByKey(event)" tabindex="0">
+  <div id="acadbeatNav"></div>
+  <main class="gate-main" onclick="enterPage()" onkeydown="enterByKey(event)" tabindex="0">
+    <div class="wave w1" aria-hidden="true"></div>
+    <div class="wave w2" aria-hidden="true"></div>
+    <div class="wave w3" aria-hidden="true"></div>
+    <div class="beam" aria-hidden="true"></div>
+    <h1>Rank</h1>
+    <button class="gate-enter-btn" onclick="enterPage();event.stopPropagation();">Enter Module</button>
+  </main>
+  <script src="./shared-nav.js"></script>
+  <script>
+    window.addEventListener('load', () => {
+      window.initializeAcadBeatNav({
+        mountId: 'acadbeatNav',
+        basePath: './',
+        active: 'rank',
+        academicUrl: './academic-gate.html',
+        forumUrl: './forum-gate.html',
+        technologyUrl: './technology-gate.html',
+        studioUrl: './studio-gate.html',
+        rankUrl: './rank-gate.html',
+        authApiBase: './Auth/backend/api',
+        homeUrl: './home.html',
+        ownerUrl: './owner.html',
+        adminUrl: (window.ACADBEAT_LOCAL && window.ACADBEAT_LOCAL.adminDistUrl) || window.location.origin + '/admin_page/dist/index.html',
+        redirectAdmins: true
+      });
+    });
+    function enterPage() { window.location.href = './rank/index.html'; }
+    function enterByKey(event) {
+      if (event.key === 'Enter' || event.key === ' ') enterPage();
+    }
+  </script>
+</body>
+</html>

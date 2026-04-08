@@ -1,16 +1,16 @@
 :root{
   /* Theme colors (unchanged) */
-  --bg: #E4DFD8;
-  --brand: #9BB7D4;
-  --brand2: #3A4E6B;
+  --bg: #f4efff;
+  --brand: #facc15;
+  --brand2: #5b2a86;
 
   /* Neutrals */
   --panel: #ffffff;
   --panel2: #ffffff;
-  --stroke: rgba(58,78,107,.18);
+  --stroke: rgba(91,42,134,.22);
   --text: rgba(28,36,48,.96);
-  --muted: rgba(58,78,107,.80);
-  --muted2: rgba(58,78,107,.62);
+  --muted: rgba(91,42,134,.8);
+  --muted2: rgba(91,42,134,.62);
 
   /* State colors */
   --danger: #d9415b;
@@ -29,7 +29,7 @@
   --fs-pill: 13px;
 
   /* Borders & shadows – reference feel */
-  --shadow: 0 2px 12px rgba(58,78,107,.08);
+  --shadow: 0 2px 12px rgba(91,42,134,.12);
   --shadow-card: 0 2px 10px rgba(0,0,0,.06);
   --radius: 10px;
   --radius2: 8px;
@@ -178,7 +178,7 @@ body{
   padding: 0 5%;
   height: 80px;
   background-color: var(--bg);
-  border-bottom: 1px solid rgba(58, 78, 107, 0.1);
+  border-bottom: 1px solid rgba(91, 42, 134, 0.16);
   position: sticky;
   top: 0;
   width: 100%;
@@ -1839,7 +1839,7 @@ body.with-acadbeat-shared-nav .page__main {
     width: 100%;
     gap: 12px;
     padding-top: 8px;
-    border-top: 1px solid rgba(58, 78, 107, 0.1);
+    border-top: 1px solid rgba(91, 42, 134, 0.16);
     flex-wrap: wrap;
   }
   .page__main{ padding: 16px; }

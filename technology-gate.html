@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Technology</title>
+  <link rel="stylesheet" href="./shared-nav.css">
+  <script src="./shared/acadbeat-local-config.js"></script>
+  <style>
+    :root {
+      --bg: #f4efff;
+      --primary: #facc15;
+      --secondary: #5b2a86;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 18% 14%, rgba(250, 204, 21, 0.28), transparent 34%),
+        radial-gradient(circle at 82% 78%, rgba(91, 42, 134, 0.24), transparent 36%),
+        linear-gradient(140deg, #f8f4ff 0%, #efe6ff 54%, #fff9df 100%);
+      cursor: pointer;
+    }
+    .gate-main {
+      margin-top: 80px;
+      min-height: calc(100vh - 80px);
+      display: grid;
+      place-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .grid {
+      position: fixed;
+      inset: -12vh -8vw;
+      background:
+        linear-gradient(rgba(91, 42, 134, 0.08) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(91, 42, 134, 0.08) 1px, transparent 1px);
+      background-size: 48px 48px;
+      animation: drift 14s ease-in-out infinite alternate;
+    }
+    .scan {
+      position: fixed;
+      top: -20%;
+      left: -40%;
+      width: 40%;
+      height: 150%;
+      background: linear-gradient(90deg, transparent, rgba(250, 204, 21, 0.28), transparent);
+      transform: skewX(-14deg);
+      animation: scan 4.8s ease-in-out infinite;
+    }
+    h1 {
+      position: relative;
+      z-index: 3;
+      font-family: "Playfair Display", serif;
+      font-size: clamp(3rem, 9vw, 7rem);
+      letter-spacing: -0.03em;
+      color: var(--secondary);
+      text-shadow: 0 14px 44px rgba(91, 42, 134, 0.25);
+    }
+    .gate-enter-btn {
+      position: relative;
+      z-index: 3;
+      margin-top: 22px;
+      min-height: 52px;
+      padding: 0 28px;
+      border: 1px solid rgba(250, 204, 21, 0.85);
+      border-radius: 999px;
+      background: linear-gradient(135deg, #facc15 0%, #ffd84a 100%);
+      color: #5b2a86;
+      font-size: 0.84rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      font-weight: 800;
+      cursor: pointer;
+      box-shadow: 0 18px 40px rgba(250, 204, 21, 0.28);
+    }
+    .gate-enter-btn:hover {
+      transform: translateY(-2px) scale(1.02);
+      background: linear-gradient(135deg, #ffd84a 0%, #facc15 100%);
+    }
+    @keyframes drift {
+      from { transform: translate3d(0, 0, 0) scale(1); }
+      to { transform: translate3d(3vw, -2vh, 0) scale(1.06); }
+    }
+    @keyframes scan {
+      0% { left: -45%; }
+      56% { left: 120%; }
+      100% { left: 120%; }
+    }
+  </style>
+</head>
+<body onclick="enterPage()" onkeydown="enterByKey(event)" tabindex="0">
+  <div id="acadbeatNav"></div>
+  <main class="gate-main" onclick="enterPage()" onkeydown="enterByKey(event)" tabindex="0">
+    <div class="grid" aria-hidden="true"></div>
+    <div class="scan" aria-hidden="true"></div>
+    <h1>Technology</h1>
+    <button class="gate-enter-btn" onclick="enterPage();event.stopPropagation();">Enter Module</button>
+  </main>
+  <script src="./shared-nav.js"></script>
+  <script>
+    window.addEventListener('load', () => {
+      window.initializeAcadBeatNav({
+        mountId: 'acadbeatNav',
+        basePath: './',
+        active: 'technology',
+        academicUrl: './academic-gate.html',
+        forumUrl: './forum-gate.html',
+        technologyUrl: './technology-gate.html',
+        studioUrl: './studio-gate.html',
+        rankUrl: './rank-gate.html',
+        authApiBase: './Auth/backend/api',
+        homeUrl: './home.html',
+        ownerUrl: './owner.html',
+        adminUrl: (window.ACADBEAT_LOCAL && window.ACADBEAT_LOCAL.adminDistUrl) || window.location.origin + '/admin_page/dist/index.html',
+        redirectAdmins: true
+      });
+    });
+    function enterPage() { window.location.href = './technology.html'; }
+    function enterByKey(event) {
+      if (event.key === 'Enter' || event.key === ' ') enterPage();
+    }
+  </script>
+</body>
+</html>
