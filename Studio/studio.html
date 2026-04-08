@@ -5,7 +5,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AcadBeat | Studio</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;1,700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="../shared/acadbeat-local-config.js"></script>
+    <script>
+        (function () {
+            let mode = 'classic';
+            try {
+                const queryMode = new URLSearchParams(window.location.search).get('studio_ui');
+                if (queryMode === 'godot') mode = 'godot';
+            } catch (_e) {
+                mode = 'classic';
+            }
+            document.documentElement.setAttribute('data-ui', mode);
+            window.__ACADBEAT_STUDIO_UI_MODE = mode;
+        })();
+    </script>
     <style>
+        @font-face {
+            font-family: 'MyfontRegular';
+            src: url('../gameUI_src/Assets/Fonts/Myfont-Regular.ttf') format('truetype');
+            font-weight: 400;
+            font-style: normal;
+            font-display: swap;
+        }
+
         :root {
             --bg-color: #E4DFD8;
             --primary-color: #9BB7D4;
@@ -96,6 +118,27 @@
             display: flex;
             align-items: center;
             gap: 12px;
+        }
+        .nav-godot {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 34px;
+            padding: 0 12px;
+            border-radius: 999px;
+            border: 1px solid rgba(58, 78, 107, 0.2);
+            background: rgba(155, 183, 212, 0.34);
+            color: var(--secondary-color);
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: 0.25s ease;
+        }
+        .nav-godot:hover {
+            background: rgba(155, 183, 212, 0.54);
+            transform: translateY(-1px);
         }
 
         .user-section {
@@ -248,6 +291,119 @@
             opacity: 0.76;
         }
 
+        html[data-ui="godot"] body {
+            background:
+                linear-gradient(rgba(122, 112, 112, 0.7), rgba(122, 112, 112, 0.7)),
+                url('./assets/studio-godot-bg.png') center bottom / cover no-repeat fixed;
+            color: #f5f2f2;
+        }
+
+        html[data-ui="godot"] nav {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.22);
+            background: rgba(122, 112, 112, 0.86);
+            backdrop-filter: blur(8px);
+        }
+
+        html[data-ui="godot"] .logo,
+        html[data-ui="godot"] .studio-hero h1,
+        html[data-ui="godot"] .game-name,
+        html[data-ui="godot"] .game-link,
+        html[data-ui="godot"] .game-tag {
+            font-family: 'MyfontRegular', 'Inter', sans-serif;
+            letter-spacing: 0.02em;
+        }
+
+        html[data-ui="godot"] .logo {
+            color: #ffffff;
+            text-shadow: 2px 2px 0 #222, 4px 4px 0 rgba(0, 229, 255, 0.6);
+        }
+
+        html[data-ui="godot"] .logo span {
+            color: #ffffff;
+        }
+
+        html[data-ui="godot"] .nav-item {
+            color: #f4ecec;
+            opacity: 0.75;
+        }
+
+        html[data-ui="godot"] .nav-item:hover,
+        html[data-ui="godot"] .nav-item.active {
+            opacity: 1;
+        }
+
+        html[data-ui="godot"] .nav-item.active::after {
+            background: #00e5ff;
+            box-shadow: 0 0 8px rgba(0, 229, 255, 0.6);
+        }
+
+        html[data-ui="godot"] .studio-hero {
+            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(67, 58, 58, 0.72);
+            box-shadow: 0 16px 36px rgba(0, 0, 0, 0.24);
+        }
+
+        html[data-ui="godot"] .studio-hero h1 {
+            color: #ffffff;
+            text-shadow: 2px 2px 0 #1f1b1b, 4px 4px 0 rgba(0, 229, 255, 0.45);
+        }
+
+        html[data-ui="godot"] .studio-hero p {
+            color: rgba(255, 245, 245, 0.92);
+        }
+
+        html[data-ui="godot"] .game-card {
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid rgba(255, 255, 255, 0.78);
+            box-shadow: 0 8px 18px rgba(0, 0, 0, 0.22);
+        }
+
+        html[data-ui="godot"] .game-card:hover {
+            transform: translateY(-6px) scale(1.01);
+            box-shadow: 0 14px 24px rgba(0, 0, 0, 0.26);
+        }
+
+        html[data-ui="godot"] .game-icon {
+            background: #d7cccc;
+            border: 2px solid #7f6f6f;
+        }
+
+        html[data-ui="godot"] .game-tag {
+            border-color: rgba(58, 58, 58, 0.38);
+            color: rgba(58, 58, 58, 0.9);
+            background: rgba(255, 255, 255, 0.86);
+        }
+
+        html[data-ui="godot"] .user-section,
+        html[data-ui="godot"] .logout-link {
+            color: #fff;
+        }
+        html[data-ui="godot"] .nav-godot {
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.36);
+            background: rgba(255, 255, 255, 0.18);
+        }
+        html[data-ui="godot"] .nav-godot:hover {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.55);
+        }
+
+        html[data-ui="godot"] .avatar {
+            background-color: rgba(255, 255, 255, 0.88);
+            color: #433a3a;
+            border-color: rgba(255, 255, 255, 0.9);
+        }
+
+        html[data-ui="godot"] .logout-link {
+            background: rgba(255, 255, 255, 0.16);
+            border-color: rgba(255, 255, 255, 0.34);
+        }
+
+        html[data-ui="godot"] .logout-link:hover {
+            background: rgba(255, 255, 255, 0.26);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
         @media (max-width: 900px) {
             body {
                 padding: 0 16px 36px;
@@ -277,14 +433,15 @@
 </head>
 <body>
     <nav>
-        <div class="logo" onclick="window.location.href='../home.html'">Acad<span>Beat</span></div>
+        <div class="logo" onclick="goAcademic()">Acad<span>Beat</span></div>
         <div class="nav-menu">
-            <div class="nav-item" onclick="window.location.href='../home.html?module=Insight'">Academic</div>
-            <div class="nav-item" onclick="window.location.href='../home.html?module=Dialogue'">Forum</div>
-            <div class="nav-item" onclick="window.location.href='../technology.html'">Technology</div>
-            <div class="nav-item active" onclick="window.location.href='./studio.html'">Studio</div>
+            <div class="nav-item" onclick="goAcademic()">Academic</div>
+            <div class="nav-item" onclick="goForum()">Forum</div>
+            <div class="nav-item" onclick="goTechnology()">Technology</div>
+            <div class="nav-item active" onclick="goStudio()">Studio</div>
         </div>
         <div class="user-group">
+            <button type="button" class="nav-godot" onclick="requestSwitchToGodot()">Switch</button>
             <div class="user-section" id="userSection" onclick="handleUserAction()">
                 <span id="userLabel" style="font-size: 0.75rem; font-weight: 700;">LOGIN</span>
                 <div class="avatar" id="userAvatar">IN</div>
@@ -299,7 +456,7 @@
     </section>
 
     <section class="games-grid">
-        <article class="game-card" onclick="window.location.href='./Scrabble/scrabble.html'">
+        <article class="game-card" onclick="openScrabble()">
             <div class="game-icon">SQ</div>
             <div class="game-name">Scrabble</div>
             <div class="game-tag">Single Player</div>
@@ -323,6 +480,58 @@
     <script>
         const AUTH_API_BASE = '../Auth/backend/api';
         const authState = { user: null };
+        const uiState = { mode: window.__ACADBEAT_STUDIO_UI_MODE === 'godot' ? 'godot' : 'classic' };
+        const LOCAL = window.ACADBEAT_LOCAL || {};
+
+        function getMainOrigin() {
+            const here = window.location.origin;
+            if (window.location.port === '5500') {
+                return LOCAL.mainOrigin || 'http://127.0.0.1:8001';
+            }
+            return here;
+        }
+
+        const MAIN_ORIGIN = getMainOrigin();
+
+        function isGodotUiMode() {
+            return uiState.mode === 'godot';
+        }
+
+        function requestSwitchToGodot() {
+            const next = isGodotUiMode() ? 'classic' : 'godot';
+            uiState.mode = next;
+            document.documentElement.setAttribute('data-ui', next);
+            try {
+                const u = new URL(window.location.href);
+                // Studio only listens to studio_ui, and ignores cross-module ui cookie/param.
+                u.searchParams.delete('ui');
+                if (next === 'godot') u.searchParams.set('studio_ui', 'godot');
+                else u.searchParams.delete('studio_ui');
+                window.history.replaceState({}, '', u.toString());
+            } catch (_e) {
+                /* ignore URL rewrite issues */
+            }
+        }
+
+        function goAcademic() {
+            window.location.href = `${MAIN_ORIGIN}/home.html?module=Insight`;
+        }
+
+        function goForum() {
+            window.location.href = `${MAIN_ORIGIN}/home.html?module=Dialogue`;
+        }
+
+        function goTechnology() {
+            window.location.href = `${MAIN_ORIGIN}/technology.html`;
+        }
+
+        function goStudio() {
+            window.location.href = `${MAIN_ORIGIN}/Studio/studio.html`;
+        }
+
+        function openScrabble() {
+            window.location.href = `${MAIN_ORIGIN}/Studio/Scrabble/scrabble.html`;
+        }
 
         function initialsOf(name) {
             const trimmed = String(name || '').trim();
@@ -364,10 +573,10 @@
 
         function handleUserAction() {
             if (authState.user) {
-                window.location.href = '../owner.html';
+                window.location.href = `${MAIN_ORIGIN}/owner.html`;
                 return;
             }
-            window.location.href = '../home.html?login=1';
+            window.location.href = `${MAIN_ORIGIN}/home.html?login=1`;
         }
 
         async function handleLogout(event) {
@@ -376,7 +585,7 @@
             await authFetch('logout.php');
             authState.user = null;
             renderAuthUI();
-            window.location.href = '../home.html';
+            window.location.href = `${MAIN_ORIGIN}/home.html`;
             return false;
         }
 

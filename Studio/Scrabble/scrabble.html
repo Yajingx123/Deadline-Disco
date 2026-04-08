@@ -739,7 +739,25 @@
             gap: 8px;
         }
         .guide-dim {
-            display: none !important;
+            position: fixed;
+            inset: 0;
+            background: rgba(13, 19, 30, 0.56);
+            z-index: 70;
+        }
+        .guide-dim.hidden {
+            display: none;
+        }
+        .guide-dim.guide-dim--spotlight {
+            --guide-spot-x: 50vw;
+            --guide-spot-y: 50vh;
+            --guide-spot-r: 120px;
+            background:
+                radial-gradient(
+                    circle at var(--guide-spot-x) var(--guide-spot-y),
+                    rgba(255, 255, 255, 0) 0 calc(var(--guide-spot-r) - 8px),
+                    rgba(13, 19, 30, 0.22) calc(var(--guide-spot-r) + 8px),
+                    rgba(13, 19, 30, 0.62) calc(var(--guide-spot-r) + 52px)
+                );
         }
         .guide-focus-target {
             position: relative;
@@ -1281,6 +1299,7 @@
             if (forceFromStart) state.guideStep = 0;
             state.guideActive = true;
             document.getElementById("guide-modal")?.classList.add("hidden");
+            document.getElementById("guide-dim")?.classList.remove("hidden");
             document.getElementById("guide-coach")?.classList.remove("hidden");
             renderGuideStep();
             window.addEventListener("resize", onGuideViewportChanged);
@@ -1291,6 +1310,9 @@
 
         function closeGuideModal(markSeen = true) {
             document.getElementById("guide-modal")?.classList.add("hidden");
+            const dim = document.getElementById("guide-dim");
+            dim?.classList.add("hidden");
+            dim?.classList.remove("guide-dim--spotlight");
             document.getElementById("guide-coach")?.classList.add("hidden");
             state.guideActive = false;
             clearGuideFocus();
@@ -1339,6 +1361,7 @@
             const targets = getGuideTargets(step);
             targets.forEach((el) => el.classList.add("guide-focus-target"));
             state.guideFocusEls = targets;
+            syncGuideDimSpotlight(step);
         }
 
         function positionGuideCoach(step) {
@@ -1426,8 +1449,27 @@
                 if (!state.guideActive) return;
                 const step = GUIDE_STEPS[Math.max(0, Math.min(state.guideStep, GUIDE_STEPS.length - 1))];
                 if (!step) return;
+                syncGuideDimSpotlight(step);
                 positionGuideCoach(step);
             });
+        }
+
+        function syncGuideDimSpotlight(step) {
+            const dim = document.getElementById("guide-dim");
+            if (!dim) return;
+            const target = getGuideTargets(step)[0];
+            if (!target) {
+                dim.classList.remove("guide-dim--spotlight");
+                return;
+            }
+            const rect = target.getBoundingClientRect();
+            const cx = rect.left + rect.width / 2;
+            const cy = rect.top + rect.height / 2;
+            const radius = Math.max(rect.width, rect.height) * 0.62 + 22;
+            dim.style.setProperty("--guide-spot-x", `${Math.round(cx)}px`);
+            dim.style.setProperty("--guide-spot-y", `${Math.round(cy)}px`);
+            dim.style.setProperty("--guide-spot-r", `${Math.round(radius)}px`);
+            dim.classList.add("guide-dim--spotlight");
         }
 
         function maybeShowGuideForNewPlayer() {

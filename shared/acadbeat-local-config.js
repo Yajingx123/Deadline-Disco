@@ -10,11 +10,36 @@
   var host = isBrowser ? window.location.hostname : '127.0.0.1';
   var isLocalHost = host === '127.0.0.1' || host === 'localhost';
   var origin = isBrowser ? window.location.origin : 'http://127.0.0.1:8001';
-  var MAIN = isLocalHost ? 'http://127.0.0.1:8001' : origin;
+  var fallbackLocalMain = 'http://127.0.0.1:8001';
+  var MAIN = origin;
+  if (isLocalHost) {
+    var savedMain = '';
+    try {
+      if (isBrowser && window.localStorage) {
+        savedMain = String(window.localStorage.getItem('acadbeat_main_origin') || '').trim();
+      }
+    } catch (_err) {
+      savedMain = '';
+    }
+    var currentPort = isBrowser ? String(window.location.port || '') : '';
+    // If we are on business pages (not Godot shell), use current origin as main and persist it.
+    if (isBrowser && currentPort !== '5500') {
+      MAIN = origin;
+      try {
+        if (window.localStorage) {
+          window.localStorage.setItem('acadbeat_main_origin', MAIN);
+        }
+      } catch (_err) {}
+    } else if (savedMain && /^https?:\/\//i.test(savedMain)) {
+      MAIN = savedMain;
+    } else {
+      MAIN = fallbackLocalMain;
+    }
+  }
   var wsProtocol = isBrowser && window.location.protocol === 'https:' ? 'wss:' : 'ws:';
   var wsHost = isBrowser ? window.location.host : '127.0.0.1:3001';
   var sameOriginWs = wsProtocol + '//' + wsHost + '/ws';
-  var localAdminDistUrl = 'http://127.0.0.1:8001/admin_page/dist/index.html';
+  var localAdminDistUrl = MAIN + '/admin_page/index.html';
   g.ACADBEAT_LOCAL = {
     mainOrigin: MAIN,
     technologyUrl: MAIN + '/technology.html',
@@ -22,14 +47,14 @@
     challengeApiUrl: MAIN + '/challenge/api/challenge.php',
     /** Production should use same-origin /ws via Nginx reverse proxy. */
     voiceRoomWsUrl: isLocalHost ? 'ws://127.0.0.1:3001/ws' : sameOriginWs,
-    // Default to PHP-served static builds so the app still opens even when Vite dev servers are not running.
+    // Default to PHP-served entries so pages open even when Vite build/dist is unavailable.
     adminDistUrl: isLocalHost ? localAdminDistUrl : MAIN + '/admin_page/dist/index.html',
-    messageCenterDistUrl: MAIN + '/message-center-project/dist/index.html',
+    messageCenterDistUrl: MAIN + '/message-center-project/index.html',
     messageSummaryApiUrl: MAIN + '/forum-project/api/message-center.php?summaryOnly=1',
     authMeUrl: MAIN + '/Auth/backend/api/me.php',
     /** 经典 UI（home 等）固定使用 forum-project，避免与 v2 混用 */
-    forumDevChooserUrl: MAIN + '/forum-project/dist/index.html?view=forum',
-    forumClassicIndexUrl: MAIN + '/forum-project/dist/index.html',
+    forumDevChooserUrl: MAIN + '/forum-project/index.html?view=forum',
+    forumClassicIndexUrl: MAIN + '/forum-project/index.html',
     /** 兼容旧键名：仍指向经典论坛 */
     forumProdIndexUrl: MAIN + '/forum-project/dist/index.html',
     /** Godot/newUI 网页壳固定使用 forum-project-v2（仅壳内 iframe） */
