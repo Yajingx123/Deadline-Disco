@@ -671,6 +671,172 @@
         .vocab-edit-status.error {
             color: #b24b5e;
         }
+        .side-utility-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .side-utility-row button {
+            flex: 1 1 0;
+            min-width: 140px;
+        }
+        .guide-modal__panel {
+            max-width: 560px;
+        }
+        .guide-step-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 102px;
+            border-radius: 999px;
+            padding: 4px 10px;
+            background: rgba(155, 183, 212, 0.18);
+            border: 1px solid rgba(58, 78, 107, 0.16);
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+        }
+        .guide-title {
+            font-size: 1.02rem;
+            font-weight: 800;
+            margin: 2px 0 8px;
+            color: var(--secondary-color);
+        }
+        .guide-body {
+            font-size: 0.84rem;
+            line-height: 1.62;
+            color: #2f3a4a;
+        }
+        .guide-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(58, 78, 107, 0.1);
+        }
+        .guide-dots {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+        .guide-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(58, 78, 107, 0.22);
+        }
+        .guide-dot.active {
+            background: var(--secondary-color);
+            transform: scale(1.15);
+        }
+        .guide-actions {
+            display: flex;
+            gap: 8px;
+        }
+        .guide-dim {
+            display: none !important;
+        }
+        .guide-focus-target {
+            position: relative;
+            z-index: 90 !important;
+            box-shadow: 0 0 0 3px rgba(255, 242, 153, 0.92), 0 0 0 10px rgba(255, 242, 153, 0.24);
+            animation: guide-pulse 1.25s ease-in-out infinite;
+        }
+        .cell.guide-focus-target,
+        .preview-turn.guide-focus-target,
+        .vocab-bank-btn.guide-focus-target {
+            border-radius: 10px;
+        }
+        .guide-coach {
+            position: fixed;
+            width: min(360px, calc(100vw - 24px));
+            background: #ffffff;
+            border: 1px solid rgba(58, 78, 107, 0.16);
+            border-radius: 14px;
+            padding: 12px 12px 10px;
+            box-shadow: 0 14px 34px rgba(12, 26, 46, 0.28);
+            z-index: 95;
+            color: var(--secondary-color);
+            --guide-arrow-x: 26px;
+            --guide-arrow-y: 20px;
+        }
+        .guide-coach.hidden {
+            display: none;
+        }
+        .guide-coach__step {
+            font-size: 0.69rem;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            font-weight: 700;
+            opacity: 0.8;
+        }
+        .guide-coach__title {
+            margin-top: 4px;
+            font-size: 1rem;
+            font-weight: 800;
+        }
+        .guide-coach__body {
+            margin-top: 6px;
+            font-size: 0.83rem;
+            line-height: 1.56;
+            color: #2f3a4a;
+        }
+        .guide-coach__actions {
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(58, 78, 107, 0.1);
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+        .guide-coach--top::after,
+        .guide-coach--bottom::after,
+        .guide-coach--left::after,
+        .guide-coach--right::after {
+            content: "";
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #fff;
+            border-left: 1px solid rgba(58, 78, 107, 0.16);
+            border-top: 1px solid rgba(58, 78, 107, 0.16);
+            transform: rotate(45deg);
+        }
+        .guide-coach--top::after {
+            left: var(--guide-arrow-x);
+            bottom: -7px;
+            border-left: none;
+            border-top: none;
+            border-right: 1px solid rgba(58, 78, 107, 0.16);
+            border-bottom: 1px solid rgba(58, 78, 107, 0.16);
+        }
+        .guide-coach--bottom::after {
+            left: var(--guide-arrow-x);
+            top: -7px;
+        }
+        .guide-coach--left::after {
+            right: -7px;
+            top: var(--guide-arrow-y);
+            border-left: none;
+            border-top: none;
+            border-right: 1px solid rgba(58, 78, 107, 0.16);
+            border-bottom: 1px solid rgba(58, 78, 107, 0.16);
+        }
+        .guide-coach--right::after {
+            left: -7px;
+            top: var(--guide-arrow-y);
+        }
+        @keyframes guide-pulse {
+            0% { box-shadow: 0 0 0 3px rgba(255, 242, 153, 0.92), 0 0 0 10px rgba(255, 242, 153, 0.24); }
+            50% { box-shadow: 0 0 0 4px rgba(255, 242, 153, 1), 0 0 0 14px rgba(255, 242, 153, 0.28); }
+            100% { box-shadow: 0 0 0 3px rgba(255, 242, 153, 0.92), 0 0 0 10px rgba(255, 242, 153, 0.24); }
+        }
     </style>
 </head>
 <body>
@@ -708,7 +874,7 @@
             <div class="nav-item" onclick="window.location.href='../../technology.html'">Technology</div>
             <div class="nav-item active" onclick="window.location.href='../studio.html'">Studio</div>
         </div>
-        <button type="button" class="nav-rules" onclick="openRulesModal()">Rules</button>
+        <button type="button" class="nav-rules" onclick="goBackToStudio()">Back to Studio</button>
     </nav>
 
     <div id="game-root" class="game-root hidden">
@@ -756,6 +922,10 @@
                 <button onclick="exchangeSelected()">Exchange Selected</button>
                 <button class="warn" onclick="passTurn()">Pass</button>
                 <button onclick="restartGame()">Restart</button>
+            </div>
+            <div class="side-utility-row">
+                <button type="button" onclick="openRulesModal()">Rules</button>
+                <button type="button" onclick="openGuideModal()">Quick Guide</button>
             </div>
 
             <div class="log-box" id="log-box"></div>
@@ -821,6 +991,37 @@
             </div>
         </div>
     </div>
+    <div id="guide-modal" class="rules-modal hidden" role="dialog" aria-modal="true" aria-labelledby="guide-title">
+        <div class="rules-modal__backdrop" onclick="closeGuideModal()"></div>
+        <div class="rules-modal__panel guide-modal__panel" onclick="event.stopPropagation()">
+            <div class="rules-modal__head">
+                <h2 id="guide-title">New Player Guide</h2>
+                <button type="button" class="rules-modal__close" onclick="closeGuideModal()" aria-label="Close">&times;</button>
+            </div>
+            <div class="rules-modal__body">
+                <div class="guide-step-badge" id="guide-step-badge">Step 1 / 5</div>
+                <div class="guide-title" id="guide-step-title"></div>
+                <div class="guide-body" id="guide-step-body"></div>
+                <div class="guide-nav">
+                    <div class="guide-dots" id="guide-dots"></div>
+                    <div class="guide-actions">
+                        <button type="button" id="guide-prev-btn" onclick="prevGuideStep()">Back</button>
+                        <button type="button" class="primary" id="guide-next-btn" onclick="nextGuideStep()">Next</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="guide-dim" class="guide-dim hidden" onclick="closeGuideModal(false)" aria-hidden="true"></div>
+    <div id="guide-coach" class="guide-coach hidden" role="dialog" aria-live="polite" aria-label="Interactive guide">
+        <div id="guide-coach-step" class="guide-coach__step">Step 1 / 5</div>
+        <div id="guide-coach-title" class="guide-coach__title"></div>
+        <div id="guide-coach-body" class="guide-coach__body"></div>
+        <div class="guide-coach__actions">
+            <button type="button" id="guide-coach-prev" onclick="prevGuideStep()">Back</button>
+            <button type="button" class="primary" id="guide-coach-next" onclick="nextGuideStep()">Next</button>
+        </div>
+    </div>
 
     <script src="https://cdn.socket.io/4.7.5/socket.io.min.js" crossorigin="anonymous"></script>
     <script>
@@ -881,6 +1082,41 @@
         const SCRABBLE_SOCKET_PATH_PREFIX = SCRABBLE_SERVER_URL.pathname.replace(/\/+$/, "");
         const SCRABBLE_SOCKET_PATH = `${SCRABBLE_SOCKET_PATH_PREFIX || ""}/socket.io`;
         const MAX_ROUNDS = 20;
+        const GUIDE_SEEN_KEY = "scrabble_quick_guide_seen_v1";
+        const GUIDE_STEPS = [
+            {
+                title: "Board focus and goal",
+                body: "This is your battlefield. Build English words by placing tiles in one straight line and connect to existing letters to keep scoring.",
+                target: () => document.getElementById("board"),
+                placement: "right"
+            },
+            {
+                title: "First word must cross the star",
+                body: "Your opening word must pass through the center star (H8). The highlighted square is mandatory for your first move.",
+                target: () => document.querySelector(`.cell[data-r="${CENTER}"][data-c="${CENTER}"]`),
+                placement: "bottom"
+            },
+            {
+                title: "Try a sample word",
+                body: "Try placing your own word across the highlighted center. While tiles are on board, the Preview box shows your estimated score instantly.",
+                target: () => document.getElementById("preview-turn"),
+                placement: "left"
+            },
+            {
+                title: "How to submit and read score",
+                body: "After placing your own tiles, click Play. The score card updates right away, and the highlighted words show what was counted this turn.",
+                target: () => document.querySelector(".controls .primary"),
+                extraTargets: () => [document.getElementById("score-you"), document.getElementById("score-ai")],
+                placement: "left"
+            },
+            {
+                title: "Track history and bonus words",
+                body: "Use the operation log to review each move. Open Vocabulary Bank to see words that grant x2 bonus when formed.",
+                target: () => document.getElementById("log-box"),
+                extraTargets: () => [document.querySelector(".vocab-bank-btn")],
+                placement: "top"
+            }
+        ];
 
         const state = {
             mode: "pick",
@@ -907,8 +1143,16 @@
             isMyTurn: true,
             endReason: null,
             vocabBank: new Set(loadVocabularyBankWords()),
-            currentUser: null
+            currentUser: null,
+            guideStep: 0,
+            guideActive: false,
+            guideFocusEls: [],
+            guidePositionRaf: 0
         };
+
+        function goBackToStudio() {
+            window.location.href = "../studio.html";
+        }
 
         async function fetchCurrentUser() {
             try {
@@ -995,6 +1239,202 @@
 
         function closeVocabularyBankModal() {
             document.getElementById("vocab-modal")?.classList.add("hidden");
+        }
+
+        function renderGuideStep() {
+            const idx = Math.max(0, Math.min(state.guideStep, GUIDE_STEPS.length - 1));
+            state.guideStep = idx;
+            const step = GUIDE_STEPS[idx];
+            const badge = document.getElementById("guide-step-badge");
+            const title = document.getElementById("guide-step-title");
+            const body = document.getElementById("guide-step-body");
+            if (badge) badge.textContent = `Step ${idx + 1} / ${GUIDE_STEPS.length}`;
+            if (title) title.textContent = step.title;
+            if (body) body.textContent = step.body;
+
+            const dotsHost = document.getElementById("guide-dots");
+            if (dotsHost) {
+                dotsHost.innerHTML = GUIDE_STEPS.map((_, i) => `<span class="guide-dot ${i === idx ? "active" : ""}"></span>`).join("");
+            }
+            const prevBtn = document.getElementById("guide-prev-btn");
+            const nextBtn = document.getElementById("guide-next-btn");
+            if (prevBtn) prevBtn.disabled = idx === 0;
+            if (nextBtn) nextBtn.textContent = idx === GUIDE_STEPS.length - 1 ? "Done" : "Next";
+
+            const coachStep = document.getElementById("guide-coach-step");
+            const coachTitle = document.getElementById("guide-coach-title");
+            const coachBody = document.getElementById("guide-coach-body");
+            const coachPrev = document.getElementById("guide-coach-prev");
+            const coachNext = document.getElementById("guide-coach-next");
+            if (coachStep) coachStep.textContent = `Step ${idx + 1} / ${GUIDE_STEPS.length}`;
+            if (coachTitle) coachTitle.textContent = step.title;
+            if (coachBody) coachBody.textContent = step.body;
+            if (coachPrev) coachPrev.disabled = idx === 0;
+            if (coachNext) coachNext.textContent = idx === GUIDE_STEPS.length - 1 ? "Done" : "Next";
+            if (state.guideActive) {
+                applyGuideFocus(step);
+                positionGuideCoach(step);
+            }
+        }
+
+        function openGuideModal(forceFromStart = false) {
+            if (forceFromStart) state.guideStep = 0;
+            state.guideActive = true;
+            document.getElementById("guide-modal")?.classList.add("hidden");
+            document.getElementById("guide-coach")?.classList.remove("hidden");
+            renderGuideStep();
+            window.addEventListener("resize", onGuideViewportChanged);
+            window.addEventListener("scroll", onGuideViewportChanged, true);
+            window.addEventListener("wheel", onGuideViewportChanged, { passive: true });
+            window.addEventListener("touchmove", onGuideViewportChanged, { passive: true });
+        }
+
+        function closeGuideModal(markSeen = true) {
+            document.getElementById("guide-modal")?.classList.add("hidden");
+            document.getElementById("guide-coach")?.classList.add("hidden");
+            state.guideActive = false;
+            clearGuideFocus();
+            window.removeEventListener("resize", onGuideViewportChanged);
+            window.removeEventListener("scroll", onGuideViewportChanged, true);
+            window.removeEventListener("wheel", onGuideViewportChanged);
+            window.removeEventListener("touchmove", onGuideViewportChanged);
+            if (state.guidePositionRaf) {
+                cancelAnimationFrame(state.guidePositionRaf);
+                state.guidePositionRaf = 0;
+            }
+            if (markSeen) {
+                try { localStorage.setItem(GUIDE_SEEN_KEY, "1"); } catch (_e) { /* */ }
+            }
+        }
+
+        function nextGuideStep() {
+            if (state.guideStep >= GUIDE_STEPS.length - 1) {
+                closeGuideModal(true);
+                return;
+            }
+            state.guideStep += 1;
+            renderGuideStep();
+        }
+
+        function prevGuideStep() {
+            if (state.guideStep <= 0) return;
+            state.guideStep -= 1;
+            renderGuideStep();
+        }
+
+        function clearGuideFocus() {
+            if (!Array.isArray(state.guideFocusEls)) state.guideFocusEls = [];
+            state.guideFocusEls.forEach((el) => el?.classList?.remove("guide-focus-target"));
+            state.guideFocusEls = [];
+        }
+
+        function getGuideTargets(step) {
+            const primary = typeof step.target === "function" ? step.target() : null;
+            const extra = typeof step.extraTargets === "function" ? step.extraTargets() : [];
+            return [primary, ...(Array.isArray(extra) ? extra : [])].filter((el) => el && typeof el.classList !== "undefined");
+        }
+
+        function applyGuideFocus(step) {
+            clearGuideFocus();
+            const targets = getGuideTargets(step);
+            targets.forEach((el) => el.classList.add("guide-focus-target"));
+            state.guideFocusEls = targets;
+        }
+
+        function positionGuideCoach(step) {
+            const coach = document.getElementById("guide-coach");
+            if (!coach) return;
+            const targets = getGuideTargets(step);
+            const target = targets[0];
+            const preferredPlacement = step.placement || "right";
+            coach.classList.remove("guide-coach--top", "guide-coach--bottom", "guide-coach--left", "guide-coach--right");
+            if (!target) {
+                coach.classList.add("guide-coach--bottom");
+                coach.style.left = "50%";
+                coach.style.top = "50%";
+                coach.style.transform = "translate(-50%, -50%)";
+                return;
+            }
+            const rect = target.getBoundingClientRect();
+            const coachRect = coach.getBoundingClientRect();
+            const gap = 16;
+            const margin = 10;
+            const placements = [...new Set([preferredPlacement, "right", "left", "bottom", "top"])];
+
+            function getPlacementXY(placement) {
+                let left = rect.right + gap;
+                let top = rect.top + (rect.height - coachRect.height) / 2;
+                if (placement === "left") left = rect.left - coachRect.width - gap;
+                if (placement === "top") top = rect.top - coachRect.height - gap;
+                if (placement === "bottom") top = rect.bottom + gap;
+                if (placement === "top" || placement === "bottom") {
+                    left = rect.left + (rect.width - coachRect.width) / 2;
+                }
+                return { left, top };
+            }
+
+            function fitsInViewport(left, top) {
+                return (
+                    left >= margin &&
+                    top >= margin &&
+                    left + coachRect.width <= window.innerWidth - margin &&
+                    top + coachRect.height <= window.innerHeight - margin
+                );
+            }
+
+            let placement = preferredPlacement;
+            let coords = getPlacementXY(placement);
+            for (const p of placements) {
+                const c = getPlacementXY(p);
+                if (fitsInViewport(c.left, c.top)) {
+                    placement = p;
+                    coords = c;
+                    break;
+                }
+            }
+
+            let left = Math.min(window.innerWidth - coachRect.width - margin, Math.max(margin, coords.left));
+            let top = Math.min(window.innerHeight - coachRect.height - margin, Math.max(margin, coords.top));
+            coach.style.left = `${Math.round(left)}px`;
+            coach.style.top = `${Math.round(top)}px`;
+            coach.style.transform = "";
+            coach.classList.add(`guide-coach--${placement}`);
+
+            const targetCenterX = rect.left + rect.width / 2;
+            const targetCenterY = rect.top + rect.height / 2;
+            const minOffset = 12;
+            if (placement === "top" || placement === "bottom") {
+                const arrowX = Math.min(
+                    coachRect.width - 26,
+                    Math.max(minOffset, targetCenterX - left - 6)
+                );
+                coach.style.setProperty("--guide-arrow-x", `${Math.round(arrowX)}px`);
+            } else {
+                const arrowY = Math.min(
+                    coachRect.height - 26,
+                    Math.max(minOffset, targetCenterY - top - 6)
+                );
+                coach.style.setProperty("--guide-arrow-y", `${Math.round(arrowY)}px`);
+            }
+        }
+
+        function onGuideViewportChanged() {
+            if (!state.guideActive) return;
+            if (state.guidePositionRaf) return;
+            state.guidePositionRaf = requestAnimationFrame(() => {
+                state.guidePositionRaf = 0;
+                if (!state.guideActive) return;
+                const step = GUIDE_STEPS[Math.max(0, Math.min(state.guideStep, GUIDE_STEPS.length - 1))];
+                if (!step) return;
+                positionGuideCoach(step);
+            });
+        }
+
+        function maybeShowGuideForNewPlayer() {
+            let seen = false;
+            try { seen = localStorage.getItem(GUIDE_SEEN_KEY) === "1"; } catch (_e) { /* */ }
+            if (seen) return;
+            openGuideModal(true);
         }
 
         function applyVocabularyBankWords(words) {
@@ -1088,6 +1528,7 @@
 
         function showGameRoot() {
             document.getElementById("game-root")?.classList.remove("hidden");
+            maybeShowGuideForNewPlayer();
         }
 
         function hideGameRoot() {
@@ -2435,12 +2876,14 @@
             renderGameProgress();
             renderLogs();
             document.getElementById("exchange-toggle").textContent = state.exchangeMode ? "Exit Exchange Mode" : "Exchange Mode";
+            if (state.guideActive) renderGuideStep();
         }
 
         document.addEventListener("keydown", (e) => {
             if (e.key === "Escape") {
                 closeRulesModal();
                 closeVocabularyBankModal();
+                closeGuideModal(false);
             }
         });
 
