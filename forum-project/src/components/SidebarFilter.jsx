@@ -8,9 +8,9 @@ export default function SidebarFilter({ labels, selectedTags, setSelectedTags, s
   };
 
   return (
-    <aside className="sidebar">
+    <aside className="sidebar" data-guide-forum="sidebar">
       <h3>Browse labels</h3>
-      <div className="filter-options">
+      <div className="filter-options" data-guide-forum="labels">
         {labels.map(label => (
           <label key={label.id} className="tag-label">
             <input
@@ -29,6 +29,7 @@ export default function SidebarFilter({ labels, selectedTags, setSelectedTags, s
       <div className="sort-select-wrap">
         <select
           className="sort-select"
+          data-guide-forum="sort"
           value={sortOrder}
           onChange={(e) => setSortOrder(e.target.value)}
         >

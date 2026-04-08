@@ -104,6 +104,13 @@
     align-items: start;
 }
 
+.challenge-hero__actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    justify-self: end;
+}
+
 .challenge-copy {
     margin: 0.7rem 0 0;
     max-width: 760px;
@@ -132,6 +139,32 @@
 .challenge-ghost-btn:hover {
     transform: translateY(-2px);
     background: #fff;
+}
+
+#challengeGuideBtn {
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+    min-height: 44px;
+    padding: 0;
+    border-radius: 50%;
+    border: 1px solid rgba(122, 153, 255, 0.34);
+    background: linear-gradient(135deg, rgba(31, 58, 121, 0.88), rgba(43, 74, 143, 0.88));
+    color: rgba(236, 243, 255, 0.98);
+    font-size: 1rem;
+    letter-spacing: 0;
+    font-weight: 800;
+    box-shadow: 0 10px 26px rgba(22, 36, 78, 0.34);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+}
+
+#challengeGuideBtn:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.08);
+    border-color: rgba(146, 174, 255, 0.58);
 }
 
 .challenge-secondary-btn__count {
@@ -666,6 +699,69 @@
     margin-top: 18px;
 }
 
+.challenge-tutorial-layer {
+    z-index: 5400;
+}
+
+.challenge-tutorial-card {
+    width: min(980px, 100%);
+}
+
+.challenge-tutorial-view {
+    margin-top: 16px;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 12px;
+}
+
+.challenge-tutorial-sideBtn {
+    width: 48px;
+    min-width: 48px;
+    min-height: 48px;
+    padding: 0;
+    font-size: 1.2rem;
+    border-radius: 999px;
+}
+
+.challenge-tutorial-figure {
+    min-height: 460px;
+    border-radius: 20px;
+    border: 1px solid rgba(91, 42, 134, 0.14);
+    background: rgba(16, 15, 22, 0.92);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.challenge-tutorial-figure img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+.challenge-tutorial-copy {
+    margin: 14px 0 0;
+    font-size: 1rem;
+    line-height: 1.75;
+    color: rgba(91, 42, 134, 0.82);
+}
+
+.challenge-tutorial-progress {
+    margin-top: 14px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(91, 42, 134, 0.58);
+}
+
+.challenge-tutorial-actions {
+    justify-content: center;
+}
+
 .challenge-inline-btn {
     min-height: 34px;
     padding: 0 14px;
@@ -813,6 +909,10 @@ body[data-challenge-page="1"] .leaderboard-aside {
     .challenge-hero,
     .challenge-name-row {
         grid-template-columns: 1fr;
+    }
+
+    .challenge-hero__actions {
+        justify-self: start;
     }
 
     .challenge-forming-head {

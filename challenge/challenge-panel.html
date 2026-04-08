@@ -17,10 +17,13 @@
                     <h2 class="quote-text" id="challengeTitle">Create your fellowship</h2>
                     <p class="challenge-copy" id="challengeCopy">Sign up first, then either create your own 4-person team or join one from the square. Teams that fail to fill in time dissolve automatically.</p>
                 </div>
-                <button type="button" class="challenge-secondary-btn" id="openInviteInboxBtn" onclick="openInviteInbox()">
-                    Invitations
-                    <span class="challenge-secondary-btn__count" id="inviteInboxCount">0</span>
-                </button>
+                <div class="challenge-hero__actions">
+                    <button type="button" class="challenge-secondary-btn" id="openInviteInboxBtn" onclick="openInviteInbox()">
+                        Invitations
+                        <span class="challenge-secondary-btn__count" id="inviteInboxCount">0</span>
+                    </button>
+                    <button type="button" class="challenge-ghost-btn" id="challengeGuideBtn" aria-label="Open challenge guide" title="Guide">?</button>
+                </div>
             </div>
             <div class="challenge-status-row">
                 <div class="challenge-status-chip" id="challengeWeekChip">Teams reset every Monday at 00:00.</div>
@@ -143,6 +146,24 @@
                 <div class="challenge-panel-error" id="inviteInboxError" hidden></div>
                 <div class="search-layer__actions">
                     <button type="button" class="challenge-ghost-btn" onclick="closeInviteInbox()">Close</button>
+                </div>
+            </div>
+        </div>
+        <div class="search-layer challenge-tutorial-layer" id="challengeTutorialLayer">
+            <div class="search-layer__card challenge-tutorial-card">
+                <p class="module-label">Challenge Tutorial</p>
+                <h3 class="challenge-panel-title" id="challengeTutorialTitle">Step 1</h3>
+                <div class="challenge-tutorial-view">
+                    <button type="button" class="challenge-ghost-btn challenge-tutorial-sideBtn" id="challengeTutorialPrevBtn">←</button>
+                    <div class="challenge-tutorial-figure">
+                        <img id="challengeTutorialImage" alt="Challenge tutorial step image" />
+                    </div>
+                    <button type="button" class="challenge-ghost-btn challenge-tutorial-sideBtn" id="challengeTutorialNextBtn">→</button>
+                </div>
+                <p class="challenge-tutorial-copy" id="challengeTutorialCopy"></p>
+                <div class="challenge-tutorial-progress" id="challengeTutorialProgress">1 / 4</div>
+                <div class="search-layer__actions challenge-tutorial-actions">
+                    <button type="button" class="challenge-ghost-btn" id="challengeTutorialCloseBtn">Close</button>
                 </div>
             </div>
         </div>

@@ -1,4 +1,4 @@
-export default function Header({ searchQuery, setSearchQuery, onOpenModal, onShowFavorites, viewMode, onBackToForum, favoritesTab }) {
+export default function Header({ searchQuery, setSearchQuery, onOpenModal, onShowFavorites, viewMode, onBackToForum, favoritesTab, onOpenGuide }) {
   return (
     <header className="forum-header">
       <div className="forum-hero">
@@ -11,11 +11,14 @@ export default function Header({ searchQuery, setSearchQuery, onOpenModal, onSho
         </p>
         <div className="forum-hero__actions">
           {viewMode === 'favorites' ? (
-            <button className="post-btn post-btn--hero" onClick={onBackToForum}>Back to Forum</button>
+            <>
+              <button className="post-btn post-btn--hero" onClick={onBackToForum}>Back to Forum</button>
+            </>
           ) : (
             <>
-              <button className="post-btn post-btn--hero" onClick={onOpenModal}>Publish Post</button>
-              <button className="post-btn post-btn--secondary" onClick={onShowFavorites}>My...</button>
+              <button className="post-btn post-btn--hero" onClick={onOpenModal} data-guide-forum="publish-btn">Publish Post</button>
+              <button className="post-btn post-btn--secondary post-btn--personal" onClick={onShowFavorites} data-guide-forum="my-btn">Personal</button>
+              <button className="post-btn post-btn--guide-dot" onClick={onOpenGuide} data-guide-forum="guide-btn" aria-label="Open forum guide" title="Guide">?</button>
             </>
           )}
         </div>
@@ -25,6 +28,7 @@ export default function Header({ searchQuery, setSearchQuery, onOpenModal, onSho
           <input
             type="text"
             className="search-bar"
+            data-guide-forum="search"
             placeholder="Search title, author, content"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}

@@ -12,7 +12,42 @@
     realtimeClosedManually: false,
     countdownTimer: null,
     fallbackPollTimer: null,
+    tutorialIndex: 0,
   };
+
+  function resolveTeamGuidePath(fileName) {
+    const path = window.location.pathname || '';
+    const base = path.includes('/rank/') ? '../teamGuide/' : './teamGuide/';
+    return `${base}${fileName}`;
+  }
+
+  const CHALLENGE_TUTORIAL_STEPS = [
+    {
+      title: 'Step 1: Sign Up First',
+      image: resolveTeamGuidePath('signup.png'),
+      copy: 'First, sign up for this week\'s challenge cycle. Only signed-up users can create or join teams.',
+    },
+    {
+      title: 'Step 2: Choose Mode',
+      image: resolveTeamGuidePath('chooseMode.png'),
+      copy: 'After sign-up, choose your route first: create your own team or go to the square.',
+    },
+    {
+      title: 'Step 3: Team Square',
+      image: resolveTeamGuidePath('square.png'),
+      copy: 'In Team Square, you can browse open teams and join one that fits your plan.',
+    },
+    {
+      title: 'Step 4: My Team Invite',
+      image: resolveTeamGuidePath('myteam.png'),
+      copy: 'When you create your own team, use Invite to send requests and fill all required team seats. You can also post your team to the square so that others can join.',
+    },
+    {
+      title: 'Step 5: Invitation Inbox',
+      image: resolveTeamGuidePath('invitation.png'),
+      copy: 'Use the Invitations button to review invite records and accept/decline invites sent to you.',
+    },
+  ];
 
   function getEl(id) {
     return document.getElementById(id);
@@ -31,6 +66,29 @@
       return window.acadbeatNavState.user;
     }
     return null;
+  }
+
+  function getGuideUserId() {
+    const user = getAuthUser() || {};
+    return user.user_id || user.id || user.username || 'guest';
+  }
+
+  function challengeTutorialSeenKey(userId) {
+    return `acadbeat:challenge:tutorial:v2:u:${String(userId || 'guest')}`;
+  }
+
+  function hasSeenChallengeTutorial(userId) {
+    try {
+      return window.localStorage.getItem(challengeTutorialSeenKey(userId)) === '1';
+    } catch (_err) {
+      return false;
+    }
+  }
+
+  function markSeenChallengeTutorial(userId) {
+    try {
+      window.localStorage.setItem(challengeTutorialSeenKey(userId), '1');
+    } catch (_err) {}
   }
 
   function isChallengePageMode() {
@@ -502,9 +560,67 @@
     stopCountdownTicker();
     stopFallbackPolling();
     closePanels();
+    closeChallengeTutorial();
     if (typeof window.acadbeatAfterChallengeClose === 'function') {
       window.acadbeatAfterChallengeClose();
     }
+  }
+
+  function renderChallengeTutorial() {
+    const titleEl = getEl('challengeTutorialTitle');
+    const imageEl = getEl('challengeTutorialImage');
+    const copyEl = getEl('challengeTutorialCopy');
+    const progressEl = getEl('challengeTutorialProgress');
+    const prevBtn = getEl('challengeTutorialPrevBtn');
+    const nextBtn = getEl('challengeTutorialNextBtn');
+    if (!titleEl || !imageEl || !copyEl || !progressEl || !prevBtn || !nextBtn) return;
+    const idx = Math.max(0, Math.min(CHALLENGE_TUTORIAL_STEPS.length - 1, state.tutorialIndex));
+    const step = CHALLENGE_TUTORIAL_STEPS[idx];
+    titleEl.textContent = step.title;
+    imageEl.src = step.image;
+    imageEl.alt = step.title;
+    copyEl.textContent = step.copy;
+    progressEl.textContent = `${idx + 1} / ${CHALLENGE_TUTORIAL_STEPS.length}`;
+    prevBtn.disabled = idx <= 0;
+    nextBtn.textContent = idx >= CHALLENGE_TUTORIAL_STEPS.length - 1 ? '✓' : '→';
+  }
+
+  function openChallengeTutorial(force) {
+    const user = getAuthUser();
+    if (!user) return;
+    const userId = getGuideUserId();
+    if (!force && hasSeenChallengeTutorial(userId)) {
+      return;
+    }
+    const layer = getEl('challengeTutorialLayer');
+    if (!layer) return;
+    state.tutorialIndex = 0;
+    renderChallengeTutorial();
+    layer.style.display = 'flex';
+  }
+
+  function closeChallengeTutorial(markCompleted) {
+    const layer = getEl('challengeTutorialLayer');
+    if (layer) {
+      layer.style.display = 'none';
+    }
+    if (markCompleted) {
+      markSeenChallengeTutorial(getGuideUserId());
+    }
+  }
+
+  function prevChallengeTutorialStep() {
+    state.tutorialIndex = Math.max(0, state.tutorialIndex - 1);
+    renderChallengeTutorial();
+  }
+
+  function nextChallengeTutorialStep() {
+    if (state.tutorialIndex >= CHALLENGE_TUTORIAL_STEPS.length - 1) {
+      closeChallengeTutorial(true);
+      return;
+    }
+    state.tutorialIndex += 1;
+    renderChallengeTutorial();
   }
 
   async function signUp() {
@@ -646,6 +762,30 @@
       mount.addEventListener('click', (event) => {
         if (event.target === mount) closeChallengeModal();
       });
+    }
+    const guideBtn = getEl('challengeGuideBtn');
+    if (guideBtn) {
+      guideBtn.addEventListener('click', () => openChallengeTutorial(true));
+    }
+    const tutorialLayer = getEl('challengeTutorialLayer');
+    if (tutorialLayer) {
+      tutorialLayer.addEventListener('click', (event) => {
+        if (event.target === tutorialLayer) {
+          closeChallengeTutorial(false);
+        }
+      });
+    }
+    const tutorialPrevBtn = getEl('challengeTutorialPrevBtn');
+    if (tutorialPrevBtn) {
+      tutorialPrevBtn.addEventListener('click', prevChallengeTutorialStep);
+    }
+    const tutorialNextBtn = getEl('challengeTutorialNextBtn');
+    if (tutorialNextBtn) {
+      tutorialNextBtn.addEventListener('click', nextChallengeTutorialStep);
+    }
+    const tutorialCloseBtn = getEl('challengeTutorialCloseBtn');
+    if (tutorialCloseBtn) {
+      tutorialCloseBtn.addEventListener('click', () => closeChallengeTutorial(false));
     }
   }
 

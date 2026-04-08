@@ -8,19 +8,7 @@ const engine = require("./gameEngine.cjs");
 
 const PORT = Number(process.env.SCRABBLE_PORT || 9000);
 const MAX_FULL_ROUNDS = 20;
-const DEV_ADMIN_KEY = process.env.SCRABBLE_BANK_KEY || "123456";
 const ENABLE_PATH = process.env.SCRABBLE_DICT || path.join(__dirname, "..", "enable.txt");
-const DEFAULT_VOCAB_BANK = [
-  "ANALYZE", "APPROACH", "ASSUME", "BENEFIT", "CHALLENGE",
-  "COMMUNITY", "CONCEPT", "CONCLUDE", "CONTEXT", "CONTRAST",
-  "CRITICAL", "DATA", "DISTRIBUTE", "EVIDENCE", "FACTOR",
-  "FRAMEWORK", "FUNCTION", "IDENTIFY", "IMPACT", "INDICATE",
-  "INTERPRET", "ISSUE", "METHOD", "OUTCOME", "PERSPECTIVE",
-  "POLICY", "PRINCIPLE", "PROCESS", "RELEVANT", "RESEARCH",
-  "RESOURCE", "RESPONSE", "SIGNIFICANT", "SIMILAR", "STRATEGY",
-  "STRUCTURE", "THEORY", "VARIABLE"
-];
-const VOCAB_BANK = new Set(DEFAULT_VOCAB_BANK);
 
 function loadDictionary() {
   const set = new Set();
@@ -187,19 +175,16 @@ function addLog(game, msg) {
   if (game.log.length > 40) game.log = game.log.slice(0, 40);
 }
 
-function getVocabularyBankWords() {
-  return [...VOCAB_BANK].sort();
-}
-
 function sanitizeVocabWord(raw) {
   return String(raw || "").trim().toUpperCase().replace(/[^A-Z]/g, "");
 }
 
-function applyVocabularyBonus(ev) {
+function applyVocabularyBonus(ev, vocabBankSet) {
   if (!ev || !ev.valid || !Array.isArray(ev.words)) return ev;
   let bonus = 0;
+  const bank = vocabBankSet instanceof Set ? vocabBankSet : new Set();
   ev.words = ev.words.map((w) => {
-    if (!VOCAB_BANK.has(w.word)) {
+    if (!bank.has(w.word)) {
       return { ...w, vocabBonus: false };
     }
     bonus += w.score;
@@ -208,6 +193,51 @@ function applyVocabularyBonus(ev) {
   ev.total += bonus;
   ev.vocabBonusTotal = bonus;
   return ev;
+}
+
+function normalizeVocabWords(words) {
+  if (!Array.isArray(words)) return [];
+  const normalized = [];
+  for (let i = 0; i < words.length; i += 1) {
+    const w = sanitizeVocabWord(words[i]);
+    if (!w || w.length < 2 || w.length > 15) continue;
+    normalized.push(w);
+  }
+  return [...new Set(normalized)].sort();
+}
+
+function fetchLearnedWordsByUserId(userId) {
+  const uid = Number(userId || 0);
+  if (!Number.isFinite(uid) || uid <= 0) return Promise.resolve([]);
+  const sql = `
+    SELECT DISTINCT UPPER(w.word) AS word
+    FROM vocab_user_word_progress up
+    INNER JOIN vocab_words w ON w.word_id = up.word_id
+    WHERE up.user_id = ?
+      AND up.mastery_status = 'mastered'
+    ORDER BY word ASC
+  `;
+  return new Promise((resolve) => {
+    pool.execute(sql, [uid], (err, rows) => {
+      if (err) {
+        console.error("Error fetching learned words:", err);
+        resolve([]);
+        return;
+      }
+      const words = Array.isArray(rows) ? rows.map((row) => row.word) : [];
+      resolve(normalizeVocabWords(words));
+    });
+  });
+}
+
+async function resolveRoomVocabularyBank(sockets) {
+  const allWords = [];
+  for (let i = 0; i < sockets.length; i += 1) {
+    const userId = sockets[i]?.data?.userId;
+    const words = await fetchLearnedWordsByUserId(userId);
+    if (words.length) allWords.push(...words);
+  }
+  return normalizeVocabWords(allWords);
 }
 
 function serializeBoard(board) {
@@ -242,7 +272,7 @@ function snapshotFor(room, socketId) {
     gameOver: g.gameOver,
     winnerSeat: g.winnerSeat,
     endReason: g.gameOver ? g.endReason : null,
-    vocabBank: getVocabularyBankWords(),
+    vocabBank: Array.isArray(room.vocabBank) ? room.vocabBank : [],
     log: [...g.log]
   };
 }
@@ -404,32 +434,11 @@ io.on("connection", (socket) => {
     console.log(`Anonymous socket connected: ${socket.id}`);
   }
   
-  socket.emit("bank:state", { words: getVocabularyBankWords() });
-
-  socket.on("bank:edit", (payload) => {
-    const key = String(payload?.key || "");
-    if (key !== DEV_ADMIN_KEY) {
-      socket.emit("bank:edit:result", { ok: false, message: "Invalid admin key." });
-      return;
-    }
-    const op = payload?.op;
-    const word = sanitizeVocabWord(payload?.word);
-    if (!word || word.length < 2 || word.length > 15) {
-      socket.emit("bank:edit:result", { ok: false, message: "Word must be 2-15 letters (A-Z)." });
-      return;
-    }
-    if (op !== "add" && op !== "remove") {
-      socket.emit("bank:edit:result", { ok: false, message: "Unsupported edit operation." });
-      return;
-    }
-    if (op === "add") VOCAB_BANK.add(word);
-    if (op === "remove") VOCAB_BANK.delete(word);
-    const words = getVocabularyBankWords();
-    socket.emit("bank:edit:result", { ok: true, message: `Vocabulary Bank updated (${op}: ${word}).`, words });
-    io.emit("bank:state", { words });
+  fetchLearnedWordsByUserId(socket.data.userId).then((words) => {
+    socket.emit("bank:state", { words });
   });
 
-  socket.on("match:join", () => {
+  socket.on("match:join", async () => {
     if (socket.data.roomId) return;
     leaveQueue(socket.id);
     if (queue.length > 0) {
@@ -441,13 +450,16 @@ io.on("connection", (socket) => {
         return;
       }
       const roomId = randomRoomId();
+      const vocabBank = await resolveRoomVocabularyBank([other, socket]);
       const game = initGame();
       const room = {
         id: roomId,
         io,
         sockets: [otherId, socket.id],
         seatBySocket: new Map([[otherId, 0], [socket.id, 1]]),
-        game
+        game,
+        vocabBank,
+        vocabBankSet: new Set(vocabBank)
       };
       rooms.set(roomId, room);
       other.join(roomId);
@@ -518,6 +530,7 @@ io.on("connection", (socket) => {
         return;
       }
       const roomId = randomRoomId();
+      const vocabBank = await resolveRoomVocabularyBank([other, socket]);
       const game = initGame();
       const room = {
         id: roomId,
@@ -525,6 +538,8 @@ io.on("connection", (socket) => {
         sockets: [otherId, socket.id],
         seatBySocket: new Map([[otherId, 0], [socket.id, 1]]),
         game,
+        vocabBank,
+        vocabBankSet: new Set(vocabBank),
         isWeekly: true
       };
       rooms.set(roomId, room);
@@ -576,7 +591,7 @@ io.on("connection", (socket) => {
       socket.emit("game:error", { message: ev.message });
       return;
     }
-    applyVocabularyBonus(ev);
+    applyVocabularyBonus(ev, room.vocabBankSet);
     g.scores[seat] += ev.total;
     engine.commitMove(g.board, rack, g.bag, placements, ev);
     g.passStreak = 0;

@@ -1,14 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
 import ForumHome from './pages/ForumHome'
-import PersonalHub from './pages/PersonalHub'
 
 function syncForumSharedNavActive(view) {
   if (typeof window.setAcadBeatNavActive !== 'function') return
-  if (view === 'personal') {
-    window.setAcadBeatNavActive('messages')
-  } else {
-    window.setAcadBeatNavActive('forum')
-  }
+  window.setAcadBeatNavActive('forum')
 }
 
 function resolveInitialView() {
@@ -17,7 +12,7 @@ function resolveInitialView() {
     return 'forum'
   }
   const view = params.get('view')
-  if (view === 'forum' || view === 'personal' || view === 'chooser' || view === 'announcements') {
+  if (view === 'forum' || view === 'chooser' || view === 'announcements') {
     return view
   }
 
@@ -29,7 +24,7 @@ function App() {
 
   // 与旧版一致：?view=chooser 仍解析为 URL，但界面直接进论坛列表（不显示 Portal 门户页）
   const normalizedView = useMemo(() => {
-    if (view === 'forum' || view === 'personal') {
+    if (view === 'forum') {
       return view
     }
     return 'forum'
@@ -43,6 +38,17 @@ function App() {
     window.history.pushState({}, '', nextUrl)
     setView(nextView)
   }
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('view') === 'personal') {
+      params.set('view', 'forum')
+      const query = params.toString()
+      const nextUrl = `${window.location.pathname}${query ? `?${query}` : ''}${window.location.hash || ''}`
+      window.history.replaceState({}, '', nextUrl)
+      setView('forum')
+    }
+  }, [])
 
   useEffect(() => {
     const handlePopState = () => {
@@ -62,8 +68,6 @@ function App() {
   let content = null
   if (normalizedView === 'forum') {
     content = <ForumHome />
-  } else if (normalizedView === 'personal') {
-    content = <PersonalHub onBackToChooser={() => handleNavigate('forum')} />
   }
 
   return (
