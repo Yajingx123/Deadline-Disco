@@ -81,6 +81,14 @@ $frontendBuilds = [
     ],
 ];
 
+$serviceSetupSteps = [
+    [
+        'name' => 'realtime-deps',
+        'workdir' => $root . '/voice-room-server',
+        'command' => $npm . ' install',
+    ],
+];
+
 $services = [
     [
         'name' => 'main',
@@ -106,6 +114,11 @@ $services = [
 ];
 
 if ($profile === 'full') {
+    $serviceSetupSteps[] = [
+        'name' => 'scrabble-match-deps',
+        'workdir' => $root . '/Studio/Scrabble/match-server',
+        'command' => $npm . ' install',
+    ];
     $services[] = [
         'name' => 'forum_dev',
         'host' => '127.0.0.1',
@@ -139,6 +152,18 @@ foreach ($frontendBuilds as $build) {
         echo "[done] {$build['name']}\n";
     } catch (Throwable $e) {
         echo "[failed] {$build['name']}: {$e->getMessage()}\n";
+    }
+}
+echo "\n";
+
+echo "=== Install Service Dependencies ===\n";
+foreach ($serviceSetupSteps as $step) {
+    try {
+        echo "[setup] {$step['name']}\n";
+        run_unix_build($step['workdir'], $step['command']);
+        echo "[done] {$step['name']}\n";
+    } catch (Throwable $e) {
+        echo "[failed] {$step['name']}: {$e->getMessage()}\n";
     }
 }
 echo "\n";

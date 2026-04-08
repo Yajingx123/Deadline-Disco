@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AcadBeat | Technology Toolkits</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;1,700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="./shared/acadbeat-local-config.js"></script>
+    <style>html.acadbeat-role-guard body{visibility:hidden}</style>
+    <script>
+        // Keep the existing admin-role guard without affecting the page UI.
+        document.documentElement.classList.add('acadbeat-role-guard');
+        (async function guardAdminTechnology() {
+            try {
+                const response = await fetch('./Auth/backend/api/me.php', { credentials: 'include' });
+                const data = await response.json().catch(() => ({ status: 'error' }));
+                if (data.status === 'success' && data.user && String(data.user.role || '').toLowerCase() === 'admin') {
+                    const admin = (window.ACADBEAT_LOCAL && window.ACADBEAT_LOCAL.adminDistUrl) || window.location.origin + '/admin_page/dist/index.html';
+                    window.location.replace(admin);
+                    return;
+                }
+            } catch (_err) {}
+            document.documentElement.classList.remove('acadbeat-role-guard');
+        })();
+    </script>
+    <style>
+        :root {
+            --primary-color: #9BB7D4;
+            --secondary-color: #3A4E6B;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-image: url('technology-toolkit-background.png');
+            background-size: 100% 100%;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            margin: 0;
+            width: 100vw;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .page-layout {
+            display: flex;
+            width: 100%;
+            min-height: 100vh;
+            /* No top padding is needed here because this layout has no nav bar. */
+        }
+
+        .left-spacer {
+            width: 50%;
+            flex-shrink: 0;
+        }
+
+        .right-content {
+            width: 50%;
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-start;
+            justify-content: flex-end;
+            padding: 5vh 5vw 48px 0;
+        }
+
+        .boxes-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2vw;
+            width: 100%;
+            max-width: min(85%, 65vh);
+        }
+
+        .box-item {
+            display: block;
+            width: 100%;
+            aspect-ratio: 280 / 250; 
+            position: relative;
+            text-decoration: none;
+            cursor: pointer;
+            transition: transform 0.3s ease-in-out;
+            container-type: inline-size; 
+        }
+
+        .box-item:hover {
+            transform: translateY(-5%);
+        }
+
+        .box-item img.box-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            z-index: 1;
+        }
+
+        @media (max-width: 1100px) {
+            body {
+                background-size: cover;
+            }
+
+            .page-layout {
+                flex-direction: column;
+            }
+
+            .left-spacer,
+            .right-content {
+                width: 100%;
+            }
+
+            .left-spacer {
+                display: none;
+            }
+
+            .right-content {
+                padding: 24px 16px 36px;
+                justify-content: center;
+            }
+
+            .boxes-grid {
+                max-width: 860px;
+                gap: 18px;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .boxes-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .box-item {
+                aspect-ratio: 300 / 210;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="page-layout">
+        <div class="left-spacer"></div>
+
+        <div class="right-content">
+            <div class="boxes-grid">
+                
+                    <a href="https://support.microsoft.com/en-us/teams" target="_blank" class="box-item">
+                        <img src="./technology-toolkit-boxes/microsoft-teams.png" class="box-bg" alt="Microsoft Teams">
+                    </a>
+
+                    <a href="https://docs.github.com/en/get-started" target="_blank" class="box-item">
+                        <img src="./technology-toolkit-boxes/github.png" class="box-bg" alt="GitHub">
+                    </a>
+
+                    <a href="https://help.autodesk.com/view/ACD/2024/ENU/" target="_blank" class="box-item">
+                        <img src="./technology-toolkit-boxes/autocad.png" class="box-bg" alt="AutoCAD">
+                    </a>
+
+                    <a href="https://matlabacademy.mathworks.com/" target="_blank" class="box-item">
+                        <img src="./technology-toolkit-boxes/matlab.png" class="box-bg" alt="MATLAB">
+                    </a>
+
+                    <a href="https://www.originlab.com/index.aspx?go=Support/VideoTutorials" target="_blank" class="box-item">
+                        <img src="./technology-toolkit-boxes/originlab.png" class="box-bg" alt="OriginLab">
+                    </a>
+
+                    <a href="./dundee.html?from=technology1" class="box-item">
+                        <img src="./technology-toolkit-boxes/dundee-student-hub.png" class="box-bg" alt="Dundee">
+                    </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
