@@ -33,26 +33,10 @@
     }
   }
 
-  function withMessageCenterSource(url) {
-    try {
-      const next = new URL(url, window.location.origin);
-      const current = new URL(window.location.href, window.location.origin);
-      // Prevent stale login prompts when returning from message center.
-      current.searchParams.delete('login');
-      next.searchParams.set('from', current.toString());
-      return next.toString();
-    } catch (_err) {
-      return url;
-    }
-  }
-
   function applyNavActive(navRoot, activeKey) {
     if (!navRoot) return;
     const key = String(activeKey || '').toLowerCase();
     navRoot.querySelectorAll('.nav-item[data-nav]').forEach((el) => {
-      el.classList.remove('active');
-    });
-    navRoot.querySelectorAll('.message-link').forEach((el) => {
       el.classList.remove('active');
     });
     navRoot.querySelectorAll('.nav-item[data-nav]').forEach((el) => {
@@ -60,11 +44,6 @@
       const on = key === itemKey;
       if (on) el.classList.add('active');
     });
-    if (key === 'messages') {
-      navRoot.querySelectorAll('.message-link').forEach((el) => {
-        el.classList.add('active');
-      });
-    }
   }
 
   window.setAcadBeatNavActive = function setAcadBeatNavActive(activeKey) {
@@ -73,40 +52,6 @@
       document.querySelector('.acadbeat-shared-nav');
     applyNavActive(navRoot, activeKey);
   };
-
-  async function loadMessageSummary(messageApiUrl, user, badgeEl) {
-      if (!badgeEl || !user) {
-        if (badgeEl) {
-          badgeEl.hidden = true;
-          badgeEl.style.display = 'none';
-          badgeEl.classList.remove('is-visible');
-          badgeEl.textContent = '';
-        }
-        return;
-      }
-
-    try {
-      const response = await fetch(messageApiUrl, { credentials: 'include' });
-      const data = await response.json().catch(() => ({ ok: false }));
-      const totalUnread = Number(data?.summary?.totalUnread || 0);
-      if (totalUnread >= 1) {
-        badgeEl.hidden = false;
-        badgeEl.style.display = 'inline-flex';
-        badgeEl.classList.add('is-visible');
-        badgeEl.textContent = '';
-      } else {
-        badgeEl.hidden = true;
-        badgeEl.style.display = 'none';
-        badgeEl.classList.remove('is-visible');
-        badgeEl.textContent = '';
-      }
-    } catch (_err) {
-      badgeEl.hidden = true;
-      badgeEl.style.display = 'none';
-      badgeEl.classList.remove('is-visible');
-      badgeEl.textContent = '';
-    }
-  }
 
   window.initializeAcadBeatNav = async function initializeAcadBeatNav(options = {}) {
     const mount = document.getElementById(options.mountId || 'acadbeatNav');
@@ -119,22 +64,45 @@
 
     const basePath = withSlashPrefix(options.basePath || './');
     const homeUrl = options.homeUrl || `${basePath}home.html`;
-    const forumUrl = options.forumUrl || `${homeUrl}?module=Dialogue`;
-    const studioUrl = options.studioUrl || `${basePath}Studio/studio.html`;
-    const rankUrl = options.rankUrl || `${basePath}rank/index.html`;
+    const academicUrl = options.academicUrl || `${basePath}academic-gate.html`;
+    const forumUrl = options.forumUrl || `${basePath}forum-gate.html`;
+    const studioUrl = options.studioUrl || `${basePath}studio-gate.html`;
+    const socialUrl = options.socialUrl || `${basePath}social-gate.html`;
+    const competitionUrl = options.competitionUrl || options.rankUrl || `${basePath}competition-gate.html`;
+    const competitionHubUrl = options.competitionHubUrl || competitionUrl.split('?')[0];
+    const competitionRankingSubUrl = options.competitionRankingSubUrl
+      || `${competitionUrl}${competitionUrl.includes('?') ? '&' : '?'}highlight=ranking`;
+    const competitionChallengeSubUrl = options.competitionChallengeSubUrl
+      || `${competitionUrl}${competitionUrl.includes('?') ? '&' : '?'}highlight=challenge`;
+    const competitionRankingDirectUrl = options.competitionRankingDirectUrl || `${basePath}rank/index.html`;
+    const challengeHomeUrl = options.challengeHomeUrl || homeUrl;
+    const competitionChallengeDirectUrl = options.competitionChallengeDirectUrl
+      || `${basePath}rank/index.html?challenge=1`;
     const authApiBase = options.authApiBase || `${basePath}Auth/backend/api`;
     const loginUrl = options.loginUrl || `${homeUrl}?login=1`;
     const ownerUrl = options.ownerUrl || `${basePath}owner.html`;
     const L = typeof window !== 'undefined' && window.ACADBEAT_LOCAL ? window.ACADBEAT_LOCAL : null;
-    const technologyUrl = options.technologyUrl || (L && L.technologyUrl) || `${homeUrl}?module=Method`;
+    const technologyUrl = options.technologyUrl || (L && L.technologyUrl) || `${basePath}technology-gate.html`;
+    const academicTrainingUrl = options.academicTrainingUrl || `${basePath}Academic-Practice/training.html`;
+    const academicListeningUrl = options.academicListeningUrl || `${basePath}Academic-Practice/listening.html`;
+    const academicRespondUrl = options.academicRespondUrl || `${basePath}Academic-Practice/respond_training.html`;
+    const academicNoteUrl = options.academicNoteUrl || `${basePath}Academic-Practice/note_training.html`;
     const currentOrigin = (typeof window !== 'undefined' && window.location) ? window.location.origin : 'http://127.0.0.1:8001';
+    const forumPublishUrl = options.forumPublishUrl || ((L && L.forumDevChooserUrl) ? `${L.forumDevChooserUrl}&compose=1` : `${currentOrigin}/forum-project/dist/index.html?view=forum&compose=1`);
+    const forumMineUrl = options.forumMineUrl || ((L && L.forumDevChooserUrl) ? `${L.forumDevChooserUrl.replace('view=forum', 'view=personal')}` : `${currentOrigin}/forum-project/dist/index.html?view=personal`);
+    const technologyTeamsUrl = options.technologyTeamsUrl || 'https://support.microsoft.com/en-us/teams';
+    const technologyGithubUrl = options.technologyGithubUrl || 'https://docs.github.com/en/get-started';
+    const technologyMatlabUrl = options.technologyMatlabUrl || 'https://matlabacademy.mathworks.com/';
+    const technologyAutocadUrl = options.technologyAutocadUrl || 'https://help.autodesk.com/view/ACD/2024/ENU/';
+    const technologyOriginlabUrl = options.technologyOriginlabUrl || 'https://www.originlab.com/index.aspx?go=Support/VideoTutorials';
+    const technologyDundeeUrl = options.technologyDundeeUrl || `${basePath}dundee.html?from=technology`;
+    const studioScrabbleUrl = options.studioScrabbleUrl || `${basePath}Studio/Scrabble/scrabble.html`;
+    const studio2dUrl = options.studio2dUrl || ((L && L.godotWebEntryUrl) ? L.godotWebEntryUrl : `${basePath}gameUI_src/Release/index.html?ui=godot`);
     const adminUrl = options.adminUrl || (L && L.adminDistUrl) || `${currentOrigin}/admin_page/dist/index.html`;
-    const messageCenterUrl = options.messageCenterUrl || (L && L.messageCenterDistUrl) || `${currentOrigin}/message-center-project/dist/index.html`;
-    const messageApiUrl = options.messageApiUrl || (L && L.messageSummaryApiUrl) || `${currentOrigin}/forum-project/api/message-center.php?summaryOnly=1`;
     const active = String(options.active || '').toLowerCase();
-    const showChallengeButton = Boolean(options.showChallengeButton !== false); // 默认显示挑战按钮
-    const challengeButtonLabel = options.challengeButtonLabel || 'CHALLENGE';
-    const showSwitchButton = active === 'academic'; // 只在 academic 页面显示切换按钮
+    const showSwitchButton = options.showSwitchButton !== undefined
+      ? Boolean(options.showSwitchButton)
+      : active === 'academic'; // 默认只在 academic 页面显示切换按钮
     const redirectAdmins = Boolean(options.redirectAdmins);
     const requireLogin = Boolean(options.requireLogin);
     const loginReturnUrl = String(options.loginReturnUrl || '').trim();
@@ -145,20 +113,54 @@
 
     mount.innerHTML = `
       <nav class="acadbeat-shared-nav">
-        <a class="logo" href="${homeUrl}">Acad<span>Beat</span></a>
+        <a class="logo" href="${homeUrl}">Acad<span>Beat</span><span class="logo-heart" aria-hidden="true">🫀</span></a>
         <div class="nav-menu">
-          <a class="nav-item" data-nav="academic" href="${homeUrl}?module=Insight">Academic</a>
-          <a class="nav-item" data-nav="forum" href="${forumUrl}">Forum</a>
-          <a class="nav-item" data-nav="technology" href="${technologyUrl}">Technology</a>
-          <a class="nav-item" data-nav="studio" href="${studioUrl}">Studio</a>
-          <a class="nav-item" data-nav="rank" href="${rankUrl}">Rank</a>
+          <div class="nav-dropdown">
+            <a class="nav-item" data-nav="academic" href="${academicUrl}">Academic</a>
+            <div class="nav-submenu">
+              <a class="nav-subitem" href="${academicTrainingUrl}">Vocabulary</a>
+              <a class="nav-subitem" href="${academicListeningUrl}">Understand</a>
+              <a class="nav-subitem" href="${academicRespondUrl}">Respond</a>
+              <a class="nav-subitem" href="${academicNoteUrl}">Room</a>
+            </div>
+          </div>
+          <div class="nav-dropdown">
+            <a class="nav-item" data-nav="forum" href="${forumUrl}">Forum</a>
+            <div class="nav-submenu">
+              <a class="nav-subitem" href="${forumPublishUrl}">Publish</a>
+              <a class="nav-subitem" href="${forumMineUrl}">Mine</a>
+            </div>
+          </div>
+          <div class="nav-dropdown">
+            <a class="nav-item" data-nav="technology" href="${technologyUrl}">Technology</a>
+            <div class="nav-submenu">
+              <a class="nav-subitem" href="${technologyTeamsUrl}" target="_blank" rel="noopener noreferrer">Teams</a>
+              <a class="nav-subitem" href="${technologyGithubUrl}" target="_blank" rel="noopener noreferrer">Github</a>
+              <a class="nav-subitem" href="${technologyMatlabUrl}" target="_blank" rel="noopener noreferrer">Matlab</a>
+              <a class="nav-subitem" href="${technologyAutocadUrl}" target="_blank" rel="noopener noreferrer">AutoCAD</a>
+              <a class="nav-subitem" href="${technologyOriginlabUrl}" target="_blank" rel="noopener noreferrer">Originlab</a>
+              <a class="nav-subitem" href="${technologyDundeeUrl}">My Dundee</a>
+            </div>
+          </div>
+          <div class="nav-dropdown">
+            <a class="nav-item" data-nav="studio" href="${studioUrl}">Studio</a>
+            <div class="nav-submenu">
+              <a class="nav-subitem" href="${studioScrabbleUrl}">Scrabble</a>
+              <a class="nav-subitem nav-subitem--disabled" href="javascript:void(0)" aria-disabled="true" tabindex="-1">2D</a>
+            </div>
+          </div>
+          <a class="nav-item" data-nav="social" href="${socialUrl}">Social</a>
+          <div class="nav-dropdown">
+            <a class="nav-item" data-nav="competition" href="${competitionHubUrl}">Competition</a>
+            <div class="nav-submenu nav-submenu--competition">
+              <a class="nav-subitem nav-subitem--muted" href="${competitionHubUrl}">Hub overview</a>
+              <div class="nav-submenu-divider" role="presentation"></div>
+              <a class="nav-subitem" href="${competitionRankingDirectUrl}">Team ranking</a>
+              <a class="nav-subitem" href="${competitionChallengeDirectUrl}">Weekly challenge</a>
+            </div>
+          </div>
         </div>
         <div class="user-group">
-          ${showChallengeButton ? `<button type="button" class="nav-utility-btn" id="sharedChallengeBtn">${challengeButtonLabel}</button>` : ''}
-          <a class="message-link" id="messageCenterLink" href="${withMessageCenterSource(messageCenterUrl)}" aria-label="Open message center" hidden>
-            ✉
-            <span class="message-badge" id="messageBadge" hidden>0</span>
-          </a>
           ${showSwitchButton ? `<button type="button" class="nav-godot" id="homeGodotSwitchBtn">SWITCH</button>` : ''}
           <div class="user-section" id="userSection">
             <span id="userLabel" class="user-label">LOGIN</span>
@@ -175,9 +177,6 @@
     const userAvatar = mount.querySelector('#userAvatar');
     const userSection = mount.querySelector('#userSection');
     const logoutLink = mount.querySelector('#logoutLink');
-    const messageLink = mount.querySelector('#messageCenterLink');
-    const messageBadge = mount.querySelector('#messageBadge');
-    const challengeButton = mount.querySelector('#sharedChallengeBtn');
     const switchButton = mount.querySelector('#homeGodotSwitchBtn');
 
     let authUser = null;
@@ -187,32 +186,19 @@
     }
 
     function renderAuthUI() {
-      if (!userLabel || !userAvatar || !logoutLink || !messageLink || !messageBadge) return;
+      if (!userLabel || !userAvatar || !logoutLink) return;
       if (authUser) {
         userLabel.textContent = authUser.username;
         userAvatar.textContent = initialsOf(authUser.username);
         logoutLink.style.display = 'inline-flex';
-        messageLink.hidden = false;
       } else {
         userLabel.textContent = 'LOGIN';
         userAvatar.textContent = 'IN';
         logoutLink.style.display = 'none';
-        messageLink.hidden = true;
-        messageBadge.hidden = true;
-        messageBadge.style.display = 'none';
-        messageBadge.classList.remove('is-visible');
-        messageBadge.textContent = '';
-      }
-      if (challengeButton) {
-        challengeButton.hidden = !authUser;
       }
       if (switchButton) {
         switchButton.hidden = !authUser;
       }
-    }
-
-    if (challengeButton && typeof options.onChallengeClick === 'function') {
-      challengeButton.addEventListener('click', options.onChallengeClick);
     }
 
     if (switchButton) {
@@ -262,38 +248,6 @@
     window.acadbeatNavState = { user: authUser };
     window.dispatchEvent(new CustomEvent('acadbeat:nav-user', { detail: { user: authUser } }));
     renderAuthUI();
-    await loadMessageSummary(messageApiUrl, authUser, messageBadge);
-
-    const handleSummaryEvent = (event) => {
-      const totalUnread = Number(event?.detail?.summary?.totalUnread ?? event?.detail?.totalUnread ?? 0);
-      if (!messageBadge || !authUser) return;
-      if (totalUnread >= 1) {
-        messageBadge.hidden = false;
-        messageBadge.style.display = 'inline-flex';
-        messageBadge.classList.add('is-visible');
-        messageBadge.textContent = '';
-      } else {
-        messageBadge.hidden = true;
-        messageBadge.style.display = 'none';
-        messageBadge.classList.remove('is-visible');
-        messageBadge.textContent = '';
-      }
-    };
-    window.addEventListener('acadbeat:message-summary', handleSummaryEvent);
-
-    if (window.acadbeatNavSummaryPollTimer) {
-      window.clearInterval(window.acadbeatNavSummaryPollTimer);
-      window.acadbeatNavSummaryPollTimer = null;
-    }
-
-    if (authUser) {
-      window.acadbeatNavSummaryPollTimer = window.setInterval(() => {
-        if (document.hidden) {
-          return;
-        }
-        loadMessageSummary(messageApiUrl, authUser, messageBadge).catch(() => {});
-      }, 3000);
-    }
 
     releaseRoleGuard();
 
@@ -304,11 +258,7 @@
     window.dispatchEvent(new CustomEvent('acadbeat:nav-mounted', { detail: { active } }));
 
     mount.__acadbeatCleanup = function cleanupAcadbeatNav() {
-      window.removeEventListener('acadbeat:message-summary', handleSummaryEvent);
-      if (window.acadbeatNavSummaryPollTimer) {
-        window.clearInterval(window.acadbeatNavSummaryPollTimer);
-        window.acadbeatNavSummaryPollTimer = null;
-      }
+      return;
     };
 
     return authUser;

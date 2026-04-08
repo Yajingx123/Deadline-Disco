@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="refresh" content="0; url=../home.html?challenge=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weekly challenge</title>
+</head>
+<body>
+  <p>Redirecting to <a href="../home.html?challenge=1">Weekly challenge</a>…</p>
+  <script>
+    try {
+      window.location.replace(new URL('../home.html?challenge=1', window.location.href).href);
+    } catch (_e) {
+      window.location.href = '../home.html?challenge=1';
+    }
+  </script>
+</body>
+</html>

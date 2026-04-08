@@ -113,10 +113,10 @@ const PostModal = ({
       return `<img src="${src}" alt="${alt}" style="max-width: 100%; border-radius: 8px; margin: 8px 0;" />`;
     });
     html = html.replace(/!\[audio:(.*?)\]\((.*?)\)/g, (match, fileName, src) => {
-      return `<div style="margin: 12px 0; padding: 10px; background: #f4f3ec; border-radius: 8px; border: 1px solid #e5e4e7;"><div style="font-size: 12px; color: #6b6375; margin-bottom: 6px;">🎵 ${fileName}</div><audio controls style="width: 100%; height: 32px;"><source src="${src}" type="audio/mpeg" /><source src="${src}" type="audio/wav" /><source src="${src}" type="audio/ogg" />Your browser does not support the audio element.</audio></div>`;
+      return `<div style="margin: 12px 0; padding: 10px; background: #f8f2ff; border-radius: 8px; border: 1px solid #d9c6f4;"><div style="font-size: 12px; color: #5b2a86; margin-bottom: 6px;">🎵 ${fileName}</div><audio controls style="width: 100%; height: 32px;"><source src="${src}" type="audio/mpeg" /><source src="${src}" type="audio/wav" /><source src="${src}" type="audio/ogg" />Your browser does not support the audio element.</audio></div>`;
     });
     html = html.replace(/!\[video:(.*?)\]\((.*?)\)/g, (match, fileName, src) => {
-      return `<div style="margin: 12px 0; padding: 10px; background: #f4f3ec; border-radius: 8px; border: 1px solid #e5e4e7;"><div style="font-size: 12px; color: #6b6375; margin-bottom: 6px;">🎬 ${fileName}</div><video controls style="width: 100%; max-height: 320px; border-radius: 8px;"><source src="${src}" type="video/mp4" /><source src="${src}" type="video/webm" />Your browser does not support the video element.</video></div>`;
+      return `<div style="margin: 12px 0; padding: 10px; background: #f8f2ff; border-radius: 8px; border: 1px solid #d9c6f4;"><div style="font-size: 12px; color: #5b2a86; margin-bottom: 6px;">🎬 ${fileName}</div><video controls style="width: 100%; max-height: 320px; border-radius: 8px;"><source src="${src}" type="video/mp4" /><source src="${src}" type="video/webm" />Your browser does not support the video element.</video></div>`;
     });
     html = html.replace(/\[(.*?)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
     html = html.replace(/\n/g, '<br/>');
@@ -508,9 +508,9 @@ const PostModal = ({
               onClick={() => setIsPreview(!isPreview)}
               className="post-modal-submit-btn"
               style={{
-                backgroundColor: isPreview ? '#E4DFD8' : undefined,
-                color: isPreview ? '#3A4E6B' : undefined,
-                border: isPreview ? '1px solid #3A4E6B' : undefined,
+                backgroundColor: isPreview ? '#f4efff' : undefined,
+                color: isPreview ? '#5b2a86' : undefined,
+                border: isPreview ? '1px solid #5b2a86' : undefined,
                 marginRight: '8px'
               }}
             >

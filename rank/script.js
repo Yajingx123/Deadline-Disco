@@ -75,8 +75,7 @@ class TeamRanking {
       container.innerHTML = `
         <div class="no-team">
           <h3>Not in a Team</h3>
-          <p>You haven't joined a team yet. Create or join a team to participate in the weekly challenge.</p>
-          <a href="../home.html?challenge=1" class="btn-primary">Join Challenge</a>
+          <p>You haven't joined a team yet. Use <strong>Weekly challenge</strong> at the top of this page to sign up and form a team.</p>
         </div>
       `;
       return;

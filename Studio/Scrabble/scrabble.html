@@ -5,55 +5,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AcadBeat Studio | Scrabble</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../shared-nav.css">
+    <script src="../../shared/acadbeat-local-config.js"></script>
     <style>
         :root {
-            --bg-color: #E4DFD8;
-            --primary-color: #9BB7D4;
-            --secondary-color: #3A4E6B;
+            --bg-color: #f4efff;
+            --primary-color: #facc15;
+            --secondary-color: #5b2a86;
             --white: #ffffff;
             --panel: rgba(255, 255, 255, 0.76);
             --panel-strong: rgba(255, 255, 255, 0.9);
-            --border: rgba(58, 78, 107, 0.12);
-            --tw: #d66978;
-            --dw: #ef9ca9;
-            --tl: #4c6fa8;
-            --dl: #9ec8ef;
-            --center: #f0b0bc;
-            --rack: #f3ece3;
+            --border: rgba(91, 42, 134, 0.16);
+            --tw: #8f4dc0;
+            --dw: #c79ce8;
+            --tl: #6f42b4;
+            --dl: #d9c6f5;
+            --center: #f7d97f;
+            --rack: #f8f2ff;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
 
         body {
             background:
-                radial-gradient(circle at top, rgba(155, 183, 212, 0.16), transparent 28%),
-                var(--bg-color);
+                radial-gradient(circle at 12% 12%, rgba(250, 204, 21, 0.22), transparent 30%),
+                radial-gradient(circle at 84% 18%, rgba(91, 42, 134, 0.2), transparent 34%),
+                linear-gradient(142deg, #f8f4ff 0%, #efe6ff 56%, #fff8de 100%);
             color: var(--secondary-color);
             min-height: 100vh;
             padding-bottom: 28px;
         }
 
-        nav {
-            display: flex;
+        .studio-local-nav {
+            display: none;
             align-items: center;
             justify-content: space-between;
             gap: 24px;
             height: 80px;
             padding: 0 5%;
-            border-bottom: 1px solid rgba(58, 78, 107, 0.1);
-            background: rgba(228, 223, 216, 0.95);
+            border-bottom: 1px solid rgba(91, 42, 134, 0.14);
+            background: rgba(244, 239, 255, 0.94);
             position: sticky;
             top: 0;
             z-index: 100;
             backdrop-filter: blur(8px);
         }
 
-        .logo { font-size: 1.4rem; font-weight: 800; text-transform: uppercase; cursor: pointer; }
-        .logo span { color: var(--primary-color); }
+        .studio-local-nav .logo { font-size: 1.4rem; font-weight: 800; text-transform: uppercase; cursor: pointer; }
+        .studio-local-nav .logo span { color: var(--primary-color); }
 
-        .nav-menu { display: flex; gap: 2.2rem; }
+        .studio-local-nav .nav-menu { display: flex; gap: 2.2rem; }
 
-        .nav-item {
+        .studio-local-nav .nav-item {
             color: var(--secondary-color);
             font-weight: 600;
             font-size: 0.8rem;
@@ -65,10 +68,10 @@
             cursor: pointer;
         }
 
-        .nav-item.active,
-        .nav-item:hover { opacity: 1; }
+        .studio-local-nav .nav-item.active,
+        .studio-local-nav .nav-item:hover { opacity: 1; }
 
-        .nav-item.active::after {
+        .studio-local-nav .nav-item.active::after {
             content: "";
             position: absolute;
             left: 0;
@@ -80,7 +83,7 @@
 
         .layout {
             max-width: 1320px;
-            margin: 18px auto 0;
+            margin: 102px auto 0;
             padding: 0 18px;
             display: grid;
             grid-template-columns: minmax(680px, 1fr) 360px;
@@ -161,7 +164,7 @@
             letter-spacing: 0.02em;
         }
 
-        .tile.temp-tile { outline: 2px solid rgba(155, 183, 212, 0.9); background: #fff8ed; }
+        .tile.temp-tile { outline: 2px solid rgba(250, 204, 21, 0.9); background: #fffbea; }
         .tile[draggable="true"] { cursor: grab; }
         .tile[draggable="true"]:active { cursor: grabbing; }
 
@@ -169,7 +172,7 @@
             box-shadow: inset 0 0 0 3px rgba(58, 78, 107, 0.45);
             z-index: 1;
         }
-        .cell.drag-over { outline: 2px dashed rgba(155, 183, 212, 0.95); outline-offset: -2px; }
+        .cell.drag-over { outline: 2px dashed rgba(250, 204, 21, 0.95); outline-offset: -2px; }
 
         .preview-turn {
             font-size: 0.88rem;
@@ -252,12 +255,12 @@
             font-weight: 700;
             padding: 8px 10px;
             border-radius: 10px;
-            background: rgba(155, 183, 212, 0.12);
+            background: rgba(250, 204, 21, 0.16);
         }
 
         .score-line.active {
-            outline: 2px solid rgba(58, 78, 107, 0.26);
-            background: rgba(155, 183, 212, 0.2);
+            outline: 2px solid rgba(91, 42, 134, 0.3);
+            background: rgba(250, 204, 21, 0.24);
         }
 
         .rack-box {
@@ -428,6 +431,12 @@
         }
         .nav-rules:hover {
             background: rgba(155, 183, 212, 0.35);
+        }
+        .studio-rules-btn {
+            position: fixed;
+            top: 94px;
+            right: 20px;
+            z-index: 90;
         }
 
         .game-progress {
@@ -840,6 +849,7 @@
     </style>
 </head>
 <body>
+    <div id="acadbeatNav"></div>
     <div id="mode-overlay" class="mode-overlay">
         <div class="mode-card">
             <h2>Scrabble</h2>
@@ -866,7 +876,7 @@
             <p class="server-hint" id="server-hint"></p>
         </div>
     </div>
-    <nav>
+    <nav class="studio-local-nav">
         <div class="logo" onclick="window.location.href='../../home.html'">Acad<span>Beat</span></div>
         <div class="nav-menu">
             <div class="nav-item" onclick="window.location.href='../../home.html?module=Insight'">Academic</div>
@@ -876,6 +886,7 @@
         </div>
         <button type="button" class="nav-rules" onclick="goBackToStudio()">Back to Studio</button>
     </nav>
+    <button type="button" class="nav-rules studio-rules-btn" onclick="openRulesModal()">Rules</button>
 
     <div id="game-root" class="game-root hidden">
     <div class="layout">
@@ -1023,6 +1034,22 @@
         </div>
     </div>
 
+    <script src="../../shared-nav.js"></script>
+    <script>
+        window.addEventListener('load', () => {
+            const L = window.ACADBEAT_LOCAL || {};
+            window.initializeAcadBeatNav({
+                mountId: 'acadbeatNav',
+                basePath: '../../',
+                active: 'studio',
+                authApiBase: '../../Auth/backend/api',
+                homeUrl: '../../home.html',
+                ownerUrl: '../../owner.html',
+                adminUrl: L.adminDistUrl || window.location.origin + '/admin_page/dist/index.html',
+                redirectAdmins: true
+            });
+        });
+    </script>
     <script src="https://cdn.socket.io/4.7.5/socket.io.min.js" crossorigin="anonymous"></script>
     <script>
         const BOARD_SIZE = 15;

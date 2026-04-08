@@ -1,15 +1,11 @@
-<div class="challenge-page-root" id="challengePageRoot">
-    <header class="challenge-page-toolbar">
-        <button type="button" class="challenge-page-back" onclick="toggleTeamModal(false)">← Competition hub</button>
-    </header>
-    <div class="team-modal team-modal--embedded" id="teamModal">
-        <div class="success-overlay" id="successOverlay" style="display: none;" aria-hidden="true">
+<div class="modal-overlay" id="teamModalOverlay">
+    <div class="team-modal" id="teamModal">
+        <div class="success-overlay" id="successOverlay">
             <p class="module-label" style="opacity: 0.7; color: white;">Team Confirmed</p>
             <h2 class="quote-text" id="successTeamTitle" style="font-size: 3.5rem; margin: 1rem 0;">Ready to Sprint</h2>
             <p id="successTeamCopy" style="letter-spacing: 1px; font-size: 0.82rem; margin-bottom: 2rem; max-width: 520px;">Your team is locked for this week.</p>
             <button class="challenge-btn" style="background: var(--primary-color);" onclick="closeChallengeCelebration()">BACK TO ARENA</button>
         </div>
-        <div class="team-modal__columns">
         <div class="team-main">
             <p class="module-label" id="challengeCycleLabel">Weekly Challenge</p>
             <div class="challenge-hero">
@@ -106,7 +102,6 @@
                 <p class="challenge-system-card__value" id="challengeStatusCardValue">No team yet. Invite classmates to start this week.</p>
             </div>
         </aside>
-        </div>
         <div class="search-layer" id="searchLayer">
             <div class="search-layer__card">
                 <p class="module-label">Send Weekly Invite</p>
@@ -146,6 +141,6 @@
                 </div>
             </div>
         </div>
-        <button type="button" class="challenge-modal-close" onclick="toggleTeamModal(false)" aria-label="Close weekly challenge">✕</button>
+        <button onclick="toggleTeamModal(false)" style="position: absolute; top: 25px; right: 25px; background:none; border:none; color:inherit; font-size: 1.5rem; cursor:pointer; opacity: 0.3; z-index: 1000;">✕</button>
     </div>
 </div>

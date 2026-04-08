@@ -5,9 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AcadBeat | The Sanctuary</title>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700;800&family=Playfair+Display:ital,wght@0,500;1,700&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="./shared-nav.css">
     <script src="./shared/acadbeat-local-config.js"></script>
     <style>html.acadbeat-role-guard body{visibility:hidden}</style>
@@ -29,13 +27,17 @@
 
     <style>
         :root {
-            --bg-color: #E4DFD8;
-            --primary-color: #9BB7D4;
-            --secondary-color: #3A4E6B;
+            --bg-color: #f4efff;
+            --bg-accent: #ede1ff;
+            --card-bg: rgba(255, 255, 255, 0.84);
+            --card-border: rgba(91, 42, 134, 0.14);
+            --primary-color: #facc15;
+            --secondary-color: #5b2a86;
+            --text-strong: #3f2160;
+            --text-muted: rgba(91, 42, 134, 0.68);
             --white: #ffffff;
-            --accent-red: #D98E8E;
-            --transition-slow: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-            --transition-fast: all 0.4s ease;
+            --accent-red: #d96c83;
+            --transition-fast: all 0.22s ease;
         }
 
         * {
@@ -46,8 +48,11 @@
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--secondary-color);
+            background:
+                radial-gradient(circle at 14% 14%, rgba(250, 204, 21, 0.2), transparent 34%),
+                radial-gradient(circle at 84% 84%, rgba(91, 42, 134, 0.18), transparent 38%),
+                linear-gradient(145deg, #f8f4ff 0%, #efe6ff 52%, #fff8dd 100%);
+            color: var(--text-strong);
             overflow-x: hidden;
         }
 
@@ -74,10 +79,10 @@
             background:
                 linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(249, 245, 239, 0.96)),
                 var(--bg-color);
-            border: 1px solid rgba(58, 78, 107, 0.1);
+            border: 1px solid var(--card-border);
             border-radius: 30px;
             box-shadow:
-                0 28px 80px rgba(58, 78, 107, 0.12),
+                0 28px 80px rgba(91, 42, 134, 0.16),
                 inset 0 1px 0 rgba(255, 255, 255, 0.78);
             padding: 30px 30px 24px;
         }
@@ -93,7 +98,7 @@
         .site-modal__body {
             font-size: 0.95rem;
             line-height: 1.7;
-            color: rgba(58, 78, 107, 0.72);
+            color: var(--text-muted);
         }
 
         .site-modal__actions {
@@ -106,7 +111,7 @@
             min-width: 118px;
             min-height: 44px;
             border-radius: 999px;
-            box-shadow: 0 12px 28px rgba(58, 78, 107, 0.12);
+            box-shadow: 0 12px 28px rgba(91, 42, 134, 0.16);
         }
 
         /* --- 用户身份区域优化 --- */
@@ -117,23 +122,20 @@
 
         /* 增加下方间距 */
         .user-label {
-            font-size: 1.5rem;
-            /* 明显化 */
-            letter-spacing: 2px;
-            text-transform: none;
-            opacity: 0.8;
-            margin-bottom: 0.8rem;
+            font-size: 0.75rem;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 0.6rem;
             display: block;
-            font-family: 'Playfair Display', serif;
-            font-style: italic;
+            font-weight: 700;
         }
 
         .user-name-display {
-            font-size: 3.2rem;
-            font-weight: 300;
-            letter-spacing: -1px;
-            text-transform: none;
-            line-height: 1;
+            font-size: clamp(2rem, 4.4vw, 2.8rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.08;
             display: inline-block;
             position: relative;
         }
@@ -144,11 +146,10 @@
         }
 
         .quote-text {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.2rem;
-            font-style: italic;
-            line-height: 1.2;
-            margin-bottom: 2.5rem;
+            font-size: clamp(1.4rem, 2.8vw, 1.95rem);
+            line-height: 1.34;
+            margin-bottom: 2rem;
+            font-weight: 700;
         }
 
         /* 列表页间距 */
@@ -157,11 +158,10 @@
         }
 
         .sub-greeting {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.1rem;
-            opacity: 0.5;
-            font-style: italic;
+            font-size: 1rem;
+            opacity: 0.66;
             margin-top: 10px;
+            color: var(--text-muted);
         }
 
         .module-label {
@@ -176,12 +176,9 @@
 
         /* 布局 */
         .dashboard-container {
-            display: grid;
-            grid-template-columns: 280px 1fr;
-            gap: 60px;
-            max-width: 1400px;
+            max-width: 1240px;
             margin: 112px auto 50px;
-            padding: 0 5%;
+            padding: 0 max(20px, 4vw);
         }
 
         .owner-return {
@@ -197,7 +194,7 @@
             min-height: 38px;
             padding: 0 16px;
             border-radius: 999px;
-            border: 1px solid rgba(58, 78, 107, 0.18);
+            border: 1px solid rgba(91, 42, 134, 0.18);
             background: rgba(255, 255, 255, 0.72);
             color: var(--secondary-color);
             text-decoration: none;
@@ -211,78 +208,82 @@
         .owner-return__btn:hover {
             transform: translateY(-1px);
             background: rgba(255, 255, 255, 0.94);
-            border-color: rgba(58, 78, 107, 0.28);
+            border-color: rgba(91, 42, 134, 0.28);
         }
 
-        .sidebar {
-            position: sticky;
-            top: 120px;
-            height: fit-content;
+        .section-switch {
+            display: inline-flex;
+            gap: 8px;
+            padding: 6px;
+            border-radius: 999px;
+            border: 1px solid var(--card-border);
+            background: rgba(255, 255, 255, 0.74);
+            box-shadow: 0 10px 24px rgba(91, 42, 134, 0.08);
+            margin-bottom: 28px;
         }
 
-        .side-menu {
-            list-style: none;
-            margin-top: 30px;
-        }
-
-        .side-item {
-            padding: 18px 0;
-            font-size: 0.8rem;
-            font-weight: 700;
+        .section-switch__btn {
+            border: 1px solid transparent;
+            background: transparent;
+            color: var(--secondary-color);
+            border-radius: 999px;
+            min-height: 40px;
+            padding: 0 18px;
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 0.1em;
             text-transform: uppercase;
-            letter-spacing: 2px;
             cursor: pointer;
-            opacity: 0.3;
             transition: var(--transition-fast);
-            border-bottom: 1px solid rgba(58, 78, 107, 0.05);
         }
 
-        .side-item:hover,
-        .side-item.active {
-            opacity: 1;
-            padding-left: 10px;
+        .section-switch__btn:hover {
+            background: rgba(91, 42, 134, 0.08);
         }
 
-        .side-item.active {
-            border-bottom: 2px solid var(--secondary-color);
+        .section-switch__btn.active {
+            background: linear-gradient(135deg, #facc15 0%, #ffd84a 100%);
+            color: #4a2470;
+            box-shadow: 0 10px 24px rgba(250, 204, 21, 0.32);
         }
 
         /* 卡片 */
         .daily-focus-card {
-            background: rgba(255, 255, 255, 0.4);
-            border: 1px solid rgba(58, 78, 107, 0.08);
-            padding: 2.5rem 3.5rem;
-            border-radius: 2px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            padding: 2rem clamp(1.1rem, 3vw, 2.3rem);
+            border-radius: 24px;
             backdrop-filter: blur(10px);
-            margin-bottom: 2.5rem;
+            margin-bottom: 1.4rem;
             position: relative;
+            box-shadow: 0 18px 40px rgba(91, 42, 134, 0.08);
         }
 
         .btn-small {
             padding: 12px 30px;
             border-radius: 40px;
-            border: 1.2px solid var(--secondary-color);
-            background: transparent;
+            border: 1px solid rgba(91, 42, 134, 0.22);
+            background: rgba(255, 255, 255, 0.86);
             color: var(--secondary-color);
             font-size: 0.65rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 2px;
             cursor: pointer;
-            transition: 0.4s;
+            transition: var(--transition-fast);
             position: relative;
         }
 
         .btn-small:hover {
             background-color: var(--secondary-color);
-            color: var(--bg-color);
+            color: #fff;
             transform: translateY(-2px);
         }
 
         .btn-primary-small {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
-            color: white;
+            background: linear-gradient(135deg, #facc15 0%, #ffd84a 100%);
+            border-color: rgba(250, 204, 21, 0.9);
+            color: #4a2470;
         }
 
         .notification-dot {
@@ -305,9 +306,9 @@
         }
 
         .month-display {
-            font-family: 'Playfair Display', serif;
             font-size: 1.8rem;
-            font-weight: 700;
+            font-weight: 800;
+            letter-spacing: -0.02em;
         }
 
         .calendar-grid {
@@ -344,7 +345,7 @@
             display: flex;
             gap: 30px;
             margin-bottom: 40px;
-            border-bottom: 1px solid rgba(58, 78, 107, 0.1);
+            border-bottom: 1px solid var(--card-border);
         }
 
         .sub-tab-item {
@@ -363,18 +364,14 @@
         }
 
         #list-sec .quote-text {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.2rem;
-            font-style: italic;
-            font-weight: 500;
-            letter-spacing: 0;
+            font-size: clamp(1.45rem, 2.8vw, 2rem);
+            font-weight: 800;
+            letter-spacing: -0.01em;
         }
 
         #list-sec .sub-greeting {
-            font-family: 'Playfair Display', serif;
-            font-size: 1.1rem;
-            font-style: italic;
-            opacity: 0.5;
+            font-size: 1rem;
+            opacity: 0.66;
         }
 
         @keyframes rotateCW {
@@ -413,6 +410,29 @@
                 transform: scale(1);
             }
         }
+
+        .main-content {
+            width: 100%;
+        }
+
+        @media (max-width: 760px) {
+            .dashboard-container {
+                margin-top: 100px;
+            }
+
+            .section-switch {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .section-switch__btn {
+                flex: 1;
+                min-width: 0;
+                padding: 0 10px;
+                letter-spacing: 0.06em;
+                font-size: 0.66rem;
+            }
+        }
     </style>
 </head>
 
@@ -420,16 +440,12 @@
     <div id="acadbeatNav"></div>
 
     <div class="dashboard-container">
-        <aside class="sidebar">
-            <span class="module-label">Personal Space</span>
-            <ul class="side-menu">
-                <li class="side-item active" onclick="showSection('checkin')">Daily Check-in</li>
-                <li class="side-item" onclick="showSection('records')">Study Records</li>
-                <li class="side-item" onclick="showSection('favorites')">My Favorites</li>
-            </ul>
-        </aside>
-
         <main class="main-content">
+            <div class="section-switch" role="tablist" aria-label="Owner Sections">
+                <button type="button" class="section-switch__btn active" data-section="checkin" onclick="showSection('checkin')">Daily Check-in</button>
+                <button type="button" class="section-switch__btn" data-section="records" onclick="showSection('records')">Study Records</button>
+                <button type="button" class="section-switch__btn" data-section="favorites" onclick="showSection('favorites')">My Favorites</button>
+            </div>
             <div id="checkin-sec">
                 <div class="identity-wrap">
                     <span class="user-label">Welcome back,</span>
@@ -652,7 +668,7 @@
                 <div class="daily-focus-card list-item">
                     <div>
                         <h4 style="font-size:0.78rem; opacity:0.45;">VOCABULARY • NO RECORDS YET</h4>
-                        <p style="font-family:'Playfair Display'; font-size:1.35rem;">No vocabulary sessions saved yet</p>
+                        <p style="font-size:1.2rem; font-weight:700;">No vocabulary sessions saved yet</p>
                         <p style="font-size:0.86rem; opacity:0.62; margin-top:10px;">Finish a vocabulary session and your study record will appear here automatically.</p>
                     </div>
                 </div>`;
@@ -663,9 +679,9 @@
                     <div style="display:flex; justify-content:space-between; gap:18px; align-items:flex-start;">
                         <div style="flex:1;">
                             <h4 style="font-size:0.78rem; opacity:0.45;">VOCABULARY • ${escapeHtml(formatShortDate(record.completedAt))}</h4>
-                            <p style="font-family:'Playfair Display'; font-size:1.35rem;">${escapeHtml(record.title)}</p>
+                            <p style="font-size:1.2rem; font-weight:700;">${escapeHtml(record.title)}</p>
                         </div>
-                        <div style="font-family:'Playfair Display'; font-size:2.5rem; opacity:0.18; font-style:italic;">${String(index + 1).padStart(2, '0')}</div>
+                        <div style="font-size:2rem; opacity:0.18; font-weight:800;">${String(index + 1).padStart(2, '0')}</div>
                     </div>
                     <div style="margin-top:14px;">
                         <div style="font-size:0.78rem; opacity:0.55; margin-bottom:8px;">Words in this session</div>
@@ -685,7 +701,7 @@
                 <div class="daily-focus-card list-item">
                     <div>
                         <h4 style="font-size:0.78rem; opacity:0.45;">VOCABULARY • NO FAVORITES YET</h4>
-                        <p style="font-family:'Playfair Display'; font-size:1.35rem;">No selected word books yet</p>
+                        <p style="font-size:1.2rem; font-weight:700;">No selected word books yet</p>
                         <p style="font-size:0.86rem; opacity:0.62; margin-top:10px;">Choose word books in Vocabulary Practice and they will appear here with progress.</p>
                     </div>
                 </div>`;
@@ -698,7 +714,7 @@
                             <img src="${escapeHtml(book.coverUrl)}" alt="" style="width:76px; height:102px; object-fit:cover; border-radius:16px; box-shadow:0 12px 28px rgba(0,0,0,0.08);" />
                             <div style="flex:1;">
                                 <h4 style="font-size:0.78rem; opacity:0.45;">VOCABULARY FAVORITE</h4>
-                                <p style="font-family:'Playfair Display'; font-size:1.35rem;">${escapeHtml(book.title)}</p>
+                                <p style="font-size:1.2rem; font-weight:700;">${escapeHtml(book.title)}</p>
                                 <p style="font-size:0.84rem; opacity:0.62; margin-top:8px;">${escapeHtml(book.description)}</p>
                                 <p style="font-size:0.82rem; opacity:0.68; margin-top:10px;">${book.masteredWords} of ${book.totalWords} words marked learned</p>
                                 <div style="margin-top:12px; width:100%; max-width:320px; height:8px; background:rgba(0,0,0,0.08); border-radius:999px; overflow:hidden;">
@@ -706,7 +722,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div style="font-family:'Playfair Display'; font-size:2.5rem; opacity:0.18; font-style:italic;">${String(index + 1).padStart(2, '0')}</div>
+                        <div style="font-size:2rem; opacity:0.18; font-weight:800;">${String(index + 1).padStart(2, '0')}</div>
                     </div>
                 </div>
             `).join('');
@@ -720,7 +736,7 @@
                 <div class="daily-focus-card list-item">
                     <div>
                         <h4 style="font-size:0.78rem; opacity:0.45;">LISTENING • NO RECORDS YET</h4>
-                        <p style="font-family:'Playfair Display'; font-size:1.35rem;">No listening records saved yet</p>
+                        <p style="font-size:1.2rem; font-weight:700;">No listening records saved yet</p>
                         <p style="font-size:0.86rem; opacity:0.62; margin-top:10px;">Save an answer from the note page in Academic Practice and it will appear here automatically.</p>
                     </div>
                 </div>`;
@@ -731,7 +747,7 @@
                     <div style="display:flex; justify-content:space-between; gap:18px; align-items:flex-start;">
                         <div style="flex:1;">
                             <h4 style="font-size:0.78rem; opacity:0.45;">LISTENING • ${escapeHtml(formatShortDate(record.createdAt))}</h4>
-                            <p style="font-family:'Playfair Display'; font-size:1.35rem;">${escapeHtml(record.title)}</p>
+                            <p style="font-size:1.2rem; font-weight:700;">${escapeHtml(record.title)}</p>
                             <p style="font-size:0.84rem; opacity:0.62; margin-top:8px;">${escapeHtml(record.personMeta || 'Academic Practice')}</p>
                             <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:12px;">
                                 ${record.mode ? `<span style="padding:8px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.82rem;">${escapeHtml(record.mode)}</span>` : ''}
@@ -739,7 +755,7 @@
                                 ${record.duration ? `<span style="padding:8px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.82rem;">${escapeHtml(record.duration)}</span>` : ''}
                             </div>
                         </div>
-                        <div style="font-family:'Playfair Display'; font-size:2.5rem; opacity:0.18; font-style:italic;">${String(index + 1).padStart(2, '0')}</div>
+                        <div style="font-size:2rem; opacity:0.18; font-weight:800;">${String(index + 1).padStart(2, '0')}</div>
                     </div>
                     <p style="font-size:0.82rem; opacity:0.64; margin-top:14px;">Tap to view the saved answer details.</p>
                 </button>
@@ -792,7 +808,7 @@
                 <div class="daily-focus-card list-item">
                     <div>
                         <h4 style="font-size:0.78rem; opacity:0.45;">INTEGRATED • NO RECORDS YET</h4>
-                        <p style="font-family:'Playfair Display'; font-size:1.35rem;">No integrated speaking records saved yet</p>
+                        <p style="font-size:1.2rem; font-weight:700;">No integrated speaking records saved yet</p>
                         <p style="font-size:0.86rem; opacity:0.62; margin-top:10px;">Use Response Practice and save your audio answer to create an integrated record here.</p>
                     </div>
                 </div>`;
@@ -803,7 +819,7 @@
                     <div style="display:flex; justify-content:space-between; gap:18px; align-items:flex-start;">
                         <div style="flex:1;">
                             <h4 style="font-size:0.78rem; opacity:0.45;">INTEGRATED • ${escapeHtml(formatShortDate(record.createdAt))}</h4>
-                            <p style="font-family:'Playfair Display'; font-size:1.35rem;">${escapeHtml(record.title)}</p>
+                            <p style="font-size:1.2rem; font-weight:700;">${escapeHtml(record.title)}</p>
                             <p style="font-size:0.84rem; opacity:0.62; margin-top:8px;">${escapeHtml(record.personMeta || 'Response Practice')}</p>
                             <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:12px;">
                                 ${record.mode ? `<span style="padding:8px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.82rem;">${escapeHtml(record.mode)}</span>` : ''}
@@ -811,7 +827,7 @@
                                 ${record.duration ? `<span style="padding:8px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.82rem;">${escapeHtml(record.duration)}</span>` : ''}
                             </div>
                         </div>
-                        <div style="font-family:'Playfair Display'; font-size:2.5rem; opacity:0.18; font-style:italic;">${String(index + 1).padStart(2, '0')}</div>
+                        <div style="font-size:2rem; opacity:0.18; font-weight:800;">${String(index + 1).padStart(2, '0')}</div>
                     </div>
                     <p style="font-size:0.82rem; opacity:0.64; margin-top:14px;">Tap to play your saved response.</p>
                 </button>
@@ -850,8 +866,8 @@
         function renderPlaceholderList(cat) {
             document.getElementById('items-container').innerHTML = `
             <div class="daily-focus-card list-item" style="display:flex; justify-content:space-between; align-items:center;">
-                <div><h4 style="font-size:0.7rem; opacity:0.4;">${cat.toUpperCase()} • MAR 2026</h4><p style="font-family:'Playfair Display'; font-size:1.4rem;">The Architecture of Resonance</p></div>
-                <div style="font-family:'Playfair Display'; font-size:2.5rem; opacity:0.2; font-style:italic;">01</div>
+                <div><h4 style="font-size:0.7rem; opacity:0.4;">${cat.toUpperCase()} • MAR 2026</h4><p style="font-size:1.24rem; font-weight:700;">The Architecture of Resonance</p></div>
+                <div style="font-size:2rem; opacity:0.2; font-weight:800;">01</div>
             </div>`;
         }
 
@@ -894,8 +910,9 @@
         }
 
         function showSection(type) {
-            document.querySelectorAll('.side-item').forEach(el => el.classList.remove('active'));
-            event.currentTarget.classList.add('active');
+            document.querySelectorAll('.section-switch__btn').forEach((btn) => {
+                btn.classList.toggle('active', btn.dataset.section === type);
+            });
             document.getElementById('checkin-sec').classList.toggle('hidden', type !== 'checkin');
             document.getElementById('list-sec').classList.toggle('hidden', type === 'checkin');
             if (type !== 'checkin') {
