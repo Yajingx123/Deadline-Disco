@@ -37,7 +37,7 @@ const MAIN_ORIGIN =
   (typeof window !== 'undefined' && window.ACADBEAT_LOCAL && window.ACADBEAT_LOCAL.mainOrigin)
   || (typeof window !== 'undefined' ? window.location.origin : 'http://127.0.0.1:8001')
 const FALLBACK_BACK_URL = `${MAIN_ORIGIN}/home.html?module=Dialogue`
-const TARGET_UI_PATH = '/message-center-project%202/dist/'
+const TARGET_UI_PATH = '/message-center-project/dist/'
 
 function sanitizeBackUrl(rawUrl) {
   if (!rawUrl) return ''
@@ -87,8 +87,8 @@ function resolveBackUrl() {
 
 function resolveUiSwitchUrl(targetPath) {
   if (typeof window === 'undefined') return targetPath
-  const { origin, search, hash } = window.location
-  return `${origin}${targetPath}${search || ''}${hash || ''}`
+  const { origin } = window.location
+  return `${origin}${targetPath}`
 }
 
 export default function MessageCenter() {
@@ -267,68 +267,68 @@ export default function MessageCenter() {
   ]), [data.summary])
 
   const renderReplyList = () => (
-    <div className="message-feed">
+    <div className="mc2-feed">
       {data.replies.map((item) => (
-        <article key={item.id} className={`message-card ${item.isRead ? '' : 'is-unread'}`}>
-          <div className="message-card__avatar">{String(item.actor || 'U').slice(0, 1).toUpperCase()}</div>
-          <div className="message-card__body">
-            <div className="message-card__top">
+        <article key={item.id} className={`mc2-card ${item.isRead ? '' : 'is-unread'}`}>
+          <div className="mc2-card__avatar">{String(item.actor || 'U').slice(0, 1).toUpperCase()}</div>
+          <div className="mc2-card__body">
+            <div className="mc2-card__top">
               <strong>{item.actor}</strong>
               <span>{timeAgo(item.createdAt)}</span>
             </div>
-            <div className="message-card__headline">{item.title}</div>
-            <div className="message-card__preview">{item.commentPreview || item.body}</div>
-            <div className="message-card__meta">Post: {item.postTitle}</div>
-            <div className="message-card__actions">
-              <button type="button" className="message-card__cta" onClick={() => { window.location.href = item.ctaUrl }}>
+            <div className="mc2-card__headline">{item.title}</div>
+            <div className="mc2-card__preview">{item.commentPreview || item.body}</div>
+            <div className="mc2-card__meta">Post: {item.postTitle}</div>
+            <div className="mc2-card__actions">
+              <button type="button" className="mc2-actionBtn" onClick={() => { window.location.href = item.ctaUrl }}>
                 Reply
               </button>
             </div>
           </div>
         </article>
       ))}
-      {!data.replies.length && <div className="message-empty">No reply activity yet.</div>}
+      {!data.replies.length && <div className="mc2-empty">No reply activity yet.</div>}
     </div>
   )
 
   const renderReactionList = () => (
-    <div className="message-feed">
+    <div className="mc2-feed">
       {data.reactions.map((item) => (
-        <article key={item.id} className={`message-card ${item.isRead ? '' : 'is-unread'}`}>
-          <div className="message-card__avatar">{String(item.actor || 'U').slice(0, 1).toUpperCase()}</div>
-          <div className="message-card__body">
-            <div className="message-card__top">
+        <article key={item.id} className={`mc2-card ${item.isRead ? '' : 'is-unread'}`}>
+          <div className="mc2-card__avatar">{String(item.actor || 'U').slice(0, 1).toUpperCase()}</div>
+          <div className="mc2-card__body">
+            <div className="mc2-card__top">
               <strong>{item.actor}</strong>
               <span>{timeAgo(item.createdAt)}</span>
             </div>
-            <div className="message-card__headline">{item.title}</div>
-            <div className="message-card__preview">{item.postTitle || item.body}</div>
-            <div className="message-card__actions">
-              <button type="button" className="message-card__cta" onClick={() => { window.location.href = item.ctaUrl }}>
+            <div className="mc2-card__headline">{item.title}</div>
+            <div className="mc2-card__preview">{item.postTitle || item.body}</div>
+            <div className="mc2-card__actions">
+              <button type="button" className="mc2-actionBtn" onClick={() => { window.location.href = item.ctaUrl }}>
                 View post
               </button>
             </div>
           </div>
         </article>
       ))}
-      {!data.reactions.length && <div className="message-empty">No likes or favorites yet.</div>}
+      {!data.reactions.length && <div className="mc2-empty">No likes or favorites yet.</div>}
     </div>
   )
 
   const renderNotices = () => (
-    <div className="notice-feed">
+    <div className="mc2-noticeFeed">
       {data.notices.map((item) => (
-        <article key={`${item.kind || 'system'}-${item.id}`} className="notice-card">
-          {!item.isRead && <div className="notice-card__dot" />}
-          <div className="notice-card__tag">
+        <article key={`${item.kind || 'system'}-${item.id}`} className="mc2-notice">
+          {!item.isRead && <div className="mc2-notice__dot" />}
+          <div className="mc2-notice__tag">
             {item.kind === 'challenge' ? 'Challenge Update' : item.kind === 'notification' ? 'Moderation Update' : 'System Notice'}
           </div>
           <h3>{item.title}</h3>
           <p>{item.body}</p>
-          <div className="notice-card__footer">
+          <div className="mc2-notice__footer">
             <span>{timeAgo(item.createdAt)}</span>
             {item.ctaUrl && (
-              <button type="button" className="message-card__cta" onClick={async () => {
+              <button type="button" className="mc2-actionBtn" onClick={async () => {
                 await handleReadNotice(item.id, item.kind || 'system')
                 window.location.href = item.ctaUrl
               }}>
@@ -336,59 +336,52 @@ export default function MessageCenter() {
               </button>
             )}
             {!item.ctaUrl && !item.isRead && (
-              <button type="button" className="message-card__cta" onClick={() => handleReadNotice(item.id, item.kind || 'system')}>
+              <button type="button" className="mc2-actionBtn" onClick={() => handleReadNotice(item.id, item.kind || 'system')}>
                 Mark as read
               </button>
             )}
           </div>
         </article>
       ))}
-      {!data.notices.length && <div className="message-empty">No system notices right now.</div>}
+      {!data.notices.length && <div className="mc2-empty">No system notices right now.</div>}
     </div>
   )
 
-  let panelContent = null
-  if (loading) {
-    panelContent = <div className="message-empty">Loading message center…</div>
-  } else if (error) {
-    panelContent = <div className="message-empty message-empty--error">{error}</div>
-  } else if (activeTab === 'messages') {
-    panelContent = <PersonalHub embedded />
-  } else if (activeTab === 'replies') {
-    panelContent = renderReplyList()
-  } else if (activeTab === 'reactions') {
-    panelContent = renderReactionList()
-  } else {
-    panelContent = renderNotices()
-  }
+  const statusPanel = loading
+    ? <div className="mc2-empty">Loading message center…</div>
+    : (error ? <div className="mc2-empty mc2-empty--error">{error}</div> : null)
+  const activeTabMeta = tabs.find((tab) => tab.id === activeTab)
+  const infoPanel = activeTab === 'replies'
+    ? renderReplyList()
+    : (activeTab === 'reactions' ? renderReactionList() : renderNotices())
 
   return (
-    <div className="forum-container forum-container--messages">
-      <header className="message-center__topbar">
-        <div className="message-center__topbarActions">
-          <button type="button" className="message-center__backBtn" onClick={() => { window.location.href = backUrl }}>
+    <div className="forum-container forum-container--messages mc2-page">
+      <header className="mc2-topbar">
+        <div className="mc2-topbar__actions">
+          <button type="button" className="mc2-topbar__backBtn" onClick={() => { window.location.href = backUrl }}>
             ←
           </button>
-          <button type="button" className="message-center__modeBtn" onClick={() => { window.location.href = switchUrl }}>
-            Game UI
+          <button type="button" className="mc2-topbar__modeBtn" onClick={() => { window.location.href = switchUrl }}>
+            Classic UI
           </button>
         </div>
       </header>
 
-      <section className="message-center">
-        <aside className="message-center__sidebar">
-          <div className="message-center__sidebarHeader">
-            <div className="message-center__eyebrow">Message Center</div>
+      <section className="mc2-a">
+        <aside className="mc2-b">
+          <div className="mc2-b__header">
+            <div className="mc2-eyebrow">Message Center</div>
             <h1>Inbox</h1>
             <p>Track conversations, post replies, appreciation, and platform notices in one place.</p>
           </div>
 
-          <div className="message-center__nav">
+          <nav className="mc2-b__nav" aria-label="Message center tabs">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 type="button"
-                className={`message-center__navItem ${activeTab === tab.id ? 'is-active' : ''}`}
+                className={`mc2-b__navItem ${activeTab === tab.id ? 'is-active' : ''}`}
                 onClick={() => setActiveTab(tab.id)}
               >
                 <span>
@@ -398,22 +391,34 @@ export default function MessageCenter() {
                 {tab.count > 0 && <em>{tab.count > 99 ? '99+' : tab.count}</em>}
               </button>
             ))}
-          </div>
+          </nav>
         </aside>
 
-        <main className="message-center__content">
-          {activeTab !== 'messages' && (
-            <div className="message-center__panelHeader">
-              <div>
-                <div className="message-center__eyebrow">{tabs.find((tab) => tab.id === activeTab)?.label}</div>
-                <h2>{tabs.find((tab) => tab.id === activeTab)?.label}</h2>
-              </div>
-            </div>
-          )}
-          <div className={`message-center__panelBody ${activeTab === 'messages' ? 'is-chat' : ''}`}>
-            {panelContent}
-          </div>
-        </main>
+        <div className="mc2-right">
+          {activeTab === 'messages'
+            ? (
+              <section className="mc2-d">
+                {statusPanel || (
+                  <div className="mc2-d__inner">
+                    <PersonalHub embedded />
+                  </div>
+                )}
+              </section>
+              )
+            : (
+              <section className="mc2-c">
+                <header className="mc2-c__header">
+                  <div>
+                    <div className="mc2-eyebrow">{activeTabMeta?.label}</div>
+                    <h2>{activeTabMeta?.label}</h2>
+                  </div>
+                </header>
+                <div className="mc2-c__body">
+                  {statusPanel || infoPanel}
+                </div>
+              </section>
+              )}
+        </div>
       </section>
     </div>
   )

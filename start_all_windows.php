@@ -11,6 +11,18 @@ $php = PHP_BINARY ?: 'php';
 $npm = 'npm.cmd';
 $profile = getenv('ACADBEAT_START_PROFILE') ?: 'simple';
 
+function is_port_open(string $host, int $port, float $timeoutSeconds = 0.8): bool
+{
+    $errno = 0;
+    $errstr = '';
+    $conn = @fsockopen($host, (string)$port, $errno, $errstr, $timeoutSeconds);
+    if (is_resource($conn)) {
+        fclose($conn);
+        return true;
+    }
+    return false;
+}
+
 $frontendBuilds = [
     [
         'name' => 'forum-static',
@@ -150,6 +162,34 @@ foreach ($services as $service) {
         echo "[started] {$name} http://{$host}:{$port}\n";
     } catch (Throwable $e) {
         echo "[failed] {$name}: {$e->getMessage()}\n";
+    }
+}
+
+
+
+echo "
+=== Service Health Check ===
+";
+foreach ($services as $service) {
+    $name = $service['name'];
+    $host = $service['host'];
+    $port = (int)$service['port'];
+    $ok = false;
+    for ($i = 0; $i < 10; $i++) {
+        if (is_port_open($host, $port, 0.6)) {
+            $ok = true;
+            break;
+        }
+        usleep(300000);
+    }
+    if ($ok) {
+        echo "[ok] {$name} http://{$host}:{$port}
+";
+    } else {
+        echo "[not-listening] {$name} http://{$host}:{$port}
+";
+        echo "  check logs: .run/{$name}_{$port}.out.log and .run/{$name}_{$port}.err.log
+";
     }
 }
 
