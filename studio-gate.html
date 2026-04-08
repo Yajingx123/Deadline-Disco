@@ -5,32 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Studio</title>
   <link rel="stylesheet" href="./shared-nav.css">
+  <link rel="stylesheet" href="./shared-gate.css">
   <script src="./shared/acadbeat-local-config.js"></script>
   <style>
-    :root {
-      --bg: #f4efff;
-      --primary: #facc15;
-      --secondary: #5b2a86;
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      min-height: 100vh;
-      overflow: hidden;
-      background:
-        radial-gradient(circle at 18% 16%, rgba(250, 204, 21, 0.24), transparent 34%),
-        radial-gradient(circle at 82% 82%, rgba(91, 42, 134, 0.24), transparent 36%),
-        linear-gradient(140deg, #f7f2ff 0%, #efe5ff 56%, #fff8dd 100%);
-      cursor: pointer;
-    }
-    .gate-main {
-      margin-top: 80px;
-      min-height: calc(100vh - 80px);
-      display: grid;
-      place-items: center;
-      position: relative;
-      overflow: hidden;
-    }
-    .ring {
+    /* Studio-only: concentric spinning rings */
+    .gate-fx--studio .studio-ring {
       position: absolute;
       left: 50%;
       top: 50%;
@@ -40,57 +19,44 @@
       mix-blend-mode: multiply;
       pointer-events: none;
     }
-    .r1 { width: 120vmin; height: 120vmin; animation: spin 18s linear infinite; }
-    .r2 { width: 86vmin; height: 86vmin; animation: spin 12s linear infinite reverse; }
-    .r3 { width: 56vmin; height: 56vmin; animation: pulse 2.8s ease-in-out infinite; border-color: rgba(250, 204, 21, 0.52); }
-    h1 {
-      position: relative;
-      z-index: 3;
-      font-family: "Playfair Display", serif;
-      font-size: clamp(3rem, 9vw, 7rem);
-      letter-spacing: -0.03em;
-      color: var(--secondary);
-      text-shadow: 0 14px 44px rgba(91, 42, 134, 0.25);
+    .gate-fx--studio .studio-ring.r1 { width: 120vmin; height: 120vmin; animation: gateStudioSpin 18s linear infinite; }
+    .gate-fx--studio .studio-ring.r2 { width: 86vmin; height: 86vmin; animation: gateStudioSpin 12s linear infinite reverse; }
+    .gate-fx--studio .studio-ring.r3 {
+      width: 56vmin;
+      height: 56vmin;
+      animation: gateStudioPulse 2.8s ease-in-out infinite;
+      border-color: rgba(250, 204, 21, 0.52);
     }
-    .gate-enter-btn {
-      position: relative;
-      z-index: 3;
-      margin-top: 22px;
-      min-height: 52px;
-      padding: 0 28px;
-      border: 1px solid rgba(250, 204, 21, 0.85);
-      border-radius: 999px;
-      background: linear-gradient(135deg, #facc15 0%, #ffd84a 100%);
-      color: #5b2a86;
-      font-size: 0.84rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      font-weight: 800;
-      cursor: pointer;
-      box-shadow: 0 18px 40px rgba(250, 204, 21, 0.28);
-    }
-    .gate-enter-btn:hover {
-      transform: translateY(-2px) scale(1.02);
-      background: linear-gradient(135deg, #ffd84a 0%, #facc15 100%);
-    }
-    @keyframes spin {
+    @keyframes gateStudioSpin {
       from { transform: translate(-50%, -50%) rotate(0deg); }
       to { transform: translate(-50%, -50%) rotate(360deg); }
     }
-    @keyframes pulse {
-      0%,100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
+    @keyframes gateStudioPulse {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.8; }
       50% { transform: translate(-50%, -50%) scale(1.08); opacity: 1; }
     }
   </style>
 </head>
-<body onclick="enterPage()" onkeydown="enterByKey(event)" tabindex="0">
+<body class="gate-page">
   <div id="acadbeatNav"></div>
-  <main class="gate-main" onclick="enterPage()" onkeydown="enterByKey(event)" tabindex="0">
-    <div class="ring r1" aria-hidden="true"></div>
-    <div class="ring r2" aria-hidden="true"></div>
-    <div class="ring r3" aria-hidden="true"></div>
-    <h1>Studio</h1>
-    <button class="gate-enter-btn" onclick="enterPage();event.stopPropagation();">Enter Module</button>
+  <main class="gate-main gate-main--clickable" onclick="enterPage()" onkeydown="enterByKey(event)" tabindex="0">
+    <div class="gate-fx gate-fx--studio" aria-hidden="true">
+      <div class="studio-ring r1"></div>
+      <div class="studio-ring r2"></div>
+      <div class="studio-ring r3"></div>
+    </div>
+    <div class="gate-hero">
+      <h1 class="gate-title">Studio</h1>
+      <div class="gate-typing" aria-hidden="true">
+        <div class="gate-typing-track">
+          <span id="gateTypingDot" class="gate-typing-dot">🫀</span>
+          <span id="gateTypingText"></span>
+        </div>
+      </div>
+      <div class="gate-actions">
+        <button type="button" class="gate-enter-btn" onclick="enterPage(); event.stopPropagation();">Enter Module</button>
+      </div>
+    </div>
   </main>
   <script src="./shared-nav.js"></script>
   <script>
@@ -103,14 +69,53 @@
         forumUrl: './forum-gate.html',
         technologyUrl: './technology-gate.html',
         studioUrl: './studio-gate.html',
-        rankUrl: './rank-gate.html',
+        competitionUrl: './competition-gate.html',
         authApiBase: './Auth/backend/api',
         homeUrl: './home.html',
         ownerUrl: './owner.html',
         adminUrl: (window.ACADBEAT_LOCAL && window.ACADBEAT_LOCAL.adminDistUrl) || window.location.origin + '/admin_page/dist/index.html',
         redirectAdmins: true
       });
+      initGateTyping();
     });
+    function initGateTyping() {
+      const phrase = 'Build creative projects and turn ideas into real experiences.';
+      const textMount = document.getElementById('gateTypingText');
+      const dot = document.getElementById('gateTypingDot');
+      if (!textMount || !dot) return;
+      textMount.innerHTML = '';
+      const chars = Array.from(phrase).map((ch) => {
+        const span = document.createElement('span');
+        span.className = 'gate-typing-char';
+        span.textContent = ch;
+        textMount.appendChild(span);
+        return span;
+      });
+      function setDot(index) {
+        if (!chars.length) return;
+        const safe = Math.max(0, Math.min(index, chars.length - 1));
+        dot.style.left = `${chars[safe].offsetLeft - 16}px`;
+      }
+      function clearLine() {
+        chars.forEach((el) => el.classList.remove('is-on'));
+        dot.style.left = '0px';
+      }
+      function loop() {
+        clearLine();
+        let i = 0;
+        const timer = window.setInterval(() => {
+          if (i < chars.length) {
+            chars[i].classList.add('is-on');
+            setDot(i);
+            i += 1;
+            return;
+          }
+          window.clearInterval(timer);
+          window.setTimeout(loop, 1000);
+        }, 65);
+      }
+      loop();
+    }
     function enterPage() { window.location.href = './Studio/studio.html'; }
     function enterByKey(event) {
       if (event.key === 'Enter' || event.key === ' ') enterPage();

@@ -43,6 +43,8 @@ html.acadbeat-login-guard body {
   justify-content: center;
   gap: 2.5rem;
   align-items: center;
+  position: relative;
+  z-index: 1000;
 }
 
 .acadbeat-shared-nav .user-group {
@@ -52,6 +54,8 @@ html.acadbeat-login-guard body {
   gap: 12px;
   min-width: 300px;
   justify-content: flex-end;
+  position: relative;
+  z-index: 1301;
 }
 
 .acadbeat-shared-nav .logo span {
@@ -141,6 +145,71 @@ html.acadbeat-login-guard body {
   color: var(--acad-nav-text);
 }
 
+.acadbeat-shared-nav .nav-submenu--competition {
+  min-width: 200px;
+}
+
+.acadbeat-shared-nav .nav-subitem--muted {
+  font-weight: 600;
+  opacity: 0.72;
+  text-transform: none;
+  letter-spacing: 0.02em;
+  font-size: 0.78rem;
+}
+
+.acadbeat-shared-nav .nav-submenu-divider {
+  height: 1px;
+  margin: 6px 4px;
+  background: rgba(91, 42, 134, 0.12);
+}
+
+.acadbeat-local-context {
+  position: fixed;
+  top: 80px;
+  left: 0;
+  right: 0;
+  z-index: 998;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  padding: 10px 5%;
+  border-bottom: 1px solid rgba(91, 42, 134, 0.12);
+  background: rgba(244, 239, 255, 0.94);
+  backdrop-filter: blur(10px);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--acad-nav-text);
+}
+
+.acadbeat-local-context[hidden] {
+  display: none !important;
+}
+
+.acadbeat-local-context__link {
+  color: rgba(91, 42, 134, 0.88);
+  text-decoration: none;
+  border-radius: 8px;
+  padding: 4px 8px;
+  margin: -4px -8px;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.acadbeat-local-context__link:hover {
+  background: rgba(250, 204, 21, 0.22);
+  color: #412060;
+}
+
+.acadbeat-local-context__sep {
+  opacity: 0.35;
+  user-select: none;
+}
+
+.acadbeat-local-context__current {
+  opacity: 0.72;
+  font-weight: 600;
+}
+
 .acadbeat-shared-nav .nav-item {
   text-decoration: none;
   color: var(--acad-nav-text);
@@ -188,6 +257,8 @@ html.acadbeat-login-guard body {
   letter-spacing: 0.08em;
   cursor: pointer;
   transition: 0.25s ease;
+  position: relative;
+  z-index: 1302;
 }
 
 .acadbeat-shared-nav .nav-utility-btn:hover {
@@ -197,61 +268,6 @@ html.acadbeat-login-guard body {
 
 .acadbeat-shared-nav .nav-utility-btn[hidden] {
   display: none !important;
-}
-
-.acadbeat-shared-nav .message-link {
-  position: relative;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: 1px solid rgba(91, 42, 134, 0.22);
-  background: rgba(255, 255, 255, 0.74);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--acad-nav-text);
-  text-decoration: none;
-  box-shadow: 0 8px 20px rgba(91, 42, 134, 0.12);
-  transition: 0.25s ease;
-}
-
-.acadbeat-shared-nav .message-link:hover {
-  background: rgba(250, 204, 21, 0.28);
-  transform: translateY(-1px);
-}
-
-.acadbeat-shared-nav .message-link.active {
-  background: rgba(250, 204, 21, 0.32);
-  border-color: rgba(91, 42, 134, 0.3);
-  box-shadow: 0 10px 22px rgba(91, 42, 134, 0.16);
-}
-
-.acadbeat-shared-nav .message-link[hidden] {
-  display: none !important;
-}
-
-.acadbeat-shared-nav .message-badge,
-.acadbeat-shared-nav .message-badge[hidden] {
-  display: none;
-}
-
-.acadbeat-shared-nav .message-badge.is-visible {
-  position: absolute;
-  top: -3px;
-  right: -3px;
-  width: 10px;
-  min-width: 10px;
-  height: 10px;
-  padding: 0;
-  border-radius: 999px;
-  background: #ef4444;
-  color: transparent;
-  font-size: 0;
-  border: 2px solid #f7f3eb;
-  box-shadow: 0 0 0 1px rgba(91, 42, 134, 0.12);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .acadbeat-shared-nav .user-section {

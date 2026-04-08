@@ -3,66 +3,68 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Technology</title>
+  <title>Competition</title>
   <link rel="stylesheet" href="./shared-nav.css">
   <link rel="stylesheet" href="./shared-gate.css">
   <script src="./shared/acadbeat-local-config.js"></script>
   <style>
-    /* Technology-only: rising scan lines + soft glow orbs */
-    .gate-fx--technology .tech-lines {
+    /* Competition-only: rotating conic mesh + floating shards (distinct from Studio rings) */
+    .gate-fx--competition .competition-mesh {
       position: absolute;
-      inset: -8%;
-      background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 36px,
-        rgba(91, 42, 134, 0.055) 36px,
-        rgba(91, 42, 134, 0.055) 37px
-      );
-      animation: gateTechLines 11s linear infinite;
-      opacity: 0.85;
-    }
-    .gate-fx--technology .tech-orb {
-      position: absolute;
-      width: 42vmin;
-      height: 42vmin;
+      left: 50%;
+      top: 50%;
+      width: 140vmin;
+      height: 140vmin;
+      margin-left: -70vmin;
+      margin-top: -70vmin;
       border-radius: 50%;
-      filter: blur(40px);
-      opacity: 0.45;
+      background: conic-gradient(
+        from 0deg,
+        rgba(250, 204, 21, 0.07),
+        rgba(91, 42, 134, 0.1),
+        rgba(250, 204, 21, 0.06),
+        rgba(91, 42, 134, 0.09),
+        rgba(250, 204, 21, 0.07)
+      );
+      animation: gateCompetitionMesh 28s linear infinite;
+      opacity: 0.55;
       pointer-events: none;
     }
-    .gate-fx--technology .tech-orb.o1 {
-      left: -8%;
-      top: 20%;
-      background: radial-gradient(circle, rgba(250, 204, 21, 0.35), transparent 70%);
-      animation: gateTechOrbFloat 9s ease-in-out infinite;
+    .gate-fx--competition .competition-shard {
+      position: absolute;
+      width: 12px;
+      height: 28px;
+      border-radius: 3px;
+      background: linear-gradient(180deg, rgba(250, 204, 21, 0.55), rgba(91, 42, 134, 0.35));
+      opacity: 0.55;
+      animation: gateCompetitionFloat 6.5s ease-in-out infinite;
     }
-    .gate-fx--technology .tech-orb.o2 {
-      right: -6%;
-      bottom: 12%;
-      background: radial-gradient(circle, rgba(91, 42, 134, 0.32), transparent 70%);
-      animation: gateTechOrbFloat 12s ease-in-out infinite reverse;
+    .gate-fx--competition .competition-shard.s1 { left: 18%; top: 28%; animation-delay: -0.8s; }
+    .gate-fx--competition .competition-shard.s2 { left: 72%; top: 22%; animation-delay: -2.1s; }
+    .gate-fx--competition .competition-shard.s3 { left: 64%; top: 68%; animation-delay: -3.4s; }
+    .gate-fx--competition .competition-shard.s4 { left: 26%; top: 62%; animation-delay: -1.2s; }
+    @keyframes gateCompetitionMesh {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
     }
-    @keyframes gateTechLines {
-      from { transform: translateY(0); }
-      to { transform: translateY(37px); }
-    }
-    @keyframes gateTechOrbFloat {
-      0%, 100% { transform: translate(0, 0) scale(1); }
-      50% { transform: translate(4vw, -2vh) scale(1.08); }
+    @keyframes gateCompetitionFloat {
+      0%, 100% { transform: translate(0, 0) rotate(-8deg); opacity: 0.45; }
+      50% { transform: translate(8px, -14px) rotate(6deg); opacity: 0.75; }
     }
   </style>
 </head>
 <body class="gate-page">
   <div id="acadbeatNav"></div>
-  <main class="gate-main gate-main--clickable" onclick="enterPage()" onkeydown="enterByKey(event)" tabindex="0">
-    <div class="gate-fx gate-fx--technology" aria-hidden="true">
-      <div class="tech-lines"></div>
-      <div class="tech-orb o1"></div>
-      <div class="tech-orb o2"></div>
+  <main class="gate-main">
+    <div class="gate-fx gate-fx--competition" aria-hidden="true">
+      <div class="competition-mesh"></div>
+      <div class="competition-shard s1"></div>
+      <div class="competition-shard s2"></div>
+      <div class="competition-shard s3"></div>
+      <div class="competition-shard s4"></div>
     </div>
     <div class="gate-hero">
-      <h1 class="gate-title">Technology</h1>
+      <h1 class="gate-title">Competition</h1>
       <div class="gate-typing" aria-hidden="true">
         <div class="gate-typing-track">
           <span id="gateTypingDot" class="gate-typing-dot">🫀</span>
@@ -70,21 +72,33 @@
         </div>
       </div>
       <div class="gate-actions">
-        <button type="button" class="gate-enter-btn" onclick="enterPage(); event.stopPropagation();">Enter Module</button>
+        <a class="gate-enter-btn" id="gate-enter" href="./rank/index.html">Enter Module</a>
       </div>
     </div>
   </main>
   <script src="./shared-nav.js"></script>
   <script>
+    function applyHighlight() {
+      const btn = document.getElementById('gate-enter');
+      if (!btn) return;
+      try {
+        const h = new URLSearchParams(window.location.search).get('highlight');
+        if (h === 'ranking' || h === 'challenge') {
+          btn.classList.add('is-highlight');
+        }
+      } catch (_e) {}
+    }
+
     window.addEventListener('load', () => {
       window.initializeAcadBeatNav({
         mountId: 'acadbeatNav',
         basePath: './',
-        active: 'technology',
+        active: 'competition',
         academicUrl: './academic-gate.html',
         forumUrl: './forum-gate.html',
         technologyUrl: './technology-gate.html',
         studioUrl: './studio-gate.html',
+        socialUrl: './social-gate.html',
         competitionUrl: './competition-gate.html',
         authApiBase: './Auth/backend/api',
         homeUrl: './home.html',
@@ -93,9 +107,11 @@
         redirectAdmins: true
       });
       initGateTyping();
+      applyHighlight();
     });
+
     function initGateTyping() {
-      const phrase = 'Acquire necessary skills and learn to use practical tools.';
+      const phrase = 'Open team ranking first — weekly challenge is one click away.';
       const textMount = document.getElementById('gateTypingText');
       const dot = document.getElementById('gateTypingDot');
       if (!textMount || !dot) return;
@@ -131,10 +147,6 @@
         }, 65);
       }
       loop();
-    }
-    function enterPage() { window.location.href = './technology.html'; }
-    function enterByKey(event) {
-      if (event.key === 'Enter' || event.key === ' ') enterPage();
     }
   </script>
 </body>

@@ -18,41 +18,8 @@
     return document.getElementById(id);
   }
 
-  function getChallengeMount() {
-    return document.getElementById('challengeMount');
-  }
-
-  function getAuthUser() {
-    if (typeof window === 'undefined') return null;
-    if (window.authState && window.authState.user) {
-      return window.authState.user;
-    }
-    if (window.acadbeatNavState && window.acadbeatNavState.user) {
-      return window.acadbeatNavState.user;
-    }
-    return null;
-  }
-
-  function isChallengePageMode() {
-    return Boolean(
-      (typeof window !== 'undefined' && window.ACADBEAT_CHALLENGE_PAGE)
-      || document.body?.dataset?.challengePage === '1'
-    );
-  }
-
-  function competitionHubUrl() {
-    let base = './competition-gate.html';
-    try {
-      const path = window.location.pathname || '';
-      if (path.includes('/rank/') || isChallengePageMode()) {
-        base = '../competition-gate.html';
-      }
-    } catch (_e) {}
-    return `${base}?highlight=challenge`;
-  }
-
   function isChallengeOpen() {
-    return !!getChallengeMount()?.classList.contains('challenge-mount--open');
+    return !!getEl('teamModalOverlay')?.classList.contains('is-open');
   }
 
   function closePanels() {
@@ -435,9 +402,8 @@
 
   function handleRealtimeEvent(payload) {
     if (!payload || payload.type !== 'challenge.updated') return;
-    const u = (typeof authState !== 'undefined' && authState.user) ? authState.user : getAuthUser();
-    if (!u) return;
-    if (String(u.role || '').toLowerCase() === 'admin') return;
+    if (typeof authState === 'undefined' || !authState.user) return;
+    if (String(authState.user.role || '').toLowerCase() === 'admin') return;
     scheduleRealtimeRefresh();
   }
 
@@ -474,37 +440,25 @@
   }
 
   async function openChallengeModal() {
-    const authUser = getAuthUser();
-    if (!authUser) {
+    if (typeof authState === 'undefined' || !authState.user) {
       state.pendingOpenAfterLogin = true;
       openAuthModal('login', 'Please log in before using challenge teams.');
       return;
     }
-    if (String(authUser.role || '').toLowerCase() === 'admin') {
+    if (String(authState.user.role || '').toLowerCase() === 'admin') {
       openSiteModal('Challenge Disabled', 'Admin accounts do not join weekly challenge teams.');
       return;
     }
-    const mount = getChallengeMount();
-    mount?.classList.add('challenge-mount--open');
-    mount?.setAttribute('aria-hidden', 'false');
+    getEl('teamModalOverlay')?.classList.add('is-open');
     startFallbackPolling();
     await loadState();
   }
 
   function closeChallengeModal() {
-    if (isChallengePageMode()) {
-      window.location.href = competitionHubUrl();
-      return;
-    }
-    const mount = getChallengeMount();
-    mount?.classList.remove('challenge-mount--open');
-    mount?.setAttribute('aria-hidden', 'true');
+    getEl('teamModalOverlay')?.classList.remove('is-open');
     stopCountdownTicker();
     stopFallbackPolling();
     closePanels();
-    if (typeof window.acadbeatAfterChallengeClose === 'function') {
-      window.acadbeatAfterChallengeClose();
-    }
   }
 
   async function signUp() {
@@ -607,23 +561,20 @@
     }
   }
 
+  function attachListeners() {
+    const overlay = getEl('teamModalOverlay');
+    if (overlay) {
+      overlay.addEventListener('click', (event) => {
+        if (event.target === overlay) closeChallengeModal();
+      });
+    }
+  }
+
   window.toggleTeamModal = function (show) {
     if (show) {
       openChallengeModal().catch((error) => openSiteModal('Challenge Error', error.message || 'Failed to load challenge.'));
     } else {
       closeChallengeModal();
-    }
-  };
-
-  window.closeChallengeCelebration = function () {
-    const el = getEl('successOverlay');
-    if (el) {
-      el.style.display = 'none';
-      el.classList.remove('is-open');
-      el.setAttribute('aria-hidden', 'true');
-    }
-    if (isChallengePageMode()) {
-      window.location.href = competitionHubUrl();
     }
   };
   window.openInviteComposer = function () { openPanel('searchLayer'); };
@@ -640,15 +591,6 @@
   window.createChallengeTeam = function () { createTeam().catch((error) => openSiteModal('Challenge Error', error.message || 'Failed to create team.')); };
   window.saveChallengeTeamName = function () { saveTeamName().catch((error) => openSiteModal('Challenge Error', error.message || 'Failed to confirm team name.')); };
 
-  function attachListeners() {
-    const mount = getChallengeMount();
-    if (mount) {
-      mount.addEventListener('click', (event) => {
-        if (event.target === mount) closeChallengeModal();
-      });
-    }
-  }
-
   window.challengeHome = {
     syncAccess(user) {
       const btn = getEl('challengeEntryBtn');
@@ -662,7 +604,6 @@
       }
     },
     handleInitialRoute(params) {
-      if (isChallengePageMode()) return;
       if (params.get('challenge') === '1') {
         openChallengeModal().catch((error) => openSiteModal('Challenge Error', error.message || 'Failed to open challenge.'));
       }
@@ -670,10 +611,7 @@
   };
 
   attachListeners();
-  {
-    const u = (typeof authState !== 'undefined' && authState.user) ? authState.user : getAuthUser();
-    if (u && String(u.role || '').toLowerCase() !== 'admin') {
-      connectChallengeRealtime();
-    }
+  if (typeof authState !== 'undefined' && authState.user && String(authState.user.role || '').toLowerCase() !== 'admin') {
+    connectChallengeRealtime();
   }
 })();

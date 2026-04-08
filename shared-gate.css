@@ -1,0 +1,172 @@
+/* Shared layout + typography for *-gate.html (animations stay per-page) */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,700;1,500&display=swap");
+
+:root {
+  --gate-primary: #facc15;
+  --gate-secondary: #5b2a86;
+  --gate-bg: #f4efff;
+}
+
+body.gate-page {
+  box-sizing: border-box;
+  margin: 0;
+  min-height: 100vh;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 16% 14%, rgba(250, 204, 21, 0.24), transparent 34%),
+    radial-gradient(circle at 84% 82%, rgba(91, 42, 134, 0.24), transparent 36%),
+    linear-gradient(142deg, #f8f4ff 0%, #efe5ff 56%, #fff8de 100%);
+}
+
+body.gate-page * {
+  box-sizing: border-box;
+}
+
+/* Full viewport hero below fixed nav (80px) */
+.gate-main {
+  margin-top: 80px;
+  min-height: calc(100vh - 80px);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 clamp(16px, 4vw, 32px);
+}
+
+/* Decorative layers (rings, grids, nodes…) sit behind content */
+.gate-fx {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Center column: title → tagline → CTA (same vertical rhythm on all gates) */
+.gate-hero {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  max-width: min(720px, 100%);
+  gap: 0.25rem;
+}
+
+.gate-title {
+  margin: 0;
+  font-family: "Playfair Display", Georgia, serif;
+  font-size: clamp(3rem, 9vw, 7rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: var(--gate-secondary);
+  text-shadow: 0 14px 44px rgba(91, 42, 134, 0.25);
+}
+
+.gate-typing {
+  margin-top: 0.75rem;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: clamp(1.05rem, 2.1vw, 1.55rem);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  line-height: 1.45;
+  color: rgba(91, 42, 134, 0.9);
+  text-shadow: 0 8px 24px rgba(91, 42, 134, 0.14);
+}
+
+.gate-typing-track {
+  position: relative;
+  display: inline-flex;
+  align-items: baseline;
+  padding-left: 18px;
+}
+
+.gate-typing-dot {
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: 1.08em;
+  line-height: 1;
+  color: #ffffff;
+  filter: drop-shadow(0 3px 8px rgba(130, 20, 20, 0.45));
+  animation: gateTypingDotBeat 0.45s ease-in-out infinite;
+  transition: left 0.11s linear;
+  pointer-events: none;
+}
+
+.gate-typing-char {
+  opacity: 0;
+  transform: translateY(2px);
+  transition: opacity 0.12s ease, transform 0.12s ease;
+  white-space: pre;
+}
+
+.gate-typing-char.is-on {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@keyframes gateTypingDotBeat {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
+.gate-actions {
+  margin-top: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.gate-enter-btn {
+  appearance: none;
+  min-height: 52px;
+  padding: 0 28px;
+  border: 1px solid rgba(250, 204, 21, 0.85);
+  border-radius: 999px;
+  background: linear-gradient(135deg, #facc15 0%, #ffd84a 100%);
+  color: #5b2a86;
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 0.84rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 0 18px 40px rgba(250, 204, 21, 0.28);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.gate-enter-btn:hover {
+  transform: translateY(-2px) scale(1.02);
+  background: linear-gradient(135deg, #ffd84a 0%, #facc15 100%);
+}
+
+.gate-enter-btn.is-highlight {
+  box-shadow:
+    0 18px 40px rgba(250, 204, 21, 0.28),
+    0 0 0 3px rgba(250, 204, 21, 0.75);
+}
+
+.gate-main--clickable {
+  cursor: pointer;
+}

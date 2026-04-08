@@ -1,5 +1,61 @@
 /* Team Ranking Page Styles */
 
+/* Minimal site notice modal (used by challenge/challenge-home.js on this page) */
+.site-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(18, 12, 28, 0.82);
+  backdrop-filter: blur(8px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9600;
+  padding: 24px;
+}
+
+.site-modal.is-open {
+  display: flex;
+}
+
+.site-modal__card {
+  width: min(440px, 100%);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(247, 242, 255, 0.98));
+  border: 1px solid rgba(91, 42, 134, 0.18);
+  border-radius: 24px;
+  box-shadow: 0 28px 80px rgba(91, 42, 134, 0.22);
+  padding: 28px 28px 22px;
+}
+
+.site-modal__title {
+  font-family: "Playfair Display", serif;
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin-bottom: 10px;
+  color: var(--primary-color);
+}
+
+.site-modal__body {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  color: var(--text-secondary);
+}
+
+.site-modal__actions {
+  margin-top: 22px;
+}
+
+.site-modal__actions .btn-small {
+  min-width: 112px;
+  min-height: 42px;
+  padding: 0 20px;
+  border-radius: 999px;
+  border: 1px solid var(--border-color);
+  background: rgba(250, 204, 21, 0.28);
+  color: var(--primary-color);
+  font-weight: 700;
+  cursor: pointer;
+}
+
 :root {
   --primary-color: #5b2a86;
   --secondary-color: #facc15;
@@ -61,8 +117,43 @@ body::after {
   animation: rankDriftB 13s ease-in-out infinite alternate;
 }
 
+/* Floating back to competition gate (replaces top breadcrumb bar) */
+.rank-back-float {
+  position: fixed;
+  left: 20px;
+  bottom: 24px;
+  z-index: 1100;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 18px;
+  border-radius: 999px;
+  border: 1px solid var(--border-color);
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: var(--shadow-lg);
+  color: var(--primary-color);
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.rank-back-float:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px rgba(91, 42, 134, 0.18);
+}
+
+@media (max-width: 768px) {
+  .rank-back-float {
+    left: 16px;
+    bottom: 20px;
+    max-width: calc(100vw - 32px);
+    font-size: 0.82rem;
+  }
+}
+
 .ranking-main {
-  padding-top: 110px;
+  padding-top: 104px;
   min-height: 100vh;
 }
 
@@ -151,6 +242,31 @@ body::after {
   color: var(--text-secondary);
   max-width: 600px;
   margin: 0 auto;
+}
+
+.ranking-header__actions {
+  margin-top: 22px;
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.ranking-header .rank-challenge-btn {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 22px;
+  border-radius: 999px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  border: none;
+  font: inherit;
+  cursor: pointer;
 }
 
 /* My Team Card */

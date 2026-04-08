@@ -520,6 +520,71 @@
       }
     }
   </style>
+  <style>
+    /* Purple-gold skin override */
+    body[data-page="voice-room-home"] {
+      background:
+        radial-gradient(circle at 12% 16%, rgba(250, 204, 21, 0.2), transparent 32%),
+        radial-gradient(circle at 84% 18%, rgba(91, 42, 134, 0.2), transparent 34%),
+        linear-gradient(142deg, #f8f4ff 0%, #efe6ff 56%, #fff8de 100%);
+    }
+
+    .voice-room-board,
+    .voice-room-filter-group,
+    .voice-room-card,
+    .voice-room-modal-card--form {
+      border-color: rgba(91, 42, 134, 0.16) !important;
+    }
+
+    .voice-room-board {
+      background:
+        linear-gradient(160deg, rgba(255, 255, 255, 0.86), rgba(246, 240, 255, 0.68));
+      box-shadow: 0 24px 54px rgba(91, 42, 134, 0.14);
+    }
+
+    .voice-room-filter-group {
+      background: rgba(255, 255, 255, 0.78);
+    }
+
+    .voice-room-chip {
+      border-color: rgba(91, 42, 134, 0.18);
+      color: rgba(91, 42, 134, 0.86);
+      background: rgba(255, 255, 255, 0.86);
+    }
+
+    .voice-room-chip.is-active,
+    #voiceRoomOpenCreateBtn {
+      background: linear-gradient(135deg, #5b2a86 0%, #6a33a0 100%) !important;
+      border-color: rgba(91, 42, 134, 0.9) !important;
+      color: #fff8ea !important;
+    }
+
+    .voice-room-card {
+      background:
+        radial-gradient(circle at 86% 14%, rgba(250, 204, 21, 0.2), transparent 32%),
+        linear-gradient(170deg, rgba(255, 255, 255, 0.92), rgba(246, 239, 255, 0.78));
+      box-shadow: 0 16px 34px rgba(91, 42, 134, 0.12);
+    }
+
+    .voice-room-tag--public {
+      background: rgba(250, 204, 21, 0.2);
+      color: rgba(91, 42, 134, 0.86);
+      border-color: rgba(250, 204, 21, 0.46);
+    }
+
+    .voice-room-join-btn,
+    .voice-room-modal-btn {
+      background: linear-gradient(135deg, #5b2a86 0%, #6a33a0 100%) !important;
+      border-color: rgba(91, 42, 134, 0.9) !important;
+      color: #fff8ea !important;
+    }
+
+    .voice-room-modal-btn--ghost {
+      background: rgba(255, 255, 255, 0.82) !important;
+      color: rgba(91, 42, 134, 0.86) !important;
+      border: 1px solid rgba(91, 42, 134, 0.18) !important;
+    }
+  </style>
 
   <script src="./video-call.js"></script>
   <script>

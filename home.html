@@ -8,8 +8,8 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,500;1,700&family=Inter:wght@300;400;600;800&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="./challenge/challenge-home.css">
     <link rel="stylesheet" href="./shared-nav.css">
+    <link rel="stylesheet" href="./challenge/challenge-home.css">
     <script src="./shared/acadbeat-local-config.js"></script>
     <script>
         (function () {
@@ -196,6 +196,13 @@
             justify-content: center;
             flex-wrap: wrap;
             gap: 14px;
+        }
+
+        .entry-login-float {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            z-index: 4;
         }
 
         .entry-typing {
@@ -806,7 +813,7 @@
             display: none;
             align-items: center;
             justify-content: center;
-            z-index: 3000;
+            z-index: 9500;
             padding: 24px;
             backdrop-filter: blur(10px);
         }
@@ -959,7 +966,7 @@
             display: none;
             align-items: center;
             justify-content: center;
-            z-index: 3100;
+            z-index: 9300;
             padding: 24px;
         }
 
@@ -1007,225 +1014,7 @@
             box-shadow: 0 12px 28px rgba(91, 42, 134, 0.18);
         }
 
-        /* --- 醒目的 TEAM 入口 --- */
-        .challenge-btn {
-            background: var(--secondary-color);
-            color: var(--bg-color);
-            padding: 10px 24px;
-            border-radius: 4px;
-            font-size: 0.7rem;
-            font-weight: 800;
-            letter-spacing: 3px;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-            border: none;
-            box-shadow: 0 0 0 rgba(91, 42, 134, 0);
-            animation: pulseGlow 3s infinite;
-        }
-
-        @keyframes pulseGlow {
-            0% { box-shadow: 0 0 0 0 rgba(91, 42, 134, 0.4); }
-            70% { box-shadow: 0 0 0 15px rgba(91, 42, 134, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(91, 42, 134, 0); }
-        }
-
-        .challenge-btn:hover {
-            transform: scale(1.05) translateY(-2px);
-            background: #4a1f72;
-        }
-
         .user-group { display: flex; align-items: center; gap: 30px; }
-
-        /* --- TEAM MODAL --- */
-        .modal-overlay {
-            position: fixed; inset: 0; background: rgba(34, 41, 55, 0.3);
-            backdrop-filter: blur(20px); display: none; justify-content: center; align-items: center; z-index: 4000;
-        }
-        .modal-overlay.is-open { display: flex; }
-
-        .team-modal {
-            width: 90vw; max-width: 1150px; height: 82vh; background: var(--bg-color);
-            display: grid; grid-template-columns: 1fr 340px; position: relative;
-            box-shadow: 0 50px 120px rgba(0,0,0,0.15); animation: moduleReveal 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-            overflow: hidden; border-radius: 4px;
-        }
-
-        /* 成功参赛的激昂状态 */
-        .team-modal.is-ready {
-            background: linear-gradient(135deg, #f4efff 0%, #e9dcff 100%);
-            border: 2px solid var(--primary-color);
-        }
-
-        .team-main { padding: 4rem; display: flex; flex-direction: column; }
-
-        /* 排行榜样式升级 */
-        .leaderboard-aside {
-            background: #5b2a86; color: #f4efff; padding: 3.5rem 2rem;
-            display: flex; flex-direction: column; box-shadow: -10px 0 30px rgba(0,0,0,0.1);
-        }
-
-        .rank-item {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 18px 0; border-bottom: 1px solid rgba(228, 223, 216, 0.1);
-            transition: transform 0.3s ease;
-        }
-        .rank-item:hover { transform: translateX(-5px); }
-
-        .rank-badge {
-            font-family: 'Playfair Display', serif; font-size: 1.4rem; font-weight: 700;
-            margin-right: 15px; width: 30px;
-        }
-        .gold { color: var(--accent-gold); }
-        .silver { color: #A8A8A8; }
-        .bronze { color: #AD8A60; }
-
-        .rank-info { flex: 1; text-align: left; }
-        .rank-name { font-size: 0.85rem; font-weight: 700; letter-spacing: 1px; }
-        .rank-pts { font-family: 'Playfair Display', serif; font-size: 1.1rem; opacity: 0.8; }
-
-        /* 席位样式 */
-        .slots-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin: 3rem 0; }
-        .slot-card {
-            aspect-ratio: 1/1.2; background: rgba(255,255,255,0.4); border: 1px solid rgba(91, 42, 134, 0.16);
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            transition: var(--transition-fast); position: relative;
-        }
-        .slot-empty { border: 1px dashed var(--secondary-color); cursor: pointer; opacity: 0.5; }
-        .slot-empty:hover { opacity: 1; background: #fff; }
-
-        /* 成功动画层 */
-        .success-overlay {
-            position: absolute; inset: 0; background: var(--secondary-color); color: var(--bg-color);
-            display: none; flex-direction: column; align-items: center; justify-content: center;
-            z-index: 500; text-align: center; animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
-
-        /* 通用类 */
-        .module-label { font-size: 0.7rem; letter-spacing: 4px; text-transform: uppercase; opacity: 0.5; margin-bottom: 1rem; }
-        .quote-text { font-family: 'Playfair Display', serif; font-size: 2.4rem; font-style: italic; }
-        
-        .search-layer {
-            position: absolute; inset: 0; background: var(--bg-color); z-index: 100;
-            display: none; flex-direction: column; align-items: center; justify-content: center;
-        }
-
-        /* -------------------------- 新增：队伍广场功能样式 -------------------------- */
-        .team-float-actions {
-          margin-top: 2rem;
-          display: flex;
-          gap: 14px;
-        }
-        .btn-publish {
-          padding: 12px 26px;
-          border-radius: 4px;
-          background: var(--secondary-color);
-          color: var(--bg-color);
-          font-size: 0.75rem;
-          font-weight: 800;
-          letter-spacing: 1px;
-          text-transform: uppercase;
-          border: none;
-          cursor: pointer;
-          transition: 0.3s ease;
-        }
-        .btn-publish:hover {
-          background: #4a1f72;
-          transform: translateY(-2px);
-        }
-        .btn-publish:disabled {
-          opacity: 0.4;
-          cursor: not-allowed;
-          transform: none;
-        }
-
-        /* 广场弹窗 */
-        .lobby-modal {
-          position: fixed;
-          inset: 0;
-          z-index: 4500;
-          background: rgba(34, 41, 55, 0.35);
-          backdrop-filter: blur(16px);
-          display: none;
-          align-items: center;
-          justify-content: center;
-          padding: 20px;
-        }
-        .lobby-modal.is-open {
-          display: flex;
-        }
-        .lobby-card {
-          width: min(900px, 100%);
-          max-height: 85vh;
-          background: var(--bg-color);
-          border-radius: 6px;
-          box-shadow: 0 40px 100px rgba(0,0,0,0.15);
-          padding: 3rem;
-          animation: moduleReveal 0.8s cubic-bezier(0.16,1,0.3,1);
-          overflow-y: auto;
-        }
-        .lobby-title {
-          font-family: 'Playfair Display', serif;
-          font-style: italic;
-          font-size: 2.2rem;
-          margin-bottom: 2rem;
-        }
-        .lobby-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-          gap: 18px;
-        }
-        .lobby-team-card {
-          background: rgba(255,255,255,0.4);
-          border: 1px solid rgba(58,78,107,0.12);
-          border-radius: 6px;
-          padding: 20px;
-          transition: 0.25s ease;
-        }
-        .lobby-team-card:hover {
-          transform: translateY(-4px);
-          box-shadow: 0 10px 30px rgba(58,78,107,0.08);
-        }
-        .lobby-team-name {
-          font-family: 'Playfair Display', serif;
-          font-size: 1.2rem;
-          font-style: italic;
-          margin-bottom: 8px;
-        }
-        .lobby-team-count {
-          font-size: 0.75rem;
-          opacity: 0.6;
-          margin-bottom: 14px;
-          letter-spacing: 0.5px;
-        }
-        .lobby-join-btn {
-          width: 100%;
-          padding: 10px;
-          border-radius: 4px;
-          background: var(--primary-color);
-          color: var(--secondary-color);
-          font-weight: 700;
-          font-size: 0.75rem;
-          border: none;
-          cursor: pointer;
-          transition: 0.2s ease;
-        }
-        .lobby-join-btn:disabled {
-          background: #ccc;
-          color: #666;
-          cursor: not-allowed;
-        }
-        .close-lobby {
-          position: absolute;
-          top: 26px;
-          right: 26px;
-          background: none;
-          border: none;
-          font-size: 1.6rem;
-          opacity: 0.4;
-          cursor: pointer;
-        }
 
         /* --- ANIMATIONS --- */
         @keyframes moduleReveal {
@@ -1516,6 +1305,9 @@
 
 <body>
     <div class="entry-cover" id="entryCover" aria-hidden="false">
+        <div class="entry-login-float">
+            <button type="button" class="entry-btn entry-btn--login" onclick="openEntryLogin()">Login / Register</button>
+        </div>
         <div class="entry-cover__card">
             <h1 class="entry-title">
                 Acad<span class="entry-beat">Beat</span>
@@ -1523,7 +1315,6 @@
                 <span class="entry-plus">Pro Max</span>
             </h1>
             <div class="entry-actions">
-                <button type="button" class="entry-btn entry-btn--login" onclick="openEntryLogin()">Login / Register</button>
                 <button type="button" class="entry-btn entry-action-main entry-btn--classic" onclick="chooseClassicUi()">Classical Version</button>
                 <button type="button" class="entry-btn entry-action-main entry-btn--explore" onclick="playGodotUi()">Exploration Version</button>
             </div>
@@ -1600,23 +1391,53 @@
         </div>
     </div>
 
-    <div id="challengeMount"></div>
+    <div id="challengeMount" class="challenge-mount" aria-hidden="true"></div>
 
     <script>
         const L = window.ACADBEAT_LOCAL || {};
         const HOME_URL = './home.html';
         const OWNER_URL = './owner.html';
         const ADMIN_URL = L.adminDistUrl || window.location.origin + '/admin_page/dist/index.html';
+        const ACADEMIC_GATE_URL = './academic-gate.html';
         const VOCABULARY_URL = './vocba_prac/';
         const FORUM_URL = L.forumDevChooserUrl || (window.location.origin + '/forum-project/dist/index.html?view=forum');
         const TECHNOLOGY_URL = L.technologyUrl || './technology-gate.html';
         const ACADEMIC_PRACTICE_URL = './Academic-Practice/training.html';
         const AUTH_API_BASE = './Auth/backend/api';
         const authState = { user: null, mode: 'login' };
+        window.authState = authState;
         let currentHomeModule = 'Insight';
         let pendingGodotSwitch = false;
+        let pendingEntryMode = null;
         let coverHidden = false;
         let typingTimer = null;
+        let challengeBundlePromise = null;
+
+        function bootChallengeBundle() {
+            if (challengeBundlePromise) {
+                return challengeBundlePromise;
+            }
+            challengeBundlePromise = (async function loadChallengeUi() {
+                const mount = document.getElementById('challengeMount');
+                if (!mount || mount.dataset.challengeLoaded === '1') {
+                    return;
+                }
+                const response = await fetch('./challenge/challenge-panel.html', { credentials: 'same-origin' });
+                if (!response.ok) {
+                    return;
+                }
+                mount.innerHTML = await response.text();
+                mount.dataset.challengeLoaded = '1';
+                await new Promise(function (resolve, reject) {
+                    const script = document.createElement('script');
+                    script.src = './challenge/challenge-home.js';
+                    script.onload = resolve;
+                    script.onerror = reject;
+                    document.body.appendChild(script);
+                });
+            })().catch(function () {});
+            return challengeBundlePromise;
+        }
 
         function setUiMode(mode) {
             document.cookie = `ui_mode=${encodeURIComponent(mode)}; path=/; max-age=2592000`;
@@ -1638,19 +1459,35 @@
             cover.setAttribute('aria-hidden', 'true');
         }
 
+        function shouldBypassEntryCover(params) {
+            if (!params) return false;
+            return params.get('login') === '1';
+        }
+
         function openEntryLogin() {
-            hideEntryCover();
             openAuthModal('login');
         }
 
         function chooseClassicUi() {
             setUiMode('classic');
-            hideEntryCover();
+            if (authState.user) {
+                pendingEntryMode = null;
+                window.location.href = ACADEMIC_GATE_URL;
+                return;
+            }
+            pendingEntryMode = 'classic';
+            openAuthModal('login', 'Please log in before entering Classical Version.');
         }
 
         function playGodotUi() {
             setUiMode('godot');
-            hideEntryCover();
+            if (authState.user) {
+                pendingEntryMode = null;
+                hideEntryCover();
+                openGodotMode(null);
+                return;
+            }
+            pendingEntryMode = 'godot';
             requestSwitchToGodot();
         }
 
@@ -1717,6 +1554,21 @@
             return OWNER_URL;
         }
 
+        function normalizePostLoginUrl(rawUrl) {
+            try {
+                const target = new URL(rawUrl, window.location.origin);
+                if (target.origin !== window.location.origin) {
+                    return null;
+                }
+                const path = target.pathname.toLowerCase();
+                const map = {};
+                if (map[path]) return map[path];
+                return target.toString();
+            } catch (_err) {
+                return null;
+            }
+        }
+
         function mountHomeGodotSwitchInNav() {
             // 只在 academic 模块页面添加 switch 按钮
             if (currentHomeModule !== 'Insight') {
@@ -1781,12 +1633,6 @@
             return trimmed.slice(0, 2).toUpperCase();
         }
 
-        function renderAuthUI() {
-            if (window.challengeHome && typeof window.challengeHome.syncAccess === 'function') {
-                window.challengeHome.syncAccess(authState.user);
-            }
-        }
-
         async function refreshSharedNav() {
             if (typeof window.initializeAcadBeatNav !== 'function') {
                 return;
@@ -1804,15 +1650,12 @@
                 forumUrl: './forum-gate.html',
                 technologyUrl: L.technologyUrl || './technology-gate.html',
                 studioUrl: './studio-gate.html',
-                rankUrl: './rank-gate.html',
+                competitionUrl: './competition-gate.html',
                 messageCenterUrl: L.messageCenterDistUrl || (window.location.origin + '/message-center-project/dist/index.html'),
                 redirectAdmins: true,
-                showChallengeButton: true,
-                challengeButtonLabel: 'CHALLENGE',
-                onChallengeClick: () => toggleTeamModal(true)
+                showChallengeButton: false
             });
             authState.user = (window.acadbeatNavState && window.acadbeatNavState.user) || authState.user;
-            renderAuthUI();
             mountHomeGodotSwitchInNav();
         }
 
@@ -1830,7 +1673,6 @@
         async function loadAuthUser() {
             const data = await authFetch('me.php');
             authState.user = data.status === 'success' ? data.user : null;
-            renderAuthUI();
             await refreshSharedNav();
         }
 
@@ -1849,6 +1691,7 @@
 
         function cancelAuthModal() {
             pendingGodotSwitch = false;
+            pendingEntryMode = null;
             closeAuthModal();
         }
 
@@ -1919,6 +1762,10 @@
 
             authState.user = data.user || null;
             await refreshSharedNav();
+            await bootChallengeBundle();
+            if (window.challengeHome && typeof window.challengeHome.syncAccess === 'function') {
+                window.challengeHome.syncAccess(authState.user);
+            }
             if (authState.user && String(authState.user.role || '').toLowerCase() === 'admin') {
                 pendingGodotSwitch = false;
                 closeAuthModal();
@@ -1927,6 +1774,19 @@
             }
             if (pendingGodotSwitch && authState.user) {
                 pendingGodotSwitch = false;
+                pendingEntryMode = null;
+                closeAuthModal();
+                openGodotMode(null);
+                return;
+            }
+            if (pendingEntryMode === 'classic' && authState.user) {
+                pendingEntryMode = null;
+                closeAuthModal();
+                window.location.href = ACADEMIC_GATE_URL;
+                return;
+            }
+            if (pendingEntryMode === 'godot' && authState.user) {
+                pendingEntryMode = null;
                 closeAuthModal();
                 openGodotMode(null);
                 return;
@@ -1936,11 +1796,10 @@
                     const p = new URLSearchParams(window.location.search);
                     const raw = p.get('from');
                     if (raw) {
-                        const decoded = decodeURIComponent(raw);
-                        const u = new URL(decoded, window.location.origin);
-                        if (u.origin === window.location.origin) {
+                        const normalized = normalizePostLoginUrl(decodeURIComponent(raw));
+                        if (normalized) {
                             closeAuthModal();
-                            window.location.replace(u.toString());
+                            window.location.replace(normalized);
                             return;
                         }
                     }
@@ -2070,41 +1929,37 @@
             viewport.innerHTML = html;
         }
 
-        async function loadChallengeBundle() {
-            const mount = document.getElementById('challengeMount');
-            if (!mount) return;
-            const response = await fetch('./challenge/challenge-panel.html');
-            if (!response.ok) {
-                throw new Error('Failed to load challenge panel.');
-            }
-            mount.innerHTML = await response.text();
-            await new Promise((resolve, reject) => {
-                const script = document.createElement('script');
-                script.src = './challenge/challenge-home.js';
-                script.onload = resolve;
-                script.onerror = () => reject(new Error('Failed to load challenge script.'));
-                document.body.appendChild(script);
-            });
-        }
-
         // 初始化加载
         window.onload = async () => {
             initEntryTyping();
-            try {
-                await loadChallengeBundle();
-            } catch (error) {
-                console.error(error);
-            }
             const params = new URLSearchParams(window.location.search);
-            const moduleName = resolveModuleName(params.get('module'));
-            loadModule(moduleName);
+            const moduleParam = params.get('module');
+            if (moduleParam) {
+                const moduleName = resolveModuleName(moduleParam);
+                loadModule(moduleName);
+            } else {
+                const viewport = document.getElementById('app-viewport');
+                if (viewport) {
+                    viewport.innerHTML = '';
+                }
+            }
             await refreshSharedNav();
+            if (params.get('challenge') === '1') {
+                hideEntryCover();
+            }
+            await bootChallengeBundle();
+            if (window.challengeHome) {
+                window.challengeHome.syncAccess(authState.user);
+                window.challengeHome.handleInitialRoute(params);
+            }
+            if (shouldBypassEntryCover(params)) {
+                hideEntryCover();
+            }
             if (authState.user && params.get('login') === '1' && params.get('from')) {
                 try {
-                    const decoded = decodeURIComponent(params.get('from'));
-                    const u = new URL(decoded, window.location.origin);
-                    if (u.origin === window.location.origin) {
-                        window.location.replace(u.toString());
+                    const normalized = normalizePostLoginUrl(decodeURIComponent(params.get('from')));
+                    if (normalized) {
+                        window.location.replace(normalized);
                         return;
                     }
                 } catch (_err) {}
@@ -2112,9 +1967,6 @@
             if (params.get('login') === '1' && !authState.user) {
                 hideEntryCover();
                 openAuthModal('login', 'Please log in first.');
-            }
-            if (window.challengeHome && typeof window.challengeHome.handleInitialRoute === 'function') {
-                window.challengeHome.handleInitialRoute(params);
             }
         };
     </script>

@@ -567,6 +567,140 @@ body.route-pending button {
   background: rgba(58, 78, 107, 0.92);
 }
 
+/* Training page visual refresh (functionality unchanged) */
+body[data-page="training-home"] {
+  background:
+    radial-gradient(circle at 12% 16%, rgba(250, 204, 21, 0.22), transparent 30%),
+    radial-gradient(circle at 84% 18%, rgba(91, 42, 134, 0.2), transparent 34%),
+    radial-gradient(circle at 78% 84%, rgba(91, 42, 134, 0.12), transparent 30%),
+    linear-gradient(142deg, #f8f4ff 0%, #efe6ff 56%, #fff8de 100%);
+}
+
+body[data-page="training-home"] .page-shell {
+  width: min(calc(100% - 20px), 1700px);
+}
+
+body[data-page="training-home"] .training-clean {
+  margin-top: 26px;
+  padding: 44px;
+  border: 1px solid rgba(91, 42, 134, 0.16);
+  border-radius: 30px;
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.86), rgba(249, 244, 255, 0.62)),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0));
+  box-shadow:
+    0 30px 68px rgba(91, 42, 134, 0.14),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(14px) saturate(1.04);
+}
+
+body[data-page="training-home"] .training-clean-eyebrow {
+  color: rgba(91, 42, 134, 0.66);
+  letter-spacing: 0.2em;
+}
+
+body[data-page="training-home"] .training-clean-header p {
+  color: rgba(91, 42, 134, 0.78);
+}
+
+body[data-page="training-home"] .training-clean-summary span {
+  border-color: rgba(91, 42, 134, 0.2);
+  background: rgba(255, 255, 255, 0.75);
+  color: rgba(91, 42, 134, 0.84);
+}
+
+body[data-page="training-home"] .training-clean-card {
+  border: 1px solid rgba(91, 42, 134, 0.14);
+  background:
+    linear-gradient(165deg, rgba(255, 255, 255, 0.9), rgba(246, 240, 255, 0.7));
+  box-shadow:
+    0 18px 42px rgba(91, 42, 134, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+body[data-page="training-home"] .training-clean-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(91, 42, 134, 0.28);
+  box-shadow: 0 28px 52px rgba(91, 42, 134, 0.16);
+}
+
+body[data-page="training-home"] .training-clean-card--vocab {
+  background:
+    radial-gradient(circle at 14% 16%, rgba(250, 204, 21, 0.24), transparent 30%),
+    linear-gradient(165deg, rgba(255, 255, 255, 0.92), rgba(247, 241, 255, 0.76));
+}
+
+body[data-page="training-home"] .training-clean-card--accent {
+  background:
+    radial-gradient(circle at 86% 18%, rgba(250, 204, 21, 0.26), transparent 30%),
+    radial-gradient(circle at 22% 82%, rgba(91, 42, 134, 0.14), transparent 36%),
+    linear-gradient(165deg, rgba(255, 255, 255, 0.9), rgba(245, 237, 255, 0.72));
+}
+
+body[data-page="training-home"] .training-clean-grid .training-clean-card:nth-child(2) {
+  background:
+    radial-gradient(circle at 86% 18%, rgba(250, 204, 21, 0.2), transparent 32%),
+    linear-gradient(165deg, rgba(255, 255, 255, 0.9), rgba(244, 237, 255, 0.74));
+}
+
+body[data-page="training-home"] .training-clean-grid .training-clean-card:nth-child(3) {
+  background:
+    radial-gradient(circle at 14% 20%, rgba(91, 42, 134, 0.16), transparent 34%),
+    linear-gradient(165deg, rgba(255, 255, 255, 0.9), rgba(242, 234, 255, 0.76));
+}
+
+body[data-page="training-home"] .training-visual {
+  border: 1px solid rgba(91, 42, 134, 0.14);
+  background: rgba(255, 255, 255, 0.74);
+}
+
+body[data-page="training-home"] .training-clean-grid .training-clean-card:nth-child(2) .training-visual {
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.88), rgba(249, 243, 255, 0.78));
+  border-color: rgba(91, 42, 134, 0.16);
+}
+
+body[data-page="training-home"] .training-clean-grid .training-clean-card:nth-child(3) .training-visual {
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.84), rgba(244, 236, 255, 0.8));
+  border-color: rgba(91, 42, 134, 0.18);
+}
+
+body[data-page="training-home"] .training-clean-grid .training-clean-card:nth-child(4) .training-visual {
+  background:
+    radial-gradient(circle at 82% 18%, rgba(250, 204, 21, 0.2), transparent 32%),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.88), rgba(246, 239, 255, 0.8));
+}
+
+body[data-page="training-home"] .vocab-chip {
+  border-color: rgba(91, 42, 134, 0.16);
+}
+
+body[data-page="training-home"] .vocab-chip-main {
+  background: rgba(250, 204, 21, 0.24);
+  border-color: rgba(250, 204, 21, 0.5);
+}
+
+body[data-page="training-home"] .training-go-btn {
+  background: linear-gradient(135deg, #5b2a86 0%, #6a33a0 100%);
+  color: #fff9eb;
+  border: 1px solid rgba(255, 255, 255, 0.34);
+  box-shadow: 0 14px 28px rgba(91, 42, 134, 0.28);
+}
+
+body[data-page="training-home"] .training-go-btn:hover {
+  opacity: 1;
+  transform: translateY(-2px);
+  box-shadow: 0 18px 34px rgba(91, 42, 134, 0.34);
+}
+
+body[data-page="training-home"] .training-go-btn--soft {
+  background: linear-gradient(135deg, #facc15 0%, #ffd84a 100%);
+  color: #4a2370;
+  border: 1px solid rgba(250, 204, 21, 0.82);
+  box-shadow: 0 16px 30px rgba(250, 204, 21, 0.3);
+}
+
 .section-header {
   display: flex;
   align-items: end;
@@ -3304,6 +3438,67 @@ body[data-page="voice-room-session"] .voice-room-wave-segment:nth-child(10) { he
     width: 100%;
     max-height: 40vh;
   }
+}
+
+/* Listening pages (understand/respond) purple-gold theme override */
+body[data-page="video-list"] {
+  background:
+    radial-gradient(circle at 12% 16%, rgba(250, 204, 21, 0.2), transparent 30%),
+    radial-gradient(circle at 84% 16%, rgba(91, 42, 134, 0.2), transparent 34%),
+    linear-gradient(142deg, #f8f4ff 0%, #efe6ff 56%, #fff8de 100%);
+}
+
+body[data-page="video-list"] .video-results,
+body[data-page="video-list"] .compact-results,
+body[data-page="video-list"] .listening-filter-dock-frame,
+body[data-page="video-list"] .listening-filter-slot,
+body[data-page="video-list"] .video-card {
+  border-color: rgba(91, 42, 134, 0.16);
+}
+
+body[data-page="video-list"] .video-results {
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.86), rgba(247, 241, 255, 0.66));
+  box-shadow: 0 24px 54px rgba(91, 42, 134, 0.14);
+}
+
+body[data-page="video-list"] .video-card {
+  background:
+    radial-gradient(circle at 86% 16%, rgba(250, 204, 21, 0.18), transparent 32%),
+    linear-gradient(170deg, rgba(255, 255, 255, 0.9), rgba(245, 238, 255, 0.76));
+  box-shadow: 0 14px 30px rgba(91, 42, 134, 0.12);
+}
+
+body[data-page="video-list"] .video-meta-pill {
+  background: rgba(250, 204, 21, 0.2);
+  border-color: rgba(250, 204, 21, 0.46);
+  color: rgba(91, 42, 134, 0.88);
+}
+
+body[data-page="video-list"] .smart-input,
+body[data-page="video-list"] .smart-select,
+body[data-page="video-list"] .country-select-btn {
+  background: rgba(255, 255, 255, 0.84);
+  border-color: rgba(91, 42, 134, 0.18);
+  color: var(--secondary-color);
+}
+
+body[data-page="video-list"] .listening-filter-reset-btn,
+body[data-page="video-list"] .compact-reset-btn {
+  background: linear-gradient(135deg, #5b2a86 0%, #6a33a0 100%);
+  border-color: rgba(91, 42, 134, 0.9);
+  color: #fff8ea;
+}
+
+body[data-page="video-list"] .listening-filter-reset-btn:hover,
+body[data-page="video-list"] .compact-reset-btn:hover {
+  background: linear-gradient(135deg, #6a33a0 0%, #5b2a86 100%);
+}
+
+body[data-page="video-list"][data-listening-mode="respond"] .video-results {
+  background:
+    radial-gradient(circle at 14% 18%, rgba(91, 42, 134, 0.16), transparent 36%),
+    linear-gradient(160deg, rgba(255, 255, 255, 0.86), rgba(244, 237, 255, 0.7));
 }
 
 @media (max-width: 640px) {
