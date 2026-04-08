@@ -88,8 +88,6 @@
     const academicRespondUrl = options.academicRespondUrl || `${basePath}Academic-Practice/respond_training.html`;
     const academicNoteUrl = options.academicNoteUrl || `${basePath}Academic-Practice/note_training.html`;
     const currentOrigin = (typeof window !== 'undefined' && window.location) ? window.location.origin : 'http://127.0.0.1:8001';
-    const forumPublishUrl = options.forumPublishUrl || ((L && L.forumDevChooserUrl) ? `${L.forumDevChooserUrl}&compose=1` : `${currentOrigin}/forum-project/dist/index.html?view=forum&compose=1`);
-    const forumMineUrl = options.forumMineUrl || ((L && L.forumDevChooserUrl) ? `${L.forumDevChooserUrl.replace('view=forum', 'view=personal')}` : `${currentOrigin}/forum-project/dist/index.html?view=personal`);
     const technologyTeamsUrl = options.technologyTeamsUrl || 'https://support.microsoft.com/en-us/teams';
     const technologyGithubUrl = options.technologyGithubUrl || 'https://docs.github.com/en/get-started';
     const technologyMatlabUrl = options.technologyMatlabUrl || 'https://matlabacademy.mathworks.com/';
@@ -124,13 +122,7 @@
               <a class="nav-subitem" href="${academicNoteUrl}">Room</a>
             </div>
           </div>
-          <div class="nav-dropdown">
-            <a class="nav-item" data-nav="forum" href="${forumUrl}">Forum</a>
-            <div class="nav-submenu">
-              <a class="nav-subitem" href="${forumPublishUrl}">Publish</a>
-              <a class="nav-subitem" href="${forumMineUrl}">Mine</a>
-            </div>
-          </div>
+          <a class="nav-item" data-nav="forum" href="${forumUrl}">Forum</a>
           <div class="nav-dropdown">
             <a class="nav-item" data-nav="technology" href="${technologyUrl}">Technology</a>
             <div class="nav-submenu">

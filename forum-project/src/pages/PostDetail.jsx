@@ -98,7 +98,7 @@ const PostDetail = ({ post, onBack, onAddComment, onDeletePost, onDeleteComment,
       {/* Top Navigation Bar */}
       <div className="detail-header">
         <div className="header-left">
-          <button onClick={onBack} className="btn-back">
+          <button onClick={onBack} className="btn-back" data-guide-forum="detail-back">
             <span className="icon">←</span> Back to List
           </button>
         </div>
@@ -114,6 +114,7 @@ const PostDetail = ({ post, onBack, onAddComment, onDeletePost, onDeleteComment,
           <button 
             onClick={() => handleReplyClick()} 
             className="btn-reply-main"
+            data-guide-forum="detail-reply"
           >
             <span className="icon">💬</span> Reply to Post
           </button>

@@ -15,7 +15,7 @@ function is_port_open(string $host, int $port, float $timeoutSeconds = 0.8): boo
 {
     $errno = 0;
     $errstr = '';
-    $conn = @fsockopen($host, (string)$port, $errno, $errstr, $timeoutSeconds);
+    $conn = @fsockopen($host, $port, $errno, $errstr, $timeoutSeconds);
     if (is_resource($conn)) {
         fclose($conn);
         return true;
@@ -170,6 +170,7 @@ foreach ($services as $service) {
 echo "
 === Service Health Check ===
 ";
+$healthFailures = [];
 foreach ($services as $service) {
     $name = $service['name'];
     $host = $service['host'];
@@ -186,6 +187,7 @@ foreach ($services as $service) {
         echo "[ok] {$name} http://{$host}:{$port}
 ";
     } else {
+        $healthFailures[] = "{$name}({$host}:{$port})";
         echo "[not-listening] {$name} http://{$host}:{$port}
 ";
         echo "  check logs: .run/{$name}_{$port}.out.log and .run/{$name}_{$port}.err.log
@@ -205,4 +207,8 @@ echo "\n论坛隔离：经典 UI -> /forum-project/dist/；新 UI 壳 -> /forum-
 echo "新 UI 论坛壳地址：http://127.0.0.1:8001/newUI/shell/forum/shell.html\n";
 if ($profile === 'full') {
     echo "Full 模式包含：5173 forum-dev、5174 admin-dev、9000 scrabble-match\n";
+}
+if (!empty($healthFailures)) {
+    fwrite(STDERR, "\n[error] Service health check failed: " . implode(', ', $healthFailures) . "\n");
+    exit(2);
 }

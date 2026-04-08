@@ -33,7 +33,7 @@ function is_port_open(string $host, int $port, float $timeoutSeconds = 0.8): boo
 {
     $errno = 0;
     $errstr = '';
-    $conn = @fsockopen($host, (string)$port, $errno, $errstr, $timeoutSeconds);
+    $conn = @fsockopen($host, $port, $errno, $errstr, $timeoutSeconds);
     if (is_resource($conn)) {
         fclose($conn);
         return true;
@@ -51,19 +51,39 @@ function run_unix_build(string $workdir, string $command): void
 
 function start_unix_detached(string $workdir, string $command, string $stdoutLog, string $stderrLog): int
 {
-    $cmd = sprintf(
-        'cd %s && nohup %s >> %s 2>> %s < /dev/null & echo $!',
-        sh_quote($workdir),
-        $command,
-        sh_quote($stdoutLog),
-        sh_quote($stderrLog)
-    );
-    $output = shell_exec('bash -lc ' . sh_quote($cmd));
-    $pid = (int) trim((string) $output);
-    if ($pid <= 0) {
-        throw new RuntimeException('Could not capture process PID.');
+    $pid = pcntl_fork();
+    if ($pid === -1) {
+        throw new RuntimeException('Could not fork process.');
     }
-    return $pid;
+
+    if ($pid > 0) {
+        return $pid;
+    }
+
+    if (posix_setsid() === -1) {
+        file_put_contents($stderrLog, "[launcher] posix_setsid failed\n", FILE_APPEND);
+        exit(1);
+    }
+
+    if (!@chdir($workdir)) {
+        file_put_contents($stderrLog, "[launcher] chdir failed: {$workdir}\n", FILE_APPEND);
+        exit(1);
+    }
+
+    @fclose(STDIN);
+    @fclose(STDOUT);
+    @fclose(STDERR);
+    $stdin = fopen('/dev/null', 'r');
+    $stdout = fopen($stdoutLog, 'ab');
+    $stderr = fopen($stderrLog, 'ab');
+    if ($stdin === false || $stdout === false || $stderr === false) {
+        file_put_contents($stderrLog, "[launcher] failed to open stdio log files\n", FILE_APPEND);
+        exit(1);
+    }
+
+    pcntl_exec('/bin/bash', ['-lc', $command]);
+    file_put_contents($stderrLog, "[launcher] pcntl_exec failed for command: {$command}\n", FILE_APPEND);
+    exit(1);
 }
 
 $python = resolve_binary(['python3', 'python']);
@@ -203,6 +223,7 @@ foreach ($services as $service) {
 echo "
 === Service Health Check ===
 ";
+$healthFailures = [];
 foreach ($services as $service) {
     $name = $service['name'];
     $host = $service['host'];
@@ -219,6 +240,7 @@ foreach ($services as $service) {
         echo "[ok] {$name} http://{$host}:{$port}
 ";
     } else {
+        $healthFailures[] = "{$name}({$host}:{$port})";
         echo "[not-listening] {$name} http://{$host}:{$port}
 ";
         echo "  check logs: .run/{$name}_{$port}.out.log and .run/{$name}_{$port}.err.log
@@ -232,3 +254,7 @@ echo "Auto-detect command: php start_all.php\n";
 echo "Full mode command: php start_all.php --full\n";
 echo "\nHome: http://127.0.0.1:8001/home.html\n";
 echo "Forum isolation: classic -> /forum-project/dist/, new shell -> /forum-project-v2/dist/\n";
+if (!empty($healthFailures)) {
+    fwrite(STDERR, "\n[error] Service health check failed: " . implode(', ', $healthFailures) . "\n");
+    exit(2);
+}
