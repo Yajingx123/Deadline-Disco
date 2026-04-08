@@ -57,7 +57,7 @@ height = 134.0
 
 [node name="Player" type="CharacterBody2D" unique_id=1343888655 node_paths=PackedStringArray("animator") groups=["Player"]]
 z_index = 7
-scale = Vector2(2, 2)
+scale = Vector2(3, 3)
 script = ExtResource("1_cvnsp")
 animator = NodePath("AnimatedSprite2D")
 
