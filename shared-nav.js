@@ -132,8 +132,9 @@
     const messageCenterUrl = options.messageCenterUrl || (L && L.messageCenterDistUrl) || `${currentOrigin}/message-center-project/dist/index.html`;
     const messageApiUrl = options.messageApiUrl || (L && L.messageSummaryApiUrl) || `${currentOrigin}/forum-project/api/message-center.php?summaryOnly=1`;
     const active = String(options.active || '').toLowerCase();
-    const showChallengeButton = Boolean(options.showChallengeButton);
+    const showChallengeButton = Boolean(options.showChallengeButton !== false); // 默认显示挑战按钮
     const challengeButtonLabel = options.challengeButtonLabel || 'CHALLENGE';
+    const showSwitchButton = active === 'academic'; // 只在 academic 页面显示切换按钮
     const redirectAdmins = Boolean(options.redirectAdmins);
     const requireLogin = Boolean(options.requireLogin);
     const loginReturnUrl = String(options.loginReturnUrl || '').trim();
@@ -158,6 +159,7 @@
             ✉
             <span class="message-badge" id="messageBadge" hidden>0</span>
           </a>
+          ${showSwitchButton ? `<button type="button" class="nav-godot" id="homeGodotSwitchBtn">SWITCH</button>` : ''}
           <div class="user-section" id="userSection">
             <span id="userLabel" class="user-label">LOGIN</span>
             <div class="avatar" id="userAvatar">IN</div>
@@ -176,6 +178,7 @@
     const messageLink = mount.querySelector('#messageCenterLink');
     const messageBadge = mount.querySelector('#messageBadge');
     const challengeButton = mount.querySelector('#sharedChallengeBtn');
+    const switchButton = mount.querySelector('#homeGodotSwitchBtn');
 
     let authUser = null;
 
@@ -203,10 +206,24 @@
       if (challengeButton) {
         challengeButton.hidden = !authUser;
       }
+      if (switchButton) {
+        switchButton.hidden = !authUser;
+      }
     }
 
     if (challengeButton && typeof options.onChallengeClick === 'function') {
       challengeButton.addEventListener('click', options.onChallengeClick);
+    }
+
+    if (switchButton) {
+      switchButton.addEventListener('click', () => {
+        if (authUser) {
+          const L = window.ACADBEAT_LOCAL || {};
+          window.location.href = L.godotWebEntryUrl || 'http://127.0.0.1:5500/index.html?ui=godot';
+        } else {
+          window.location.href = loginUrl;
+        }
+      });
     }
 
     userSection?.addEventListener('click', () => {

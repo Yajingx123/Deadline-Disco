@@ -639,3 +639,19 @@ INSERT INTO chat_draw_guess_words (word_text, text_hint, second_text_hint) VALUE
 ('camera', 'It is used to capture photos.', 'You point it at a subject and press a button.'),
 ('airport', 'It is where planes take off and land.', 'Travelers check in and go through security there.')
 ON DUPLICATE KEY UPDATE text_hint = VALUES(text_hint), second_text_hint = VALUES(second_text_hint);
+
+-- ===== Source: 003_score_rules_records.sql =====
+-- 插入日常积分规则
+INSERT INTO score_rules (rule_id, rule_name, rule_type, description, base_score, daily_limit, daily_count_limit, weekly_count_limit)
+VALUES 
+('routine1', '小组日常签到', 'routine', '小组当日签到人数 ≥ 小组总人数的 1/2，获得固定签到分，每日仅算1次', 5, 5, 1, NULL),
+('routine2', '在线学习时长', 'routine', '每累计在线学习满5分钟加分，最多计算15分钟（3段）', 3, 9, 3, NULL),
+('routine3', '发帖得分', 'routine', '发帖审核通过加分，每日有上限', 3, 3, 1, NULL),
+('routine4', '回帖得分', 'routine', '回帖审核通过加分，每日有上限', 1, 1, 1, NULL),
+('compete1_win', '周赛Scrabble-获胜', 'compete', '周赛Scrabble小组对战获胜，获得高额积分', 10, NULL, NULL, 1),
+('compete1_lose', '周赛Scrabble-参与', 'compete', '周赛Scrabble小组对战失败，获得参与积分', 2, NULL, NULL, 1);
+
+-- 创建索引以提高查询性能
+CREATE INDEX idx_score_records_group_id ON score_records(group_id);
+CREATE INDEX idx_score_records_rule_id ON score_records(rule_id);
+CREATE INDEX idx_score_records_record_time ON score_records(record_time);

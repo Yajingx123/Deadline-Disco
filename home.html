@@ -66,118 +66,6 @@
             height: 100vh;
         }
 
-        /* --- NAVIGATION --- */
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 5%;
-            height: 80px;
-            background-color: var(--bg-color);
-            border-bottom: 1px solid rgba(58, 78, 107, 0.1);
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-        }
-
-        .logo {
-            font-size: 1.4rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            text-transform: uppercase;
-        }
-
-        .logo span {
-            color: var(--primary-color);
-        }
-
-        .nav-menu {
-            display: flex;
-            gap: 2.5rem;
-        }
-
-        .nav-item {
-            text-decoration: none;
-            color: var(--secondary-color);
-            font-weight: 600;
-            font-size: 0.8rem;
-            cursor: pointer;
-            padding: 8px 0;
-            position: relative;
-            transition: 0.6s ease;
-            opacity: 0.5;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        .nav-item:hover,
-        .nav-item.active {
-            opacity: 1;
-        }
-
-        .nav-item.active::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background-color: var(--secondary-color);
-        }
-
-        /* Godot animated homepage (serve.py on 127.0.0.1:5500) */
-        .nav-godot {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 1.25rem;
-            padding: 0.45rem 0.9rem;
-            font-size: 0.72rem;
-            font-weight: 700;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            text-decoration: none;
-            color: var(--secondary-color);
-            background: rgba(155, 183, 212, 0.35);
-            border: 1px solid var(--primary-color);
-            border-radius: 6px;
-            transition: var(--transition-fast);
-            white-space: nowrap;
-        }
-
-        .nav-godot:hover {
-            background: rgba(155, 183, 212, 0.55);
-            opacity: 1;
-        }
-
-        /* Switch 插入 shared-nav 的 .user-group，勿用 fixed 盖住顶栏私信区 */
-        #acadbeatNav .nav-godot {
-            cursor: pointer;
-            border: none;
-            font: inherit;
-            font-family: inherit;
-        }
-
-        .user-section {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .avatar {
-            width: 34px;
-            height: 34px;
-            background-color: var(--primary-color);
-            border-radius: 50%;
-            border: 1px solid var(--secondary-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 0.7rem;
-        }
-
         /* --- MAIN VIEWPORT --- */
         main {
             margin-top: 80px;
@@ -1108,6 +996,10 @@
         }
 
         function mountHomeGodotSwitchInNav() {
+            // 只在 academic 模块页面添加 switch 按钮
+            if (currentHomeModule !== 'Insight') {
+                return;
+            }
             const nav = document.querySelector('#acadbeatNav .acadbeat-shared-nav');
             const userGroup = nav && nav.querySelector('.user-group');
             if (!userGroup) {
