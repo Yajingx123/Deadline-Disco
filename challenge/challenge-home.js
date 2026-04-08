@@ -610,6 +610,28 @@
     },
   };
 
+  let isV2Style = false;
+
+  function toggleChallengeStyle() {
+    isV2Style = !isV2Style;
+    const elements = document.querySelectorAll('#teamModalOverlay, #teamModal, .team-main, .challenge-hero, .challenge-copy, .challenge-secondary-btn, .challenge-ghost-btn, .challenge-secondary-btn__count, .challenge-name-row, .challenge-name-field, .challenge-name-input, .challenge-search-input, .challenge-request-input, .challenge-status-row, .challenge-status-chip, .challenge-stage, .challenge-card, .challenge-card--center, .challenge-card--stacked, .challenge-forming-head, .challenge-countdown-card, .challenge-countdown, .challenge-countdown__unit, .challenge-countdown__divider, .slots-grid, .slot-card, .slot-card--filled, .slot-card__avatar, .slot-card__badge, .slot-card__badge--captain, .slot-card__name, .slot-card__meta, .slot-empty, .slot-card__emptyLabel, .challenge-pending, .challenge-pending__list, .challenge-invite-list, .challenge-pending__item, .challenge-invite-card, .challenge-pending__avatar, .challenge-invite-card__avatar, .challenge-pending__content, .challenge-invite-card__content, .team-float-actions, .team-float-actions--wide, .btn-publish, .btn-publish__count, .btn-publish--secondary, .btn-publish--soft, .btn-publish--ghost, .challenge-tabbar, .challenge-tab, .challenge-hub-pane, .challenge-mylisting-card, .challenge-mylisting-card__copy, .leaderboard-aside, .leaderboard-empty, .challenge-system-card, .challenge-system-card__value, .search-layer, .search-layer__card, .search-layer__card--wide, .search-layer__copy, .search-layer__actions, .challenge-inline-btn, .challenge-inline-btn--ghost, .challenge-panel-title, .challenge-panel-error, .challenge-admin-note, .success-overlay, .module-label, .quote-text, .challenge-btn, .challenge-empty');
+    
+    elements.forEach(el => {
+      if (isV2Style) {
+        el.classList.add('v2-style');
+      } else {
+        el.classList.remove('v2-style');
+      }
+    });
+    
+    const toggleBtn = document.querySelector('.style-toggle-btn');
+    if (toggleBtn) {
+      toggleBtn.textContent = isV2Style ? 'Switch to V1' : 'Switch to V2';
+    }
+  }
+
+  window.toggleChallengeStyle = toggleChallengeStyle;
+
   attachListeners();
   if (typeof authState !== 'undefined' && authState.user && String(authState.user.role || '').toLowerCase() !== 'admin') {
     connectChallengeRealtime();
