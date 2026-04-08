@@ -2301,3 +2301,74 @@
     margin-left: 0;
   }
 }
+
+/* Emoji menu layering fix */
+.chat-stage__composerWrap {
+  position: relative;
+  overflow: visible;
+  z-index: 120;
+}
+
+.chat-composer {
+  position: relative;
+  z-index: 121;
+  overflow: visible;
+}
+
+.chat-composer__panel {
+  position: relative;
+  z-index: 122;
+  overflow: visible;
+}
+
+.chat-composer__emojiWrap {
+  position: relative;
+  z-index: 1300;
+  isolation: auto;
+}
+
+.chat-composer__emojiMenu {
+  z-index: 1301;
+  pointer-events: auto;
+}
+
+.chat-stage__messages {
+  position: relative;
+  z-index: 1;
+}
+
+/* Emoji popup hard-fix: avoid toolbar clipping and stacking overlap */
+.chat-composer__toolbar {
+  position: relative !important;
+  overflow-x: auto !important;
+  overflow-y: visible !important;
+  z-index: 2000 !important;
+}
+
+.chat-composer__emojiWrap {
+  position: relative !important;
+  z-index: 2100 !important;
+  isolation: auto !important;
+}
+
+.chat-composer__emojiMenu {
+  position: absolute !important;
+  bottom: calc(100% + 8px) !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  z-index: 2200 !important;
+  pointer-events: auto !important;
+}
+
+.chat-composer,
+.chat-composer__panel,
+.chat-stage__composerWrap {
+  overflow: visible !important;
+}
+
+/* Emoji popup final override: disable toolbar clipping */
+.chat-composer__toolbar {
+  overflow: visible !important;
+  flex-wrap: wrap !important;
+  row-gap: 8px;
+}
