@@ -10,21 +10,63 @@
   <link rel="stylesheet" href="../shared-nav.css">
   <script src="../shared/acadbeat-local-config.js"></script>
   <link rel="stylesheet" href="acadbeat-global.css">
-  <link rel="stylesheet" href="practice-style.css" id="practice-theme-style">
-  <script>
-    (function () {
-      const params = new URLSearchParams(window.location.search);
-      const uiMode = params.get('ui');
-      if (uiMode !== 'godot') return;
-      document.cookie = 'ui_mode=godot; path=/; max-age=2592000';
-      const link = document.getElementById('practice-theme-style');
-      if (link) link.href = '../newUI/static/practice-detail-pixel.css';
-    })();
-  </script>
+  <link rel="stylesheet" href="practice-style.css">
+  <style>
+    body.note-training-page .page-shell {
+      width: min(1720px, calc(100% - clamp(18px, 3vw, 36px)));
+      min-height: calc(100vh - 126px);
+      padding-top: clamp(88px, 9vh, 112px) !important;
+    }
+
+    body.note-training-page .study-workspace {
+      grid-template-columns: minmax(0, 1fr) clamp(340px, 31vw, 520px);
+      gap: clamp(16px, 2vw, 28px);
+      align-items: start;
+    }
+
+    body.note-training-page .detail-layout,
+    body.note-training-page .detail-note-layout {
+      min-width: 0;
+    }
+
+    body.note-training-page .video-panel {
+      padding: clamp(18px, 2vw, 28px);
+    }
+
+    body.note-training-page #practiceVideo {
+      width: 100%;
+      max-height: min(62vh, 780px);
+      aspect-ratio: 16 / 9;
+    }
+
+    body.note-training-page .detail-note-panel {
+      min-height: clamp(760px, 84vh, 1160px);
+    }
+
+    body.note-training-page .three-col-note-grid {
+      gap: clamp(14px, 1.8vh, 20px);
+    }
+
+    body.note-training-page .note-panel textarea {
+      height: clamp(10rem, 18vh, 15rem);
+      min-height: clamp(10rem, 18vh, 15rem);
+      max-height: none;
+    }
+
+    @media (max-width: 1180px) {
+      body.note-training-page .study-workspace {
+        grid-template-columns: 1fr;
+      }
+
+      body.note-training-page .detail-note-panel {
+        min-height: auto;
+      }
+    }
+  </style>
 </head>
-<body data-page="video-detail">
+<body data-page="video-detail" class="note-training-page">
   <div id="acadbeatNav"></div>
-  <main class="module-content page-shell" style="padding-top: 110px;">
+  <main class="module-content page-shell">
     <div id="studyWorkspace" class="study-workspace">
       <section class="detail-layout">
         <div class="video-panel">
@@ -94,14 +136,7 @@
   <script src="practice-app-api.js"></script>
   <script>
     window.addEventListener('load', () => {
-      const uiGodot = (() => {
-        try {
-          return new URLSearchParams(location.search).get('ui') === 'godot';
-        } catch (_e) {}
-        return false;
-      })();
       const L = window.ACADBEAT_LOCAL || {};
-      const loginUrl = uiGodot ? (L.godotWebEntryUrl || 'http://127.0.0.1:5500/index.html?ui=godot') : '../home.html?login=1';
       window.initializeAcadBeatNav({
         mountId: 'acadbeatNav',
         basePath: '../',
@@ -110,7 +145,7 @@
         homeUrl: '../home.html',
         ownerUrl: '../owner.html',
         adminUrl: L.adminDistUrl || window.location.origin + '/admin_page/dist/index.html',
-        loginUrl,
+        loginUrl: '../home.html?login=1',
         redirectAdmins: false
       });
     });

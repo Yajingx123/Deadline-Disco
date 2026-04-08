@@ -1,0 +1,579 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Practice Detail | AcadBeat</title>
+  <script src="../shared/acadbeat-local-config.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      color-scheme: dark;
+      --note-training1-monitor-ratio: 1452 / 1071;
+      --note-training1-clipboard-ratio: 993 / 1618;
+      --panel-bg: rgba(20, 16, 18, 0.52);
+      --panel-border: rgba(255, 255, 255, 0.96);
+      --text-main: #ffffff;
+      --text-soft: rgba(255, 255, 255, 0.82);
+      --note-text: #2c2118;
+      --note-soft: #6f5a48;
+      --note-fill: rgba(255, 253, 248, 0.84);
+      --shadow-strong: 0 24px 60px rgba(0, 0, 0, 0.34);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+    }
+
+    body.note-training1-page {
+      margin: 0;
+      font-family: "Inter", sans-serif;
+      color: var(--text-main);
+      background:
+        linear-gradient(180deg, rgba(18, 13, 14, 0.36), rgba(18, 13, 14, 0.64)),
+        url("note_training/note-background.png") center center / cover no-repeat fixed;
+    }
+
+    body.note-training1-page::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at 16% 18%, rgba(255, 255, 255, 0.16), transparent 24%),
+        radial-gradient(circle at 85% 12%, rgba(255, 255, 255, 0.08), transparent 22%);
+      pointer-events: none;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .page-shell.note-training1-shell {
+      position: relative;
+      z-index: 1;
+      width: min(1720px, calc(100% - clamp(18px, 3vw, 40px)));
+      margin: 0 auto;
+      padding: clamp(20px, 3vh, 32px) 0;
+    }
+
+    .study-workspace.note-training1-workspace {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) clamp(390px, 34vw, 560px);
+      gap: clamp(20px, 2vw, 32px);
+      align-items: start;
+      transition: grid-template-columns 0.24s ease;
+    }
+
+    .study-workspace.note-training1-workspace.note-dock-collapsed {
+      grid-template-columns: minmax(0, 1fr) 0;
+    }
+
+    .study-workspace.note-training1-workspace.note-dock-collapsed .note-training1-sidebar {
+      min-width: 0;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(24px);
+    }
+
+    .detail-layout,
+    .detail-note-layout {
+      margin: 0;
+    }
+
+    .note-training1-main,
+    .note-training1-sidebar {
+      min-width: 0;
+    }
+
+    .video-panel.note-training1-video-panel {
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      backdrop-filter: none;
+      box-shadow: none;
+    }
+
+    .workspace-top-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .back-fab {
+      width: 48px;
+      height: 48px;
+      border: 3px solid #fff;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      font: inherit;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .workspace-top-actions h2 {
+      margin: 0;
+      font-size: clamp(1.5rem, 2vw, 2.3rem);
+      line-height: 1.15;
+      letter-spacing: 0.01em;
+    }
+
+    .person-meta-line {
+      margin: 12px 0 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      color: var(--text-soft);
+      font-size: 0.97rem;
+    }
+
+    .person-meta-separator {
+      opacity: 0.6;
+    }
+
+    .country-inline {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .country-flag-icon {
+      width: 22px;
+      height: 16px;
+      object-fit: cover;
+      border-radius: 3px;
+      border: 1px solid rgba(255, 255, 255, 0.72);
+    }
+
+    .detail-meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 16px 0 0;
+    }
+
+    .detail-meta-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 40px;
+      padding: 0 16px;
+      border: 3px solid rgba(255, 255, 255, 0.92);
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.28);
+      color: var(--text-main);
+      font-size: 0.92rem;
+      font-weight: 600;
+    }
+
+    .note-training1-monitor {
+      position: relative;
+      margin-top: clamp(20px, 2.8vh, 30px);
+      width: 100%;
+      max-width: 1180px;
+      aspect-ratio: var(--note-training1-monitor-ratio);
+      background: url("note_training/note-video-frame.png") no-repeat center center;
+      background-size: 100% 100%;
+    }
+
+    .note-training1-monitor-frame {
+      display: none;
+    }
+
+    .note-training1-monitor-screen {
+      position: absolute;
+      left: 2.7%;
+      top: 12%;
+      width: 94.6%;
+      height: 80.4%;
+      overflow: hidden;
+      border: 0;
+      border-radius: clamp(12px, 1.4vw, 22px);
+      background: #000;
+      box-shadow: none;
+    }
+
+    #practiceVideo {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      background: #000;
+      border: 0;
+    }
+
+    .detail-resource-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    .detail-resource-tab,
+    .note-share-btn,
+    .note-dock-toggle-btn,
+    .btn-primary-small {
+      min-height: 46px;
+      padding: 0 18px;
+      border: 3px solid #fff;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.3);
+      color: #fff;
+      font: inherit;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .detail-resource-tab.is-active,
+    .detail-resource-tab:hover,
+    .note-share-btn:hover,
+    .note-dock-toggle-btn:hover,
+    .btn-primary-small:hover {
+      background: rgba(255, 255, 255, 0.16);
+    }
+
+    .transcript-panel {
+      margin-top: 16px;
+      max-width: 1180px;
+      padding: 18px;
+      border: 4px solid #fff;
+      border-radius: 26px;
+      background: rgba(0, 0, 0, 0.36);
+      box-shadow: 0 16px 28px rgba(0, 0, 0, 0.2);
+    }
+
+    .detail-resource-head {
+      margin-bottom: 12px;
+      font-size: 1rem;
+      font-weight: 700;
+    }
+
+    .transcript-content {
+      max-height: 280px;
+      overflow: auto;
+      line-height: 1.7;
+      color: var(--text-soft);
+      white-space: pre-wrap;
+    }
+
+    .note-training1-sidebar {
+      transition: opacity 0.24s ease, transform 0.24s ease;
+    }
+
+    .note-panel.note-training1-note-panel {
+      position: relative;
+      width: 100%;
+      min-height: clamp(1080px, 118vh, 600px);
+      padding: 0;
+      border: 0;
+      background: transparent;
+      box-shadow: none;
+      aspect-ratio: var(--note-training1-clipboard-ratio);
+      background: url("note_training/note-clipboard.png") no-repeat top center;
+      background-size: 100% 100%;
+    }
+
+    .note-training1-clipboard {
+      display: none;
+    }
+
+    .note-training1-note-surface {
+      position: absolute;
+      top: 12%;
+      left: 4.2%;
+      width: 91.5%;
+      height: 88.8%;
+      display: flex;
+      flex-direction: column;
+      gap: clamp(12px, 1.6vh, 18px);
+      padding-bottom: clamp(18px, 3vh, 28px);
+      color: var(--note-text);
+    }
+
+    .note-panel-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .note-panel-head h3 {
+      margin: 0;
+      color: var(--note-text);
+      font-size: 1.42rem;
+      font-weight: 800;
+    }
+
+    .note-panel-head-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    .note-grid.three-col-note-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      grid-template-rows: repeat(3, minmax(0, 1fr));
+      flex: 1 1 auto;
+      min-height: 0;
+      gap: clamp(14px, 1.6vh, 18px);
+    }
+
+    .note-field {
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      gap: 8px;
+    }
+
+    .note-field label {
+      color: var(--note-soft);
+      font-size: 0.98rem;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+
+    .note-field textarea,
+    .note-field-display {
+      width: 100%;
+      min-height: clamp(132px, 15vh, 220px);
+      height: 100%;
+      padding: 8px 4px;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      color: var(--note-text);
+      font: inherit;
+      font-size: clamp(0.96rem, 0.3vw + 0.9rem, 1.05rem);
+      line-height: 1.6;
+      box-shadow: none;
+    }
+
+    .note-field textarea {
+      flex: 1 1 auto;
+      resize: none;
+      outline: none;
+    }
+
+    .note-field textarea::placeholder {
+      color: rgba(44, 33, 24, 0.52);
+    }
+
+    .note-field-display {
+      white-space: pre-wrap;
+    }
+
+    .note-record-action {
+      margin-top: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .note-record-action-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .note-record-error,
+    .note-record-feedback {
+      color: var(--note-text);
+      font-size: 0.92rem;
+    }
+
+    .note-record-feedback {
+      padding: 0;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .note-record-feedback strong {
+      font-size: 0.98rem;
+    }
+
+    .note-share-btn,
+    .note-dock-toggle-btn,
+    .btn-primary-small {
+      min-height: 40px;
+      padding: 0 14px;
+      border: 1px solid rgba(111, 90, 72, 0.28);
+      border-radius: 999px;
+      background: rgba(111, 90, 72, 0.08);
+      color: var(--note-text);
+      font-size: 0.86rem;
+      font-weight: 700;
+    }
+
+    .note-share-btn:hover,
+    .note-dock-toggle-btn:hover,
+    .btn-primary-small:hover {
+      background: rgba(111, 90, 72, 0.16);
+    }
+
+    #studyWorkspace:fullscreen {
+      width: 100%;
+      height: 100%;
+      padding: 20px;
+      background:
+        linear-gradient(180deg, rgba(18, 13, 14, 0.5), rgba(18, 13, 14, 0.78)),
+        url("note_training/note-background.png") center center / cover no-repeat;
+    }
+
+    @media (max-width: 1180px) {
+      .study-workspace.note-training1-workspace {
+        grid-template-columns: 1fr;
+      }
+
+      .study-workspace.note-training1-workspace.note-dock-collapsed {
+        grid-template-columns: 1fr;
+      }
+
+      .study-workspace.note-training1-workspace.note-dock-collapsed .note-training1-sidebar {
+        display: none;
+      }
+
+      .note-panel.note-training1-note-panel,
+      .note-training1-note-surface {
+        min-height: auto;
+      }
+
+      .note-panel.note-training1-note-panel {
+        min-height: clamp(960px, 160vw, 1420px);
+      }
+    }
+
+    @media (max-width: 720px) {
+      .page-shell.note-training1-shell {
+        width: min(100%, calc(100% - 16px));
+        padding-top: 16px;
+      }
+
+      .video-panel.note-training1-video-panel {
+        padding: 0;
+      }
+
+      .note-training1-note-surface {
+        top: 7.9%;
+        left: 4.5%;
+        width: 91%;
+        height: 89.1%;
+      }
+
+      .note-panel-head,
+      .note-panel-head-actions,
+      .note-record-action-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .detail-meta-pill,
+      .detail-resource-tab,
+      .note-share-btn,
+      .note-dock-toggle-btn,
+      .btn-primary-small {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body data-page="video-detail" data-back-target-mode="godot-academic" class="note-training1-page">
+  <main class="module-content page-shell note-training1-shell">
+    <div id="studyWorkspace" class="study-workspace note-training1-workspace">
+      <section class="detail-layout note-training1-main">
+        <article class="video-panel note-training1-video-panel">
+          <div class="workspace-top-actions">
+            <button class="back-btn back-fab" data-back-target="listening.html" aria-label="Go back" title="Back" type="button">&#8592;</button>
+            <h2 id="detailTitle">Video title</h2>
+          </div>
+          <p id="detailPersonMeta" class="person-meta-line"></p>
+          <div id="detailMeta" class="detail-meta-row"></div>
+
+          <div class="note-training1-monitor">
+            <img class="note-training1-monitor-frame" src="note_training/note-video-frame.png" alt="" aria-hidden="true">
+            <div class="note-training1-monitor-screen">
+              <video id="practiceVideo" controls preload="metadata"></video>
+            </div>
+          </div>
+
+          <div class="detail-resource-tabs">
+            <button class="btn-small transcript-toggle-btn detail-resource-tab" id="transcriptToggleBtn" type="button">Transcript</button>
+            <button class="btn-small transcript-toggle-btn detail-resource-tab hidden" id="sampleNotesToggleBtn" type="button">Sample Notes</button>
+          </div>
+          <aside class="transcript-panel hidden" id="transcriptPanel">
+            <div class="detail-resource-head">
+              <strong id="detailResourceTitle">Transcript</strong>
+            </div>
+            <div class="transcript-content" id="transcriptContent"></div>
+          </aside>
+        </article>
+      </section>
+
+      <section class="detail-note-layout note-training1-sidebar">
+        <aside class="note-panel detail-note-panel note-training1-note-panel">
+          <img class="note-training1-clipboard" src="note_training/note-clipboard.png" alt="" aria-hidden="true">
+          <div class="note-training1-note-surface">
+            <div class="note-panel-head">
+              <h3>Note</h3>
+              <div class="note-panel-head-actions">
+                <button class="btn-small note-share-btn" id="noteShareBtn" type="button">Share</button>
+                <button class="btn-small note-dock-toggle-btn" id="noteDockToggleBtn" type="button">Fold</button>
+              </div>
+            </div>
+
+            <div class="note-grid three-col-note-grid">
+              <div class="note-field">
+                <label for="noteMainContent">Main Content</label>
+                <textarea id="noteMainContent" rows="6" placeholder="Summarize the main content of the video"></textarea>
+                <div class="note-field-display hidden" id="noteMainContentDisplay"></div>
+              </div>
+              <div class="note-field">
+                <label for="noteKeyWord">Key Word</label>
+                <textarea id="noteKeyWord" rows="6" placeholder="Record keywords and terms"></textarea>
+                <div class="note-field-display hidden" id="noteKeyWordDisplay"></div>
+              </div>
+              <div class="note-field">
+                <label for="notePersonalView">Personal View</label>
+                <textarea id="notePersonalView" rows="6" placeholder="Write your thoughts and opinions"></textarea>
+                <div class="note-field-display hidden" id="notePersonalViewDisplay"></div>
+              </div>
+            </div>
+
+            <div class="note-record-action">
+              <div class="note-record-action-row">
+                <button class="btn-small btn-primary-small" id="recordAnswerBtn" type="button">Record your answer</button>
+                <span class="note-record-error hidden" id="recordAnswerError">notes are blank</span>
+              </div>
+              <div class="note-record-feedback hidden" id="recordAnswerFeedback">
+                <strong>Saved to your study record</strong>
+                <span>You can still make multiple attempts and save</span>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </section>
+    </div>
+  </main>
+
+  <script src="practice-data.js"></script>
+  <script src="practice-data-api.js"></script>
+  <script src="practice-app-api.js"></script>
+</body>
+</html>

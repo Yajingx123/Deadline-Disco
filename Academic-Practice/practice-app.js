@@ -49,6 +49,19 @@
     return u + (u.indexOf("?") === -1 ? "?" : "&") + "ui=godot";
   }
 
+  function getGodotAcademicBackTarget() {
+    return (typeof window !== "undefined" && window.ACADBEAT_LOCAL && window.ACADBEAT_LOCAL.godotAcademicWebUrl) ||
+      "http://127.0.0.1:5500/index.html?ui=godot&scene=academic";
+  }
+
+  function resolveConfiguredBackTarget(defaultTarget) {
+    const mode = document.body && document.body.dataset ? document.body.dataset.backTargetMode : "";
+    if (mode === "godot-academic") {
+      return getGodotAcademicBackTarget();
+    }
+    return defaultTarget;
+  }
+
   function buildAbsoluteProjectUrl(pathWithQuery) {
     return new URL(pathWithQuery, window.location.origin + "/").toString();
   }
@@ -1131,10 +1144,7 @@
     var backList = qs(".back-btn");
     if (backList) {
       if (UI_MODE === "godot") {
-        var gAc =
-          (typeof window !== "undefined" && window.ACADBEAT_LOCAL && window.ACADBEAT_LOCAL.godotAcademicWebUrl) ||
-          "http://127.0.0.1:5500/index.html?ui=godot&scene=academic";
-        backList.dataset.backTarget = gAc;
+        backList.dataset.backTarget = getGodotAcademicBackTarget();
       } else {
         backList.dataset.backTarget = "training.html";
       }
@@ -1254,8 +1264,11 @@
           questionLine;
 
         card.querySelector(".video-go-btn").addEventListener("click", function () {
-          const targetPage = mode === "respond" ? "respond_training.html" : "note_training.html";
-          window.location.href = withUiMode(targetPage + "?mode=" + mode + "&videoId=" + video.id);
+          const targetPage = mode === "respond"
+            ? "respond_training.html"
+            : (UI_MODE === "godot" ? "note_training1.html" : "note_training.html");
+          const targetUrl = targetPage + "?mode=" + mode + "&videoId=" + video.id;
+          window.location.href = withUiMode(targetUrl);
         });
 
         resultList.appendChild(card);
@@ -1321,7 +1334,9 @@
 
     const backBtnDetail = qs(".back-btn");
     if (backBtnDetail) {
-      backBtnDetail.dataset.backTarget = "listening.html?mode=" + encodeURIComponent(mode);
+      backBtnDetail.dataset.backTarget = resolveConfiguredBackTarget(
+        "listening.html?mode=" + encodeURIComponent(mode)
+      );
     }
 
     const titleEl = qs("#detailTitle");
@@ -1464,7 +1479,8 @@
 
       if (recordAnswerError) recordAnswerError.classList.add("hidden");
 
-      const trainingPath = withUiMode("Academic-Practice/note_training.html?mode=" + encodeURIComponent(mode) + "&videoId=" + encodeURIComponent(video.id));
+      const currentTrainingPage = window.location.pathname.split("/").pop() || "note_training.html";
+      const trainingPath = "Academic-Practice/" + currentTrainingPage + "?mode=" + encodeURIComponent(mode) + "&videoId=" + encodeURIComponent(video.id);
       const trainingUrl = buildAbsoluteProjectUrl(trainingPath);
       const answerText = buildSharedAnswerText(values);
       const prefillContent = [
@@ -1539,7 +1555,7 @@
 
     function refreshNoteDockBtnText() {
       const isCollapsed = studyWorkspaceEl.classList.contains("note-dock-collapsed");
-      noteDockToggleBtn.textContent = isCollapsed ? "展开" : "折叠";
+      noteDockToggleBtn.textContent = isCollapsed ? "Expand" : "Fold";
     }
 
     async function switchVideoFullscreenToWorkspace() {
