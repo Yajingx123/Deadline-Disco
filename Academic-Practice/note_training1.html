@@ -42,6 +42,7 @@
     body.note-training1-page {
       margin: 0;
       font-family: var(--font-copy);
+      font-size: 18px;
       color: var(--text-main);
       background:
         linear-gradient(180deg, rgba(18, 13, 14, 0.36), rgba(18, 13, 14, 0.64)),
@@ -122,14 +123,14 @@
       background: rgba(255, 255, 255, 0.08);
       color: #fff;
       font: inherit;
-      font-size: 1.2rem;
+      font-size: 1.35rem;
       cursor: pointer;
     }
 
     .workspace-top-actions h2 {
       margin: 0;
       font-family: var(--font-ui);
-      font-size: clamp(1.5rem, 2vw, 2.3rem);
+      font-size: clamp(1.75rem, 2.2vw, 2.7rem);
       line-height: 1.15;
       letter-spacing: 0.01em;
     }
@@ -142,7 +143,7 @@
       align-items: center;
       font-family: var(--font-copy);
       color: var(--text-soft);
-      font-size: 0.97rem;
+      font-size: 1.1rem;
     }
 
     .person-meta-separator {
@@ -181,7 +182,7 @@
       background: rgba(0, 0, 0, 0.28);
       color: var(--text-main);
       font-family: var(--font-ui);
-      font-size: 0.92rem;
+      font-size: 1.02rem;
       font-weight: 600;
     }
 
@@ -239,7 +240,7 @@
       background: rgba(0, 0, 0, 0.3);
       color: #fff;
       font-family: var(--font-ui);
-      font-size: 1rem;
+      font-size: 1.08rem;
       font-weight: 700;
       cursor: pointer;
       transition: background-color 0.2s ease, color 0.2s ease;
@@ -266,7 +267,7 @@
     .detail-resource-head {
       margin-bottom: 12px;
       font-family: var(--font-ui);
-      font-size: 1rem;
+      font-size: 1.1rem;
       font-weight: 700;
     }
 
@@ -274,6 +275,7 @@
       max-height: 280px;
       overflow: auto;
       font-family: var(--font-copy);
+      font-size: 1.05rem;
       line-height: 1.7;
       color: var(--text-soft);
       white-space: pre-wrap;
@@ -324,7 +326,7 @@
       margin: 0;
       font-family: var(--font-ui);
       color: var(--note-text);
-      font-size: 1.42rem;
+      font-size: 1.7rem;
       font-weight: 800;
     }
 
@@ -354,7 +356,7 @@
     .note-field label {
       font-family: var(--font-ui);
       color: var(--note-soft);
-      font-size: 0.98rem;
+      font-size: 1.08rem;
       font-weight: 700;
       letter-spacing: 0.03em;
     }
@@ -370,7 +372,7 @@
       background: transparent;
       color: var(--note-text);
       font-family: var(--font-copy);
-      font-size: clamp(0.96rem, 0.3vw + 0.9rem, 1.05rem);
+      font-size: clamp(1.08rem, 0.35vw + 1rem, 1.22rem);
       line-height: 1.6;
       box-shadow: none;
     }
@@ -407,7 +409,7 @@
     .note-record-feedback {
       font-family: var(--font-copy);
       color: var(--note-text);
-      font-size: 0.92rem;
+      font-size: 1rem;
     }
 
     .note-record-feedback {
@@ -421,7 +423,7 @@
     }
 
     .note-record-feedback strong {
-      font-size: 0.98rem;
+      font-size: 1.08rem;
     }
 
     .note-share-btn,
@@ -434,7 +436,7 @@
       background: rgba(111, 90, 72, 0.08);
       color: var(--note-text);
       font-family: var(--font-ui);
-      font-size: 0.86rem;
+      font-size: 0.98rem;
       font-weight: 700;
     }
 
@@ -511,7 +513,7 @@
     }
   </style>
 </head>
-<body data-page="video-detail" data-back-target-mode="godot-academic" class="note-training1-page">
+<body data-page="video-detail" class="note-training1-page">
   <main class="module-content page-shell note-training1-shell">
     <div id="studyWorkspace" class="study-workspace note-training1-workspace">
       <section class="detail-layout note-training1-main">
@@ -551,7 +553,6 @@
               <h3>Note</h3>
               <div class="note-panel-head-actions">
                 <button class="btn-small note-share-btn" id="noteShareBtn" type="button">Share</button>
-                <button class="btn-small note-dock-toggle-btn" id="noteDockToggleBtn" type="button">Fold</button>
               </div>
             </div>
 

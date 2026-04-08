@@ -1228,7 +1228,7 @@
     const recordAnswerError = qs("#recordAnswerError");
     const recordAnswerFeedback = qs("#recordAnswerFeedback");
 
-    if (!titleEl || !detailPersonMetaEl || !metaEl || !videoEl || !studyWorkspaceEl || !noteShareBtn || !noteDockToggleBtn || !noteMainContentEl || !noteKeyWordEl || !notePersonalViewEl) {
+    if (!titleEl || !detailPersonMetaEl || !metaEl || !videoEl || !studyWorkspaceEl || !noteShareBtn || !noteMainContentEl || !noteKeyWordEl || !notePersonalViewEl) {
       return;
     }
 
@@ -1422,6 +1422,9 @@
     }
 
     function refreshNoteDockBtnText() {
+      if (!noteDockToggleBtn) {
+        return;
+      }
       const isCollapsed = studyWorkspaceEl.classList.contains("note-dock-collapsed");
       noteDockToggleBtn.textContent = isCollapsed ? "Expand" : "Fold";
     }
@@ -1439,10 +1442,12 @@
       }
     }
 
-    noteDockToggleBtn.addEventListener("click", function () {
-      studyWorkspaceEl.classList.toggle("note-dock-collapsed");
-      refreshNoteDockBtnText();
-    });
+    if (noteDockToggleBtn) {
+      noteDockToggleBtn.addEventListener("click", function () {
+        studyWorkspaceEl.classList.toggle("note-dock-collapsed");
+        refreshNoteDockBtnText();
+      });
+    }
 
     document.addEventListener("fullscreenchange", function () {
       if (document.fullscreenElement === studyWorkspaceEl) {
