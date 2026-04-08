@@ -98,7 +98,7 @@
         overflow: auto;
         border-radius: 28px;
         background: #fffdf9;
-        box-shadow: 0 28px 70px rgba(58, 78, 107, 0.18);
+        box-shadow: 0 28px 70px rgba(91, 42, 134, 0.18);
         padding: 28px;
       }
       .practice-share-modal__header {
@@ -121,7 +121,7 @@
       }
       .practice-share-modal__close {
         border: none;
-        background: rgba(155, 183, 212, 0.14);
+        background: rgba(250, 204, 21, 0.14);
         color: #3A4E6B;
         width: 38px;
         height: 38px;
@@ -135,7 +135,7 @@
         gap: 18px;
       }
       .practice-share-panel {
-        border: 1px solid rgba(58, 78, 107, 0.1);
+        border: 1px solid rgba(91, 42, 134, 0.1);
         border-radius: 22px;
         background: rgba(255, 255, 255, 0.92);
         padding: 22px;
@@ -163,7 +163,7 @@
       }
       .practice-share-search {
         width: 100%;
-        border: 1px solid rgba(58, 78, 107, 0.14);
+        border: 1px solid rgba(91, 42, 134, 0.14);
         border-radius: 16px;
         padding: 12px 14px;
         font-size: 0.95rem;
@@ -178,7 +178,7 @@
       }
       .practice-share-item {
         width: 100%;
-        border: 1px solid rgba(58, 78, 107, 0.08);
+        border: 1px solid rgba(91, 42, 134, 0.08);
         border-radius: 18px;
         background: #fff;
         padding: 12px 14px;
@@ -225,7 +225,7 @@
         border-radius: 999px;
         min-height: 38px;
         padding: 0 14px;
-        background: rgba(58, 78, 107, 0.1);
+        background: rgba(91, 42, 134, 0.1);
         color: #24354d;
         font-weight: 700;
         cursor: pointer;

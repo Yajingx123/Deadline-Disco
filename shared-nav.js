@@ -83,10 +83,10 @@
     const ownerUrl = options.ownerUrl || `${basePath}owner.html`;
     const L = typeof window !== 'undefined' && window.ACADBEAT_LOCAL ? window.ACADBEAT_LOCAL : null;
     const technologyUrl = options.technologyUrl || (L && L.technologyUrl) || `${basePath}technology-gate.html`;
-    const academicTrainingUrl = options.academicTrainingUrl || `${basePath}Academic-Practice/training.html`;
-    const academicListeningUrl = options.academicListeningUrl || `${basePath}Academic-Practice/listening.html`;
-    const academicRespondUrl = options.academicRespondUrl || `${basePath}Academic-Practice/respond_training.html`;
-    const academicNoteUrl = options.academicNoteUrl || `${basePath}Academic-Practice/note_training.html`;
+    const academicTrainingUrl = options.academicTrainingUrl || `${basePath}vocba_prac/practice.php`;
+    const academicListeningUrl = options.academicListeningUrl || `${basePath}Academic-Practice/listening.html?mode=understand`;
+    const academicRespondUrl = options.academicRespondUrl || `${basePath}Academic-Practice/listening.html?mode=respond`;
+    const academicNoteUrl = options.academicNoteUrl || `${basePath}Academic-Practice/video_call/index.php`;
     const currentOrigin = (typeof window !== 'undefined' && window.location) ? window.location.origin : 'http://127.0.0.1:8001';
     const technologyTeamsUrl = options.technologyTeamsUrl || 'https://support.microsoft.com/en-us/teams';
     const technologyGithubUrl = options.technologyGithubUrl || 'https://docs.github.com/en/get-started';

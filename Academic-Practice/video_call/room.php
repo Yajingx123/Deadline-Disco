@@ -44,19 +44,20 @@ if ($tokenMode === 'test') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AcadBeat | Video Call Room</title>
     <link rel="stylesheet" href="../practice-style.css">
+    <link rel="stylesheet" href="../acadbeat-global.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #e7dfd6;
-            --ink: #33455f;
-            --muted: rgba(51, 69, 95, 0.68);
-            --line: rgba(51, 69, 95, 0.12);
-            --panel: rgba(255, 255, 255, 0.74);
-            --strong: rgba(255, 255, 255, 0.92);
-            --accent: #91abc8;
+            --bg: var(--bg-color);
+            --ink: var(--secondary-color);
+            --muted: rgba(91, 42, 134, 0.68);
+            --line: rgba(91, 42, 134, 0.16);
+            --panel: rgba(255, 255, 255, 0.78);
+            --strong: rgba(255, 255, 255, 0.94);
+            --accent: var(--primary-color);
             --success: #4c7960;
-            --warning: #946941;
-            --danger: #b26060;
+            --warning: #b8860b;
+            --danger: #b84c5c;
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: "Inter", sans-serif; }
         body {
@@ -64,8 +65,8 @@ if ($tokenMode === 'test') {
             color: var(--ink);
             overflow: hidden;
             background:
-                radial-gradient(circle at top left, rgba(145,171,200,0.28), transparent 30%),
-                radial-gradient(circle at bottom right, rgba(51,69,95,0.10), transparent 34%),
+                radial-gradient(circle at 12% 16%, rgba(250, 204, 21, 0.2), transparent 32%),
+                radial-gradient(circle at 84% 22%, rgba(91, 42, 134, 0.16), transparent 36%),
                 var(--bg);
         }
         .room-page-shell {
@@ -83,7 +84,7 @@ if ($tokenMode === 'test') {
             border-radius: 20px;
             background: var(--panel);
             backdrop-filter: blur(14px);
-            box-shadow: 0 16px 38px rgba(51, 69, 95, 0.07);
+            box-shadow: 0 16px 38px rgba(91, 42, 134, 0.1);
         }
         .btn {
             border-radius: 999px;
@@ -103,8 +104,8 @@ if ($tokenMode === 'test') {
         }
         .btn.primary {
             background: var(--accent);
-            border-color: var(--accent);
-            color: #fff;
+            border-color: rgba(91, 42, 134, 0.28);
+            color: var(--ink);
         }
         .btn.danger {
             color: var(--danger);
@@ -154,20 +155,20 @@ if ($tokenMode === 'test') {
             height: 100%;
             flex: 1 1 auto;
             min-height: 0;
-            background: #f7f4ef;
+            background: #f4f0ff;
             overflow: hidden;
         }
         .empty {
             position: absolute;
             inset: 14px;
             border-radius: 16px;
-            border: 1px dashed rgba(51,69,95,0.22);
+            border: 1px dashed rgba(91, 42, 134, 0.28);
             display: flex;
             align-items: center;
             justify-content: center;
             text-align: center;
             padding: 16px;
-            background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(241,236,230,0.92));
+            background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(244, 239, 255, 0.92));
         }
         .empty[hidden] { display: none !important; }
         .empty-card { max-width: 440px; }
@@ -208,7 +209,7 @@ if ($tokenMode === 'test') {
         .room-manage-modal__backdrop {
             position: absolute;
             inset: 0;
-            background: rgba(28, 35, 49, 0.34);
+            background: rgba(45, 18, 82, 0.38);
             backdrop-filter: blur(5px);
         }
         .room-manage-card {
@@ -217,7 +218,7 @@ if ($tokenMode === 'test') {
             border-radius: 24px;
             border: 1px solid var(--line);
             background: rgba(255,255,255,0.96);
-            box-shadow: 0 24px 56px rgba(51,69,95,0.18);
+            box-shadow: 0 24px 56px rgba(91, 42, 134, 0.2);
             padding: 20px;
             display: grid;
             gap: 16px;
@@ -281,7 +282,7 @@ if ($tokenMode === 'test') {
             font-weight: 700;
         }
         .room-visibility-option input {
-            accent-color: var(--accent);
+            accent-color: #5b2a86;
         }
         .room-manage-field {
             position: relative;
@@ -307,7 +308,7 @@ if ($tokenMode === 'test') {
             border-radius: 18px;
             border: 1px solid var(--line);
             background: rgba(255,255,255,0.98);
-            box-shadow: 0 18px 42px rgba(51,69,95,0.16);
+            box-shadow: 0 18px 42px rgba(91, 42, 134, 0.16);
             padding: 8px;
             display: grid;
             gap: 6px;
@@ -318,7 +319,7 @@ if ($tokenMode === 'test') {
         .room-manage-option {
             border: 0;
             border-radius: 14px;
-            background: rgba(247,244,239,0.92);
+            background: rgba(248, 244, 255, 0.94);
             padding: 10px 12px;
             display: grid;
             gap: 3px;
@@ -343,7 +344,7 @@ if ($tokenMode === 'test') {
             border-radius: 14px;
             border: 1px solid var(--line);
             padding: 10px 12px;
-            background: rgba(247,244,239,0.92);
+            background: rgba(248, 244, 255, 0.94);
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -512,7 +513,7 @@ if ($tokenMode === 'test') {
             const el = document.getElementById('roomManageFeedback');
             if (!el) return;
             el.textContent = message || '';
-            el.style.color = isError ? '#b26060' : 'rgba(51,69,95,0.72)';
+            el.style.color = isError ? '#b84c5c' : 'rgba(91, 42, 134, 0.72)';
         }
 
         function toggleManageModal(open) {

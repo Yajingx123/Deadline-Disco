@@ -1,22 +1,23 @@
+/* 与 AcadBeat 全站紫金（acadbeat-global / shared-nav）一致；供将来复用或单独引用 */
 :root {
-  --vc-bg: #e7dfd6;
-  --vc-ink: #364964;
-  --vc-muted: rgba(54, 73, 100, 0.68);
-  --vc-line: rgba(54, 73, 100, 0.12);
+  --vc-bg: #f4efff;
+  --vc-ink: #5b2a86;
+  --vc-muted: rgba(91, 42, 134, 0.68);
+  --vc-line: rgba(91, 42, 134, 0.16);
   --vc-panel: rgba(255, 255, 255, 0.78);
-  --vc-panel-strong: rgba(255, 255, 255, 0.92);
-  --vc-accent: #9bb7d4;
-  --vc-accent-strong: #4f6b90;
-  --vc-soft: rgba(155, 183, 212, 0.2);
-  --vc-danger: #b96060;
+  --vc-panel-strong: rgba(255, 255, 255, 0.94);
+  --vc-accent: #facc15;
+  --vc-accent-strong: #5b2a86;
+  --vc-soft: rgba(250, 204, 21, 0.22);
+  --vc-danger: #b84c5c;
   --vc-success: #4d7b60;
 }
 
 .video-call-page {
   color: var(--vc-ink);
   background:
-    radial-gradient(circle at top left, rgba(155, 183, 212, 0.28), transparent 24%),
-    radial-gradient(circle at right center, rgba(54, 73, 100, 0.10), transparent 22%),
+    radial-gradient(circle at 12% 16%, rgba(250, 204, 21, 0.2), transparent 24%),
+    radial-gradient(circle at right center, rgba(91, 42, 134, 0.14), transparent 26%),
     var(--vc-bg);
   min-height: calc(100vh - 84px);
   padding-bottom: 48px;
@@ -34,7 +35,7 @@
   border: 1px solid var(--vc-line);
   background: var(--vc-panel);
   border-radius: 28px;
-  box-shadow: 0 18px 40px rgba(54, 73, 100, 0.08);
+  box-shadow: 0 18px 40px rgba(91, 42, 134, 0.1);
   backdrop-filter: blur(16px);
 }
 
@@ -155,7 +156,7 @@
   padding: 18px;
   border-radius: 22px;
   border: 1px solid var(--vc-line);
-  background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(245,241,235,0.86));
+  background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(244, 239, 255, 0.86));
 }
 
 .video-call-card__top,
@@ -201,9 +202,9 @@
 
 .video-call-create__btn--solid,
 .video-call-card__join {
-  background: var(--vc-accent-strong);
-  border-color: var(--vc-accent-strong);
-  color: #fff;
+  background: linear-gradient(135deg, #5b2a86 0%, #6a33a0 100%);
+  border-color: rgba(91, 42, 134, 0.9);
+  color: #fff8ea;
 }
 
 .video-call-card__join {
@@ -234,7 +235,7 @@
 .video-call-empty {
   margin-top: 16px;
   padding: 28px;
-  border: 1px dashed rgba(54, 73, 100, 0.22);
+  border: 1px dashed rgba(91, 42, 134, 0.24);
   border-radius: 22px;
   text-align: center;
   color: var(--vc-muted);
@@ -248,7 +249,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(54, 73, 100, 0.24);
+  background: rgba(91, 42, 134, 0.22);
   backdrop-filter: blur(10px);
   padding: 18px;
 }
@@ -258,7 +259,7 @@
   border-radius: 28px;
   background: var(--vc-panel-strong);
   border: 1px solid var(--vc-line);
-  box-shadow: 0 22px 54px rgba(54, 73, 100, 0.18);
+  box-shadow: 0 22px 54px rgba(91, 42, 134, 0.16);
   padding: 26px;
 }
 
@@ -315,7 +316,7 @@
   border-radius: 16px;
   background: #fff;
   border: 1px solid var(--vc-line);
-  box-shadow: 0 18px 36px rgba(54, 73, 100, 0.16);
+  box-shadow: 0 18px 36px rgba(91, 42, 134, 0.14);
 }
 
 .video-call-toast.is-error {
