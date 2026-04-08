@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AcadBeat | Studio</title>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;1,700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../shared-nav.css">
     <style>
         :root {
             --bg-color: #E4DFD8;
@@ -29,120 +30,6 @@
             color: var(--secondary-color);
             min-height: 100vh;
             padding: 0 5% 48px;
-        }
-
-        nav {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 24px;
-            height: 80px;
-            margin: 0 calc(5% * -1);
-            padding: 0 5%;
-            border-bottom: 1px solid rgba(58, 78, 107, 0.1);
-            background-color: var(--bg-color);
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 1000;
-        }
-
-        .logo {
-            font-size: 1.4rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            text-transform: uppercase;
-            cursor: pointer;
-        }
-
-        .logo span {
-            color: var(--primary-color);
-        }
-
-        .nav-menu {
-            display: flex;
-            gap: 2.5rem;
-        }
-
-        .nav-item {
-            color: var(--secondary-color);
-            font-weight: 600;
-            font-size: 0.8rem;
-            cursor: pointer;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            opacity: 0.5;
-            padding: 8px 0;
-            position: relative;
-            transition: 0.6s ease;
-        }
-
-        .nav-item:hover,
-        .nav-item.active {
-            opacity: 1;
-        }
-
-        .nav-item.active::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            width: 100%;
-            height: 2px;
-            background: var(--secondary-color);
-        }
-
-        .user-group {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .user-section {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-            transition: 0.4s ease;
-        }
-
-        .user-section:hover {
-            opacity: 0.7;
-        }
-
-        .avatar {
-            width: 34px;
-            height: 34px;
-            background-color: var(--primary-color);
-            border-radius: 50%;
-            border: 1px solid var(--secondary-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 0.7rem;
-        }
-
-        .logout-link {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 34px;
-            padding: 0 12px;
-            border-radius: 999px;
-            border: 1px solid rgba(58, 78, 107, 0.18);
-            background: rgba(255, 255, 255, 0.72);
-            color: var(--secondary-color);
-            text-decoration: none;
-            font-size: 0.72rem;
-            font-weight: 700;
-            transition: 0.25s ease;
-        }
-
-        .logout-link:hover {
-            transform: translateY(-1px);
-            background: rgba(255, 255, 255, 0.94);
-            border-color: rgba(58, 78, 107, 0.3);
         }
 
         .studio-hero {
@@ -276,22 +163,7 @@
     </style>
 </head>
 <body>
-    <nav>
-        <div class="logo" onclick="window.location.href='../home.html'">Acad<span>Beat</span></div>
-        <div class="nav-menu">
-            <div class="nav-item" onclick="window.location.href='../home.html?module=Insight'">Academic</div>
-            <div class="nav-item" onclick="window.location.href='../home.html?module=Dialogue'">Forum</div>
-            <div class="nav-item" onclick="window.location.href='../technology.html'">Technology</div>
-            <div class="nav-item active" onclick="window.location.href='./studio.html'">Studio</div>
-        </div>
-        <div class="user-group">
-            <div class="user-section" id="userSection" onclick="handleUserAction()">
-                <span id="userLabel" style="font-size: 0.75rem; font-weight: 700;">LOGIN</span>
-                <div class="avatar" id="userAvatar">IN</div>
-            </div>
-            <a href="#" class="logout-link" id="logoutLink" onclick="return handleLogout(event)" style="display:none;">Log out</a>
-        </div>
-    </nav>
+    <div id="acadbeatNav"></div>
 
     <section class="studio-hero">
         <h1>Studio</h1>
@@ -320,67 +192,20 @@
         </article>
     </section>
 
+    <script src="../shared-nav.js"></script>
     <script>
-        const AUTH_API_BASE = '../Auth/backend/api';
-        const authState = { user: null };
-
-        function initialsOf(name) {
-            const trimmed = String(name || '').trim();
-            if (!trimmed) return 'IN';
-            return trimmed.slice(0, 2).toUpperCase();
-        }
-
-        function renderAuthUI() {
-            const label = document.getElementById('userLabel');
-            const avatar = document.getElementById('userAvatar');
-            const logoutLink = document.getElementById('logoutLink');
-            if (!label || !avatar || !logoutLink) return;
-            if (authState.user) {
-                label.textContent = authState.user.username;
-                avatar.textContent = initialsOf(authState.user.username);
-                logoutLink.style.display = 'inline-flex';
-            } else {
-                label.textContent = 'LOGIN';
-                avatar.textContent = 'IN';
-                logoutLink.style.display = 'none';
-            }
-        }
-
-        async function authFetch(path, options = {}) {
-            const response = await fetch(`${AUTH_API_BASE}/${path}`, {
-                method: options.method || 'GET',
-                headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
-                credentials: 'include',
-                body: options.body || undefined
+        window.addEventListener('load', () => {
+            window.initializeAcadBeatNav({
+                mountId: 'acadbeatNav',
+                basePath: '../',
+                active: 'studio',
+                authApiBase: '../Auth/backend/api',
+                homeUrl: '../home.html',
+                ownerUrl: '../owner.html',
+                adminUrl: (window.ACADBEAT_LOCAL && window.ACADBEAT_LOCAL.adminDistUrl) || window.location.origin + '/admin_page/dist/index.html',
+                redirectAdmins: true
             });
-            return response.json().catch(() => ({ status: 'error', message: 'Invalid response' }));
-        }
-
-        async function loadAuthUser() {
-            const data = await authFetch('me.php');
-            authState.user = data.status === 'success' ? data.user : null;
-            renderAuthUI();
-        }
-
-        function handleUserAction() {
-            if (authState.user) {
-                window.location.href = '../owner.html';
-                return;
-            }
-            window.location.href = '../home.html?login=1';
-        }
-
-        async function handleLogout(event) {
-            if (event) event.preventDefault();
-            if (!authState.user) return false;
-            await authFetch('logout.php');
-            authState.user = null;
-            renderAuthUI();
-            window.location.href = '../home.html';
-            return false;
-        }
-
-        window.addEventListener('load', loadAuthUser);
+        });
     </script>
 </body>
 </html>

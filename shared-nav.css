@@ -11,9 +11,7 @@ html.acadbeat-login-guard body {
 .acadbeat-shared-nav {
   box-sizing: border-box;
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  gap: 24px;
   padding: 0 5%;
   height: 80px;
   background-color: var(--acad-nav-bg);
@@ -26,12 +24,30 @@ html.acadbeat-login-guard body {
 }
 
 .acadbeat-shared-nav .logo {
+  flex: 0 0 auto;
+  min-width: 120px;
   font-size: 1.4rem;
   font-weight: 800;
   letter-spacing: -0.5px;
   text-transform: uppercase;
   color: var(--acad-nav-text);
   text-decoration: none;
+}
+
+.acadbeat-shared-nav .nav-menu {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  gap: 2.5rem;
+}
+
+.acadbeat-shared-nav .user-group {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 300px;
+  justify-content: flex-end;
 }
 
 .acadbeat-shared-nav .logo span {
@@ -206,4 +222,30 @@ html.acadbeat-login-guard body {
   transform: translateY(-1px);
   background: rgba(255, 255, 255, 0.94);
   border-color: rgba(58, 78, 107, 0.3);
+}
+
+.acadbeat-shared-nav .nav-godot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1.25rem;
+  padding: 0.45rem 0.9rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--acad-nav-text);
+  background: rgba(155, 183, 212, 0.35);
+  border: 1px solid var(--acad-nav-primary);
+  border-radius: 6px;
+  transition: 0.25s ease;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.acadbeat-shared-nav .nav-godot:hover {
+  background: rgba(155, 183, 212, 0.55);
+  opacity: 1;
+  transform: translateY(-1px);
 }
