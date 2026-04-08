@@ -5,10 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Practice Detail | AcadBeat</title>
   <script src="../shared/acadbeat-local-config.js"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
+    @font-face {
+      font-family: "AcademicDisplay";
+      src: url("Myfont-Regular.ttf") format("truetype");
+      font-display: swap;
+      font-weight: 400;
+      font-style: normal;
+    }
+
     :root {
       color-scheme: dark;
       --note-training1-monitor-ratio: 1452 / 1071;
@@ -21,6 +26,8 @@
       --note-soft: #6f5a48;
       --note-fill: rgba(255, 253, 248, 0.84);
       --shadow-strong: 0 24px 60px rgba(0, 0, 0, 0.34);
+      --font-ui: "AcademicDisplay", "Trebuchet MS", sans-serif;
+      --font-copy: "AcademicDisplay", "Segoe UI", sans-serif;
     }
 
     * {
@@ -34,7 +41,7 @@
 
     body.note-training1-page {
       margin: 0;
-      font-family: "Inter", sans-serif;
+      font-family: var(--font-copy);
       color: var(--text-main);
       background:
         linear-gradient(180deg, rgba(18, 13, 14, 0.36), rgba(18, 13, 14, 0.64)),
@@ -121,6 +128,7 @@
 
     .workspace-top-actions h2 {
       margin: 0;
+      font-family: var(--font-ui);
       font-size: clamp(1.5rem, 2vw, 2.3rem);
       line-height: 1.15;
       letter-spacing: 0.01em;
@@ -132,6 +140,7 @@
       flex-wrap: wrap;
       gap: 8px;
       align-items: center;
+      font-family: var(--font-copy);
       color: var(--text-soft);
       font-size: 0.97rem;
     }
@@ -171,6 +180,7 @@
       border-radius: 999px;
       background: rgba(0, 0, 0, 0.28);
       color: var(--text-main);
+      font-family: var(--font-ui);
       font-size: 0.92rem;
       font-weight: 600;
     }
@@ -228,7 +238,8 @@
       border-radius: 999px;
       background: rgba(0, 0, 0, 0.3);
       color: #fff;
-      font: inherit;
+      font-family: var(--font-ui);
+      font-size: 1rem;
       font-weight: 700;
       cursor: pointer;
       transition: background-color 0.2s ease, color 0.2s ease;
@@ -254,6 +265,7 @@
 
     .detail-resource-head {
       margin-bottom: 12px;
+      font-family: var(--font-ui);
       font-size: 1rem;
       font-weight: 700;
     }
@@ -261,6 +273,7 @@
     .transcript-content {
       max-height: 280px;
       overflow: auto;
+      font-family: var(--font-copy);
       line-height: 1.7;
       color: var(--text-soft);
       white-space: pre-wrap;
@@ -309,6 +322,7 @@
 
     .note-panel-head h3 {
       margin: 0;
+      font-family: var(--font-ui);
       color: var(--note-text);
       font-size: 1.42rem;
       font-weight: 800;
@@ -338,6 +352,7 @@
     }
 
     .note-field label {
+      font-family: var(--font-ui);
       color: var(--note-soft);
       font-size: 0.98rem;
       font-weight: 700;
@@ -354,7 +369,7 @@
       border-radius: 0;
       background: transparent;
       color: var(--note-text);
-      font: inherit;
+      font-family: var(--font-copy);
       font-size: clamp(0.96rem, 0.3vw + 0.9rem, 1.05rem);
       line-height: 1.6;
       box-shadow: none;
@@ -390,6 +405,7 @@
 
     .note-record-error,
     .note-record-feedback {
+      font-family: var(--font-copy);
       color: var(--note-text);
       font-size: 0.92rem;
     }
@@ -417,6 +433,7 @@
       border-radius: 999px;
       background: rgba(111, 90, 72, 0.08);
       color: var(--note-text);
+      font-family: var(--font-ui);
       font-size: 0.86rem;
       font-weight: 700;
     }
