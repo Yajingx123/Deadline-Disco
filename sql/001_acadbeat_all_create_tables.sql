@@ -1360,4 +1360,30 @@ CREATE TABLE IF NOT EXISTS chat_draw_guess_guesses (
         ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+-- ===== Source: 003_score_rules_records.sql =====
+DROP TABLE IF EXISTS score_rules;
+CREATE TABLE score_rules (
+    rule_id VARCHAR(50) PRIMARY KEY,
+    rule_name VARCHAR(100) NOT NULL,
+    rule_type VARCHAR(20) NOT NULL, -- routine: 日常规则, compete: 竞赛规则
+    description TEXT NOT NULL,
+    base_score INT NOT NULL, -- 基础分数
+    daily_limit INT, -- 每日上限分数
+    daily_count_limit INT, -- 每日次数上限
+    weekly_count_limit INT, -- 每周次数上限
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+DROP TABLE IF EXISTS score_records;
+CREATE TABLE score_records (
+    record_id INT AUTO_INCREMENT PRIMARY KEY,
+    group_id INT NOT NULL,
+    rule_id VARCHAR(50) NOT NULL,
+    score INT NOT NULL,
+    record_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    user_id INT, -- 相关用户ID（可选）
+    description VARCHAR(255), -- 相关描述（可选）
+    FOREIGN KEY (rule_id) REFERENCES score_rules(rule_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 SET FOREIGN_KEY_CHECKS = 1;
