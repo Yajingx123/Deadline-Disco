@@ -220,13 +220,16 @@
 
 /* E */
 .mc2-d__inner .chat-stage {
-  background-image: url('../../chat.png');
+  background: transparent;
+}
+
+.mc2-d__inner .chat-stage__messages {
+  background-image: url('../../chat.jpg');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
 }
 
-.mc2-d__inner .chat-stage__messages,
 .mc2-d__inner .chat-stage__header,
 .mc2-d__inner .chat-stage__composerWrap {
   background: rgba(255, 255, 255, 0.14);
