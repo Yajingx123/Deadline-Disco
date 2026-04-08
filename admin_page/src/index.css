@@ -1,21 +1,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 
 :root {
-  --bg-color: #E4DFD8;
-  --primary-color: #9BB7D4;
-  --secondary-color: #3A4E6B;
+  --bg-color: #f4efff;
+  --primary-color: #facc15;
+  --secondary-color: #5b2a86;
   --white: #ffffff;
-  --panel: rgba(255, 255, 255, 0.72);
-  --panel-strong: rgba(255, 255, 255, 0.88);
-  --border: rgba(58, 78, 107, 0.12);
-  --shadow-soft: 0 18px 50px rgba(58, 78, 107, 0.08);
-  
+  --panel: rgba(255, 255, 255, 0.78);
+  --panel-strong: rgba(255, 255, 255, 0.92);
+  --border: rgba(91, 42, 134, 0.14);
+  --shadow-soft: 0 18px 50px rgba(91, 42, 134, 0.1);
+
   --text: var(--secondary-color);
   --text-h: var(--secondary-color);
   --bg: var(--bg-color);
   --accent: var(--primary-color);
-  --accent-bg: rgba(155, 183, 212, 0.2);
-  --accent-border: rgba(155, 183, 212, 0.5);
+  --accent-bg: rgba(250, 204, 21, 0.22);
+  --accent-border: rgba(250, 204, 21, 0.48);
   
   --sans: 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
   --heading: 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
@@ -37,8 +37,9 @@ body {
   margin: 0;
   font-family: var(--sans);
   background:
-    radial-gradient(circle at top, rgba(155, 183, 212, 0.16), transparent 28%),
-    var(--bg-color);
+    radial-gradient(circle at 12% 0%, rgba(250, 204, 21, 0.18), transparent 32%),
+    radial-gradient(circle at 88% 8%, rgba(91, 42, 134, 0.12), transparent 30%),
+    linear-gradient(160deg, #f8f4ff 0%, #f0e8ff 48%, #fff8e8 100%);
   color: var(--secondary-color);
   min-height: 100vh;
 }

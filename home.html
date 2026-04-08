@@ -315,6 +315,16 @@
             opacity: 0.92;
         }
 
+        .entry-btn--login.entry-btn--logged-in {
+            text-transform: none;
+            letter-spacing: 0.03em;
+            font-weight: 700;
+            max-width: min(52vw, 260px);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
         @keyframes introHeartBeat {
             0%, 100% { transform: scale(1); }
             18% { transform: scale(1.22); }
@@ -1306,7 +1316,7 @@
 <body>
     <div class="entry-cover" id="entryCover" aria-hidden="false">
         <div class="entry-login-float">
-            <button type="button" class="entry-btn entry-btn--login" onclick="openEntryLogin()">Login / Register</button>
+            <button type="button" class="entry-btn entry-btn--login" id="entryLoginBtn">Login / Register</button>
         </div>
         <div class="entry-cover__card">
             <h1 class="entry-title">
@@ -1457,6 +1467,39 @@
             if (!cover) return;
             cover.classList.add('is-hidden');
             cover.setAttribute('aria-hidden', 'true');
+        }
+
+        function showEntryCover() {
+            coverHidden = false;
+            const cover = document.getElementById('entryCover');
+            if (!cover) return;
+            cover.classList.remove('is-hidden');
+            cover.setAttribute('aria-hidden', 'false');
+        }
+
+        function syncEntryLoginButton() {
+            const btn = document.getElementById('entryLoginBtn');
+            if (!btn) return;
+            const u = authState.user;
+            if (u && String(u.role || '').toLowerCase() !== 'admin') {
+                const raw = String(u.username || u.email || 'Account').trim();
+                btn.textContent = raw.length > 26 ? `${raw.slice(0, 24)}…` : raw;
+                btn.classList.add('entry-btn--logged-in');
+                btn.title = 'Open your account';
+                btn.onclick = function (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    window.location.href = portalUrlForCurrentUser();
+                };
+            } else {
+                btn.textContent = 'Login / Register';
+                btn.classList.remove('entry-btn--logged-in');
+                btn.title = '';
+                btn.onclick = function (e) {
+                    e.stopPropagation();
+                    openEntryLogin();
+                };
+            }
         }
 
         function shouldBypassEntryCover(params) {
@@ -1657,6 +1700,7 @@
             });
             authState.user = (window.acadbeatNavState && window.acadbeatNavState.user) || authState.user;
             mountHomeGodotSwitchInNav();
+            syncEntryLoginButton();
         }
 
         async function authFetch(path, options = {}) {
@@ -1933,38 +1977,53 @@
         window.onload = async () => {
             initEntryTyping();
             const params = new URLSearchParams(window.location.search);
-            const moduleParam = params.get('module');
-            if (moduleParam) {
+            const forceEntryLanding = params.get('entry') === '1';
+            if (forceEntryLanding) {
+                showEntryCover();
+                const viewport = document.getElementById('app-viewport');
+                if (viewport) {
+                    viewport.innerHTML = '';
+                }
+                try {
+                    const u = new URL(window.location.href);
+                    u.searchParams.delete('entry');
+                    const qs = u.searchParams.toString();
+                    window.history.replaceState({}, '', u.pathname + (qs ? `?${qs}` : '') + u.hash);
+                } catch (_err) {}
+            }
+            const paramsAfter = new URLSearchParams(window.location.search);
+            const moduleParam = paramsAfter.get('module');
+            if (moduleParam && !forceEntryLanding) {
                 const moduleName = resolveModuleName(moduleParam);
                 loadModule(moduleName);
-            } else {
+            } else if (!forceEntryLanding) {
                 const viewport = document.getElementById('app-viewport');
                 if (viewport) {
                     viewport.innerHTML = '';
                 }
             }
             await refreshSharedNav();
-            if (params.get('challenge') === '1') {
+            if (paramsAfter.get('challenge') === '1') {
                 hideEntryCover();
             }
             await bootChallengeBundle();
             if (window.challengeHome) {
                 window.challengeHome.syncAccess(authState.user);
-                window.challengeHome.handleInitialRoute(params);
+                window.challengeHome.handleInitialRoute(paramsAfter);
             }
-            if (shouldBypassEntryCover(params)) {
+            if (shouldBypassEntryCover(paramsAfter)) {
                 hideEntryCover();
             }
-            if (authState.user && params.get('login') === '1' && params.get('from')) {
+            if (authState.user && paramsAfter.get('login') === '1' && paramsAfter.get('from')) {
                 try {
-                    const normalized = normalizePostLoginUrl(decodeURIComponent(params.get('from')));
+                    const normalized = normalizePostLoginUrl(decodeURIComponent(paramsAfter.get('from')));
                     if (normalized) {
                         window.location.replace(normalized);
                         return;
                     }
                 } catch (_err) {}
             }
-            if (params.get('login') === '1' && !authState.user) {
+            if (paramsAfter.get('login') === '1' && !authState.user) {
                 hideEntryCover();
                 openAuthModal('login', 'Please log in first.');
             }

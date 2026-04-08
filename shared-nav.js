@@ -83,10 +83,10 @@
     const ownerUrl = options.ownerUrl || `${basePath}owner.html`;
     const L = typeof window !== 'undefined' && window.ACADBEAT_LOCAL ? window.ACADBEAT_LOCAL : null;
     const technologyUrl = options.technologyUrl || (L && L.technologyUrl) || `${basePath}technology-gate.html`;
-    const academicTrainingUrl = options.academicTrainingUrl || `${basePath}Academic-Practice/training.html`;
-    const academicListeningUrl = options.academicListeningUrl || `${basePath}Academic-Practice/listening.html`;
-    const academicRespondUrl = options.academicRespondUrl || `${basePath}Academic-Practice/respond_training.html`;
-    const academicNoteUrl = options.academicNoteUrl || `${basePath}Academic-Practice/note_training.html`;
+    const academicTrainingUrl = options.academicTrainingUrl || `${basePath}vocba_prac/practice.php`;
+    const academicListeningUrl = options.academicListeningUrl || `${basePath}Academic-Practice/listening.html?mode=understand`;
+    const academicRespondUrl = options.academicRespondUrl || `${basePath}Academic-Practice/listening.html?mode=respond`;
+    const academicNoteUrl = options.academicNoteUrl || `${basePath}Academic-Practice/video_call/index.php`;
     const currentOrigin = (typeof window !== 'undefined' && window.location) ? window.location.origin : 'http://127.0.0.1:8001';
     const forumPublishUrl = options.forumPublishUrl || ((L && L.forumDevChooserUrl) ? `${L.forumDevChooserUrl}&compose=1` : `${currentOrigin}/forum-project/dist/index.html?view=forum&compose=1`);
     const forumMineUrl = options.forumMineUrl || ((L && L.forumDevChooserUrl) ? `${L.forumDevChooserUrl.replace('view=forum', 'view=personal')}` : `${currentOrigin}/forum-project/dist/index.html?view=personal`);
