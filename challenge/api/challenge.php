@@ -149,9 +149,8 @@ function challenge_build_state(PDO $pdo, array $user, array $cycle): array {
           ON ctm.team_id = ct.team_id
         WHERE ct.week_start_date = ?
           AND ct.status = 'locked'
-          AND ct.score > 0
         GROUP BY ct.team_id, ct.team_name, ct.score, ct.daily_rank, captain.username
-        ORDER BY ct.daily_rank IS NULL, ct.daily_rank ASC, ct.score DESC, ct.team_id ASC
+        ORDER BY ct.score DESC, ct.created_at ASC, ct.team_id ASC
         LIMIT 8
     ");
     $leaderboardStmt->execute([$weekStartDate]);

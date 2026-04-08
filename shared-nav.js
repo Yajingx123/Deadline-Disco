@@ -122,6 +122,7 @@
     const forumUrl = options.forumUrl || `${homeUrl}?module=Dialogue`;
     const technologyUrl = options.technologyUrl || `${homeUrl}?module=Method`;
     const studioUrl = options.studioUrl || `${basePath}Studio/studio.html`;
+    const rankUrl = options.rankUrl || `${basePath}rank/index.html`;
     const authApiBase = options.authApiBase || `${basePath}Auth/backend/api`;
     const loginUrl = options.loginUrl || `${homeUrl}?login=1`;
     const ownerUrl = options.ownerUrl || `${basePath}owner.html`;
@@ -149,6 +150,7 @@
           <a class="nav-item" data-nav="forum" href="${forumUrl}">Forum</a>
           <a class="nav-item" data-nav="technology" href="${technologyUrl}">Technology</a>
           <a class="nav-item" data-nav="studio" href="${studioUrl}">Studio</a>
+          <a class="nav-item" data-nav="rank" href="${rankUrl}">Rank</a>
         </div>
         <div class="user-group">
           ${showChallengeButton ? `<button type="button" class="nav-utility-btn" id="sharedChallengeBtn">${challengeButtonLabel}</button>` : ''}

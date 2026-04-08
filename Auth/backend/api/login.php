@@ -43,11 +43,14 @@ try {
         session_regenerate_id(true);
         $_SESSION['auth_user'] = auth_map_user_row($user);
 
+        $checkinResult = perform_daily_checkin($pdo, (int)$user['user_id']);
+
         echo json_encode([
             'status' => 'success',
             'message' => 'Login successful.',
             'user' => $_SESSION['auth_user'],
             'username' => $user['username'],
+            'checkin' => $checkinResult,
         ], JSON_UNESCAPED_UNICODE);
         exit;
     }
@@ -63,4 +66,80 @@ try {
         'status' => 'error',
         'message' => 'Database error: ' . $e->getMessage(),
     ], JSON_UNESCAPED_UNICODE);
+}
+
+function perform_daily_checkin(PDO $pdo, int $userId): array {
+    try {
+        $now = new DateTimeImmutable('now', new DateTimeZone('Asia/Shanghai'));
+        $today = date('Y-m-d', strtotime('+1 day'));
+        $weekday = (int)$now->format('N');
+        $weekStart = $now->setTime(0, 0)->modify('-' . ($weekday - 1) . ' days');
+        $weekStartStr = $weekStart->format('Y-m-d');
+
+        $teamStmt = $pdo->prepare("
+            SELECT ct.team_id, ct.team_name
+            FROM challenge_team_members ctm
+            JOIN challenge_teams ct ON ct.team_id = ctm.team_id
+            WHERE ctm.user_id = ?
+              AND ctm.membership_status = 'active'
+              AND ct.week_start_date = ?
+              AND ct.status = 'locked'
+            LIMIT 1
+        ");
+        $teamStmt->execute([$userId, $weekStartStr]);
+        $team = $teamStmt->fetch();
+
+        if (!$team) {
+            return ['status' => 'skipped', 'message' => 'Not in an active team'];
+        }
+
+        $teamId = (int)$team['team_id'];
+
+        $checkStmt = $pdo->prepare("
+            SELECT COUNT(*) as cnt
+            FROM score_records
+            WHERE group_id = ?
+              AND rule_id = 'routine1'
+              AND user_id = ?
+              AND DATE(record_time) = ?
+        ");
+        $checkStmt->execute([$teamId, $userId, $today]);
+        $existing = $checkStmt->fetch();
+
+        if ((int)$existing['cnt'] > 0) {
+            return ['status' => 'already_checked_in', 'message' => 'Already checked in today'];
+        }
+
+        $ruleStmt = $pdo->prepare("SELECT base_score FROM score_rules WHERE rule_id = 'routine1'");
+        $ruleStmt->execute();
+        $rule = $ruleStmt->fetch();
+
+        if (!$rule) {
+            return ['status' => 'error', 'message' => 'Check-in rule not found'];
+        }
+
+        $baseScore = (int)$rule['base_score'];
+
+        $insertStmt = $pdo->prepare("
+            INSERT INTO score_records (group_id, rule_id, score, user_id, description, record_time)
+            VALUES (?, 'routine1', ?, ?, 'Daily check-in', NOW())
+        ");
+        $insertStmt->execute([$teamId, $baseScore, $userId]);
+
+        $updateStmt = $pdo->prepare("
+            UPDATE challenge_teams 
+            SET score = score + ? 
+            WHERE team_id = ?
+        ");
+        $updateStmt->execute([$baseScore, $teamId]);
+
+        return [
+            'status' => 'success',
+            'message' => 'Check-in successful',
+            'points_earned' => $baseScore,
+            'team_name' => $team['team_name']
+        ];
+    } catch (Exception $e) {
+        return ['status' => 'error', 'message' => $e->getMessage()];
+    }
 }
