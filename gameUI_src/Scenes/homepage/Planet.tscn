@@ -29,6 +29,7 @@ position = Vector2(269.58408, -240.30278)
 rotation = 0.8374001
 scale = Vector2(0.457, 0.457)
 tip_text = "Game Studio"
+door_id = "studio"
 
 [node name="Door3" parent="." unique_id=40628788 instance=ExtResource("2_r86au")]
 z_index = 4
@@ -71,6 +72,7 @@ position = Vector2(-297.29532, 187.66054)
 rotation = -2.1386702
 scale = Vector2(0.396, 0.396)
 tip_text = "Game Studio"
+door_id = "studio"
 
 [node name="Door9" parent="." unique_id=58010467 instance=ExtResource("2_r86au")]
 z_index = 4
