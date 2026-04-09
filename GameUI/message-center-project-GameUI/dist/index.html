@@ -55,7 +55,7 @@
         document.documentElement.classList.remove('acadbeat-role-guard');
       })();
     </script>
-    <script type="module" crossorigin src="/GameUI/message-center-project-GameUI/dist/assets/index-4yxoSb4m.js"></script>
+    <script type="module" crossorigin src="/GameUI/message-center-project-GameUI/dist/assets/index-DbA_vPve.js"></script>
     <link rel="stylesheet" crossorigin href="/GameUI/message-center-project-GameUI/dist/assets/index-sB3vLWPK.css">
   </head>
   <body>
@@ -69,8 +69,9 @@
         var MAIN = L.mainOrigin || window.location.origin;
         var params = new URLSearchParams(window.location.search);
         var isGodot = params.get('ui') === 'godot';
+        var isGameUiMessageCenter = window.location.pathname.indexOf('/GameUI/message-center-project-GameUI/') === 0;
         var navMount = document.getElementById('acadbeatNav');
-        if (isGodot) {
+        if (isGodot || isGameUiMessageCenter) {
           if (navMount) navMount.style.display = 'none';
           return;
         }
@@ -97,14 +98,15 @@
         if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
         else boot();
       })();
-    </script>
+    </script>
     <script>
       (function initGodotBackButton() {
         var btn = document.getElementById('godotBackBtn');
         if (!btn) return;
         var params = new URLSearchParams(window.location.search);
         var isGodot = params.get('ui') === 'godot';
-        if (!isGodot) return;
+        var isGameUiMessageCenter = window.location.pathname.indexOf('/GameUI/message-center-project-GameUI/') === 0;
+        if (!isGodot && !isGameUiMessageCenter) return;
         document.body.classList.add('mc2-godot-bg');
         var L = window.ACADBEAT_LOCAL || {};
         var target = String(L.godotWebEntryUrl || '').trim() || (window.location.origin + '/gameUI_src/Release/index.html?ui=godot');

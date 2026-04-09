@@ -40,6 +40,28 @@ const FALLBACK_BACK_URL = `${MAIN_ORIGIN}/home.html?module=Dialogue`
 const GAMEUI_FORUM_URL = `${MAIN_ORIGIN}/GameUI/forum-project-GameUI/dist/index.html`
 const GAMEUI_MESSAGE_CENTER_URL = `${MAIN_ORIGIN}/GameUI/message-center-project-GameUI/dist/index.html`
 const GAMEUI_CHALLENGE_URL = `${MAIN_ORIGIN}/GameUI/challenge-GameUI/challenge-panel.html`
+const IS_GODOT_CONTEXT = (() => {
+  if (typeof window === 'undefined') return false
+  const params = new URLSearchParams(window.location.search)
+  if (params.get('ui') === 'godot') return true
+  if (String(window.location.pathname || '').startsWith('/GameUI/message-center-project-GameUI/')) return true
+  return sessionStorage.getItem('acadbeatMessageCenterGodot') === '1'
+})()
+
+if (typeof window !== 'undefined' && IS_GODOT_CONTEXT) {
+  sessionStorage.setItem('acadbeatMessageCenterGodot', '1')
+}
+
+function withGodotUi(url) {
+  if (!IS_GODOT_CONTEXT) return url
+  try {
+    const parsed = new URL(url, window.location.origin)
+    parsed.searchParams.set('ui', 'godot')
+    return parsed.toString()
+  } catch (_err) {
+    return url
+  }
+}
 
 function sanitizeBackUrl(rawUrl) {
   if (!rawUrl) return ''
@@ -112,7 +134,7 @@ function mapMessageCtaToGameUi(rawUrl, noticeKind = '') {
     const isChallengePath = path.startsWith('/challenge/')
 
     if (isChallengeHome || isChallengePath || noticeKind === 'challenge') {
-      return GAMEUI_CHALLENGE_URL
+      return withGodotUi(GAMEUI_CHALLENGE_URL)
     }
 
     if (isForumHome || isForumPath) {
@@ -121,11 +143,11 @@ function mapMessageCtaToGameUi(rawUrl, noticeKind = '') {
       if (postId) {
         target.searchParams.set('postId', postId)
       }
-      return target.toString()
+      return withGodotUi(target.toString())
     }
 
     if (isMessageHome || isMessagePath) {
-      return GAMEUI_MESSAGE_CENTER_URL
+      return withGodotUi(GAMEUI_MESSAGE_CENTER_URL)
     }
 
     return parsed.toString()

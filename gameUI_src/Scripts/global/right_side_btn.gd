@@ -3,7 +3,7 @@ extends CanvasLayer
 # 悬停颜色
 var normal_color : Color = Color(1, 1, 1)
 var hover_color : Color = Color(0.8, 0.8, 0.8)
-const MAIN_MESSAGE_CENTER_URL := "http://127.0.0.1:8001/message-center-project%202/dist/index.html?ui=godot"
+const MAIN_MESSAGE_CENTER_URL := "http://127.0.0.1:8001/GameUI/message-center-project-GameUI/dist/index.html?ui=godot"
 
 # ==========================
 # 切换按钮

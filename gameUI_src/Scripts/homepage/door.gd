@@ -6,10 +6,10 @@ extends Area2D
 @export var tip_text: String = "按 Enter 进门"
 @export var door_id: String = "door_default"
 
-const MAIN_FORUM_URL := "http://127.0.0.1:8001/forum-project-v2/dist/index.html?ui=godot"
+const MAIN_FORUM_URL := "http://127.0.0.1:8001/GameUI/forum-project-GameUI/dist/index.html?ui=godot"
 const MAIN_STUDIO_URL := "http://127.0.0.1:8001/Studio/studio-godot.html?ui=godot"
 const MAIN_TECH_URL := "http://127.0.0.1:8001/GameUI/Technology-GameUI/technology.html?ui=godot"
-const MAIN_COMPETITION_URL := "http://127.0.0.1:8001/home.html?module=Studio&ui=godot"
+const MAIN_COMPETITION_URL := "http://127.0.0.1:8001/GameUI/rank-GameUI/index.html?ui=godot"
 
 @onready var tip: Label = $Tip
 var player: CharacterBody2D

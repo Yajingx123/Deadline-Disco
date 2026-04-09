@@ -61,6 +61,21 @@ export default function ForumHomeV2() {
   const [selectedPost, setSelectedPost] = useState(null)
   const [viewMode, setViewMode] = useState('all') // all | favorites
   const [favoritesTab, setFavoritesTab] = useState('favorites') // favorites | likes | posts
+  const [isGodotContext, setIsGodotContext] = useState(false)
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    const ui = params.get('ui')
+    const hasGodotQuery = ui === 'godot'
+    const hasGodotReferrer = String(document.referrer || '').includes('/gameUI_src/Release/index.html')
+    const rememberedGodot = sessionStorage.getItem('acadbeatForumIsGodot') === '1'
+    const inGodotContext = hasGodotQuery || hasGodotReferrer || rememberedGodot
+
+    setIsGodotContext(inGodotContext)
+    if (inGodotContext) {
+      sessionStorage.setItem('acadbeatForumIsGodot', '1')
+    }
+  }, [])
 
   function preparePosts(rawRows = []) {
     return rawRows.map((post) => ({
@@ -223,9 +238,10 @@ export default function ForumHomeV2() {
 
   const handleBackToHub = () => {
     const params = new URLSearchParams(window.location.search)
-    const ui = params.get('ui')
     const L = (typeof window !== 'undefined' && window.ACADBEAT_LOCAL) ? window.ACADBEAT_LOCAL : {}
-    const target = ui === 'godot'
+    const ui = params.get('ui')
+    const shouldBackToGodot = ui === 'godot' || isGodotContext
+    const target = shouldBackToGodot
       ? (L.godotWebEntryUrl || `${window.location.origin}/gameUI_src/Release/index.html?ui=godot`)
       : (ui ? `/gates/forum-gate.html?ui=${encodeURIComponent(ui)}` : '/gates/forum-gate.html')
     window.location.href = target
