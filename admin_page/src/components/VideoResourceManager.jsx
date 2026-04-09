@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react'
-import { adminFetch } from '../api'
 
 function VideoResourceManager() {
   const [videos, setVideos] = useState([])
@@ -70,10 +69,8 @@ function VideoResourceManager() {
     try {
       // 👇 直接用原生 fetch，不经过任何封装！
       const rawResponse = await fetch('/Academic-Practice/api/video_resources.php?action=list')
-      console.log("📶 HTTP 状态码：", rawResponse.status)
 
       const response = await rawResponse.json()
-      console.log("✅ 真实后端返回：", response) // 看这里！看这里！
 
       // 正确读取数据（不管后端是什么结构，我们都能拿到）
       let data = []
@@ -163,7 +160,6 @@ function VideoResourceManager() {
       reader.onload = (event) => {
         try {
           const json = JSON.parse(event.target.result);
-          console.log("✅ JSON 解析成功", json);
 
           setFormData(prev => ({
             ...prev,
@@ -229,7 +225,6 @@ function VideoResourceManager() {
 
       // ✅ 强制先生成 video_id
       const newId = generateVideoId()
-      console.log("✅ 最终提交的 video_id：", newId)
 
       // 添加所有表单字段
       Object.keys(formData).forEach(key => {
@@ -254,7 +249,6 @@ function VideoResourceManager() {
       })
 
       const result = await response.json()
-      console.log("后端返回：", result)
 
       if (!result.ok) throw new Error(result.error)
 
