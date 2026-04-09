@@ -101,6 +101,27 @@
         }
         .back-btn:hover { transform: scale(1.1); }
 
+        .back-text-btn {
+            position: absolute;
+            top: -8%;
+            left: -3%;
+            height: 36px;
+            padding: 0 14px;
+            border: 1px solid rgba(139, 111, 89, 0.35);
+            border-radius: 10px;
+            background: rgba(255, 249, 242, 0.92);
+            color: var(--primary);
+            font-size: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+            z-index: 10;
+        }
+
+        .back-text-btn:hover {
+            transform: translateY(-1px);
+            background: rgba(255, 249, 242, 1);
+        }
+
         .dashboard-container {
             display: grid; grid-template-columns: 130px 1fr; gap: 34px;
             flex: 1; overflow: hidden;
@@ -206,6 +227,7 @@
     <div class="module-frame">
         <div class="module-content">
             <button class="back-btn" onclick="window.location.href='home.html'">←</button>
+            <button class="back-text-btn" onclick="window.location.href='home.html'">Back Home</button>
 
             <div class="dashboard-container">
                 <aside class="sidebar">
