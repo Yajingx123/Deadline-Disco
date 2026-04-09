@@ -37,6 +37,11 @@
 
   // Listening flows should stay in classic UI unless URL explicitly asks for godot.
   const UI_MODE = getParam("ui", "");
+  const IS_GODOT_UI = UI_MODE === "godot";
+
+  function pickUiPage(classicPage, godotPage) {
+    return IS_GODOT_UI ? godotPage : classicPage;
+  }
 
   function withUiMode(url) {
     if (UI_MODE !== "godot") {
@@ -1119,7 +1124,9 @@
           questionLine;
 
         card.querySelector(".video-go-btn").addEventListener("click", function () {
-          const targetPage = mode === "respond" ? "respond_training.html" : "note_training.html";
+          const targetPage = mode === "respond"
+            ? pickUiPage("respond_training.html", "respond_training-2.html")
+            : pickUiPage("note_training.html", "note_training-2.html");
           window.location.href = withUiMode(targetPage + "?mode=" + mode + "&videoId=" + video.id);
         });
 
@@ -1187,7 +1194,8 @@
 
     const backBtnDetail = qs(".back-btn");
     if (backBtnDetail) {
-      backBtnDetail.dataset.backTarget = "listening.html?mode=" + encodeURIComponent(mode);
+      const listeningPage = pickUiPage("listening.html", "listening-2.html");
+      backBtnDetail.dataset.backTarget = listeningPage + "?mode=" + encodeURIComponent(mode);
     }
 
     const titleEl = qs("#detailTitle");
@@ -1332,7 +1340,8 @@
 
       if (recordAnswerError) recordAnswerError.classList.add("hidden");
 
-      const trainingPath = withUiMode("Academic-Practice/note_training.html?mode=" + encodeURIComponent(mode) + "&videoId=" + encodeURIComponent(video.id));
+      const notePage = pickUiPage("Academic-Practice/note_training.html", "note_training-2.html");
+      const trainingPath = withUiMode(notePage + "?mode=" + encodeURIComponent(mode) + "&videoId=" + encodeURIComponent(video.id));
       const trainingUrl = buildAbsoluteProjectUrl(trainingPath);
       const answerText = buildSharedAnswerText(values);
       const prefillContent = [
@@ -1456,7 +1465,8 @@
 
     const backBtnRespond = qs(".back-btn");
     if (backBtnRespond) {
-      backBtnRespond.dataset.backTarget = "listening.html?mode=" + encodeURIComponent(mode);
+      const listeningPage = pickUiPage("listening.html", "listening-2.html");
+      backBtnRespond.dataset.backTarget = listeningPage + "?mode=" + encodeURIComponent(mode);
     }
 
     const titleEl = qs("#respondTitle");
@@ -1524,7 +1534,8 @@
     }
 
     function buildRespondShareContent(audioUrl) {
-      const trainingPath = withUiMode("Academic-Practice/respond_training.html?mode=" + encodeURIComponent(mode) + "&videoId=" + encodeURIComponent(video.id));
+      const respondPage = pickUiPage("Academic-Practice/respond_training.html", "respond_training-2.html");
+      const trainingPath = withUiMode(respondPage + "?mode=" + encodeURIComponent(mode) + "&videoId=" + encodeURIComponent(video.id));
       const trainingUrl = buildAbsoluteProjectUrl(trainingPath);
       const audioFileName = "response-" + video.id + "." + getAudioExtensionFromMime(currentAudioMime);
       return [

@@ -15,29 +15,14 @@
     (function () {
       var params = new URLSearchParams(window.location.search);
       var uiParam = params.get('ui');
-      var cookieGodot = document.cookie.split('; ').some(function (c) {
-        return c === 'ui_mode=godot' || c.indexOf('ui_mode=godot') === 0;
-      });
-      if (uiParam !== 'godot' && cookieGodot) {
-        params.set('ui', 'godot');
-        var qs = params.toString();
-        history.replaceState(null, '', window.location.pathname + (qs ? '?' + qs : '') + window.location.hash);
-        uiParam = 'godot';
-      }
       if (uiParam !== 'godot') {
         return;
       }
-      /* 先于首帧：让 practice-style 的 display:contents 拆层不作用于 Godot（与 game-listening-theme 同特异性时不再靠加载顺序赌赢） */
-      document.documentElement.setAttribute('data-ui', 'godot');
-      document.cookie = 'ui_mode=godot; path=/; max-age=2592000';
-      var font = document.createElement('link');
-      font.rel = 'stylesheet';
-      font.href = 'https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap';
-      document.head.appendChild(font);
-      var theme = document.createElement('link');
-      theme.rel = 'stylesheet';
-      theme.href = '../newUI/static/game-listening-theme.css';
-      document.head.appendChild(theme);
+      var mode = params.get('mode') === 'respond' ? 'respond' : 'understand';
+      var target = new URL('../listening-2.html', window.location.href);
+      target.searchParams.set('mode', mode);
+      target.searchParams.set('ui', 'godot');
+      window.location.replace(target.toString());
     })();
   </script>
 </head>
@@ -177,12 +162,7 @@
   <script src="practice-app-api.js"></script>
   <script>
     window.addEventListener('load', () => {
-      const uiGodot = (() => {
-        try {
-          if (new URLSearchParams(location.search).get('ui') === 'godot') return true;
-        } catch (_e) {}
-        return document.cookie.split('; ').some((c) => c.startsWith('ui_mode=godot'));
-      })();
+      const uiGodot = new URLSearchParams(location.search).get('ui') === 'godot';
       if (!uiGodot) {
         const L = window.ACADBEAT_LOCAL || {};
         const loginUrl = '../home.html?login=1';

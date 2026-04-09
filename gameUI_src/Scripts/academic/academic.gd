@@ -4,8 +4,8 @@ extends Node2D
 # 本地 URL 与 shared/acadbeat-local-config.js（mainOrigin 等）对齐；见 docs/ARCHITECTURE.md
 
 const URL_VOCAB := "http://127.0.0.1:8001/vocba_prac/?ui=godot"
-const URL_LISTEN_UNDERSTAND := "http://127.0.0.1:8001/Academic-Practice/listening.html?mode=understand&ui=godot"
-const URL_LISTEN_RESPOND := "http://127.0.0.1:8001/Academic-Practice/listening.html?mode=respond&ui=godot"
+const URL_LISTEN_UNDERSTAND := "http://127.0.0.1:8001/listening-2.html?mode=understand&ui=godot"
+const URL_LISTEN_RESPOND := "http://127.0.0.1:8001/listening-2.html?mode=respond&ui=godot"
 const URL_VOICE_ROOM := "http://127.0.0.1:8001/Academic-Practice/voice_room.html?ui=godot"
 
 @export var hover_scale: float = 1.1
