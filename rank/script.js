@@ -4,16 +4,27 @@ class TeamRanking {
     this.teamData = null;
     this.rankingData = [];
     this.isV2Style = this.loadStylePreference();
+    this.cache = new Map();
+    this.API_ENDPOINTS = {
+      USER_INFO: '../Auth/backend/api/me.php',
+      TEAM_RANKING: '../challenge/api/team-ranking.php'
+    };
     this.init();
   }
 
   async init() {
     this.initStyle();
-    await this.getUserInfo();
-    await this.loadRankingData();
+    
+    // 并行加载数据，提高性能
+    const [userInfo, rankingData] = await Promise.all([
+      this.getUserInfo(),
+      this.loadRankingData()
+    ]);
+    
     if (this.currentUser) {
       await this.loadTeamData();
     }
+    
     this.renderMyTeam();
     this.renderRanking();
     this.setupStyleToggle();
@@ -62,10 +73,33 @@ class TeamRanking {
     }
   }
 
+  async fetchData(url, options = {}) {
+    const cacheKey = `${url}_${JSON.stringify(options)}`;
+    
+    // 检查缓存
+    if (this.cache.has(cacheKey)) {
+      return this.cache.get(cacheKey);
+    }
+    
+    try {
+      const response = await fetch(url, {
+        credentials: 'include',
+        ...options
+      });
+      const data = await response.json();
+      
+      // 缓存数据
+      this.cache.set(cacheKey, data);
+      return data;
+    } catch (error) {
+      console.error(`Error fetching data from ${url}:`, error);
+      throw error;
+    }
+  }
+
   async getUserInfo() {
     try {
-      const response = await fetch('../Auth/backend/api/me.php', { credentials: 'include' });
-      const data = await response.json();
+      const data = await this.fetchData(this.API_ENDPOINTS.USER_INFO);
       if (data.status === 'success' && data.user) {
         this.currentUser = data.user;
       }
@@ -76,10 +110,7 @@ class TeamRanking {
 
   async loadTeamData() {
     try {
-      const response = await fetch('../challenge/api/team-ranking.php?action=get_user_team', {
-        credentials: 'include'
-      });
-      const data = await response.json();
+      const data = await this.fetchData(`${this.API_ENDPOINTS.TEAM_RANKING}?action=get_user_team`);
       if (data.status === 'success' && data.team) {
         this.teamData = data.team;
       }
@@ -90,10 +121,7 @@ class TeamRanking {
 
   async loadRankingData() {
     try {
-      const response = await fetch('../challenge/api/team-ranking.php?action=get_team_ranking', {
-        credentials: 'include'
-      });
-      const data = await response.json();
+      const data = await this.fetchData(`${this.API_ENDPOINTS.TEAM_RANKING}?action=get_team_ranking`);
       if (data.status === 'success' && data.rankings) {
         this.rankingData = data.rankings;
       }
@@ -107,59 +135,76 @@ class TeamRanking {
     if (!container) return;
 
     if (!this.currentUser) {
-      container.innerHTML = `
-        <div class="no-team">
-          <h3>Please Log In</h3>
-          <p>You need to be logged in to see your team information.</p>
-          <a href="../home.html?login=1" class="btn-primary">Log In</a>
-        </div>
-      `;
+      this.renderNotLoggedInState(container);
       return;
     }
 
     if (!this.teamData) {
-      container.innerHTML = `
-        <div class="no-team">
-          <h3>Not in a Team</h3>
-          <p>You haven't joined a team yet. Create or join a team to participate in the weekly challenge.</p>
-          <a href="../home.html?challenge=1" class="btn-primary">Join Challenge</a>
-        </div>
-      `;
+      this.renderNotInTeamState(container);
       return;
     }
 
-    const membersHtml = this.teamData.members && this.teamData.members.length > 0
-      ? this.teamData.members.map(member => `
-          <div class="member-item">
-            <div class="member-avatar-large">${this.getInitials(member.username)}</div>
-            <span class="member-name">${member.username}</span>
-            <span class="member-role">${member.member_role === 'captain' ? 'Captain' : 'Member'}</span>
-          </div>
-        `).join('')
-      : '<p>No members</p>';
-
+    const membersHtml = this.generateMembersHtml(this.teamData.members);
     const progressHtml = this.renderDailyProgress(this.teamData.daily_progress);
     const weeklyProgressHtml = this.renderWeeklyProgress(this.teamData.weekly_progress);
 
+    container.innerHTML = this.generateTeamInfoHtml(this.teamData, membersHtml, progressHtml, weeklyProgressHtml);
+  }
+
+  renderNotLoggedInState(container) {
     container.innerHTML = `
+      <div class="no-team">
+        <h3>Please Log In</h3>
+        <p>You need to be logged in to see your team information.</p>
+        <a href="../home.html?login=1" class="btn-primary">Log In</a>
+      </div>
+    `;
+  }
+
+  renderNotInTeamState(container) {
+    container.innerHTML = `
+      <div class="no-team">
+        <h3>Not in a Team</h3>
+        <p>You haven't joined a team yet. Create or join a team to participate in the weekly challenge.</p>
+        <a href="../home.html?challenge=1" class="btn-primary">Join Challenge</a>
+      </div>
+    `;
+  }
+
+  generateMembersHtml(members) {
+    if (!members || members.length === 0) {
+      return '<p>No members</p>';
+    }
+    
+    return members.map(member => `
+      <div class="member-item">
+        <div class="member-avatar-large">${this.getInitials(member.username)}</div>
+        <span class="member-name">${member.username}</span>
+        <span class="member-role">${member.member_role === 'captain' ? 'Captain' : 'Member'}</span>
+      </div>
+    `).join('');
+  }
+
+  generateTeamInfoHtml(teamData, membersHtml, progressHtml, weeklyProgressHtml) {
+    return `
       <div class="team-info">
         <div class="team-header">
           <div class="team-title">
-            <h3>${this.escapeHtml(this.teamData.team_name)}</h3>
-            <p>Captain: ${this.escapeHtml(this.teamData.captain_username)}</p>
+            <h3>${this.escapeHtml(teamData.team_name)}</h3>
+            <p>Captain: ${this.escapeHtml(teamData.captain_username)}</p>
           </div>
-          <span class="team-status ${this.teamData.status}">
-            ${this.teamData.status === 'locked' ? 'Active' : this.teamData.status}
+          <span class="team-status ${teamData.status}">
+            ${teamData.status === 'locked' ? 'Active' : teamData.status}
           </span>
         </div>
         <div class="team-details">
           <div class="detail-item">
             <span class="detail-label">Current Rank</span>
-            <span class="detail-value">#${this.teamData.rank || '-'}</span>
+            <span class="detail-value">#${teamData.rank || '-'}</span>
           </div>
           <div class="detail-item">
             <span class="detail-label">Team Score</span>
-            <span class="detail-value">${this.teamData.score || 0} pts</span>
+            <span class="detail-value">${teamData.score || 0} pts</span>
           </div>
         </div>
         <div class="team-members">
@@ -189,12 +234,7 @@ class TeamRanking {
     if (!container) return;
 
     if (!this.rankingData || this.rankingData.length === 0) {
-      container.innerHTML = `
-        <div class="loading-state">
-          <p>No team rankings available yet.</p>
-          <p style="font-size: 14px; margin-top: 8px;">Teams will appear here once they are formed.</p>
-        </div>
-      `;
+      this.renderNoRankingsState(container);
       return;
     }
 
@@ -203,28 +243,47 @@ class TeamRanking {
       const rankClass = index < 3 ? `rank-${index + 1}` : '';
       const currentClass = isCurrentTeam ? 'current-team' : '';
 
-      const membersHtml = team.members && team.members.length > 0
-        ? team.members.slice(0, 4).map(member => `
-            <div class="member-avatar" title="${this.escapeHtml(member.username)}">
-              ${this.getInitials(member.username)}
-            </div>
-          `).join('')
-        : '';
+      const membersHtml = this.generateRankingMembersHtml(team.members);
 
-      return `
-        <div class="ranking-row ${rankClass} ${currentClass}">
-          <div class="rank-col ${index < 3 ? 'top-3' : ''}">${index + 1}</div>
-          <div class="team-col">
-            <div class="team-name">${this.escapeHtml(team.team_name)}</div>
-            <div class="team-captain">Captain: ${this.escapeHtml(team.captain_username)}</div>
-          </div>
-          <div class="members-col">
-            ${membersHtml}
-          </div>
-          <div class="score-col">${team.score || 0}</div>
-        </div>
-      `;
+      return this.generateRankingRowHtml(team, index, rankClass, currentClass, membersHtml);
     }).join('');
+  }
+
+  renderNoRankingsState(container) {
+    container.innerHTML = `
+      <div class="loading-state">
+        <p>No team rankings available yet.</p>
+        <p style="font-size: 14px; margin-top: 8px;">Teams will appear here once they are formed.</p>
+      </div>
+    `;
+  }
+
+  generateRankingMembersHtml(members) {
+    if (!members || members.length === 0) {
+      return '';
+    }
+    
+    return members.slice(0, 4).map(member => `
+      <div class="member-avatar" title="${this.escapeHtml(member.username)}">
+        ${this.getInitials(member.username)}
+      </div>
+    `).join('');
+  }
+
+  generateRankingRowHtml(team, index, rankClass, currentClass, membersHtml) {
+    return `
+      <div class="ranking-row ${rankClass} ${currentClass}">
+        <div class="rank-col ${index < 3 ? 'top-3' : ''}">${index + 1}</div>
+        <div class="team-col">
+          <div class="team-name">${this.escapeHtml(team.team_name)}</div>
+          <div class="team-captain">Captain: ${this.escapeHtml(team.captain_username)}</div>
+        </div>
+        <div class="members-col">
+          ${membersHtml}
+        </div>
+        <div class="score-col">${team.score || 0}</div>
+      </div>
+    `;
   }
 
   renderDailyProgress(progress) {
