@@ -1,16 +1,16 @@
 :root{
   /* Theme colors (unchanged) */
-  --bg: #E4DFD8;
-  --brand: #9BB7D4;
-  --brand2: #3A4E6B;
+  --bg: #f4efff;
+  --brand: #facc15;
+  --brand2: #5b2a86;
 
   /* Neutrals */
   --panel: #ffffff;
   --panel2: #ffffff;
-  --stroke: rgba(58,78,107,.18);
+  --stroke: rgba(91,42,134,.22);
   --text: rgba(28,36,48,.96);
-  --muted: rgba(58,78,107,.80);
-  --muted2: rgba(58,78,107,.62);
+  --muted: rgba(91,42,134,.8);
+  --muted2: rgba(91,42,134,.62);
 
   /* State colors */
   --danger: #d9415b;
@@ -29,7 +29,7 @@
   --fs-pill: 13px;
 
   /* Borders & shadows – reference feel */
-  --shadow: 0 2px 12px rgba(58,78,107,.08);
+  --shadow: 0 2px 12px rgba(91,42,134,.12);
   --shadow-card: 0 2px 10px rgba(0,0,0,.06);
   --radius: 10px;
   --radius2: 8px;
@@ -178,7 +178,7 @@ body{
   padding: 0 5%;
   height: 80px;
   background-color: var(--bg);
-  border-bottom: 1px solid rgba(58, 78, 107, 0.1);
+  border-bottom: 1px solid rgba(91, 42, 134, 0.16);
   position: sticky;
   top: 0;
   width: 100%;
@@ -306,7 +306,16 @@ body.with-acadbeat-shared-nav .page__main {
   gap: 14px;
   width: min(calc(100% - 92px), 1180px);
   margin: 68px auto 28px;
-  padding-top: 10px;
+  padding: 26px 24px;
+  border-radius: 28px;
+  border: 1px solid rgba(91,42,134,.16);
+  background:
+    linear-gradient(160deg, rgba(255,255,255,.88), rgba(246,240,255,.66)),
+    linear-gradient(180deg, rgba(255,255,255,.2), rgba(255,255,255,0));
+  box-shadow:
+    0 26px 58px rgba(91,42,134,.14),
+    inset 0 1px 0 rgba(255,255,255,.92);
+  backdrop-filter: blur(12px);
 }
 
 .modeBackBtn{
@@ -349,7 +358,7 @@ body.with-acadbeat-shared-nav .page__main {
   font-family: "Playfair Display", serif;
   font-size: clamp(2.2rem, 3vw, 3.2rem);
   line-height: 1.05;
-  color: #000;
+  color: var(--brand2);
   font-weight: 700;
   font-style: normal;
 }
@@ -357,7 +366,7 @@ body.with-acadbeat-shared-nav .page__main {
 .vocabEntryHero p{
   margin: 0;
   max-width: 760px;
-  color: rgba(58,78,107,.68);
+  color: rgba(91,42,134,.78);
   font-size: 1.06rem;
   line-height: 1.8;
 }
@@ -842,23 +851,30 @@ body.with-acadbeat-shared-nav .page__main {
   width: 100%;
   text-align: left;
   border-radius: var(--radius);
-  border: 1px solid var(--stroke);
-  background: var(--panel);
+  border: 1px solid rgba(91,42,134,.16);
+  background:
+    linear-gradient(168deg, rgba(255,255,255,.9), rgba(245,238,255,.72));
   padding: 22px;
   min-height: 220px;
   cursor: pointer;
   color: var(--text);
   transition: box-shadow .12s ease, background .12s ease, border-color .12s ease;
-  box-shadow: var(--shadow-card);
+  box-shadow:
+    0 18px 38px rgba(91,42,134,.10),
+    inset 0 1px 0 rgba(255,255,255,.88);
 }
 .modeCard:hover{
-  background: var(--panel2);
-  box-shadow: 0 2px 14px rgba(58,78,107,.1);
+  background:
+    radial-gradient(circle at 82% 18%, rgba(250,204,21,.22), transparent 28%),
+    linear-gradient(168deg, rgba(255,255,255,.92), rgba(244,236,255,.76));
+  box-shadow: 0 24px 46px rgba(91,42,134,.16);
 }
 .modeCard.isSelected{
-  border-color: var(--brand);
-  background: rgba(155,183,212,.15);
-  box-shadow: 0 2px 12px rgba(58,78,107,.12);
+  border-color: rgba(250,204,21,.7);
+  background:
+    radial-gradient(circle at 14% 16%, rgba(250,204,21,.24), transparent 30%),
+    linear-gradient(168deg, rgba(255,255,255,.96), rgba(247,241,255,.82));
+  box-shadow: 0 24px 50px rgba(250,204,21,.2);
 }
 .modeCard__top{
   display:flex;
@@ -1008,9 +1024,9 @@ body.with-acadbeat-shared-nav .page__main {
   height: 26px;
   padding: 0 10px;
   border-radius: 999px;
-  background: rgba(255,255,255,.72);
-  border: 1px solid var(--stroke);
-  color: rgba(28,36,48,.92);
+  background: rgba(255,255,255,.85);
+  border: 1px solid rgba(91,42,134,.2);
+  color: rgba(91,42,134,.88);
   font-size: 12px;
   font-weight: 700;
 }
@@ -1104,8 +1120,8 @@ body.with-acadbeat-shared-nav .page__main {
   align-items:center;
   padding: 0 10px;
   border-radius: 999px;
-  background: rgba(155,183,212,.55);
-  border: 1px solid rgba(58,78,107,.18);
+  background: rgba(250,204,21,.24);
+  border: 1px solid rgba(250,204,21,.52);
   font-weight: 800;
   font-size: 12px;
 }
@@ -1398,9 +1414,11 @@ body.with-acadbeat-shared-nav .page__main {
   align-items: stretch;
   padding: 14px;
   border-radius: 22px;
-  border: 1px solid rgba(58,78,107,.14);
-  background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.76));
-  box-shadow: 0 14px 32px rgba(58,78,107,.1);
+  border: 1px solid rgba(91,42,134,.14);
+  background:
+    radial-gradient(circle at 84% 18%, rgba(250,204,21,.2), transparent 30%),
+    linear-gradient(180deg, rgba(255,255,255,.94), rgba(247,240,255,.8));
+  box-shadow: 0 16px 34px rgba(91,42,134,.12);
 }
 .selectedBookCard__cover{
   width: 88px;
@@ -1839,7 +1857,7 @@ body.with-acadbeat-shared-nav .page__main {
     width: 100%;
     gap: 12px;
     padding-top: 8px;
-    border-top: 1px solid rgba(58, 78, 107, 0.1);
+    border-top: 1px solid rgba(91, 42, 134, 0.16);
     flex-wrap: wrap;
   }
   .page__main{ padding: 16px; }

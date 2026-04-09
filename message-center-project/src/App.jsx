@@ -5,7 +5,7 @@ export default function App() {
   useEffect(() => {
     const run = () => {
       if (typeof window.setAcadBeatNavActive === 'function') {
-        window.setAcadBeatNavActive('messages')
+        window.setAcadBeatNavActive('social')
       }
     }
     run()

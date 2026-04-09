@@ -3,21 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>词表 · 网页壳 | AcadBeat</title>
+  <title>Vocabulary Practice | AcadBeat</title>
   <link rel="stylesheet" href="overrides.css">
 </head>
 <body class="ab-shell ab-shell--vocabulary" data-ab-module="vocabulary">
-  <div class="ab-shell-viewport">
-    <div class="ab-shell-underlay" aria-hidden="true">
-      <img class="ab-shell-bg-fallback" src="" alt="">
-    </div>
-    <main class="ab-shell-main">
-      <iframe class="ab-shell-iframe" id="abLegacyFrame" title="词表练习（原版页面）"></iframe>
-    </main>
-    <div class="ab-shell-frame" aria-hidden="true"></div>
-    <div class="ab-shell-overlay" aria-hidden="true"></div>
-  </div>
-  <script src="../../../shared/acadbeat-local-config.js"></script>
-  <script src="../../static/shell-iframe.js?v=20260406"></script>
+  <main class="vocab-game-home" aria-label="Vocabulary practice mode selection">
+    <h1 class="vocab-title">Vocabulary practice</h1>
+    <section class="vocab-card-grid" aria-label="Practice duration options">
+      <button class="vocab-mode-card" type="button" aria-label="1 minute fast review">
+        <span class="vocab-mode-time">1min</span>
+        <span class="vocab-mode-label">fast review</span>
+      </button>
+      <button class="vocab-mode-card" type="button" aria-label="3 to 5 minutes core review">
+        <span class="vocab-mode-time">3-5minutes</span>
+        <span class="vocab-mode-label">core review</span>
+      </button>
+      <button class="vocab-mode-card" type="button" aria-label="10 minutes full mix">
+        <span class="vocab-mode-time">10 minutes</span>
+        <span class="vocab-mode-label">full mix</span>
+      </button>
+    </section>
+  </main>
 </body>
 </html>

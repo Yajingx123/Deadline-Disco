@@ -1,0 +1,604 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Response Practice | AcadBeat</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared-nav.css">
+  <script src="../shared/acadbeat-local-config.js"></script>
+  <link rel="stylesheet" href="acadbeat-global.css">
+  <link rel="stylesheet" href="practice-style.css" id="practice-theme-style">
+  <style>
+    @font-face {
+      font-family: 'AcadBeat';
+      src:
+        local('Pixellari'),
+        url('../fonts/Pixellari.ttf') format('truetype'),
+        url('../gameUI_src/Assets/Fonts/Pixellari.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    :root {
+      --bg-pink: #d6c7c7;
+      --card-white: rgba(255, 255, 255, 0.92);
+      --text-dark: #3a3a3a;
+      --primary: #c9b3b3;
+      --secondary: #b9c6b4;
+      --accent: #b7c8cc;
+      --radius-small: 8px;
+      --radius-button: 10px;
+      --radius-card: 12px;
+      --radius-large: 16px;
+      --space-xs: 4px;
+      --space-sm: 8px;
+      --space-md: 16px;
+      --space-lg: 24px;
+      --space-xl: 32px;
+      --shadow-soft: 0 2px 6px rgba(0, 0, 0, 0.08);
+      --transition-fast: all 0.18s ease;
+      --space-bg: #433c3d;
+      --space-panel: rgba(193, 182, 184, 0.9);
+      --space-panel-line: #9ff4e9;
+      --space-ink: #ffffff;
+      --space-note: #7ef5de;
+      --space-shadow: rgba(28, 22, 24, 0.35);
+      --pixel-edge: #f2eded;
+      --pixel-edge-dark: #7e7374;
+    }
+
+    * {
+      font-family: 'AcadBeat', sans-serif !important;
+      box-sizing: border-box;
+    }
+
+    #respondTitle,
+    .respond-panel-head h3,
+    .back-btn.back-fab,
+    .btn-small,
+    .btn-primary-small,
+    .transcript-toggle-btn,
+    .note-share-btn,
+    #respondSaveBtn,
+    .respond-speaking-btn {
+      font-family: 'Press Start 2P', 'AcadBeat', monospace !important;
+    }
+
+    body[data-page="response-detail"] {
+      font-family: 'AcadBeat', sans-serif;
+      color: var(--space-ink);
+      background:
+        radial-gradient(circle at 20% 16%, rgba(255,255,255,0.18) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 78% 24%, rgba(255,255,255,0.22) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 66% 72%, rgba(255,255,255,0.16) 0 1px, transparent 1.5px),
+        radial-gradient(circle at 40% 58%, rgba(255,255,255,0.18) 0 1px, transparent 1.5px),
+        linear-gradient(180deg, rgba(67,60,61,0.98), rgba(67,60,61,0.98)),
+        url('../owner-background.png') no-repeat center center fixed;
+      background-size: 240px 240px, 320px 320px, 360px 360px, 280px 280px, cover, cover;
+      min-height: 100vh;
+      image-rendering: pixelated;
+    }
+
+    body[data-page="response-detail"]::before {
+      content: "";
+      position: fixed;
+      left: -10vw;
+      bottom: -18vw;
+      width: 46vw;
+      height: 46vw;
+      min-width: 360px;
+      min-height: 360px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle at 32% 24%, rgba(255,255,255,0.98) 0 7%, rgba(255,255,255,0.9) 7% 18%, transparent 18.5%),
+        radial-gradient(circle at 38% 30%, rgba(255,255,255,0.9) 0 20%, rgba(245,241,242,0.9) 20% 44%, rgba(223,215,217,0.88) 44% 66%, rgba(191,183,185,0.84) 66% 82%, rgba(157,149,152,0.82) 82% 100%),
+        radial-gradient(ellipse at 60% 34%, rgba(122,114,116,0.22) 0 9%, transparent 9.5%),
+        radial-gradient(ellipse at 44% 60%, rgba(130,122,124,0.2) 0 7%, transparent 7.5%),
+        radial-gradient(ellipse at 70% 56%, rgba(130,122,124,0.18) 0 6%, transparent 6.5%),
+        radial-gradient(ellipse at 28% 70%, rgba(255,255,255,0.14) 0 5%, transparent 5.5%),
+        radial-gradient(ellipse at 58% 76%, rgba(255,255,255,0.12) 0 4%, transparent 4.5%);
+      box-shadow:
+        inset -24px -28px 0 rgba(134, 126, 128, 0.38),
+        inset 28px 22px 0 rgba(255,255,255,0.08),
+        inset 0 0 0 3px rgba(255,255,255,0.1),
+        0 30px 60px rgba(0,0,0,0.18);
+      opacity: 0.72;
+      filter: blur(0.2px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body[data-page="response-detail"] .page-shell::before {
+      content: "";
+      position: fixed;
+      left: -9vw;
+      bottom: 16vw;
+      width: 64vw;
+      max-width: 800px;
+      height: 12.5vw;
+      max-height: 138px;
+      border-radius: 50%;
+      border: 7px solid rgba(201, 191, 193, 0.68);
+      border-top-color: rgba(255,255,255,0.24);
+      border-bottom-color: rgba(126, 115, 116, 0.32);
+      border-left-color: rgba(255,255,255,0.32);
+      border-right-color: rgba(126, 115, 116, 0.5);
+      background: transparent;
+      transform: rotate(-16deg);
+      box-shadow:
+        0 0 0 2px rgba(255,255,255,0.08),
+        inset 0 0 0 2px rgba(255,255,255,0.04),
+        0 18px 30px rgba(0,0,0,0.08);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.82;
+    }
+
+    .respond-layout::after {
+      content: "";
+      position: fixed;
+      left: -6vw;
+      bottom: 18vw;
+      width: 56vw;
+      max-width: 700px;
+      height: 8vw;
+      max-height: 90px;
+      border-radius: 50%;
+      border: 3px solid rgba(159, 244, 233, 0.16);
+      background: transparent;
+      transform: rotate(-16deg);
+      opacity: 0.75;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .page-shell::after {
+      content: "";
+      position: fixed;
+      left: 5vw;
+      bottom: 8vw;
+      width: 22px;
+      height: 62px;
+      background:
+        radial-gradient(circle at 50% 16%, #fff 0 4px, transparent 4.5px),
+        radial-gradient(circle at 50% 42%, #ffd6e7 0 3px, transparent 3.5px),
+        linear-gradient(180deg, #111 0 100%);
+      border-radius: 10px 10px 6px 6px;
+      box-shadow:
+        0 0 0 3px #111,
+        0 0 0 6px rgba(255,255,255,0.04);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.9;
+    }
+
+    .respond-layout::before {
+      content: "";
+      position: fixed;
+      left: 4.5vw;
+      bottom: 6.2vw;
+      width: 64px;
+      height: 18px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      filter: blur(6px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    body[data-page="response-detail"]::after {
+      content: "";
+      position: fixed;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      background:
+        radial-gradient(circle at 11% 22%, rgba(255,255,255,0.28) 0 2px, transparent 2.5px),
+        radial-gradient(circle at 16% 28%, rgba(255,255,255,0.22) 0 1.5px, transparent 2px),
+        radial-gradient(circle at 88% 18%, rgba(255,255,255,0.22) 0 1.5px, transparent 2px);
+      pointer-events: none;
+      opacity: 0.7;
+      z-index: 0;
+    }
+
+    #acadbeatNav,
+    .page-shell {
+      position: relative;
+      z-index: 1;
+    }
+
+    .page-shell {
+      width: min(1400px, calc(100% - 48px));
+    }
+
+    .respond-layout {
+      align-items: start;
+    }
+
+    .respond-video-panel,
+    .respond-record-panel {
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      position: relative;
+    }
+
+    .respond-video-panel::before,
+    .respond-record-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 0;
+      background:
+        linear-gradient(180deg, rgba(193, 182, 184, 0.7), rgba(184, 172, 174, 0.68));
+      box-shadow:
+        0 0 0 3px var(--pixel-edge),
+        0 0 0 7px rgba(126, 115, 116, 0.85),
+        10px 10px 0 rgba(28, 22, 24, 0.28);
+      z-index: -2;
+    }
+
+    .respond-video-panel::after,
+    .respond-record-panel::after {
+      content: "";
+      position: absolute;
+      inset: 14px;
+      border-radius: 0;
+      border: 3px solid var(--space-panel-line);
+      box-shadow: inset 0 0 0 2px rgba(255,255,255,0.16);
+      opacity: 0.82;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .workspace-top-actions {
+      align-items: center;
+      margin-bottom: var(--space-sm);
+    }
+
+    .back-btn.back-fab {
+      border: 3px solid var(--pixel-edge);
+      border-radius: 0;
+      background: rgba(193, 182, 184, 0.22);
+      color: var(--space-ink);
+      box-shadow:
+        0 0 0 3px rgba(126, 115, 116, 0.8),
+        6px 6px 0 rgba(28, 22, 24, 0.28);
+      backdrop-filter: blur(1px);
+    }
+
+    .back-btn.back-fab:hover {
+      transform: translate(-1px, -1px);
+      background: rgba(193, 182, 184, 0.3);
+    }
+
+    #respondTitle,
+    .respond-panel-head h3 {
+      color: var(--space-ink);
+      font-size: clamp(24px, 3vw, 42px);
+      line-height: 1.25;
+      letter-spacing: 0.02em;
+      text-shadow:
+        2px 0 0 rgba(193, 182, 184, 0.45),
+        4px 0 0 rgba(126, 115, 116, 0.32);
+    }
+
+    #respondTitle {
+      margin-bottom: 6px;
+    }
+
+    .person-meta-line,
+    .detail-meta-row,
+    .respond-hint,
+    .recording-status,
+    .note-record-feedback,
+    .note-record-error {
+      color: rgba(255,255,255,0.88);
+    }
+
+    .person-meta-line,
+    .detail-meta-row {
+      opacity: 0.92;
+    }
+
+    .detail-meta-row span,
+    .detail-meta-row .meta-pill,
+    #respondMeta > * {
+      background: rgba(255,255,255,0.16);
+      color: var(--space-ink);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 999px;
+      box-shadow: none;
+    }
+
+    #respondVideo,
+    .transcript-panel,
+    .respond-audio {
+      border-radius: 0;
+      border: 3px solid rgba(255,255,255,0.22);
+      box-shadow:
+        inset 0 0 0 2px rgba(159, 244, 233, 0.24),
+        0 0 0 3px rgba(126, 115, 116, 0.46);
+      background: rgba(67,60,61,0.16);
+    }
+
+    #respondVideo {
+      background-color: rgba(22, 18, 18, 0.42);
+    }
+
+    .detail-resource-tabs {
+      margin-top: var(--space-md);
+    }
+
+    .btn-small,
+    .btn-primary-small,
+    .transcript-toggle-btn,
+    .note-share-btn,
+    #respondSaveBtn {
+      background: linear-gradient(180deg, rgba(218, 204, 205, 0.92), rgba(185, 170, 171, 0.92));
+      border: 3px solid var(--pixel-edge);
+      border-radius: 0;
+      color: var(--text-dark);
+      box-shadow:
+        0 0 0 3px rgba(126, 115, 116, 0.82),
+        5px 5px 0 rgba(28, 22, 24, 0.22);
+      transition: var(--transition-fast);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      font-size: 0.7rem;
+    }
+
+    .btn-small:hover,
+    .btn-primary-small:hover,
+    .transcript-toggle-btn:hover,
+    .note-share-btn:hover,
+    #respondSaveBtn:hover {
+      transform: translate(-1px, -1px);
+      filter: brightness(1.03);
+    }
+
+    .detail-resource-tab.active,
+    .transcript-toggle-btn.active {
+      background: var(--accent);
+      color: var(--text-dark);
+    }
+
+    .transcript-panel {
+      background: rgba(255,255,255,0.08);
+      color: var(--space-ink);
+    }
+
+    .detail-resource-head {
+      color: var(--space-note);
+      border-bottom-color: rgba(159, 244, 233, 0.35);
+    }
+
+    .transcript-content {
+      color: rgba(255,255,255,0.92);
+    }
+
+    .respond-panel-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: var(--space-sm);
+    }
+
+    .respond-panel-head h3 {
+      flex: 1 1 220px;
+      min-width: 0;
+      margin: 0;
+    }
+
+    .note-panel-head-actions {
+      flex: 0 1 auto;
+      display: flex;
+      justify-content: flex-end;
+      max-width: 100%;
+      align-self: flex-start;
+      margin-top: -2px;
+      margin-left: -6px;
+    }
+
+    .note-share-btn,
+    #respondShareBtn {
+      max-width: 100%;
+      white-space: nowrap;
+      padding-inline: 14px;
+      font-size: 0.62rem;
+    }
+
+    .respond-hint {
+      font-size: 0.95rem;
+      line-height: 1.7;
+      opacity: 0.9;
+      margin-bottom: var(--space-lg);
+    }
+
+    .respond-speaking-wrap {
+      display: flex;
+      justify-content: center;
+      margin: 18px 0 16px;
+    }
+
+    .respond-speaking-btn {
+      background:
+        radial-gradient(circle at 30% 30%, rgba(255,255,255,0.24), transparent 35%),
+        linear-gradient(180deg, rgba(126,245,222,0.92), rgba(110,229,208,0.92));
+      color: #24403d;
+      border: 4px solid var(--pixel-edge);
+      border-radius: 0;
+      min-width: 150px;
+      min-height: 150px;
+      box-shadow:
+        0 0 0 6px rgba(126, 115, 116, 0.86),
+        0 0 0 12px rgba(126,245,222,0.1),
+        10px 10px 0 rgba(28,22,24,0.22);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      transition: var(--transition-fast);
+      font-size: 0.82rem;
+    }
+
+    .respond-speaking-btn:hover {
+      transform: translate(-2px, -2px);
+      box-shadow:
+        0 0 0 6px rgba(126, 115, 116, 0.86),
+        0 0 0 14px rgba(126,245,222,0.1),
+        12px 12px 0 rgba(28,22,24,0.24);
+    }
+
+    .recording-status {
+      text-align: center;
+      margin-bottom: var(--space-md);
+      opacity: 0.95;
+    }
+
+    .respond-audio {
+      width: 100%;
+      background: rgba(255,255,255,0.1);
+      margin-bottom: var(--space-md);
+    }
+
+    .respond-save-row {
+      align-items: center;
+      gap: 12px;
+    }
+
+    .note-record-feedback {
+      background: rgba(255,255,255,0.08);
+      border: 2px solid rgba(159, 244, 233, 0.35);
+      border-radius: 0;
+      padding: 14px 16px;
+      box-shadow: 0 0 0 2px rgba(126, 115, 116, 0.4);
+    }
+
+    .note-record-feedback strong {
+      color: var(--space-note);
+    }
+
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.18);
+      border-radius: 6px;
+    }
+
+    @media (max-width: 980px) {
+      body[data-page="response-detail"]::before {
+        width: 62vw;
+        height: 62vw;
+      }
+
+      #respondTitle,
+      .respond-panel-head h3 {
+        font-size: clamp(24px, 7vw, 42px);
+      }
+
+      body[data-page="response-detail"] .page-shell::before,
+      .page-shell::after,
+      .respond-layout::before,
+      .respond-layout::after {
+        display: none;
+      }
+    }
+  </style>
+  <script>
+    (function () {
+      const params = new URLSearchParams(window.location.search);
+      const uiMode = params.get('ui');
+      if (uiMode !== 'godot') return;
+      document.cookie = 'ui_mode=godot; path=/; max-age=2592000';
+      const link = document.getElementById('practice-theme-style');
+      if (link) link.href = '../newUI/static/game-practice-style.css';
+    })();
+  </script>
+</head>
+<body data-page="response-detail">
+  <div id="acadbeatNav"></div>
+  <main class="module-content page-shell" style="padding-top: 110px;">
+    <section class="respond-layout">
+      <article class="video-panel respond-video-panel">
+        <div class="workspace-top-actions">
+          <button class="back-btn back-fab" data-back-target="listening.html" aria-label="Go back" title="Back" type="button">&#8592;</button>
+          <h2 id="respondTitle">Video title</h2>
+        </div>
+        <p id="respondPersonMeta" class="person-meta-line"></p>
+        <div id="respondMeta" class="detail-meta-row"></div>
+        <video id="respondVideo" controls preload="metadata"></video>
+        <div class="detail-resource-tabs">
+          <button class="btn-small transcript-toggle-btn detail-resource-tab" id="respondTranscriptToggleBtn" type="button">Transcript</button>
+        </div>
+        <aside class="transcript-panel hidden" id="respondTranscriptPanel">
+          <div class="detail-resource-head">
+            <strong id="respondResourceTitle">Transcript</strong>
+          </div>
+          <div class="transcript-content" id="respondTranscriptContent"></div>
+        </aside>
+      </article>
+
+      <aside class="note-panel respond-record-panel">
+        <div class="note-panel-head respond-panel-head">
+          <h3>Your Response</h3>
+          <div class="note-panel-head-actions">
+            <button class="btn-small note-share-btn" id="respondShareBtn" type="button">Share</button>
+          </div>
+        </div>
+        <p class="respond-hint">Record your answer and replay it to self-check fluency and clarity.</p>
+        <div class="respond-speaking-wrap">
+          <button class="respond-speaking-btn" id="respondRecordBtn" type="button">SPEAKING</button>
+        </div>
+        <p id="respondRecordStatus" class="recording-status">Ready to record.</p>
+        <audio id="respondPlayback" class="respond-audio" controls></audio>
+        <div class="respond-save-row">
+          <button class="btn-small btn-primary-small" id="respondSaveBtn" type="button">Save your answer</button>
+          <span class="note-record-error hidden" id="respondSaveError">no recording yet</span>
+        </div>
+        <div class="note-record-feedback hidden" id="respondSaveFeedback">
+          <strong>Saved to your study record</strong>
+          <span>You can still make multiple attempts and save</span>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <script src="practice-data.js"></script>
+  <script src="practice-data-api.js"></script>
+  <script src="practice-app-api.js"></script>
+  <script>
+    window.addEventListener('load', () => {
+      const uiGodot = (() => {
+        try {
+          return new URLSearchParams(location.search).get('ui') === 'godot';
+        } catch (_e) {}
+        return false;
+      })();
+      const L = window.ACADBEAT_LOCAL || {};
+      const loginUrl = uiGodot ? (L.godotWebEntryUrl || 'http://127.0.0.1:5500/index.html?ui=godot') : '../home.html?login=1';
+      window.initializeAcadBeatNav({
+        mountId: 'acadbeatNav',
+        basePath: '../',
+        active: 'academic',
+        authApiBase: '../Auth/backend/api',
+        homeUrl: '../home.html',
+        ownerUrl: '../owner.html',
+        adminUrl: L.adminDistUrl || window.location.origin + '/admin_page/dist/index.html',
+        loginUrl,
+        redirectAdmins: false
+      });
+    });
+  </script>
+  <script src="../shared-nav.js"></script>
+</body>
+</html>

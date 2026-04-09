@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react'
-import { adminFetch } from '../api'
 
 function VideoResourceManager() {
   const [videos, setVideos] = useState([])
@@ -70,10 +69,8 @@ function VideoResourceManager() {
     try {
       // 👇 直接用原生 fetch，不经过任何封装！
       const rawResponse = await fetch('/Academic-Practice/api/video_resources.php?action=list')
-      console.log("📶 HTTP 状态码：", rawResponse.status)
 
       const response = await rawResponse.json()
-      console.log("✅ 真实后端返回：", response) // 看这里！看这里！
 
       // 正确读取数据（不管后端是什么结构，我们都能拿到）
       let data = []
@@ -163,7 +160,6 @@ function VideoResourceManager() {
       reader.onload = (event) => {
         try {
           const json = JSON.parse(event.target.result);
-          console.log("✅ JSON 解析成功", json);
 
           setFormData(prev => ({
             ...prev,
@@ -229,7 +225,6 @@ function VideoResourceManager() {
 
       // ✅ 强制先生成 video_id
       const newId = generateVideoId()
-      console.log("✅ 最终提交的 video_id：", newId)
 
       // 添加所有表单字段
       Object.keys(formData).forEach(key => {
@@ -254,7 +249,6 @@ function VideoResourceManager() {
       })
 
       const result = await response.json()
-      console.log("后端返回：", result)
 
       if (!result.ok) throw new Error(result.error)
 
@@ -436,7 +430,7 @@ function VideoResourceManager() {
               />
             </div>
 
-            <div style={styles.formGroup} style={{ ...styles.formGroup, gridColumn: 'span 2' }}>
+            <div style={{ ...styles.formGroup, gridColumn: 'span 2' }}>
               <label style={styles.label}>Title *</label>
               <input
                 type="text"
@@ -548,7 +542,7 @@ function VideoResourceManager() {
             </div>
 
             {formData.mode === 'respond' && (
-              <div style={styles.formGroup} style={{ ...styles.formGroup, gridColumn: 'span 2' }}>
+              <div style={{ ...styles.formGroup, gridColumn: 'span 2' }}>
                 <label style={styles.label}>Question (for Respond mode)</label>
                 <input
                   type="text"
@@ -633,8 +627,8 @@ function VideoResourceManager() {
                   <span style={styles.videoId}>{video.video_id}</span>
                   <span style={{
                     ...styles.modeBadge,
-                    backgroundColor: video.mode === 'understand' ? '#dbeafe' : '#dcfce7',
-                    color: video.mode === 'understand' ? '#1e40af' : '#166534'
+                    backgroundColor: video.mode === 'understand' ? 'rgba(250, 204, 21, 0.28)' : 'rgba(91, 42, 134, 0.14)',
+                    color: '#5b2a86'
                   }}>
                     {video.mode === 'understand' ? 'Understand' : 'Respond'}
                   </span>
@@ -688,7 +682,7 @@ const styles = {
     maxWidth: '90%',
     margin: '0 auto',
     padding: '32px 24px',
-    backgroundColor: '#f5f5f5',
+    backgroundColor: 'transparent',
     minHeight: '100vh'
   },
   header: {
@@ -698,19 +692,19 @@ const styles = {
   title: {
     fontSize: '36px',
     fontWeight: '700',
-    color: '#1e3a5f',
+    color: '#5b2a86',
     margin: '0 0 12px 0',
-    fontFamily: 'system-ui, -apple-system, sans-serif'
+    fontFamily: 'var(--sans), system-ui, -apple-system, sans-serif'
   },
   subtitle: {
     fontSize: '16px',
-    color: '#1e3a5f',
+    color: '#5b2a86',
     margin: 0,
-    opacity: 0.7
+    opacity: 0.75
   },
   errorAlert: {
-    backgroundColor: '#fee2e2',
-    color: '#991b1b',
+    backgroundColor: 'rgba(184, 76, 92, 0.12)',
+    color: '#8b2940',
     padding: '16px 20px',
     borderRadius: '8px',
     marginBottom: '24px',
@@ -718,11 +712,11 @@ const styles = {
     alignItems: 'center',
     gap: '12px',
     fontSize: '14px',
-    border: '1px solid #fecaca'
+    border: '1px solid rgba(184, 76, 92, 0.28)'
   },
   successAlert: {
-    backgroundColor: '#dcfce7',
-    color: '#166534',
+    backgroundColor: 'rgba(250, 204, 21, 0.18)',
+    color: '#5b2a86',
     padding: '16px 20px',
     borderRadius: '8px',
     marginBottom: '24px',
@@ -730,7 +724,7 @@ const styles = {
     alignItems: 'center',
     gap: '12px',
     fontSize: '14px',
-    border: '1px solid #bbf7d0'
+    border: '1px solid rgba(250, 204, 21, 0.45)'
   },
   alertIcon: {
     fontSize: '18px'
@@ -745,20 +739,20 @@ const styles = {
     padding: '0 4px'
   },
   formSection: {
-    backgroundColor: '#ffffff',
-    border: '1px solid #e5e5e5',
+    backgroundColor: 'rgba(255, 255, 255, 0.92)',
+    border: '1px solid rgba(91, 42, 134, 0.14)',
     borderRadius: '16px',
     padding: '32px',
     marginBottom: '32px',
-    boxShadow: '0 2px 8px rgba(0,0,0,0.08)'
+    boxShadow: '0 12px 40px rgba(91, 42, 134, 0.08)'
   },
   sectionTitle: {
     fontSize: '24px',
     fontWeight: '600',
-    color: '#1e3a5f',
+    color: '#5b2a86',
     margin: '0 0 24px 0',
     paddingBottom: '16px',
-    borderBottom: '2px solid #e8eef5'
+    borderBottom: '2px solid rgba(91, 42, 134, 0.14)'
   },
   form: {
     display: 'flex',
@@ -778,16 +772,16 @@ const styles = {
   label: {
     fontSize: '14px',
     fontWeight: '600',
-    color: '#1e3a5f',
+    color: '#5b2a86',
     textTransform: 'uppercase',
     letterSpacing: '0.5px'
   },
   input: {
     padding: '12px 16px',
     borderRadius: '10px',
-    border: '1px solid #ddd',
-    backgroundColor: '#fafafa',
-    color: '#333',
+    border: '1px solid rgba(91, 42, 134, 0.18)',
+    backgroundColor: '#faf8ff',
+    color: '#3d1f5c',
     fontSize: '15px',
     fontFamily: 'system-ui, -apple-system, sans-serif',
     transition: 'all 0.2s',
@@ -796,9 +790,9 @@ const styles = {
   select: {
     padding: '12px 16px',
     borderRadius: '10px',
-    border: '1px solid #ddd',
-    backgroundColor: '#fafafa',
-    color: '#333',
+    border: '1px solid rgba(91, 42, 134, 0.18)',
+    backgroundColor: '#faf8ff',
+    color: '#3d1f5c',
     fontSize: '15px',
     fontFamily: 'system-ui, -apple-system, sans-serif',
     cursor: 'pointer',
@@ -807,9 +801,9 @@ const styles = {
   textarea: {
     padding: '12px 16px',
     borderRadius: '10px',
-    border: '1px solid #ddd',
-    backgroundColor: '#fafafa',
-    color: '#333',
+    border: '1px solid rgba(91, 42, 134, 0.18)',
+    backgroundColor: '#faf8ff',
+    color: '#3d1f5c',
     fontSize: '15px',
     fontFamily: 'system-ui, -apple-system, sans-serif',
     resize: 'vertical',
@@ -817,15 +811,15 @@ const styles = {
     outline: 'none'
   },
   fileSection: {
-    backgroundColor: '#f8f9fa',
+    backgroundColor: 'rgba(248, 244, 255, 0.85)',
     borderRadius: '12px',
     padding: '24px',
-    border: '1px solid #e9ecef'
+    border: '1px solid rgba(91, 42, 134, 0.12)'
   },
   fileSectionTitle: {
     fontSize: '18px',
     fontWeight: '600',
-    color: '#1e3a5f',
+    color: '#5b2a86',
     margin: '0 0 20px 0'
   },
   fileGrid: {
@@ -841,7 +835,7 @@ const styles = {
   fileLabel: {
     fontSize: '13px',
     fontWeight: '600',
-    color: '#1e3a5f'
+    color: '#5b2a86'
   },
   required: {
     color: '#dc2626'
@@ -856,7 +850,7 @@ const styles = {
     gap: '12px',
     padding: '8px',
     borderRadius: '8px',
-    border: '1px solid #ddd',
+    border: '1px solid rgba(91, 42, 134, 0.14)',
     backgroundColor: '#fff'
   },
   fileInputHidden: {
@@ -865,9 +859,9 @@ const styles = {
   fileUploadButton: {
     padding: '8px 16px',
     borderRadius: '6px',
-    border: '1px solid #1e3a5f',
-    backgroundColor: '#1e3a5f',
-    color: '#fff',
+    border: '1px solid #5b2a86',
+    backgroundColor: '#5b2a86',
+    color: '#fff8ea',
     fontSize: '13px',
     fontWeight: '500',
     cursor: 'pointer',
@@ -876,7 +870,7 @@ const styles = {
   },
   fileName: {
     fontSize: '13px',
-    color: '#666',
+    color: 'rgba(91, 42, 134, 0.65)',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap'
@@ -896,21 +890,21 @@ const styles = {
     padding: '14px 32px',
     borderRadius: '10px',
     border: 'none',
-    backgroundColor: '#2563eb',
-    color: '#fff',
+    background: 'linear-gradient(135deg, #5b2a86 0%, #6a33a0 100%)',
+    color: '#fff8ea',
     fontSize: '16px',
     fontWeight: '600',
     cursor: 'pointer',
     fontFamily: 'system-ui, -apple-system, sans-serif',
-    boxShadow: '0 2px 4px rgba(37, 99, 235, 0.3)',
+    boxShadow: '0 4px 14px rgba(91, 42, 134, 0.28)',
     transition: 'all 0.2s'
   },
   cancelButton: {
     padding: '14px 32px',
     borderRadius: '10px',
-    border: '1px solid #ddd',
+    border: '1px solid rgba(91, 42, 134, 0.2)',
     backgroundColor: '#fff',
-    color: '#666',
+    color: 'rgba(91, 42, 134, 0.75)',
     fontSize: '16px',
     fontWeight: '600',
     cursor: 'pointer',
@@ -918,22 +912,22 @@ const styles = {
     transition: 'all 0.2s'
   },
   listSection: {
-    backgroundColor: '#ffffff',
-    border: '1px solid #e5e5e5',
+    backgroundColor: 'rgba(255, 255, 255, 0.92)',
+    border: '1px solid rgba(91, 42, 134, 0.14)',
     borderRadius: '16px',
     padding: '32px',
-    boxShadow: '0 2px 8px rgba(0,0,0,0.08)'
+    boxShadow: '0 12px 40px rgba(91, 42, 134, 0.08)'
   },
   loading: {
     textAlign: 'center',
     padding: '48px',
-    color: '#666',
+    color: 'rgba(91, 42, 134, 0.65)',
     fontSize: '16px'
   },
   empty: {
     textAlign: 'center',
     padding: '48px',
-    color: '#999',
+    color: 'rgba(91, 42, 134, 0.5)',
     fontSize: '16px'
   },
   videoList: {
@@ -942,10 +936,10 @@ const styles = {
     gap: '20px'
   },
   videoCard: {
-    backgroundColor: '#f8f9fa',
+    backgroundColor: 'rgba(248, 244, 255, 0.9)',
     borderRadius: '12px',
     padding: '20px',
-    border: '1px solid #e9ecef',
+    border: '1px solid rgba(91, 42, 134, 0.12)',
     transition: 'all 0.2s'
   },
   videoHeader: {
@@ -957,9 +951,9 @@ const styles = {
   videoId: {
     fontSize: '13px',
     fontWeight: '700',
-    color: '#666',
+    color: '#5b2a86',
     fontFamily: 'monospace',
-    backgroundColor: '#e9ecef',
+    backgroundColor: 'rgba(91, 42, 134, 0.1)',
     padding: '4px 8px',
     borderRadius: '4px'
   },
@@ -974,13 +968,13 @@ const styles = {
     borderRadius: '999px',
     fontSize: '12px',
     fontWeight: '600',
-    backgroundColor: '#e9ecef',
-    color: '#495057'
+    backgroundColor: 'rgba(250, 204, 21, 0.2)',
+    color: '#5b2a86'
   },
   videoTitle: {
     fontSize: '18px',
     fontWeight: '600',
-    color: '#1e3a5f',
+    color: '#5b2a86',
     margin: '0 0 12px 0',
     lineHeight: '1.4'
   },
@@ -989,7 +983,7 @@ const styles = {
     alignItems: 'center',
     gap: '12px',
     fontSize: '14px',
-    color: '#666',
+    color: 'rgba(91, 42, 134, 0.7)',
     marginBottom: '16px',
     flexWrap: 'wrap'
   },
@@ -1003,8 +997,8 @@ const styles = {
     padding: '4px 10px',
     borderRadius: '6px',
     fontSize: '12px',
-    backgroundColor: '#e3f2fd',
-    color: '#1976d2',
+    backgroundColor: 'rgba(250, 204, 21, 0.22)',
+    color: '#5b2a86',
     fontWeight: '500'
   },
   videoActions: {
@@ -1014,9 +1008,9 @@ const styles = {
   editButton: {
     padding: '8px 16px',
     borderRadius: '8px',
-    border: '1px solid #2563eb',
+    border: '1px solid #5b2a86',
     backgroundColor: '#fff',
-    color: '#2563eb',
+    color: '#5b2a86',
     fontSize: '14px',
     fontWeight: '600',
     cursor: 'pointer',

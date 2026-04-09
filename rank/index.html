@@ -8,7 +8,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../shared-nav.css">
+  <link rel="stylesheet" href="./onboarding.css">
   <script src="../shared/acadbeat-local-config.js"></script>
+  <script src="./onboarding.js"></script>
   <style>html.acadbeat-role-guard body{visibility:hidden}</style>
   <script>
     document.documentElement.classList.add('acadbeat-role-guard');
@@ -26,15 +28,22 @@
     })();
   </script>
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="../challenge/challenge-home.css">
 </head>
 <body data-page="team-ranking">
   <div id="acadbeatNav"></div>
+
+  <a class="rank-back-float" href="../competition-gate.html" aria-label="Back to competition hub">← Competition hub</a>
 
   <main class="ranking-main">
     <!-- 页面标题 -->
     <div class="ranking-header">
       <h1>Team Ranking</h1>
       <p>Weekly Challenge Team Performance</p>
+      <div class="ranking-header__actions">
+        <button type="button" class="btn-primary rank-challenge-btn" id="rankWeeklyChallengeBtn" data-guide-rank="challenge-btn">Weekly challenge</button>
+        <button type="button" class="btn-primary rank-guide-btn" id="rankGuideBtn" data-guide-rank="guide-btn" aria-label="Open ranking guide" title="Guide">?</button>
+      </div>
     </div>
     
     <div class="ranking-container">
@@ -68,27 +77,121 @@
     </div>
   </main>
 
+  <div class="site-modal" id="siteModal" aria-hidden="true">
+    <div class="site-modal__card">
+      <div class="site-modal__title" id="siteModalTitle">Notice</div>
+      <div class="site-modal__body" id="siteModalBody"></div>
+      <div class="site-modal__actions">
+        <button type="button" class="btn-small" id="siteModalConfirm">OK</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="challengeMount" class="challenge-mount" aria-hidden="true"></div>
+
   <script>
-    window.addEventListener('load', () => {
-      const uiGodot = (() => {
+    window.authState = window.authState || { user: null, mode: 'login' };
+
+    window.openSiteModal = function openSiteModal(title, message, onConfirm) {
+      var modal = document.getElementById('siteModal');
+      var titleEl = document.getElementById('siteModalTitle');
+      var bodyEl = document.getElementById('siteModalBody');
+      var confirmBtn = document.getElementById('siteModalConfirm');
+      if (!modal || !titleEl || !bodyEl || !confirmBtn) return;
+      titleEl.textContent = title || 'Notice';
+      bodyEl.textContent = message || '';
+      confirmBtn.onclick = function () {
+        modal.classList.remove('is-open');
+        modal.setAttribute('aria-hidden', 'true');
+        if (typeof onConfirm === 'function') onConfirm();
+      };
+      modal.classList.add('is-open');
+      modal.setAttribute('aria-hidden', 'false');
+    };
+
+    window.openAuthModal = function openAuthModal(mode, message) {
+      var q = '../home.html?login=1';
+      try {
+        q += '&from=' + encodeURIComponent(window.location.href.split('#')[0]);
+      } catch (_e) {}
+      window.location.href = q;
+    };
+
+    let challengeBundlePromise = null;
+    function bootChallengeBundle() {
+      if (challengeBundlePromise) {
+        return challengeBundlePromise;
+      }
+      challengeBundlePromise = (async function loadChallengeUi() {
+        const mount = document.getElementById('challengeMount');
+        if (!mount || mount.dataset.challengeLoaded === '1') {
+          return;
+        }
+        const response = await fetch('../challenge/challenge-panel.html', { credentials: 'same-origin' });
+        if (!response.ok) {
+          return;
+        }
+        mount.innerHTML = await response.text();
+        mount.dataset.challengeLoaded = '1';
+        await new Promise(function (resolve, reject) {
+          const script = document.createElement('script');
+          script.src = '../challenge/challenge-home.js';
+          script.onload = resolve;
+          script.onerror = reject;
+          document.body.appendChild(script);
+        });
+      })().catch(function () {});
+      return challengeBundlePromise;
+    }
+
+    window.openWeeklyChallengeModal = function openWeeklyChallengeModal() {
+      bootChallengeBundle().then(function () {
+        if (typeof window.toggleTeamModal === 'function') {
+          window.toggleTeamModal(true);
+        }
+      });
+    };
+
+    window.addEventListener('load', function () {
+      const uiGodot = (function () {
         try {
           if (new URLSearchParams(location.search).get('ui') === 'godot') return true;
         } catch (_e) {}
-        return document.cookie.split('; ').some((c) => c.startsWith('ui_mode=godot'));
+        return document.cookie.split('; ').some(function (c) { return c.startsWith('ui_mode=godot'); });
       })();
       const L = window.ACADBEAT_LOCAL || {};
       const loginUrl = uiGodot ? (L.godotWebEntryUrl || 'http://127.0.0.1:5500/index.html?ui=godot') : '../home.html?login=1';
       window.initializeAcadBeatNav({
         mountId: 'acadbeatNav',
         basePath: '../',
-        active: 'rank',
+        active: 'competition',
+        competitionUrl: '../competition-gate.html',
         authApiBase: '../Auth/backend/api',
         homeUrl: '../home.html',
         ownerUrl: '../owner.html',
         adminUrl: L.adminDistUrl || window.location.origin + '/admin_page/dist/index.html',
         loginUrl,
         redirectAdmins: true
-      });
+      }).then(function (user) {
+        window.authState.user = user || null;
+        return bootChallengeBundle();
+      }).then(function () {
+        if (window.challengeHome && typeof window.challengeHome.syncAccess === 'function') {
+          window.challengeHome.syncAccess(window.authState.user);
+        }
+        var btn = document.getElementById('rankWeeklyChallengeBtn');
+        if (btn) {
+          btn.addEventListener('click', function () {
+            window.openWeeklyChallengeModal();
+          });
+        }
+        try {
+          var p = new URLSearchParams(window.location.search);
+          if (p.get('challenge') === '1') {
+            window.openWeeklyChallengeModal();
+          }
+        } catch (_e) {}
+      }).catch(function () {});
     });
   </script>
   <script src="../shared-nav.js"></script>

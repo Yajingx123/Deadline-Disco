@@ -5,55 +5,58 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AcadBeat Studio | Scrabble</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../shared-nav.css">
+    <script src="../../shared/acadbeat-local-config.js"></script>
     <style>
         :root {
-            --bg-color: #E4DFD8;
-            --primary-color: #9BB7D4;
-            --secondary-color: #3A4E6B;
+            --bg-color: #f4efff;
+            --primary-color: #facc15;
+            --secondary-color: #5b2a86;
             --white: #ffffff;
             --panel: rgba(255, 255, 255, 0.76);
             --panel-strong: rgba(255, 255, 255, 0.9);
-            --border: rgba(58, 78, 107, 0.12);
-            --tw: #d66978;
-            --dw: #ef9ca9;
-            --tl: #4c6fa8;
-            --dl: #9ec8ef;
-            --center: #f0b0bc;
-            --rack: #f3ece3;
+            --border: rgba(91, 42, 134, 0.16);
+            --tw: #8f4dc0;
+            --dw: #c79ce8;
+            --tl: #6f42b4;
+            --dl: #d9c6f5;
+            --center: #f7d97f;
+            --rack: #f8f2ff;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
 
         body {
             background:
-                radial-gradient(circle at top, rgba(155, 183, 212, 0.16), transparent 28%),
-                var(--bg-color);
+                radial-gradient(circle at 12% 12%, rgba(250, 204, 21, 0.22), transparent 30%),
+                radial-gradient(circle at 84% 18%, rgba(91, 42, 134, 0.2), transparent 34%),
+                linear-gradient(142deg, #f8f4ff 0%, #efe6ff 56%, #fff8de 100%);
             color: var(--secondary-color);
             min-height: 100vh;
             padding-bottom: 28px;
         }
 
-        nav {
-            display: flex;
+        .studio-local-nav {
+            display: none;
             align-items: center;
             justify-content: space-between;
             gap: 24px;
             height: 80px;
             padding: 0 5%;
-            border-bottom: 1px solid rgba(58, 78, 107, 0.1);
-            background: rgba(228, 223, 216, 0.95);
+            border-bottom: 1px solid rgba(91, 42, 134, 0.14);
+            background: rgba(244, 239, 255, 0.94);
             position: sticky;
             top: 0;
             z-index: 100;
             backdrop-filter: blur(8px);
         }
 
-        .logo { font-size: 1.4rem; font-weight: 800; text-transform: uppercase; cursor: pointer; }
-        .logo span { color: var(--primary-color); }
+        .studio-local-nav .logo { font-size: 1.4rem; font-weight: 800; text-transform: uppercase; cursor: pointer; }
+        .studio-local-nav .logo span { color: var(--primary-color); }
 
-        .nav-menu { display: flex; gap: 2.2rem; }
+        .studio-local-nav .nav-menu { display: flex; gap: 2.2rem; }
 
-        .nav-item {
+        .studio-local-nav .nav-item {
             color: var(--secondary-color);
             font-weight: 600;
             font-size: 0.8rem;
@@ -65,10 +68,10 @@
             cursor: pointer;
         }
 
-        .nav-item.active,
-        .nav-item:hover { opacity: 1; }
+        .studio-local-nav .nav-item.active,
+        .studio-local-nav .nav-item:hover { opacity: 1; }
 
-        .nav-item.active::after {
+        .studio-local-nav .nav-item.active::after {
             content: "";
             position: absolute;
             left: 0;
@@ -80,7 +83,7 @@
 
         .layout {
             max-width: 1320px;
-            margin: 18px auto 0;
+            margin: 102px auto 0;
             padding: 0 18px;
             display: grid;
             grid-template-columns: minmax(680px, 1fr) 360px;
@@ -161,7 +164,7 @@
             letter-spacing: 0.02em;
         }
 
-        .tile.temp-tile { outline: 2px solid rgba(155, 183, 212, 0.9); background: #fff8ed; }
+        .tile.temp-tile { outline: 2px solid rgba(250, 204, 21, 0.9); background: #fffbea; }
         .tile[draggable="true"] { cursor: grab; }
         .tile[draggable="true"]:active { cursor: grabbing; }
 
@@ -169,7 +172,7 @@
             box-shadow: inset 0 0 0 3px rgba(58, 78, 107, 0.45);
             z-index: 1;
         }
-        .cell.drag-over { outline: 2px dashed rgba(155, 183, 212, 0.95); outline-offset: -2px; }
+        .cell.drag-over { outline: 2px dashed rgba(250, 204, 21, 0.95); outline-offset: -2px; }
 
         .preview-turn {
             font-size: 0.88rem;
@@ -252,12 +255,12 @@
             font-weight: 700;
             padding: 8px 10px;
             border-radius: 10px;
-            background: rgba(155, 183, 212, 0.12);
+            background: rgba(250, 204, 21, 0.16);
         }
 
         .score-line.active {
-            outline: 2px solid rgba(58, 78, 107, 0.26);
-            background: rgba(155, 183, 212, 0.2);
+            outline: 2px solid rgba(91, 42, 134, 0.3);
+            background: rgba(250, 204, 21, 0.24);
         }
 
         .rack-box {
@@ -355,32 +358,52 @@
             inset: 0;
             z-index: 200;
             background:
-                radial-gradient(circle at top, rgba(155, 183, 212, 0.2), transparent 32%),
-                rgba(228, 223, 216, 0.96);
+                radial-gradient(circle at 12% 10%, rgba(250, 204, 21, 0.15), transparent 34%),
+                radial-gradient(circle at 86% 14%, rgba(91, 42, 134, 0.14), transparent 38%),
+                linear-gradient(145deg, rgba(248, 244, 255, 0.96) 0%, rgba(241, 233, 255, 0.94) 56%, rgba(255, 248, 226, 0.94) 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 24px;
+            backdrop-filter: blur(4px);
         }
         .mode-overlay.hidden { display: none; }
         .mode-card {
             width: min(420px, 100%);
-            background: rgba(255, 255, 255, 0.92);
-            border: 1px solid var(--border);
+            background: linear-gradient(165deg, rgba(255, 255, 255, 0.94) 0%, rgba(248, 242, 255, 0.9) 100%);
+            border: 1px solid rgba(91, 42, 134, 0.18);
             border-radius: 24px;
             padding: 28px 26px;
-            box-shadow: 0 24px 60px rgba(58, 78, 107, 0.12);
+            box-shadow: 0 22px 56px rgba(91, 42, 134, 0.12);
         }
         .mode-card h2 {
             margin: 0 0 8px;
             font-size: 1.35rem;
             letter-spacing: -0.02em;
+            color: var(--secondary-color);
         }
         .mode-card p {
             margin: 0 0 20px;
             font-size: 0.9rem;
-            color: rgba(58, 78, 107, 0.72);
+            color: rgba(58, 78, 107, 0.78);
             line-height: 1.55;
+        }
+        .mode-card .mode-actions button,
+        .mode-card .match-row button {
+            border-color: rgba(91, 42, 134, 0.18);
+            background: rgba(255, 255, 255, 0.72);
+            color: var(--secondary-color);
+        }
+        .mode-card .mode-actions button:hover,
+        .mode-card .match-row button:hover {
+            background: rgba(250, 204, 21, 0.24);
+            border-color: rgba(91, 42, 134, 0.26);
+        }
+        .mode-card .mode-actions button.primary,
+        .mode-card .match-row button.primary {
+            background: linear-gradient(135deg, #5b2a86 0%, #6f42b4 100%);
+            border-color: #6f42b4;
+            color: #fff;
         }
         .mode-actions {
             display: flex;
@@ -401,13 +424,13 @@
             font-size: 0.88rem;
             font-weight: 600;
             margin-bottom: 12px;
-            color: var(--secondary-color);
+            color: rgba(58, 78, 107, 0.86);
         }
         .match-row { display: flex; gap: 8px; flex-wrap: wrap; }
         .game-root.hidden { display: none; }
         .server-hint {
             font-size: 0.72rem;
-            opacity: 0.65;
+            color: rgba(58, 78, 107, 0.72);
             margin-top: 14px;
             word-break: break-all;
         }
@@ -428,6 +451,12 @@
         }
         .nav-rules:hover {
             background: rgba(155, 183, 212, 0.35);
+        }
+        .studio-rules-btn {
+            position: fixed;
+            top: 94px;
+            right: 20px;
+            z-index: 90;
         }
 
         .game-progress {
@@ -638,42 +667,215 @@
             opacity: 0.65;
             padding: 4px 2px;
         }
-        .vocab-edit-row {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 8px;
-            margin-top: 10px;
-        }
-        .vocab-edit-row input {
-            width: 100%;
-            border: 1px solid rgba(58, 78, 107, 0.2);
-            background: #fff;
-            border-radius: 9px;
-            padding: 9px 11px;
-            font-size: 0.82rem;
-            color: var(--secondary-color);
-        }
-        .vocab-edit-actions {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-        .vocab-edit-actions button {
-            min-width: 120px;
-        }
-        .vocab-edit-status {
+        .vocab-bank-status {
             min-height: 18px;
             font-size: 0.75rem;
             font-weight: 600;
             opacity: 0.85;
             color: #2f7a3f;
         }
-        .vocab-edit-status.error {
+        .vocab-bank-status.error {
             color: #b24b5e;
+        }
+        .side-utility-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .side-utility-row button {
+            flex: 1 1 0;
+            min-width: 140px;
+        }
+        .guide-modal__panel {
+            max-width: 560px;
+        }
+        .exit-modal__panel {
+            max-width: 420px;
+        }
+        .exit-modal__body {
+            padding: 18px 20px 20px;
+        }
+        .exit-modal__title {
+            margin: 0 0 8px;
+            font-size: 0.96rem;
+            font-weight: 800;
+            color: var(--secondary-color);
+        }
+        .exit-modal__text {
+            margin: 0;
+            font-size: 0.84rem;
+            line-height: 1.55;
+            color: rgba(47, 58, 74, 0.86);
+        }
+        .exit-modal__actions {
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(58, 78, 107, 0.12);
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+        .exit-modal__actions button {
+            min-width: 118px;
+        }
+        .guide-step-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 102px;
+            border-radius: 999px;
+            padding: 4px 10px;
+            background: rgba(155, 183, 212, 0.18);
+            border: 1px solid rgba(58, 78, 107, 0.16);
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+        }
+        .guide-title {
+            font-size: 1.02rem;
+            font-weight: 800;
+            margin: 2px 0 8px;
+            color: var(--secondary-color);
+        }
+        .guide-body {
+            font-size: 0.84rem;
+            line-height: 1.62;
+            color: #2f3a4a;
+        }
+        .guide-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px solid rgba(58, 78, 107, 0.1);
+        }
+        .guide-dots {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+        .guide-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(58, 78, 107, 0.22);
+        }
+        .guide-dot.active {
+            background: var(--secondary-color);
+            transform: scale(1.15);
+        }
+        .guide-actions {
+            display: flex;
+            gap: 8px;
+        }
+        .guide-dim {
+            display: none !important;
+        }
+        .guide-focus-target {
+            position: relative;
+            z-index: 90 !important;
+            box-shadow: 0 0 0 3px rgba(255, 242, 153, 0.92), 0 0 0 10px rgba(255, 242, 153, 0.24);
+            animation: guide-pulse 1.25s ease-in-out infinite;
+        }
+        .cell.guide-focus-target,
+        .preview-turn.guide-focus-target,
+        .vocab-bank-btn.guide-focus-target {
+            border-radius: 10px;
+        }
+        .guide-coach {
+            position: fixed;
+            width: min(360px, calc(100vw - 24px));
+            background: #ffffff;
+            border: 1px solid rgba(58, 78, 107, 0.16);
+            border-radius: 14px;
+            padding: 12px 12px 10px;
+            box-shadow: 0 14px 34px rgba(12, 26, 46, 0.28);
+            z-index: 95;
+            color: var(--secondary-color);
+            --guide-arrow-x: 26px;
+            --guide-arrow-y: 20px;
+        }
+        .guide-coach.hidden {
+            display: none;
+        }
+        .guide-coach__step {
+            font-size: 0.69rem;
+            letter-spacing: 0.07em;
+            text-transform: uppercase;
+            font-weight: 700;
+            opacity: 0.8;
+        }
+        .guide-coach__title {
+            margin-top: 4px;
+            font-size: 1rem;
+            font-weight: 800;
+        }
+        .guide-coach__body {
+            margin-top: 6px;
+            font-size: 0.83rem;
+            line-height: 1.56;
+            color: #2f3a4a;
+        }
+        .guide-coach__actions {
+            margin-top: 12px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(58, 78, 107, 0.1);
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+            flex-wrap: wrap;
+        }
+        .guide-coach--top::after,
+        .guide-coach--bottom::after,
+        .guide-coach--left::after,
+        .guide-coach--right::after {
+            content: "";
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background: #fff;
+            border-left: 1px solid rgba(58, 78, 107, 0.16);
+            border-top: 1px solid rgba(58, 78, 107, 0.16);
+            transform: rotate(45deg);
+        }
+        .guide-coach--top::after {
+            left: var(--guide-arrow-x);
+            bottom: -7px;
+            border-left: none;
+            border-top: none;
+            border-right: 1px solid rgba(58, 78, 107, 0.16);
+            border-bottom: 1px solid rgba(58, 78, 107, 0.16);
+        }
+        .guide-coach--bottom::after {
+            left: var(--guide-arrow-x);
+            top: -7px;
+        }
+        .guide-coach--left::after {
+            right: -7px;
+            top: var(--guide-arrow-y);
+            border-left: none;
+            border-top: none;
+            border-right: 1px solid rgba(58, 78, 107, 0.16);
+            border-bottom: 1px solid rgba(58, 78, 107, 0.16);
+        }
+        .guide-coach--right::after {
+            left: -7px;
+            top: var(--guide-arrow-y);
+        }
+        @keyframes guide-pulse {
+            0% { box-shadow: 0 0 0 3px rgba(255, 242, 153, 0.92), 0 0 0 10px rgba(255, 242, 153, 0.24); }
+            50% { box-shadow: 0 0 0 4px rgba(255, 242, 153, 1), 0 0 0 14px rgba(255, 242, 153, 0.28); }
+            100% { box-shadow: 0 0 0 3px rgba(255, 242, 153, 0.92), 0 0 0 10px rgba(255, 242, 153, 0.24); }
         }
     </style>
 </head>
 <body>
+    <div id="acadbeatNav"></div>
     <div id="mode-overlay" class="mode-overlay">
         <div class="mode-card">
             <h2>Scrabble</h2>
@@ -700,7 +902,7 @@
             <p class="server-hint" id="server-hint"></p>
         </div>
     </div>
-    <nav>
+    <nav class="studio-local-nav">
         <div class="logo" onclick="window.location.href='../../home.html'">Acad<span>Beat</span></div>
         <div class="nav-menu">
             <div class="nav-item" onclick="window.location.href='../../home.html?module=Insight'">Academic</div>
@@ -708,8 +910,9 @@
             <div class="nav-item" onclick="window.location.href='../../technology.html'">Technology</div>
             <div class="nav-item active" onclick="window.location.href='../studio.html'">Studio</div>
         </div>
-        <button type="button" class="nav-rules" onclick="openRulesModal()">Rules</button>
+        <button type="button" class="nav-rules" onclick="goBackToStudio()">Back to Studio</button>
     </nav>
+    <button type="button" class="nav-rules studio-rules-btn" onclick="openRulesModal()">Rules</button>
 
     <div id="game-root" class="game-root hidden">
     <div class="layout">
@@ -756,6 +959,11 @@
                 <button onclick="exchangeSelected()">Exchange Selected</button>
                 <button class="warn" onclick="passTurn()">Pass</button>
                 <button onclick="restartGame()">Restart</button>
+            </div>
+            <div class="side-utility-row">
+                <button type="button" onclick="openRulesModal()">Rules</button>
+                <button type="button" onclick="openGuideModal()">Quick Guide</button>
+                <button type="button" class="warn" onclick="openExitConfirmModal()">Exit Game</button>
             </div>
 
             <div class="log-box" id="log-box"></div>
@@ -807,21 +1015,76 @@
             <div class="rules-modal__body">
                 <p>Words in the Vocabulary Bank score <strong>double points</strong> when formed in a valid move.</p>
                 <div id="vocab-bank-list" class="vocab-bank-list"></div>
-                <h3>Edit (Admin)</h3>
-                <p>Enter the admin key to add or remove words. Development key: <strong>123456</strong>.</p>
-                <div class="vocab-edit-row">
-                    <input id="vocab-admin-key" type="password" placeholder="Admin key">
-                    <input id="vocab-word-input" type="text" placeholder="Word to add/remove (A-Z)">
-                    <div class="vocab-edit-actions">
-                        <button type="button" class="primary" onclick="editVocabularyBank('add')">Add Word</button>
-                        <button type="button" onclick="editVocabularyBank('remove')">Remove Word</button>
+                <p class="vocab-empty">Vocabulary Bank is synced from words you marked as <strong>Learned</strong> in Vocabulary Practice.</p>
+                <div id="vocab-bank-status" class="vocab-bank-status" aria-live="polite"></div>
+            </div>
+        </div>
+    </div>
+    <div id="guide-modal" class="rules-modal hidden" role="dialog" aria-modal="true" aria-labelledby="guide-title">
+        <div class="rules-modal__backdrop" onclick="closeGuideModal()"></div>
+        <div class="rules-modal__panel guide-modal__panel" onclick="event.stopPropagation()">
+            <div class="rules-modal__head">
+                <h2 id="guide-title">New Player Guide</h2>
+                <button type="button" class="rules-modal__close" onclick="closeGuideModal()" aria-label="Close">&times;</button>
+            </div>
+            <div class="rules-modal__body">
+                <div class="guide-step-badge" id="guide-step-badge">Step 1 / 5</div>
+                <div class="guide-title" id="guide-step-title"></div>
+                <div class="guide-body" id="guide-step-body"></div>
+                <div class="guide-nav">
+                    <div class="guide-dots" id="guide-dots"></div>
+                    <div class="guide-actions">
+                        <button type="button" id="guide-prev-btn" onclick="prevGuideStep()">Back</button>
+                        <button type="button" class="primary" id="guide-next-btn" onclick="nextGuideStep()">Next</button>
                     </div>
-                    <div id="vocab-edit-status" class="vocab-edit-status" aria-live="polite"></div>
                 </div>
             </div>
         </div>
     </div>
+    <div id="exit-modal" class="rules-modal hidden" role="dialog" aria-modal="true" aria-labelledby="exit-title">
+        <div class="rules-modal__backdrop" onclick="closeExitConfirmModal()"></div>
+        <div class="rules-modal__panel exit-modal__panel" onclick="event.stopPropagation()">
+            <div class="rules-modal__head">
+                <h2 id="exit-title">Exit Game</h2>
+                <button type="button" class="rules-modal__close" onclick="closeExitConfirmModal()" aria-label="Close">&times;</button>
+            </div>
+            <div class="rules-modal__body exit-modal__body">
+                <p class="exit-modal__title">Leave current game and return to mode selection?</p>
+                <p class="exit-modal__text">You can choose <strong>Continue</strong> to stay in the current match.</p>
+                <div class="exit-modal__actions">
+                    <button type="button" onclick="closeExitConfirmModal()">Continue</button>
+                    <button type="button" class="warn" onclick="confirmExitCurrentGame()">Exit Game</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="guide-dim" class="guide-dim hidden" onclick="closeGuideModal(false)" aria-hidden="true"></div>
+    <div id="guide-coach" class="guide-coach hidden" role="dialog" aria-live="polite" aria-label="Interactive guide">
+        <div id="guide-coach-step" class="guide-coach__step">Step 1 / 5</div>
+        <div id="guide-coach-title" class="guide-coach__title"></div>
+        <div id="guide-coach-body" class="guide-coach__body"></div>
+        <div class="guide-coach__actions">
+            <button type="button" id="guide-coach-prev" onclick="prevGuideStep()">Back</button>
+            <button type="button" class="primary" id="guide-coach-next" onclick="nextGuideStep()">Next</button>
+        </div>
+    </div>
 
+    <script src="../../shared-nav.js"></script>
+    <script>
+        window.addEventListener('load', () => {
+            const L = window.ACADBEAT_LOCAL || {};
+            window.initializeAcadBeatNav({
+                mountId: 'acadbeatNav',
+                basePath: '../../',
+                active: 'studio',
+                authApiBase: '../../Auth/backend/api',
+                homeUrl: '../../home.html',
+                ownerUrl: '../../owner.html',
+                adminUrl: L.adminDistUrl || window.location.origin + '/admin_page/dist/index.html',
+                redirectAdmins: true
+            });
+        });
+    </script>
     <script src="https://cdn.socket.io/4.7.5/socket.io.min.js" crossorigin="anonymous"></script>
     <script>
         const BOARD_SIZE = 15;
@@ -840,18 +1103,9 @@
             "DAY","GET","HAS","HIM","HIS","HOW","ITS","LET","MAY","NEW","NOW","OLD","SEE","WAY","WHO","BOY","DID","OWN","SAW","SAY","TOO","TWO",
             "HELLO","WORLD","QUIZ","GAME","PLAY","WORD","WORK","HOME","TIME","YEAR","GOOD","LIFE","HAND","BACK","LONG","GREAT","SMALL","LARGE"
         ];
-        const DEV_ADMIN_KEY = "123456";
-        const VOCAB_STORAGE_KEY = "scrabble_vocab_bank_v1";
-        const DEFAULT_VOCAB_BANK = [
-            "ANALYZE", "APPROACH", "ASSUME", "BENEFIT", "CHALLENGE",
-            "COMMUNITY", "CONCEPT", "CONCLUDE", "CONTEXT", "CONTRAST",
-            "CRITICAL", "DATA", "DISTRIBUTE", "EVIDENCE", "FACTOR",
-            "FRAMEWORK", "FUNCTION", "IDENTIFY", "IMPACT", "INDICATE",
-            "INTERPRET", "ISSUE", "METHOD", "OUTCOME", "PERSPECTIVE",
-            "POLICY", "PRINCIPLE", "PROCESS", "RELEVANT", "RESEARCH",
-            "RESOURCE", "RESPONSE", "SIGNIFICANT", "SIMILAR", "STRATEGY",
-            "STRUCTURE", "THEORY", "VARIABLE"
-        ];
+        const MAIN_ORIGIN = (window.ACADBEAT_LOCAL && window.ACADBEAT_LOCAL.mainOrigin)
+            || `${window.location.protocol}//${window.location.host}`;
+        const LEARNED_WORDS_API = `${MAIN_ORIGIN}/vocba_prac/api/learned-words.php`;
 
         const LETTER_SPECS = {
             A: { score: 1, count: 9 }, B: { score: 3, count: 2 }, C: { score: 3, count: 2 }, D: { score: 2, count: 4 },
@@ -881,6 +1135,41 @@
         const SCRABBLE_SOCKET_PATH_PREFIX = SCRABBLE_SERVER_URL.pathname.replace(/\/+$/, "");
         const SCRABBLE_SOCKET_PATH = `${SCRABBLE_SOCKET_PATH_PREFIX || ""}/socket.io`;
         const MAX_ROUNDS = 20;
+        const GUIDE_SEEN_KEY = "scrabble_quick_guide_seen_v1";
+        const GUIDE_STEPS = [
+            {
+                title: "Board focus and goal",
+                body: "This is your battlefield. Build English words by placing tiles in one straight line and connect to existing letters to keep scoring.",
+                target: () => document.getElementById("board"),
+                placement: "right"
+            },
+            {
+                title: "First word must cross the star",
+                body: "Your opening word must pass through the center star (H8). The highlighted square is mandatory for your first move.",
+                target: () => document.querySelector(`.cell[data-r="${CENTER}"][data-c="${CENTER}"]`),
+                placement: "bottom"
+            },
+            {
+                title: "Try a sample word",
+                body: "Try placing your own word across the highlighted center. While tiles are on board, the Preview box shows your estimated score instantly.",
+                target: () => document.getElementById("preview-turn"),
+                placement: "left"
+            },
+            {
+                title: "How to submit and read score",
+                body: "After placing your own tiles, click Play. The score card updates right away, and the highlighted words show what was counted this turn.",
+                target: () => document.querySelector(".controls .primary"),
+                extraTargets: () => [document.getElementById("score-you"), document.getElementById("score-ai")],
+                placement: "left"
+            },
+            {
+                title: "Track history and bonus words",
+                body: "Use the operation log to review each move. Open Vocabulary Bank to see words that grant x2 bonus when formed.",
+                target: () => document.getElementById("log-box"),
+                extraTargets: () => [document.querySelector(".vocab-bank-btn")],
+                placement: "top"
+            }
+        ];
 
         const state = {
             mode: "pick",
@@ -906,9 +1195,17 @@
             mySeat: 0,
             isMyTurn: true,
             endReason: null,
-            vocabBank: new Set(loadVocabularyBankWords()),
-            currentUser: null
+            vocabBank: new Set(),
+            currentUser: null,
+            guideStep: 0,
+            guideActive: false,
+            guideFocusEls: [],
+            guidePositionRaf: 0
         };
+
+        function goBackToStudio() {
+            window.location.href = "../studio.html";
+        }
 
         async function fetchCurrentUser() {
             try {
@@ -945,32 +1242,8 @@
             return [...state.vocabBank].sort();
         }
 
-        function loadVocabularyBankWords() {
-            try {
-                const txt = localStorage.getItem(VOCAB_STORAGE_KEY);
-                if (!txt) return [...DEFAULT_VOCAB_BANK];
-                const parsed = JSON.parse(txt);
-                if (!Array.isArray(parsed)) return [...DEFAULT_VOCAB_BANK];
-                const words = parsed
-                    .map((w) => normalizeVocabWord(w))
-                    .filter((w) => w.length >= 2 && w.length <= 15);
-                if (!words.length) return [...DEFAULT_VOCAB_BANK];
-                return [...new Set(words)];
-            } catch (_e) {
-                return [...DEFAULT_VOCAB_BANK];
-            }
-        }
-
-        function saveVocabularyBankWords() {
-            try {
-                localStorage.setItem(VOCAB_STORAGE_KEY, JSON.stringify(getSortedVocabWords()));
-            } catch (_e) {
-                /* storage may be unavailable */
-            }
-        }
-
-        function setVocabEditStatus(message, isError = false) {
-            const el = document.getElementById("vocab-edit-status");
+        function setVocabBankStatus(message, isError = false) {
+            const el = document.getElementById("vocab-bank-status");
             if (!el) return;
             el.textContent = message || "";
             el.classList.toggle("error", !!isError);
@@ -981,67 +1254,253 @@
             if (!host) return;
             const words = getSortedVocabWords();
             if (!words.length) {
-                host.innerHTML = `<div class="vocab-empty">No vocabulary words configured.</div>`;
+                host.innerHTML = `<div class="vocab-empty">No learned words yet. Mark words as <strong>Learned</strong> in Vocabulary Practice first.</div>`;
                 return;
             }
             host.innerHTML = words.map((w) => `<span class="vocab-chip">${w}</span>`).join("");
         }
 
-        function openVocabularyBankModal() {
+        async function refreshVocabularyBankFromLearnedWords() {
+            try {
+                const response = await fetch(`${LEARNED_WORDS_API}?_=${Date.now()}`, { credentials: "include" });
+                const data = await response.json().catch(() => ({ ok: false }));
+                if (!response.ok || !data?.ok || !Array.isArray(data.words)) {
+                    throw new Error(data?.message || "Failed to load learned words.");
+                }
+                applyVocabularyBankWords(data.words, { allowEmpty: true });
+                setVocabBankStatus(`Synced ${data.words.length} learned word(s).`);
+            } catch (err) {
+                setVocabBankStatus(err?.message || "Failed to sync learned words.", true);
+            }
+        }
+
+        async function openVocabularyBankModal() {
             renderVocabularyBankModal();
-            setVocabEditStatus("");
+            setVocabBankStatus("Syncing learned words...");
             document.getElementById("vocab-modal")?.classList.remove("hidden");
+            await refreshVocabularyBankFromLearnedWords();
         }
 
         function closeVocabularyBankModal() {
             document.getElementById("vocab-modal")?.classList.add("hidden");
         }
 
-        function applyVocabularyBankWords(words) {
+        function openExitConfirmModal() {
+            document.getElementById("exit-modal")?.classList.remove("hidden");
+        }
+
+        function closeExitConfirmModal() {
+            document.getElementById("exit-modal")?.classList.add("hidden");
+        }
+
+        function renderGuideStep() {
+            const idx = Math.max(0, Math.min(state.guideStep, GUIDE_STEPS.length - 1));
+            state.guideStep = idx;
+            const step = GUIDE_STEPS[idx];
+            const badge = document.getElementById("guide-step-badge");
+            const title = document.getElementById("guide-step-title");
+            const body = document.getElementById("guide-step-body");
+            if (badge) badge.textContent = `Step ${idx + 1} / ${GUIDE_STEPS.length}`;
+            if (title) title.textContent = step.title;
+            if (body) body.textContent = step.body;
+
+            const dotsHost = document.getElementById("guide-dots");
+            if (dotsHost) {
+                dotsHost.innerHTML = GUIDE_STEPS.map((_, i) => `<span class="guide-dot ${i === idx ? "active" : ""}"></span>`).join("");
+            }
+            const prevBtn = document.getElementById("guide-prev-btn");
+            const nextBtn = document.getElementById("guide-next-btn");
+            if (prevBtn) prevBtn.disabled = idx === 0;
+            if (nextBtn) nextBtn.textContent = idx === GUIDE_STEPS.length - 1 ? "Done" : "Next";
+
+            const coachStep = document.getElementById("guide-coach-step");
+            const coachTitle = document.getElementById("guide-coach-title");
+            const coachBody = document.getElementById("guide-coach-body");
+            const coachPrev = document.getElementById("guide-coach-prev");
+            const coachNext = document.getElementById("guide-coach-next");
+            if (coachStep) coachStep.textContent = `Step ${idx + 1} / ${GUIDE_STEPS.length}`;
+            if (coachTitle) coachTitle.textContent = step.title;
+            if (coachBody) coachBody.textContent = step.body;
+            if (coachPrev) coachPrev.disabled = idx === 0;
+            if (coachNext) coachNext.textContent = idx === GUIDE_STEPS.length - 1 ? "Done" : "Next";
+            if (state.guideActive) {
+                applyGuideFocus(step);
+                positionGuideCoach(step);
+            }
+        }
+
+        function openGuideModal(forceFromStart = false) {
+            if (forceFromStart) state.guideStep = 0;
+            state.guideActive = true;
+            document.getElementById("guide-modal")?.classList.add("hidden");
+            document.getElementById("guide-coach")?.classList.remove("hidden");
+            renderGuideStep();
+            window.addEventListener("resize", onGuideViewportChanged);
+            window.addEventListener("scroll", onGuideViewportChanged, true);
+            window.addEventListener("wheel", onGuideViewportChanged, { passive: true });
+            window.addEventListener("touchmove", onGuideViewportChanged, { passive: true });
+        }
+
+        function closeGuideModal(markSeen = true) {
+            document.getElementById("guide-modal")?.classList.add("hidden");
+            document.getElementById("guide-coach")?.classList.add("hidden");
+            state.guideActive = false;
+            clearGuideFocus();
+            window.removeEventListener("resize", onGuideViewportChanged);
+            window.removeEventListener("scroll", onGuideViewportChanged, true);
+            window.removeEventListener("wheel", onGuideViewportChanged);
+            window.removeEventListener("touchmove", onGuideViewportChanged);
+            if (state.guidePositionRaf) {
+                cancelAnimationFrame(state.guidePositionRaf);
+                state.guidePositionRaf = 0;
+            }
+            if (markSeen) {
+                try { localStorage.setItem(GUIDE_SEEN_KEY, "1"); } catch (_e) { /* */ }
+            }
+        }
+
+        function nextGuideStep() {
+            if (state.guideStep >= GUIDE_STEPS.length - 1) {
+                closeGuideModal(true);
+                return;
+            }
+            state.guideStep += 1;
+            renderGuideStep();
+        }
+
+        function prevGuideStep() {
+            if (state.guideStep <= 0) return;
+            state.guideStep -= 1;
+            renderGuideStep();
+        }
+
+        function clearGuideFocus() {
+            if (!Array.isArray(state.guideFocusEls)) state.guideFocusEls = [];
+            state.guideFocusEls.forEach((el) => el?.classList?.remove("guide-focus-target"));
+            state.guideFocusEls = [];
+        }
+
+        function getGuideTargets(step) {
+            const primary = typeof step.target === "function" ? step.target() : null;
+            const extra = typeof step.extraTargets === "function" ? step.extraTargets() : [];
+            return [primary, ...(Array.isArray(extra) ? extra : [])].filter((el) => el && typeof el.classList !== "undefined");
+        }
+
+        function applyGuideFocus(step) {
+            clearGuideFocus();
+            const targets = getGuideTargets(step);
+            targets.forEach((el) => el.classList.add("guide-focus-target"));
+            state.guideFocusEls = targets;
+        }
+
+        function positionGuideCoach(step) {
+            const coach = document.getElementById("guide-coach");
+            if (!coach) return;
+            const targets = getGuideTargets(step);
+            const target = targets[0];
+            const preferredPlacement = step.placement || "right";
+            coach.classList.remove("guide-coach--top", "guide-coach--bottom", "guide-coach--left", "guide-coach--right");
+            if (!target) {
+                coach.classList.add("guide-coach--bottom");
+                coach.style.left = "50%";
+                coach.style.top = "50%";
+                coach.style.transform = "translate(-50%, -50%)";
+                return;
+            }
+            const rect = target.getBoundingClientRect();
+            const coachRect = coach.getBoundingClientRect();
+            const gap = 16;
+            const margin = 10;
+            const placements = [...new Set([preferredPlacement, "right", "left", "bottom", "top"])];
+
+            function getPlacementXY(placement) {
+                let left = rect.right + gap;
+                let top = rect.top + (rect.height - coachRect.height) / 2;
+                if (placement === "left") left = rect.left - coachRect.width - gap;
+                if (placement === "top") top = rect.top - coachRect.height - gap;
+                if (placement === "bottom") top = rect.bottom + gap;
+                if (placement === "top" || placement === "bottom") {
+                    left = rect.left + (rect.width - coachRect.width) / 2;
+                }
+                return { left, top };
+            }
+
+            function fitsInViewport(left, top) {
+                return (
+                    left >= margin &&
+                    top >= margin &&
+                    left + coachRect.width <= window.innerWidth - margin &&
+                    top + coachRect.height <= window.innerHeight - margin
+                );
+            }
+
+            let placement = preferredPlacement;
+            let coords = getPlacementXY(placement);
+            for (const p of placements) {
+                const c = getPlacementXY(p);
+                if (fitsInViewport(c.left, c.top)) {
+                    placement = p;
+                    coords = c;
+                    break;
+                }
+            }
+
+            let left = Math.min(window.innerWidth - coachRect.width - margin, Math.max(margin, coords.left));
+            let top = Math.min(window.innerHeight - coachRect.height - margin, Math.max(margin, coords.top));
+            coach.style.left = `${Math.round(left)}px`;
+            coach.style.top = `${Math.round(top)}px`;
+            coach.style.transform = "";
+            coach.classList.add(`guide-coach--${placement}`);
+
+            const targetCenterX = rect.left + rect.width / 2;
+            const targetCenterY = rect.top + rect.height / 2;
+            const minOffset = 12;
+            if (placement === "top" || placement === "bottom") {
+                const arrowX = Math.min(
+                    coachRect.width - 26,
+                    Math.max(minOffset, targetCenterX - left - 6)
+                );
+                coach.style.setProperty("--guide-arrow-x", `${Math.round(arrowX)}px`);
+            } else {
+                const arrowY = Math.min(
+                    coachRect.height - 26,
+                    Math.max(minOffset, targetCenterY - top - 6)
+                );
+                coach.style.setProperty("--guide-arrow-y", `${Math.round(arrowY)}px`);
+            }
+        }
+
+        function onGuideViewportChanged() {
+            if (!state.guideActive) return;
+            if (state.guidePositionRaf) return;
+            state.guidePositionRaf = requestAnimationFrame(() => {
+                state.guidePositionRaf = 0;
+                if (!state.guideActive) return;
+                const step = GUIDE_STEPS[Math.max(0, Math.min(state.guideStep, GUIDE_STEPS.length - 1))];
+                if (!step) return;
+                positionGuideCoach(step);
+            });
+        }
+
+        function maybeShowGuideForNewPlayer() {
+            let seen = false;
+            try { seen = localStorage.getItem(GUIDE_SEEN_KEY) === "1"; } catch (_e) { /* */ }
+            if (seen) return;
+            openGuideModal(true);
+        }
+
+        function applyVocabularyBankWords(words, options = {}) {
             if (!Array.isArray(words)) return;
             const cleaned = words
                 .map((w) => normalizeVocabWord(w))
                 .filter((w) => w.length >= 2 && w.length <= 15);
-            if (!cleaned.length) return;
+            if (!cleaned.length && !options.allowEmpty) return;
             state.vocabBank = new Set(cleaned);
-            saveVocabularyBankWords();
             renderVocabularyBankModal();
             // 只有在游戏已经初始化时才调用render()
             if (state.board && Array.isArray(state.board)) {
                 render();
             }
-        }
-
-        function editVocabularyBank(op) {
-            const key = String(document.getElementById("vocab-admin-key")?.value || "").trim();
-            if (key !== DEV_ADMIN_KEY) {
-                setVocabEditStatus("Invalid admin key.", true);
-                return;
-            }
-            const input = document.getElementById("vocab-word-input");
-            const word = normalizeVocabWord(input?.value);
-            if (!word || word.length < 2 || word.length > 15) {
-                setVocabEditStatus("Word must be 2-15 letters (A-Z).", true);
-                return;
-            }
-            if (op !== "add" && op !== "remove") {
-                setVocabEditStatus("Unsupported edit operation.", true);
-                return;
-            }
-
-            if (isOnline() && state.onlineSocket?.connected) {
-                state.onlineSocket.emit("bank:edit", { key, op, word });
-                setVocabEditStatus("Sent update to match server...");
-                return;
-            }
-
-            if (op === "add") state.vocabBank.add(word);
-            if (op === "remove") state.vocabBank.delete(word);
-            saveVocabularyBankWords();
-            renderVocabularyBankModal();
-            render();
-            if (input) input.value = "";
-            setVocabEditStatus(`Vocabulary Bank updated (${op}: ${word}).`);
         }
 
         function getDisplayRound() {
@@ -1088,6 +1547,7 @@
 
         function showGameRoot() {
             document.getElementById("game-root")?.classList.remove("hidden");
+            maybeShowGuideForNewPlayer();
         }
 
         function hideGameRoot() {
@@ -1115,6 +1575,7 @@
             setAiUiVisible(true);
             state.players[AI].name = "Computer";
             state.players[AI].isAI = true;
+            refreshVocabularyBankFromLearnedWords();
             loadDictionary().then(() => restartGame());
         }
 
@@ -1218,17 +1679,7 @@
             });
             s.on("bank:state", (payload) => {
                 if (Array.isArray(payload?.words)) {
-                    applyVocabularyBankWords(payload.words);
-                }
-            });
-            s.on("bank:edit:result", (payload) => {
-                if (payload?.ok && Array.isArray(payload?.words)) {
-                    applyVocabularyBankWords(payload.words);
-                }
-                setVocabEditStatus(payload?.message || "Vocabulary edit rejected.", !payload?.ok);
-                if (payload?.ok) {
-                    const input = document.getElementById("vocab-word-input");
-                    if (input) input.value = "";
+                    applyVocabularyBankWords(payload.words, { allowEmpty: true });
                 }
             });
             s.on("game:state", (snap) => applyOnlineSnapshot(snap));
@@ -1302,6 +1753,30 @@
             showModeOverlay();
             document.getElementById("match-panel")?.classList.remove("is-visible");
             setAiUiVisible(true);
+        }
+
+        function confirmExitCurrentGame() {
+            closeExitConfirmModal();
+            closeRulesModal();
+            closeVocabularyBankModal();
+            closeGuideModal(false);
+
+            if (isOnline() && state.onlineSocket?.connected) {
+                teardownOnlineAndReturnToMenu();
+                document.getElementById("match-status").textContent = "Exited current game.";
+                document.getElementById("weekly-match-status").textContent = "Exited current game.";
+                return;
+            }
+
+            state.mode = "pick";
+            state.temp.clear();
+            state.exchangeMode = false;
+            state.exchangeSet.clear();
+            state.selectedRack = -1;
+            state.gameOver = true;
+            hideGameRoot();
+            showModeOverlay();
+            renderGameProgress();
         }
 
         function applyBoardSnapshot(snapBoard) {
@@ -2435,12 +2910,14 @@
             renderGameProgress();
             renderLogs();
             document.getElementById("exchange-toggle").textContent = state.exchangeMode ? "Exit Exchange Mode" : "Exchange Mode";
+            if (state.guideActive) renderGuideStep();
         }
 
         document.addEventListener("keydown", (e) => {
             if (e.key === "Escape") {
                 closeRulesModal();
                 closeVocabularyBankModal();
+                closeGuideModal(false);
             }
         });
 

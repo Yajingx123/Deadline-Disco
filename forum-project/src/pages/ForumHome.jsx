@@ -1,5 +1,5 @@
 // src/pages/ForumHome.jsx
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Header from '../components/Header';
 import SidebarFilter from '../components/SidebarFilter';
 import PostList from '../components/PostList';
@@ -38,6 +38,95 @@ export default function ForumHome() {
   const [userPosts, setUserPosts] = useState([]);
   const [favoritesTab, setFavoritesTab] = useState('favorites');
   const [pinnedAnnouncements, setPinnedAnnouncements] = useState([]);
+  const guideRunnerRef = useRef(null);
+
+  const getGuideUserId = () => (
+    currentUser?.user_id
+    || currentUser?.id
+    || currentUser?.username
+    || 'guest'
+  );
+
+  const startForumGuide = (force = false) => {
+    if (!window.AcadBeatGuide || !currentUser) {
+      return;
+    }
+
+    if (selectedPost) {
+      setSelectedPost(null);
+    }
+    if (viewMode !== 'list') {
+      setViewMode('list');
+    }
+
+    const guideKey = 'forum-overview-v1';
+    const userId = getGuideUserId();
+    if (!force && window.AcadBeatGuide.hasSeen(guideKey, userId)) {
+      return;
+    }
+
+    window.setTimeout(() => {
+      if (guideRunnerRef.current) {
+        guideRunnerRef.current.stop(false);
+      }
+      const runner = window.AcadBeatGuide.create({
+        guideKey,
+        userId,
+        steps: [
+          {
+            target: '[data-guide-forum="publish-btn"]',
+            placement: 'bottom',
+            title: 'Step 1: Publish',
+            content: 'Click "Publish Post" to create a new thread.',
+          },
+          {
+            target: () => document.querySelector('.main-content .post-item') || document.querySelector('.main-content'),
+            placement: 'right',
+            requireClick: true,
+            title: 'Step 2: Open A Post',
+            content: 'This is the post list. Click any post to open the detail page.',
+          },
+          {
+            target: '[data-guide-forum="detail-reply"]',
+            placement: 'left',
+            title: 'Step 3: Reply',
+            content: 'Use "Reply to Post" to add a comment or discussion reply.',
+          },
+          {
+            target: '[data-guide-forum="detail-back"]',
+            placement: 'bottom',
+            requireClick: true,
+            title: 'Step 4: Back',
+            content: 'Click "Back to List" to return to the forum main page.',
+          },
+          {
+            target: '[data-guide-forum="sidebar"]',
+            placement: 'right',
+            title: 'Step 5: Filters',
+            content: 'Use Labels + Search + Sort together to quickly narrow down useful threads.',
+          },
+          {
+            target: '[data-guide-forum="my-btn"]',
+            placement: 'bottom',
+            requireClick: true,
+            title: 'Step 6: Personal',
+            content: 'Click "Personal" to enter your personal thread collection page.',
+          },
+          {
+            target: '.favorites-header',
+            placement: 'bottom',
+            title: 'Step 7: Favorites / Likes / My Posts',
+            content: 'Here you can switch between Favorites, Liked posts, and your own posts.',
+          },
+        ],
+        onFinish: () => {
+          setViewMode('list');
+        },
+      });
+      guideRunnerRef.current = runner;
+      runner.start();
+    }, 260);
+  };
 
   const loadForumData = async () => {
     setLoading(true);
@@ -87,6 +176,15 @@ export default function ForumHome() {
   useEffect(() => {
     loadForumData();
   }, [searchQuery, selectedTags, sortOrder]);
+
+  useEffect(() => {
+    return () => {
+      if (guideRunnerRef.current) {
+        guideRunnerRef.current.stop(false);
+        guideRunnerRef.current = null;
+      }
+    };
+  }, []);
 
   useEffect(() => {
     return connectRealtime(async (event) => {
@@ -400,11 +498,12 @@ export default function ForumHome() {
           viewMode={viewMode}
           onBackToForum={handleBackToForum}
           favoritesTab={favoritesTab}
+          onOpenGuide={() => startForumGuide(true)}
         />
         
         <div className="forum-layout favorites-layout">
           <div className="favorites-container">
-            <div className="favorites-header">
+            <div className="favorites-header" data-guide-forum="favorites-tabs">
               <button 
                 className={`favorites-tab ${favoritesTab === 'favorites' ? 'favorites-tab--active' : ''}`}
                 onClick={() => setFavoritesTab('favorites')}
@@ -473,6 +572,7 @@ export default function ForumHome() {
         viewMode={viewMode}
         onBackToForum={handleBackToForum}
         favoritesTab={favoritesTab}
+        onOpenGuide={() => startForumGuide(true)}
       />
       
       <div className="forum-layout">

@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Academic Forum</title>
     <link rel="stylesheet" href="/shared-nav.css" />
+    <link rel="stylesheet" href="/shared/onboarding.css" />
     <script src="/shared/acadbeat-local-config.js"></script>
+    <script src="/shared/onboarding.js"></script>
     <style>html.acadbeat-role-guard body{visibility:hidden}</style>
     <script>
       document.documentElement.classList.add('acadbeat-role-guard');
@@ -40,7 +42,7 @@
             homeUrl: MAIN + '/home.html',
             ownerUrl: MAIN + '/owner.html',
             authApiBase: MAIN + '/Auth/backend/api',
-            forumUrl: MAIN + '/home.html?module=Dialogue',
+            forumUrl: L.forumDevChooserUrl || (MAIN + '/forum-project/dist/index.html?view=forum'),
             technologyUrl: MAIN + '/technology.html',
             studioUrl: MAIN + '/Studio/studio.html',
             messageCenterUrl: L.messageCenterDistUrl,

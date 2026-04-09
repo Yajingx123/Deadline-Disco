@@ -29,8 +29,8 @@ function renderAnnouncementContent(text) {
     if (fileName.endsWith('.webm')) type = 'audio/webm'
 
     return `
-      <div style="margin: 14px 0; padding: 12px; border-radius: 14px; background: rgba(58, 78, 107, 0.08); border: 1px solid rgba(58, 78, 107, 0.14);">
-        <div style="font-size: 12px; font-weight: 700; color: #3a4e6b; margin-bottom: 8px;">Audio · ${fileName}</div>
+      <div style="margin: 14px 0; padding: 12px; border-radius: 14px; background: rgba(91, 42, 134, 0.08); border: 1px solid rgba(91, 42, 134, 0.14);">
+        <div style="font-size: 12px; font-weight: 700; color: #5b2a86; margin-bottom: 8px;">Audio · ${fileName}</div>
         <audio controls style="width: 100%;">
           <source src="${src}" type="${type}" />
         </audio>
@@ -543,7 +543,7 @@ const styles = {
     fontWeight: 700,
     letterSpacing: '0.24rem',
     textTransform: 'uppercase',
-    color: 'rgba(58, 78, 107, 0.45)',
+    color: 'rgba(91, 42, 134, 0.45)',
     marginBottom: '12px',
   },
   title: {
@@ -560,7 +560,7 @@ const styles = {
     maxWidth: '820px',
     fontSize: '1rem',
     lineHeight: 1.65,
-    color: 'rgba(58, 78, 107, 0.78)',
+    color: 'rgba(91, 42, 134, 0.78)',
   },
   error: {
     marginBottom: '18px',
@@ -579,8 +579,8 @@ const styles = {
   formContainer: {
     borderRadius: '26px',
     background: 'rgba(255, 255, 255, 0.9)',
-    border: '1px solid rgba(58, 78, 107, 0.12)',
-    boxShadow: '0 20px 45px rgba(58, 78, 107, 0.08)',
+    border: '1px solid rgba(91, 42, 134, 0.12)',
+    boxShadow: '0 20px 45px rgba(91, 42, 134, 0.08)',
     padding: '24px',
   },
   formHeader: {
@@ -593,11 +593,11 @@ const styles = {
   formTitle: {
     margin: '0 0 6px',
     fontSize: '1.55rem',
-    color: '#2b3f58',
+    color: '#4a2866',
   },
   formHint: {
     margin: 0,
-    color: 'rgba(58, 78, 107, 0.7)',
+    color: 'rgba(91, 42, 134, 0.7)',
     lineHeight: 1.5,
   },
   pinToggle: {
@@ -605,7 +605,7 @@ const styles = {
     alignItems: 'center',
     gap: '10px',
     fontWeight: 600,
-    color: '#3a4e6b',
+    color: '#5b2a86',
     whiteSpace: 'nowrap',
   },
   form: {
@@ -619,11 +619,11 @@ const styles = {
   label: {
     fontSize: '0.9rem',
     fontWeight: 700,
-    color: '#3a4e6b',
+    color: '#5b2a86',
   },
   input: {
     borderRadius: '16px',
-    border: '1px solid rgba(58, 78, 107, 0.16)',
+    border: '1px solid rgba(91, 42, 134, 0.16)',
     padding: '14px 16px',
     fontSize: '1rem',
     outline: 'none',
@@ -641,22 +641,22 @@ const styles = {
   },
   toolButton: {
     borderRadius: '999px',
-    border: '1px solid rgba(58, 78, 107, 0.16)',
-    background: '#f6f4f0',
-    color: '#314760',
+    border: '1px solid rgba(91, 42, 134, 0.16)',
+    background: '#f6f2ff',
+    color: '#5b2a86',
     padding: '10px 14px',
     fontWeight: 700,
     cursor: 'pointer',
   },
   toolButtonActive: {
-    background: '#3a4e6b',
+    background: '#5b2a86',
     color: '#fff',
   },
   previewToggle: {
     borderRadius: '999px',
-    border: '1px solid rgba(58, 78, 107, 0.16)',
+    border: '1px solid rgba(91, 42, 134, 0.16)',
     background: '#fff',
-    color: '#314760',
+    color: '#5b2a86',
     padding: '10px 16px',
     fontWeight: 700,
     cursor: 'pointer',
@@ -664,12 +664,12 @@ const styles = {
   recorderBanner: {
     borderRadius: '16px',
     padding: '14px 16px',
-    background: 'rgba(58, 78, 107, 0.08)',
-    color: '#314760',
+    background: 'rgba(91, 42, 134, 0.08)',
+    color: '#5b2a86',
   },
   editorSurface: {
     borderRadius: '22px',
-    border: '1px solid rgba(58, 78, 107, 0.14)',
+    border: '1px solid rgba(91, 42, 134, 0.14)',
     overflow: 'hidden',
     background: '#fff',
   },
@@ -688,7 +688,7 @@ const styles = {
     minHeight: '340px',
     padding: '20px',
     lineHeight: 1.7,
-    color: '#243547',
+    color: '#3d1f5c',
   },
   formActions: {
     display: 'flex',
@@ -704,18 +704,18 @@ const styles = {
     cursor: 'pointer',
   },
   primaryButton: {
-    background: 'rgba(58, 78, 107, 0.94)',
+    background: 'rgba(91, 42, 134, 0.94)',
     color: '#fff',
   },
   secondaryButton: {
-    background: '#ece7de',
-    color: '#2b3f58',
+    background: '#f0e8ff',
+    color: '#4a2866',
   },
   listContainer: {
     borderRadius: '26px',
     background: 'rgba(255, 255, 255, 0.9)',
-    border: '1px solid rgba(58, 78, 107, 0.12)',
-    boxShadow: '0 20px 45px rgba(58, 78, 107, 0.08)',
+    border: '1px solid rgba(91, 42, 134, 0.12)',
+    boxShadow: '0 20px 45px rgba(91, 42, 134, 0.08)',
     padding: '24px',
     minHeight: '480px',
   },
@@ -729,22 +729,22 @@ const styles = {
   listTitle: {
     margin: 0,
     fontSize: '1.4rem',
-    color: '#2b3f58',
+    color: '#4a2866',
   },
   countBadge: {
     minWidth: '32px',
     padding: '6px 10px',
     borderRadius: '999px',
-    background: 'rgba(58, 78, 107, 0.08)',
-    color: '#3a4e6b',
+    background: 'rgba(91, 42, 134, 0.08)',
+    color: '#5b2a86',
     textAlign: 'center',
     fontWeight: 700,
   },
   loading: {
-    color: 'rgba(58, 78, 107, 0.78)',
+    color: 'rgba(91, 42, 134, 0.78)',
   },
   empty: {
-    color: 'rgba(58, 78, 107, 0.62)',
+    color: 'rgba(91, 42, 134, 0.62)',
   },
   announcementsList: {
     display: 'grid',
@@ -752,8 +752,8 @@ const styles = {
   },
   announcementItem: {
     borderRadius: '20px',
-    border: '1px solid rgba(58, 78, 107, 0.12)',
-    background: '#faf8f4',
+    border: '1px solid rgba(91, 42, 134, 0.12)',
+    background: '#faf8ff',
     padding: '18px',
   },
   announcementHeader: {
@@ -765,13 +765,13 @@ const styles = {
   },
   announcementTitle: {
     margin: '0 0 8px',
-    color: '#2b3f58',
+    color: '#4a2866',
   },
   announcementMeta: {
     display: 'flex',
     gap: '10px',
     flexWrap: 'wrap',
-    color: 'rgba(58, 78, 107, 0.7)',
+    color: 'rgba(91, 42, 134, 0.7)',
     fontSize: '0.9rem',
   },
   pinnedBadge: {
@@ -793,8 +793,8 @@ const styles = {
     cursor: 'pointer',
   },
   editButton: {
-    background: 'rgba(58, 78, 107, 0.12)',
-    color: '#2b3f58',
+    background: 'rgba(91, 42, 134, 0.12)',
+    color: '#4a2866',
   },
   deleteButton: {
     background: 'rgba(179, 83, 58, 0.14)',
@@ -802,7 +802,7 @@ const styles = {
   },
   announcementContent: {
     margin: 0,
-    color: '#4a5b71',
+    color: '#6b4d8a',
     lineHeight: 1.65,
   },
 }

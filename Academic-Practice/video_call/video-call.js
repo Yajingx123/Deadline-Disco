@@ -227,6 +227,19 @@
     const scheduledAtInput = qs('#voiceRoomScheduledAtInput');
     const nextStepInput = qs('#voiceRoomNextStepInput');
 
+    if (scheduledAtInput && typeof window.flatpickr === 'function') {
+      window.flatpickr(scheduledAtInput, {
+        enableTime: true,
+        time_24hr: true,
+        disableMobile: true,
+        allowInput: true,
+        minuteIncrement: 1,
+        dateFormat: 'Y-m-d\\TH:i',
+        altInput: true,
+        altFormat: 'Y-m-d H:i',
+      });
+    }
+
     function syncScheduleMode() {
       const scheduleMode = document.querySelector('input[name="scheduleMode"]:checked')?.value || 'now';
       const isScheduled = scheduleMode === 'scheduled';

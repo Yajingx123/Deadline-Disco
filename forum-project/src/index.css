@@ -1,12 +1,12 @@
 :root {
-  --bg-color: #E4DFD8;
-  --primary-color: #9BB7D4;
-  --secondary-color: #3A4E6B;
+  --bg-color: #f4efff;
+  --primary-color: #facc15;
+  --secondary-color: #5b2a86;
   --white: #ffffff;
   --panel: rgba(255, 255, 255, 0.72);
   --panel-strong: rgba(255, 255, 255, 0.88);
-  --border: rgba(58, 78, 107, 0.12);
-  --shadow-soft: 0 18px 50px rgba(58, 78, 107, 0.08);
+  --border: rgba(91, 42, 134, 0.16);
+  --shadow-soft: 0 18px 50px rgba(91, 42, 134, 0.12);
 }
 
 * {
@@ -17,7 +17,7 @@ body {
   margin: 0;
   font-family: 'Inter', sans-serif;
   background:
-    radial-gradient(circle at top, rgba(155, 183, 212, 0.16), transparent 28%),
+    radial-gradient(circle at top, rgba(250, 204, 21, 0.2), transparent 28%),
     var(--bg-color);
   color: var(--secondary-color);
 }
@@ -41,8 +41,8 @@ body {
   gap: 24px;
   height: 80px;
   padding: 0 5%;
-  border-bottom: 1px solid rgba(58, 78, 107, 0.1);
-  background: rgba(228, 223, 216, 0.92);
+  border-bottom: 1px solid rgba(91, 42, 134, 0.16);
+  background: rgba(244, 239, 255, 0.92);
   backdrop-filter: blur(12px);
   position: sticky;
   top: 0;
@@ -104,20 +104,20 @@ body {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  border: 1px solid rgba(58, 78, 107, 0.16);
+  border: 1px solid rgba(91, 42, 134, 0.2);
   background: rgba(255, 255, 255, 0.74);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   color: var(--secondary-color);
   text-decoration: none;
-  box-shadow: 0 8px 20px rgba(58, 78, 107, 0.08);
+  box-shadow: 0 8px 20px rgba(91, 42, 134, 0.12);
   transition: 0.25s ease;
 }
 
 .forum-topnav__messageLink:hover,
 .forum-topnav__messageLink.is-active {
-  background: rgba(155, 183, 212, 0.22);
+  background: rgba(250, 204, 21, 0.26);
   transform: translateY(-1px);
 }
 
@@ -139,7 +139,7 @@ body {
   color: transparent;
   font-size: 0;
   border: 2px solid #f7f3eb;
-  box-shadow: 0 0 0 1px rgba(58, 78, 107, 0.08);
+  box-shadow: 0 0 0 1px rgba(91, 42, 134, 0.12);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -149,8 +149,8 @@ body {
   min-height: 34px;
   padding: 0 12px;
   border-radius: 999px;
-  border: 1px solid rgba(58, 78, 107, 0.18);
-  background: rgba(155, 183, 212, 0.22);
+  border: 1px solid rgba(91, 42, 134, 0.22);
+  background: rgba(250, 204, 21, 0.22);
   color: var(--secondary-color);
   font-size: 0.72rem;
   font-weight: 700;
@@ -205,7 +205,7 @@ body {
   min-height: 34px;
   padding: 0 12px;
   border-radius: 999px;
-  border: 1px solid rgba(58, 78, 107, 0.18);
+  border: 1px solid rgba(91, 42, 134, 0.22);
   background: rgba(255, 255, 255, 0.72);
   color: var(--secondary-color);
   text-decoration: none;
@@ -217,7 +217,7 @@ body {
 .forum-topnav__logout:hover {
   transform: translateY(-1px);
   background: rgba(255, 255, 255, 0.94);
-  border-color: rgba(58, 78, 107, 0.3);
+  border-color: rgba(91, 42, 134, 0.4);
 }
 
 .forum-header {
@@ -235,7 +235,7 @@ body {
   font-weight: 700;
   letter-spacing: 0.24rem;
   text-transform: uppercase;
-  color: rgba(58, 78, 107, 0.45);
+  color: rgba(91, 42, 134, 0.56);
   margin-bottom: 12px;
 }
 
@@ -251,7 +251,7 @@ body {
 .forum-hero__sub {
   margin: 0;
   max-width: 620px;
-  color: rgba(58, 78, 107, 0.74);
+  color: rgba(91, 42, 134, 0.78);
   font-size: 0.95rem;
   line-height: 1.6;
 }
@@ -268,7 +268,7 @@ body {
 .search-bar {
   padding: 14px 18px;
   width: min(100%, 360px);
-  border: 1px solid rgba(58, 78, 107, 0.16);
+  border: 1px solid rgba(91, 42, 134, 0.2);
   border-radius: 999px;
   outline: none;
   background: rgba(255, 255, 255, 0.66);
@@ -280,7 +280,7 @@ body {
 .search-bar:focus {
   border-color: var(--primary-color);
   background-color: rgba(255,255,255,0.92);
-  box-shadow: 0 0 0 4px rgba(155, 183, 212, 0.18);
+  box-shadow: 0 0 0 4px rgba(250, 204, 21, 0.2);
 }
 
 .post-btn {
@@ -292,7 +292,7 @@ body {
   cursor: pointer;
   font-weight: bold;
   transition: all 0.3s ease;
-  box-shadow: 0 14px 28px rgba(58, 78, 107, 0.12);
+  box-shadow: 0 14px 28px rgba(91, 42, 134, 0.2);
 }
 
 .post-btn:hover {
@@ -301,11 +301,43 @@ body {
 }
 
 .post-btn--hero {
-  background: rgba(58, 78, 107, 0.94);
+  background: rgba(91, 42, 134, 0.94);
 }
 
 .post-btn--secondary {
-  background: rgba(155, 183, 212, 0.8);
+  background: rgba(250, 204, 21, 0.88);
+  color: #3a1f55;
+}
+
+.post-btn--personal {
+  min-width: 124px;
+  text-align: center;
+}
+
+.post-btn--guide-dot {
+  width: 42px;
+  min-width: 42px;
+  height: 42px;
+  min-height: 42px;
+  padding: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(91, 42, 134, 0.22);
+  background: rgba(250, 204, 21, 0.96);
+  color: #4b2472;
+  font-size: 1.18rem;
+  font-weight: 800;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 24px rgba(91, 42, 134, 0.2);
+  margin-left: 10px;
+  flex: 0 0 auto;
+}
+
+.post-btn--guide-dot:hover {
+  transform: translateY(-2px);
+  background: #ffd84a;
 }
 
 .forum-layout {
@@ -334,7 +366,7 @@ body {
   font-size: 0.76rem;
   letter-spacing: 0.18rem;
   text-transform: uppercase;
-  color: rgba(58, 78, 107, 0.5);
+  color: rgba(91, 42, 134, 0.58);
 }
 
 .tag-label {
@@ -362,7 +394,7 @@ body {
 .filter-section-divider {
   margin: 22px 0;
   border: 0;
-  border-top: 1px dashed rgba(58, 78, 107, 0.2);
+  border-top: 1px dashed rgba(91, 42, 134, 0.28);
 }
 
 .sort-select-wrap {
@@ -373,7 +405,7 @@ body {
   width: 100%;
   padding: 12px 16px;
   border-radius: 16px;
-  border: 1px solid rgba(58, 78, 107, 0.12);
+  border: 1px solid rgba(91, 42, 134, 0.18);
   outline: none;
   background: rgba(255,255,255,0.76);
   color: var(--secondary-color);
@@ -389,17 +421,17 @@ body {
   right: 16px;
   top: 50%;
   transform: translateY(-50%);
-  color: rgba(58, 78, 107, 0.5);
+  color: rgba(91, 42, 134, 0.58);
   pointer-events: none;
 }
 
 .main-content {
   min-width: 0;
   background: rgba(255, 255, 255, 0.88);
-  border: 1px solid rgba(58, 78, 107, 0.08);
+  border: 1px solid rgba(91, 42, 134, 0.12);
   border-radius: 26px;
   padding: 12px 18px;
-  box-shadow: 0 18px 44px rgba(58, 78, 107, 0.06);
+  box-shadow: 0 18px 44px rgba(91, 42, 134, 0.12);
 }
 
 .pinned-posts {
@@ -412,7 +444,7 @@ body {
   font-weight: 800;
   letter-spacing: 0.18rem;
   text-transform: uppercase;
-  color: rgba(58, 78, 107, 0.72);
+  color: rgba(91, 42, 134, 0.8);
 }
 
 .post-item {
@@ -422,7 +454,7 @@ body {
   margin-bottom: 0;
   box-shadow: none;
   border: 0;
-  border-bottom: 1px solid rgba(58, 78, 107, 0.08);
+  border-bottom: 1px solid rgba(91, 42, 134, 0.12);
   display: flex;
   align-items: flex-start;
   gap: 18px;
@@ -435,7 +467,7 @@ body {
 }
 
 .post-item--pinned {
-  background: linear-gradient(180deg, rgba(227, 217, 193, 0.4), rgba(255, 255, 255, 0));
+  background: linear-gradient(180deg, rgba(250, 204, 21, 0.26), rgba(255, 255, 255, 0));
 }
 
 .post-status--pinned {
@@ -446,10 +478,10 @@ body {
 .favorites-container {
   min-width: 0;
   background: rgba(255, 255, 255, 0.88);
-  border: 1px solid rgba(58, 78, 107, 0.08);
+  border: 1px solid rgba(91, 42, 134, 0.12);
   border-radius: 26px;
   padding: 12px 18px;
-  box-shadow: 0 18px 44px rgba(58, 78, 107, 0.06);
+  box-shadow: 0 18px 44px rgba(91, 42, 134, 0.12);
   grid-column: 1 / -1;
 }
 
@@ -470,14 +502,14 @@ body {
   width: 42px;
   height: 42px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #9BB7D4, #c7d5e5);
+  background: linear-gradient(135deg, #facc15, #ffe27a);
   color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 0.92rem;
   font-weight: 700;
-  box-shadow: 0 10px 20px rgba(155, 183, 212, 0.22);
+  box-shadow: 0 10px 20px rgba(250, 204, 21, 0.32);
 }
 
 .post-main {
@@ -496,12 +528,12 @@ body {
 .post-authorName {
   font-size: 0.88rem;
   font-weight: 700;
-  color: #3A4E6B;
+  color: #5b2a86;
 }
 
 .post-authorTime {
   font-size: 0.76rem;
-  color: rgba(58, 78, 107, 0.55);
+  color: rgba(91, 42, 134, 0.6);
 }
 
 .post-status {
@@ -557,7 +589,7 @@ body {
 
 .post-summary {
   margin: 0;
-  color: rgba(58, 78, 107, 0.54);
+  color: rgba(91, 42, 134, 0.64);
   font-size: 0.88rem;
   line-height: 1.6;
   max-width: 720px;
@@ -582,7 +614,7 @@ body {
 }
 
 .tag-badge {
-  background-color: rgba(155, 183, 212, 0.22);
+  background-color: rgba(250, 204, 21, 0.24);
   color: var(--secondary-color);
   padding: 5px 9px;
   border-radius: 999px;
@@ -591,7 +623,7 @@ body {
 }
 
 .post-typeBadge {
-  background: rgba(58, 78, 107, 0.14);
+  background: rgba(91, 42, 134, 0.16);
   color: var(--secondary-color);
   padding: 5px 9px;
   border-radius: 999px;
@@ -626,7 +658,7 @@ body {
   border-radius: 28px;
   box-shadow: var(--shadow-soft);
   padding: 36px 28px;
-  color: rgba(58, 78, 107, 0.72);
+  color: rgba(91, 42, 134, 0.8);
 }
 
 .forum-empty--error {
@@ -638,32 +670,32 @@ body {
   align-items: center;
   gap: 16px;
   padding: 20px 0 24px;
-  border-bottom: 1px solid rgba(58, 78, 107, 0.1);
+  border-bottom: 1px solid rgba(91, 42, 134, 0.14);
   margin-bottom: 24px;
 }
 
 .favorites-tab {
   padding: 10px 20px;
-  border: 1px solid rgba(58, 78, 107, 0.18);
+  border: 1px solid rgba(91, 42, 134, 0.24);
   background: rgba(255, 255, 255, 0.72);
   border-radius: 999px;
   font-size: 0.88rem;
   font-weight: 700;
-  color: #3A4E6B;
+  color: #5b2a86;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .favorites-tab:hover {
   background: rgba(255, 255, 255, 0.92);
-  border-color: rgba(58, 78, 107, 0.28);
+  border-color: rgba(91, 42, 134, 0.42);
   transform: translateY(-1px);
 }
 
 .favorites-tab--active {
-  background: #9BB7D4;
-  border-color: #9BB7D4;
-  color: #fff;
+  background: #facc15;
+  border-color: #facc15;
+  color: #3a1f55;
 }
 
 @media (max-width: 980px) {
@@ -697,6 +729,7 @@ body {
     align-items: flex-start;
   }
 }
+
 
 @media (max-width: 720px) {
   .forum-topnav {

@@ -1,7 +1,7 @@
 :root {
-  --acad-nav-bg: #E4DFD8;
-  --acad-nav-primary: #9BB7D4;
-  --acad-nav-text: #3A4E6B;
+  --acad-nav-bg: #f4efff;
+  --acad-nav-primary: #facc15;
+  --acad-nav-text: #5b2a86;
 }
 
 html.acadbeat-login-guard body {
@@ -15,7 +15,7 @@ html.acadbeat-login-guard body {
   padding: 0 5%;
   height: 80px;
   background-color: var(--acad-nav-bg);
-  border-bottom: 1px solid rgba(58, 78, 107, 0.1);
+  border-bottom: 1px solid rgba(91, 42, 134, 0.16);
   position: fixed;
   top: 0;
   left: 0;
@@ -26,6 +26,9 @@ html.acadbeat-login-guard body {
 .acadbeat-shared-nav .logo {
   flex: 0 0 auto;
   min-width: 120px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   font-size: 1.4rem;
   font-weight: 800;
   letter-spacing: -0.5px;
@@ -39,6 +42,9 @@ html.acadbeat-login-guard body {
   display: flex;
   justify-content: center;
   gap: 2.5rem;
+  align-items: center;
+  position: relative;
+  z-index: 1000;
 }
 
 .acadbeat-shared-nav .user-group {
@@ -48,15 +54,160 @@ html.acadbeat-login-guard body {
   gap: 12px;
   min-width: 300px;
   justify-content: flex-end;
+  position: relative;
+  z-index: 1301;
 }
 
 .acadbeat-shared-nav .logo span {
   color: var(--acad-nav-primary);
 }
 
+.acadbeat-shared-nav .logo-heart {
+  font-size: 1.5rem;
+  line-height: 1;
+  display: inline-block;
+  margin-left: 4px;
+  transform-origin: center;
+  animation: acadbeatHeartBeat 1.2s ease-in-out infinite;
+  filter: drop-shadow(0 2px 8px rgba(130, 20, 20, 0.45));
+}
+
+@keyframes acadbeatHeartBeat {
+  0%, 100% { transform: scale(1); }
+  18% { transform: scale(1.22); }
+  36% { transform: scale(0.98); }
+  54% { transform: scale(1.16); }
+  72% { transform: scale(1); }
+}
+
 .acadbeat-shared-nav .nav-menu {
   display: flex;
   gap: 2.5rem;
+}
+
+.acadbeat-shared-nav .nav-dropdown {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  padding-bottom: 12px;
+  margin-bottom: -12px;
+}
+
+.acadbeat-shared-nav .nav-submenu {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 172px;
+  padding: 8px;
+  border-radius: 12px;
+  border: 1px solid rgba(91, 42, 134, 0.18);
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 14px 30px rgba(91, 42, 134, 0.16);
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease;
+  z-index: 1200;
+}
+
+.acadbeat-shared-nav .nav-dropdown:hover .nav-submenu,
+.acadbeat-shared-nav .nav-dropdown:focus-within .nav-submenu {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%);
+}
+
+.acadbeat-shared-nav .nav-subitem {
+  display: block;
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 8px;
+  color: var(--acad-nav-text);
+  text-decoration: none;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.acadbeat-shared-nav .nav-subitem:hover {
+  background: rgba(250, 204, 21, 0.22);
+  color: #412060;
+}
+
+.acadbeat-shared-nav .nav-subitem--disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+  background: transparent !important;
+  color: var(--acad-nav-text);
+}
+
+.acadbeat-shared-nav .nav-submenu--competition {
+  min-width: 200px;
+}
+
+.acadbeat-shared-nav .nav-subitem--muted {
+  font-weight: 600;
+  opacity: 0.72;
+  text-transform: none;
+  letter-spacing: 0.02em;
+  font-size: 0.78rem;
+}
+
+.acadbeat-shared-nav .nav-submenu-divider {
+  height: 1px;
+  margin: 6px 4px;
+  background: rgba(91, 42, 134, 0.12);
+}
+
+.acadbeat-local-context {
+  position: fixed;
+  top: 80px;
+  left: 0;
+  right: 0;
+  z-index: 998;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  padding: 10px 5%;
+  border-bottom: 1px solid rgba(91, 42, 134, 0.12);
+  background: rgba(244, 239, 255, 0.94);
+  backdrop-filter: blur(10px);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--acad-nav-text);
+}
+
+.acadbeat-local-context[hidden] {
+  display: none !important;
+}
+
+.acadbeat-local-context__link {
+  color: rgba(91, 42, 134, 0.88);
+  text-decoration: none;
+  border-radius: 8px;
+  padding: 4px 8px;
+  margin: -4px -8px;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.acadbeat-local-context__link:hover {
+  background: rgba(250, 204, 21, 0.22);
+  color: #412060;
+}
+
+.acadbeat-local-context__sep {
+  opacity: 0.35;
+  user-select: none;
+}
+
+.acadbeat-local-context__current {
+  opacity: 0.72;
+  font-weight: 600;
 }
 
 .acadbeat-shared-nav .nav-item {
@@ -98,7 +249,7 @@ html.acadbeat-login-guard body {
   min-height: 36px;
   padding: 0 14px;
   border-radius: 999px;
-  border: 1px solid rgba(58, 78, 107, 0.18);
+  border: 1px solid rgba(91, 42, 134, 0.24);
   background: rgba(255, 255, 255, 0.74);
   color: var(--acad-nav-text);
   font-size: 0.72rem;
@@ -106,6 +257,8 @@ html.acadbeat-login-guard body {
   letter-spacing: 0.08em;
   cursor: pointer;
   transition: 0.25s ease;
+  position: relative;
+  z-index: 1302;
 }
 
 .acadbeat-shared-nav .nav-utility-btn:hover {
@@ -115,61 +268,6 @@ html.acadbeat-login-guard body {
 
 .acadbeat-shared-nav .nav-utility-btn[hidden] {
   display: none !important;
-}
-
-.acadbeat-shared-nav .message-link {
-  position: relative;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: 1px solid rgba(58, 78, 107, 0.16);
-  background: rgba(255, 255, 255, 0.74);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--acad-nav-text);
-  text-decoration: none;
-  box-shadow: 0 8px 20px rgba(58, 78, 107, 0.08);
-  transition: 0.25s ease;
-}
-
-.acadbeat-shared-nav .message-link:hover {
-  background: rgba(155, 183, 212, 0.22);
-  transform: translateY(-1px);
-}
-
-.acadbeat-shared-nav .message-link.active {
-  background: rgba(155, 183, 212, 0.26);
-  border-color: rgba(58, 78, 107, 0.26);
-  box-shadow: 0 10px 22px rgba(58, 78, 107, 0.12);
-}
-
-.acadbeat-shared-nav .message-link[hidden] {
-  display: none !important;
-}
-
-.acadbeat-shared-nav .message-badge,
-.acadbeat-shared-nav .message-badge[hidden] {
-  display: none;
-}
-
-.acadbeat-shared-nav .message-badge.is-visible {
-  position: absolute;
-  top: -3px;
-  right: -3px;
-  width: 10px;
-  min-width: 10px;
-  height: 10px;
-  padding: 0;
-  border-radius: 999px;
-  background: #ef4444;
-  color: transparent;
-  font-size: 0;
-  border: 2px solid #f7f3eb;
-  box-shadow: 0 0 0 1px rgba(58, 78, 107, 0.08);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
 }
 
 .acadbeat-shared-nav .user-section {
@@ -209,7 +307,7 @@ html.acadbeat-login-guard body {
   min-height: 34px;
   padding: 0 12px;
   border-radius: 999px;
-  border: 1px solid rgba(58, 78, 107, 0.18);
+  border: 1px solid rgba(91, 42, 134, 0.24);
   background: rgba(255, 255, 255, 0.72);
   color: var(--acad-nav-text);
   text-decoration: none;
@@ -221,7 +319,7 @@ html.acadbeat-login-guard body {
 .acadbeat-shared-nav .logout-link:hover {
   transform: translateY(-1px);
   background: rgba(255, 255, 255, 0.94);
-  border-color: rgba(58, 78, 107, 0.3);
+  border-color: rgba(91, 42, 134, 0.4);
 }
 
 .acadbeat-shared-nav .nav-godot {
@@ -236,7 +334,7 @@ html.acadbeat-login-guard body {
   text-transform: uppercase;
   text-decoration: none;
   color: var(--acad-nav-text);
-  background: rgba(155, 183, 212, 0.35);
+  background: rgba(250, 204, 21, 0.34);
   border: 1px solid var(--acad-nav-primary);
   border-radius: 6px;
   transition: 0.25s ease;
@@ -245,7 +343,7 @@ html.acadbeat-login-guard body {
 }
 
 .acadbeat-shared-nav .nav-godot:hover {
-  background: rgba(155, 183, 212, 0.55);
+  background: rgba(250, 204, 21, 0.5);
   opacity: 1;
   transform: translateY(-1px);
 }

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://d12vcjcfiefbu"]
 
-[ext_resource type="Texture2D" uid="uid://cep1mynh80im4" path="res://Assets/Sprites/universeBackground.jpg" id="1_y3vd0"]
+[ext_resource type="Texture2D" uid="uid://bnk8n2c64ek0w" path="res://Assets/Sprites/bg.png" id="1_iqe81"]
 [ext_resource type="PackedScene" uid="uid://bje1of5atggde" path="res://Scenes/homepage/Planet.tscn" id="2_6ft7j"]
 
 [sub_resource type="GDScript" id="GDScript_iqe81"]
@@ -22,18 +22,17 @@ script = SubResource("GDScript_iqe81")
 
 [node name="bg" type="Sprite2D" parent="." unique_id=1524746762]
 z_index = -100
-texture = ExtResource("1_y3vd0")
+texture = ExtResource("1_iqe81")
 metadata/_edit_lock_ = true
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1939833951]
-zoom = Vector2(0.4, 0.4)
+zoom = Vector2(0.41, 0.38)
 metadata/_edit_lock_ = true
 
 [node name="Planet" parent="." unique_id=490313873 instance=ExtResource("2_6ft7j")]
-z_index = 0
-position = Vector2(-8, 1090.0001)
-scale = Vector2(2.785, 2.785)
-metadata/_edit_lock_ = true
+position = Vector2(-11.349962, 1520.6499)
+scale = Vector2(3.565, 3.565)
 
 [node name="SpawnPoint" type="Marker2D" parent="." unique_id=1017671805]
-position = Vector2(5, 157)
+position = Vector2(-67.35, 364.65)
+scale = Vector2(3.565, 3.565)

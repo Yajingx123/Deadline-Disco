@@ -49,7 +49,7 @@ function Navbar({ currentPage, setCurrentPage, currentUser, isReady, onLogout })
 
 const styles = {
   navbar: {
-    backgroundColor: 'var(--bg)',
+    backgroundColor: 'rgba(244, 239, 255, 0.96)',
     borderBottom: '1px solid var(--border)',
     padding: '16px 0',
     position: 'sticky',
@@ -90,7 +90,7 @@ const styles = {
   },
   activeLink: {
     backgroundColor: 'var(--accent-bg)',
-    color: 'var(--accent)'
+    color: 'var(--secondary-color)'
   },
   userPanel: {
     display: 'flex',
@@ -112,12 +112,12 @@ const styles = {
     fontSize: '0.72rem',
     textTransform: 'uppercase',
     letterSpacing: '0.12rem',
-    color: 'rgba(58, 78, 107, 0.55)'
+    color: 'rgba(91, 42, 134, 0.55)'
   },
   logoutButton: {
     padding: '8px 14px',
     borderRadius: '999px',
-    border: '1px solid rgba(58, 78, 107, 0.14)',
+    border: '1px solid rgba(91, 42, 134, 0.18)',
     backgroundColor: 'rgba(255, 255, 255, 0.9)',
     color: 'var(--text)',
     fontSize: '0.85rem',
