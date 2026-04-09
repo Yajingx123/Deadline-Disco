@@ -1,0 +1,215 @@
+:root {
+  --detail-back-btn-image: url('/GameUI/forum-project-GameUI/dist/images/PostDetail/detail-back-btn.png');
+  --detail-reply-btn-image: url('/GameUI/forum-project-GameUI/dist/images/PostDetail/detail-reply-btn.png');
+  --detail-post-block-image: url('/GameUI/forum-project-GameUI/dist/images/PostDetail/detail-post-block.png');
+  --detail-comments-block-image: url('/GameUI/forum-project-GameUI/dist/images/PostDetail/detail-comments-block.png');
+  --detail-side-right-image: url('/GameUI/forum-project-GameUI/dist/images/PostDetail/detail-side-right.png');
+  --detail-side-left-image: url('/GameUI/forum-project-GameUI/dist/images/PostDetail/detail-side-left.png');
+}
+
+.v2-postdetail-page {
+  position: relative;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.v2-postdetail-main {
+  width: min(56vw, 980px);
+  height: 94vh;
+  margin: 3vh auto 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 18px;
+}
+
+.v2-postdetail-block {
+  border-radius: 0;
+  border: none;
+  background-color: transparent;
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 26px;
+}
+
+.v2-postdetail-block--post {
+  background-image: var(--detail-post-block-image);
+}
+
+.v2-postdetail-block--comments {
+  background-image: var(--detail-comments-block-image);
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  min-height: 0;
+  overflow: hidden;
+}
+
+.v2-postdetail-author {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  color: #4c4034;
+}
+
+.v2-postdetail-title {
+  margin: 10px 0 14px;
+  font-weight: 400;
+}
+
+.v2-postdetail-content {
+  white-space: pre-wrap;
+  line-height: 1.6;
+  color: #3b3128;
+}
+
+.v2-postdetail-stats {
+  margin-top: 14px;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.v2-postdetail-stats span {
+  font-weight: 400;
+}
+
+.v2-postdetail-stats,
+.v2-postdetail-stats span,
+.v2-postdetail-action {
+  font-family: "Avenir Next", "Helvetica Neue", "Segoe UI", Arial, sans-serif;
+  font-weight: 300 !important;
+  font-variant-numeric: tabular-nums;
+}
+
+.v2-postdetail-action {
+  border: none;
+  background: rgba(255, 255, 255, 0.55);
+  color: #3b3128;
+  border-radius: 0;
+  padding: 4px 10px;
+  font: inherit;
+  cursor: pointer;
+}
+
+.v2-postdetail-action.is-active {
+  border-color: transparent;
+  background: rgba(26, 110, 91, 0.14);
+}
+
+.v2-postdetail-action:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+.v2-postdetail-comments-title {
+  margin-top: 0;
+}
+
+.v2-postdetail-comments-list {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+  min-height: 0;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+.v2-postdetail-comment {
+  border: none;
+  border-radius: 0;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.v2-postdetail-comment-head {
+  display: flex;
+  justify-content: space-between;
+}
+
+.v2-postdetail-comment p {
+  margin: 8px 0 0;
+}
+
+.v2-postdetail-empty {
+  color: #6d5d4d;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.v2-postdetail-back {
+  position: fixed;
+  left: 18px;
+  top: 18px;
+  width: 78px;
+  height: 78px;
+  border-radius: 0;
+  border: none;
+  background-color: transparent;
+  background-image: var(--detail-back-btn-image);
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  z-index: 30;
+}
+
+.v2-postdetail-side {
+  position: fixed;
+  right: 2vw;
+  bottom: 6vh;
+  width: 19vw;
+  min-width: 230px;
+  height: 53.333vh;
+  border: none;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  background-color: transparent;
+  background-image: var(--detail-side-right-image);
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: block;
+  padding: 16px;
+  z-index: 25;
+}
+
+.v2-postdetail-side--left {
+  left: 2vw;
+  right: auto;
+  justify-content: center;
+  align-items: center;
+  background-image: var(--detail-side-left-image);
+}
+
+.v2-postdetail-reply {
+  position: absolute;
+  top: 24%;
+  left: 50%;
+  width: 117px;
+  height: 52px;
+  transform: translate(-50%, -50%);
+  border-radius: 0;
+  border: none;
+  background-color: transparent;
+  background-image: var(--detail-reply-btn-image);
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+@media (max-width: 980px) {
+  .v2-postdetail-main {
+    width: 92vw;
+    margin-top: 14vh;
+  }
+
+  .v2-postdetail-side {
+    width: 30vw;
+    min-width: 0;
+    height: 50vh;
+  }
+}

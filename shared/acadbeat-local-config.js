@@ -17,8 +17,8 @@
   var localAdminDistUrl = 'http://127.0.0.1:8001/admin_page/dist/index.html';
   g.ACADBEAT_LOCAL = {
     mainOrigin: MAIN,
-    technologyUrl: MAIN + '/technology-gate.html',
-    technologyGodotUrl: MAIN + '/technology1.html',
+    technologyUrl: MAIN + '/gates/technology-gate.html',
+    technologyGodotUrl: MAIN + '/GameUI/Technology-GameUI/technology.html',
     challengeApiUrl: MAIN + '/challenge/api/challenge.php',
     /** Production should use same-origin /ws via Nginx reverse proxy. */
     voiceRoomWsUrl: isLocalHost ? 'ws://127.0.0.1:3001/ws' : sameOriginWs,
@@ -32,8 +32,8 @@
     forumClassicIndexUrl: MAIN + '/forum-project/dist/index.html',
     /** 兼容旧键名：仍指向经典论坛 */
     forumProdIndexUrl: MAIN + '/forum-project/dist/index.html',
-    /** Godot/newUI 网页壳固定使用 forum-project-v2（仅壳内 iframe） */
-    forumGodotShellIndexUrl: MAIN + '/forum-project-v2/dist/index.html',
+    /** Godot/GameUI 论坛入口。 */
+    forumGodotShellIndexUrl: MAIN + '/GameUI/forum-project-GameUI/dist/index.html',
     godotWebEntryUrl: isLocalHost ? 'http://127.0.0.1:5500/index.html?ui=godot' : MAIN + '/gameUI_src/Release/index.html?ui=godot',
     /** Web 导出读 ?scene=academic 进入学术星球；听力页 Godot 模式返回用 */
     godotAcademicWebUrl: isLocalHost ? 'http://127.0.0.1:5500/index.html?ui=godot&scene=academic' : MAIN + '/gameUI_src/Release/index.html?ui=godot&scene=academic',

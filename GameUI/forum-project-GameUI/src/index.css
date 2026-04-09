@@ -1,0 +1,663 @@
+@font-face {
+  font-family: 'Myfont';
+  src: url('/GameUI/resources/Myfont-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --bg: #efe5d3;
+  /* Godot/newUI art: newUI/assets/forum → copied here at build; see forum-bg.jpg / my-favourate.jpg */
+  --page-bg-image: url('/GameUI/forum-project-GameUI/dist/images/ForumHome/forum-bg.jpg');
+  --page-bg-image-mine: url('/GameUI/forum-project-GameUI/dist/images/ForumHome/my-favourate.jpg');
+  --detail-page-bg-image: url('/GameUI/forum-project-GameUI/dist/images/PostDetail/detail-back.png');
+  --fab-post-image: url('/GameUI/forum-project-GameUI/dist/images/ForumHome/fab-post.png');
+  --fab-mine-image: url('/GameUI/forum-project-GameUI/dist/images/ForumHome/fab-mine.png');
+  --content-bg-image: url('/GameUI/forum-project-GameUI/dist/images/ForumHome/content-bg.png');
+  --labels-bg-image: url('/GameUI/forum-project-GameUI/dist/images/ForumHome/labels-bg.png');
+  --composer-modal-bg-image: url('/GameUI/forum-project-GameUI/dist/images/ForumHome/composer-modal-bg.png');
+  --myfav-page-bg-image: url('/GameUI/forum-project-GameUI/dist/images/myfav/back.png');
+  --myfav-back-btn-image: url('/GameUI/forum-project-GameUI/dist/images/myfav/detail-back-btn.png');
+  --myfav-tab-fav-image: url('/GameUI/forum-project-GameUI/dist/images/myfav/fav.png');
+  --myfav-tab-like-image: url('/GameUI/forum-project-GameUI/dist/images/myfav/like.png');
+  --myfav-tab-my-image: url('/GameUI/forum-project-GameUI/dist/images/myfav/my.png');
+  --stage-aspect: 1.7777778;
+  --panel: rgba(255, 250, 243, 0.92);
+  --ink: #1f1a15;
+  --muted: #76685a;
+  --brand: #d45a2a;
+  --brand-2: #195f56;
+  --line: transparent;
+  --radius: 20px;
+  --shadow: 0 20px 44px rgba(20, 10, 3, 0.24);
+  --app-font: 'Myfont', 'Space Grotesk', 'Avenir Next', 'Segoe UI', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: var(--app-font);
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  max-width: 100%;
+  min-height: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  font-family: var(--app-font);
+  color: var(--ink);
+  background-color: var(--bg);
+}
+
+.v2-viewport {
+  position: relative;
+  /* Use 100% inside iframe — 100vw is the *browser* viewport and causes side overflow / gutters */
+  width: 100%;
+  max-width: 100%;
+  min-height: 100%;
+  min-height: 100dvh;
+  height: 100%;
+  overflow: hidden;
+}
+
+.v2-stage {
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  min-height: 100dvh;
+  background-image: var(--page-bg-image);
+  /* Stretch to fill viewport (may distort aspect ratio) */
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  overflow: hidden;
+}
+
+.v2-stage--mine {
+  background-image: var(--myfav-page-bg-image);
+}
+
+.v2-detail-route {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background-color: #f5f3ef;
+  background-image: var(--detail-page-bg-image);
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: 12px 0 24px;
+}
+
+.v2-label-zone {
+  position: absolute;
+  left: 5.8vw;
+  top: 24vh;
+  width: 16.2vw;
+  height: 46vh;
+}
+
+.v2-content-zone {
+  position: absolute;
+  left: 24.6vw;
+  top: 13vh;
+  bottom: 5vh;
+  width: 56vw;
+}
+
+.v2-content-zone--favorites {
+  left: 24vw;
+  top: calc(22vh + 70px);
+  bottom: 20px;
+  width: 50vw;
+}
+
+.v2-back-btn {
+  position: absolute;
+  left: 22px;
+  top: 18px;
+  z-index: 20;
+  width: 56px;
+  height: 56px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(255, 255, 255, 0.55);
+  color: #ff5aa5;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
+
+.v2-back-btn:hover {
+  background: rgba(255, 255, 255, 0.72);
+}
+
+.v2-back-btn--global {
+  left: 1.8vw;
+  top: 2.2vh;
+  z-index: 25;
+}
+
+.v2-back-btn__icon {
+  width: 34px;
+  height: 34px;
+  display: block;
+  background-image: url('/GameUI/forum-project-GameUI/dist/images/1775402233845.png');
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.v2-back-btn--favorites {
+  left: 18px;
+  top: 18px;
+  width: 78px;
+  height: 78px;
+  border: none;
+  border-radius: 0;
+  background-color: transparent;
+}
+
+.v2-back-btn__icon--favorites {
+  width: 100%;
+  height: 100%;
+  background-image: var(--myfav-back-btn-image);
+}
+
+.v2-board--favorites {
+  background-image: none;
+}
+
+.v2-board {
+  width: 100%;
+  height: 100%;
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
+  backdrop-filter: none;
+  background-color: transparent;
+  background-image: var(--content-bg-image);
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  padding: clamp(22px, 2.8vw, 34px);
+}
+
+/* Keep this override after .v2-board base styles. */
+.v2-board.v2-board--favorites {
+  background-image: var(--content-bg-image) !important;
+  background-size: 100% 100% !important;
+  background-position: center !important;
+  background-repeat: no-repeat !important;
+  border: none;
+}
+
+.v2-main-column {
+  min-height: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 10px;
+}
+
+.v2-toolbar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 170px;
+  width: 66%;
+  margin: 0 auto;
+  gap: 10px;
+}
+
+.v2-input,
+.v2-select,
+.v2-textarea {
+  width: 100%;
+  border: none;
+  border-radius: 0;
+  background: var(--panel);
+  color: var(--ink);
+  font: inherit;
+  padding: 12px 14px;
+}
+
+.v2-textarea {
+  resize: vertical;
+}
+
+.v2-feed-shell {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 0;
+  border: none;
+  border-radius: var(--radius);
+  background: transparent;
+  padding: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 4px;
+}
+
+.v2-feed-scroll {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: visible;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 10px;
+}
+
+.v2-card {
+  background: var(--panel);
+  border: none;
+  border-radius: 0;
+  padding: 14px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(28, 17, 8, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.v2-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 24px rgba(28, 17, 8, 0.15);
+}
+
+.v2-card--sample {
+  cursor: default;
+}
+
+.v2-card--sample:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.v2-card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: baseline;
+}
+
+.v2-card-top strong {
+  font-size: 1.32rem;
+  line-height: 1.25;
+  font-weight: 400;
+}
+
+.v2-card-top span {
+  font-size: 1.12rem;
+  font-weight: 700;
+}
+
+.v2-card p {
+  margin: 10px 0;
+  color: var(--muted);
+  font-size: 1.12rem;
+  line-height: 1.3;
+}
+
+.v2-meta {
+  display: flex;
+  gap: 14px;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+/* Forum GameUI requirement: keep numeric counters regular weight */
+.v2-card-top span,
+.v2-meta span {
+  font-weight: 400;
+}
+
+/* Make Arabic numerals lighter and cleaner in forum counters/stats */
+.v2-card-top span,
+.v2-meta,
+.v2-meta span,
+.v2-favorites-tab,
+.v2-favorites-tab--ghost {
+  font-family: "Avenir Next", "Helvetica Neue", "Segoe UI", Arial, sans-serif;
+  font-weight: 300 !important;
+  font-variant-numeric: tabular-nums;
+}
+
+.v2-label-panel {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  border: none;
+  border-radius: 0;
+  background-color: transparent;
+  background-image: var(--labels-bg-image);
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: #1f1a15;
+  padding: 20px;
+  padding-top: 28px;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  gap: 16px;
+}
+
+.v2-label-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.v2-label-head h3 {
+  margin: 0;
+}
+
+.v2-filter-clear {
+  border: none;
+  background: rgba(255, 255, 255, 0.45);
+  color: #1f1a15;
+  border-radius: 0;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.v2-filter-list {
+  min-height: 0;
+  overflow: auto;
+  display: grid;
+  gap: 8px;
+  padding-right: 4px;
+}
+
+.v2-filter-item {
+  display: grid;
+  grid-template-columns: 16px 1fr;
+  gap: 10px;
+  align-items: center;
+  padding: 6px 8px;
+  background: rgba(255, 255, 255, 0.35);
+  border: none;
+  cursor: pointer;
+  user-select: none;
+}
+
+.v2-filter-item input {
+  width: 16px;
+  height: 16px;
+}
+
+.v2-filter-item span {
+  line-height: 1.1;
+}
+
+.v2-favorites-tabs {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 2px auto 10px;
+  width: 66%;
+}
+
+.v2-favorites-tabs--overlay {
+  position: absolute;
+  left: calc(24vw + 30px);
+  top: calc((28vh + 70px) - 20px - 60px - 60px);
+  z-index: 24;
+  width: auto;
+  margin: 0;
+  gap: 37px;
+  pointer-events: auto;
+}
+
+.v2-favorites-tab {
+  border: none;
+  background: rgba(255, 255, 255, 0.45);
+  color: #1f1a15;
+  border-radius: 0;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.v2-favorites-tab--ghost {
+  width: 175px;
+  height: 60px;
+  padding: 0;
+  border: none;
+  background-color: transparent;
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: transparent;
+  box-shadow: none;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.v2-favorites-tab--fav {
+  background-image: var(--myfav-tab-fav-image);
+}
+
+.v2-favorites-tab--like {
+  background-image: var(--myfav-tab-like-image);
+}
+
+.v2-favorites-tab--my {
+  background-image: var(--myfav-tab-my-image);
+}
+
+.v2-favorites-tab.is-active {
+  color: #15352f;
+  border-color: transparent;
+  filter: drop-shadow(0 6px 20px rgba(255, 155, 205, 0.5));
+  transform: translateY(-3px);
+  transition: all 0.2s ease;
+}
+
+.v2-favorites-tab--ghost.is-active {
+  filter: drop-shadow(0 6px 24px rgba(255, 155, 205, 0.6));
+  transform: translateY(-3px);
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.v2-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.v2-btn {
+  border: none;
+  background: var(--brand);
+  color: #fff;
+  border-radius: 0;
+  padding: 10px 18px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.v2-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.v2-btn--ghost {
+  background: transparent;
+  color: var(--brand);
+}
+
+.v2-state {
+  margin-top: 4px;
+  padding: 10px;
+  background: #fff;
+  border: none;
+  border-radius: 0;
+}
+
+.v2-state--empty {
+  flex: 1 1 auto;
+  margin-top: 0;
+  width: 100%;
+  min-height: 100%;
+  display: grid;
+  place-items: center;
+  text-align: center;
+}
+
+.v2-board--favorites .v2-feed-shell {
+  background: transparent;
+}
+
+.v2-board--favorites .v2-feed-scroll {
+  min-height: 100%;
+}
+
+.v2-board--favorites .v2-state--empty {
+  background: transparent;
+  border: none;
+}
+
+.v2-state--error {
+  background: #ffe8e8;
+  border-color: #f0b9b9;
+  color: #7f2f2f;
+}
+
+.v2-fab-stack {
+  position: absolute;
+  right: clamp(110px, 12vw, 180px);
+  bottom: clamp(24px, 4vh, 42px);
+  display: grid;
+  gap: 10px;
+  z-index: 15;
+}
+
+.v2-fab {
+  width: 78px;
+  height: 78px;
+  border-radius: 0;
+  border: none;
+  background: linear-gradient(150deg, #17110d, #2e1b12 64%, #533022);
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  color: #ffe8c8;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+}
+
+.v2-fab--post {
+  background-image: var(--fab-post-image);
+}
+
+.v2-fab--mine {
+  background-image: var(--fab-mine-image);
+}
+
+.v2-fab--active {
+  border-color: transparent;
+  box-shadow: 0 0 0 2px rgba(26, 110, 91, 0.55);
+}
+
+.v2-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(18, 10, 5, 0.48);
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  z-index: 30;
+}
+
+.v2-modal {
+  width: min(680px, 100%);
+  background-color: transparent;
+  background-image: var(--composer-modal-bg-image);
+  background-size: 100% 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  border-radius: 0;
+  padding: 18px;
+  border: none;
+}
+
+.v2-modal h2 {
+  margin-top: 0;
+}
+
+.v2-modal-actions {
+  margin-top: 14px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.v2-detail {
+  display: grid;
+  gap: 12px;
+}
+
+.v2-detail-card {
+  border: none;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.55);
+  padding: 18px;
+}
+
+.v2-detail-card h2 {
+  margin: 0 0 8px;
+}
+
+.v2-detail-meta {
+  margin: 0 0 12px;
+  color: var(--muted);
+}
+
+.v2-detail-body {
+  white-space: pre-wrap;
+}
+
+@media (max-width: 980px) {
+  .v2-label-zone {
+    left: 3vw;
+    top: 12vh;
+    width: 94vw;
+    height: 20vh;
+  }
+
+  .v2-content-zone {
+    left: 3vw;
+    top: 34vh;
+    bottom: 0;
+    width: 94vw;
+  }
+
+  .v2-board {
+    width: 100%;
+    height: 100%;
+  }
+
+  .v2-label-panel {
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .v2-toolbar {
+    grid-template-columns: 1fr;
+  }
+}

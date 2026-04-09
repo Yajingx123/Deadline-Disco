@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../../shared-nav.css">
+  <link rel="stylesheet" href="../../gates/shared-nav.css">
   <script src="../../shared/acadbeat-local-config.js"></script>
   <link rel="stylesheet" href="../practice-style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
@@ -605,7 +605,7 @@
         homeUrl: '../../home.html',
         ownerUrl: '../../owner.html',
         forumUrl: '../../home.html?module=Dialogue',
-        technologyUrl: '../../technology.html',
+        technologyUrl: '../../Technology/technology.html',
         studioUrl: '../../Studio/studio.html',
         messageCenterUrl: L.messageCenterDistUrl,
         adminUrl: L.adminDistUrl || window.location.origin + '/admin_page/dist/index.html',
@@ -616,6 +616,6 @@
       });
     });
   </script>
-  <script src="../../shared-nav.js"></script>
+  <script src="../../gates/shared-nav.js"></script>
 </body>
 </html>

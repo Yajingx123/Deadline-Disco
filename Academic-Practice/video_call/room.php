@@ -2,7 +2,7 @@
 declare(strict_types=1);
 
 $rawConfig = [];
-$configPath = __DIR__ . '/../api/video/zego-config.php';
+$configPath = __DIR__ . '/api/zego-config.php';
 if (is_file($configPath)) {
     $loaded = require $configPath;
     if (is_array($loaded)) {
@@ -15,14 +15,18 @@ if (!in_array($tokenMode, ['test', 'production'], true)) {
     $tokenMode = 'production';
 }
 
-$tokenEndpoint = (string) ($rawConfig['token_endpoint'] ?? '../api/video/zego-token.php');
+$tokenEndpoint = (string) ($rawConfig['token_endpoint'] ?? './api/zego-token.php');
 if ($tokenEndpoint === '') {
-    $tokenEndpoint = '../api/video/zego-token.php';
+    $tokenEndpoint = './api/zego-token.php';
 } elseif (!preg_match('#^(?:https?:)?/#', $tokenEndpoint)) {
-    if (str_starts_with($tokenEndpoint, './api/video/')) {
-        $tokenEndpoint = '../api/video/' . substr($tokenEndpoint, strlen('./api/video/'));
+    if (str_starts_with($tokenEndpoint, './video_call/api/')) {
+        $tokenEndpoint = './api/' . substr($tokenEndpoint, strlen('./video_call/api/'));
+    } elseif (str_starts_with($tokenEndpoint, 'video_call/api/')) {
+        $tokenEndpoint = './' . substr($tokenEndpoint, strlen('video_call/'));
+    } elseif (str_starts_with($tokenEndpoint, './api/video/')) {
+        $tokenEndpoint = './api/' . substr($tokenEndpoint, strlen('./api/video/'));
     } elseif (str_starts_with($tokenEndpoint, 'api/video/')) {
-        $tokenEndpoint = '../' . $tokenEndpoint;
+        $tokenEndpoint = './api/' . substr($tokenEndpoint, strlen('api/video/'));
     }
 }
 
@@ -478,9 +482,9 @@ if ($tokenMode === 'test') {
     <script src="https://unpkg.com/@zegocloud/zego-uikit-prebuilt/zego-uikit-prebuilt.js"></script>
     <script>
         const ZEGO_PUBLIC_CONFIG = <?php echo json_encode($publicConfig, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE); ?>;
-        const ROOM_ACCESS_URL = '../api/video/video-call-access.php';
-        const ROOM_LEAVE_URL = '../api/video/video-call-leave.php';
-        const ROOM_MANAGE_URL = '../api/video/video-call-manage.php';
+        const ROOM_ACCESS_URL = './api/video-call-access.php';
+        const ROOM_LEAVE_URL = './api/video-call-leave.php';
+        const ROOM_MANAGE_URL = './api/video-call-manage.php';
         const AUTH_ME_URL = '../../Auth/backend/api/me.php';
         const CHAT_USERS_URL = '../../forum-project/api/chat-users.php';
 
@@ -653,7 +657,7 @@ if ($tokenMode === 'test') {
         async function buildKitToken(roomID, userID, userName) {
             const zegoSdk = await ensureZegoSdkReady();
             if (!ZEGO_PUBLIC_CONFIG.appID) {
-                throw new Error('Missing ZEGO_APP_ID. Configure Academic-Practice/api/video/zego-config.php first.');
+                throw new Error('Missing ZEGO_APP_ID. Configure Academic-Practice/video_call/api/zego-config.php first.');
             }
 
             if (ZEGO_PUBLIC_CONFIG.tokenMode === 'production') {

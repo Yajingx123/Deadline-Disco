@@ -1,0 +1,587 @@
+@font-face {
+  font-family: 'MC2MyFont';
+  src: url('/GameUI/resources/Myfont-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+.forum-container--messages.mc2-page {
+  min-height: 100vh;
+  padding-bottom: 24px;
+  background-color: #e4dfd8;
+  background-image: url('../../image/background.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  font-family: 'MC2MyFont', sans-serif;
+}
+
+.forum-container--messages.mc2-page * {
+  font-family: 'MC2MyFont', sans-serif !important;
+}
+
+.mc2-topbar {
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 18px 24px 0;
+}
+
+.mc2-topbar__actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mc2-topbar__backBtn {
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 1px solid rgba(58, 78, 107, 0.12);
+  background: rgba(255, 255, 255, 0.92);
+  color: #1e293b;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: 0 10px 24px rgba(58, 78, 107, 0.08);
+}
+
+.mc2-topbar__backBtn:hover {
+  transform: translateY(-1px);
+}
+
+/* A */
+.mc2-a {
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 16px 24px 24px;
+  display: grid;
+  grid-template-columns: 248px minmax(0, 1fr);
+  gap: 0;
+  height: calc(100vh - 80px - 92px);
+  min-height: 0;
+  border: 1px solid #e5e7eb;
+  border-radius: 24px;
+  box-shadow: 0 18px 40px rgba(58, 78, 107, 0.08);
+  overflow: hidden;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+/* B */
+.mc2-b {
+  padding: 24px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-width: 0;
+  background: linear-gradient(180deg, rgba(248, 250, 252, 0.98), rgba(255, 255, 255, 0.9));
+  border-right: 1px solid #eef2f7;
+}
+
+.mc2-eyebrow {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: rgba(58, 78, 107, 0.55);
+  font-weight: 700;
+}
+
+.mc2-b__header h1,
+.mc2-c__header h2 {
+  margin: 8px 0;
+  font-size: 2rem;
+  line-height: 1.05;
+}
+
+.mc2-b__header p {
+  margin: 0;
+  color: rgba(58, 78, 107, 0.74);
+  line-height: 1.7;
+  font-size: 0.94rem;
+}
+
+.mc2-b__nav {
+  display: grid;
+  gap: 2px;
+}
+
+.mc2-b__navItem {
+  width: 100%;
+  border: 0;
+  border-left: 3px solid transparent;
+  border-radius: 0;
+  background: transparent;
+  padding: 14px 14px 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  text-align: left;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.mc2-b__navItem strong {
+  display: block;
+  color: #1e293b;
+  font-size: 0.94rem;
+}
+
+.mc2-b__navItem small {
+  display: block;
+  margin-top: 4px;
+  color: #64748b;
+  font-size: 0.8rem;
+}
+
+.mc2-b__navItem em {
+  min-width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #3b82f6;
+  color: #fff;
+  font-style: normal;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0 8px;
+}
+
+.mc2-b__navItem.is-active,
+.mc2-b__navItem:hover {
+  border-left-color: #3b82f6;
+  background: rgba(239, 246, 255, 0.78);
+}
+
+.mc2-right {
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* C */
+.mc2-c {
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(circle at top right, rgba(155, 183, 212, 0.12), transparent 18%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.92), rgba(248, 250, 252, 0.84));
+}
+
+.mc2-c__header {
+  padding: 24px 28px 8px;
+}
+
+.mc2-c__body {
+  padding: 12px 28px 28px;
+  min-height: 0;
+  overflow: auto;
+}
+
+/* D */
+.mc2-d {
+  min-height: 0;
+  height: 100%;
+  overflow: hidden;
+}
+
+.mc2-d__inner,
+.mc2-d__inner > .forum-container--embedded,
+.mc2-d__inner .personal-shell--embedded,
+.mc2-d__inner .personal-layout {
+  height: 100%;
+  min-height: 0;
+}
+
+/* E */
+.mc2-d__inner .chat-stage {
+  background: transparent;
+}
+
+.mc2-d__inner .chat-stage__messages {
+  background-image: url('../../image/chat.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.mc2-d__inner .chat-stage__header,
+.mc2-d__inner .chat-stage__composerWrap {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.mc2-feed,
+.mc2-noticeFeed {
+  display: grid;
+  gap: 14px;
+  width: 100%;
+}
+
+.mc2-card,
+.mc2-notice {
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 18px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(248, 250, 252, 0.98));
+  box-shadow: 0 10px 28px rgba(58, 78, 107, 0.07);
+}
+
+.mc2-card {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  gap: 14px;
+}
+
+.mc2-notice {
+  position: relative;
+}
+
+.mc2-notice__dot {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #3b82f6;
+}
+
+.mc2-card.is-unread {
+  border-color: rgba(59, 130, 246, 0.28);
+  background: linear-gradient(180deg, rgba(239, 246, 255, 0.84), rgba(255,255,255,0.96));
+}
+
+.mc2-card__avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #9bb7d4;
+  color: #3a4e6b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+}
+
+.mc2-card__top,
+.mc2-notice__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.mc2-card__top strong,
+.mc2-card__headline,
+.mc2-notice h3 {
+  color: #1e293b;
+}
+
+.mc2-card__top span,
+.mc2-notice__footer span {
+  color: #64748b;
+  font-size: 0.8rem;
+}
+
+.mc2-card__headline {
+  margin-top: 8px;
+  font-weight: 700;
+}
+
+.mc2-card__preview,
+.mc2-card__meta,
+.mc2-notice p {
+  margin-top: 8px;
+  color: #475569;
+  line-height: 1.65;
+  font-size: 0.92rem;
+}
+
+.mc2-card__meta {
+  color: #64748b;
+}
+
+.mc2-card__actions {
+  margin-top: 14px;
+}
+
+.mc2-actionBtn {
+  height: 36px;
+  padding: 0 16px;
+  border: 1px solid rgba(58, 78, 107, 0.14);
+  border-radius: 999px;
+  background: #3a4e6b;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.mc2-actionBtn:hover {
+  background: #4a5f80;
+}
+
+.mc2-notice__tag {
+  display: inline-flex;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: rgba(95, 126, 182, 0.38);
+  border: 1px solid rgba(138, 170, 228, 0.35);
+  color: #dfeaff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.mc2-empty {
+  min-height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed #cbd5e1;
+  border-radius: 18px;
+  color: #64748b;
+  background: rgba(248, 250, 252, 0.78);
+}
+
+.mc2-empty--error {
+  color: #b45309;
+}
+
+@media (max-width: 1080px) {
+  .mc2-a {
+    grid-template-columns: 1fr;
+    height: auto;
+  }
+
+  .mc2-b {
+    border-right: 0;
+    border-bottom: 1px solid #eef2f7;
+  }
+
+  .mc2-right {
+    min-height: 72vh;
+  }
+}
+
+/* Dark Theme Override (replace white surfaces with black/deep gray) */
+.forum-container--messages.mc2-page {
+  --mc2-dark-0: #121317;
+  --mc2-dark-1: #1a1d24;
+  --mc2-dark-2: #232833;
+  --mc2-dark-3: #2d3442;
+  --mc2-border-dark: rgba(145, 158, 184, 0.32);
+  --mc2-text-main: #e8edf8;
+  --mc2-text-sub: #b4bfd3;
+}
+
+.mc2-a {
+  border-color: var(--mc2-border-dark);
+}
+
+.mc2-b {
+  background: linear-gradient(180deg, rgba(18, 19, 23, 0.92), rgba(26, 29, 36, 0.9));
+  border-right-color: var(--mc2-border-dark);
+}
+
+.mc2-c {
+  background: linear-gradient(180deg, rgba(18, 19, 23, 0.9), rgba(26, 29, 36, 0.86));
+}
+
+.mc2-topbar__backBtn,
+.mc2-card,
+.mc2-notice,
+.mc2-empty {
+  background: var(--mc2-dark-2);
+  border-color: var(--mc2-border-dark);
+  color: var(--mc2-text-main);
+}
+
+.mc2-card.is-unread {
+  background: #2a3140;
+  border-color: rgba(118, 150, 204, 0.55);
+}
+
+.mc2-b__header h1,
+.mc2-c__header h2,
+.mc2-b__navItem strong,
+.mc2-card__top strong,
+.mc2-card__headline,
+.mc2-notice h3 {
+  color: var(--mc2-text-main);
+}
+
+.mc2-eyebrow,
+.mc2-b__header p,
+.mc2-b__navItem small,
+.mc2-card__top span,
+.mc2-notice__footer span,
+.mc2-card__preview,
+.mc2-card__meta,
+.mc2-notice p,
+.mc2-empty {
+  color: var(--mc2-text-sub);
+}
+
+.mc2-c__header .mc2-eyebrow {
+  color: #c8dcff;
+}
+
+.mc2-b__navItem {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.mc2-b__navItem.is-active,
+.mc2-b__navItem:hover {
+  background: rgba(84, 117, 171, 0.26);
+}
+
+.mc2-d__inner .chat-stage__header,
+.mc2-d__inner .chat-stage__composerWrap,
+.mc2-d__inner .chat-sidebar,
+.mc2-d__inner .chat-thread,
+.mc2-d__inner .chat-search-card,
+.mc2-d__inner .chat-composer,
+.mc2-d__inner .chat-composer__panel,
+.mc2-d__inner .chat-message__bubble {
+  background: var(--mc2-dark-2);
+  border-color: var(--mc2-border-dark);
+  color: var(--mc2-text-main);
+}
+
+.mc2-d__inner .chat-sidebar__search,
+.mc2-d__inner .chat-composer__textarea,
+.mc2-d__inner .personal-modal__input {
+  background: var(--mc2-dark-1);
+  color: var(--mc2-text-main);
+}
+
+.mc2-d__inner .chat-composer__tool,
+.mc2-d__inner .chat-stage__addBtn,
+.mc2-d__inner .chat-composer__send {
+  background: var(--mc2-dark-3);
+  color: var(--mc2-text-main);
+  border-color: var(--mc2-border-dark);
+}
+
+/* Game Dark Theme */
+.mc2-d__inner .chat-stage__gameRoom {
+  background: linear-gradient(180deg, rgba(18, 19, 23, 0.92), rgba(26, 29, 36, 0.9)) !important;
+}
+
+.mc2-d__inner .chat-stage__gameLoading,
+.mc2-d__inner .chat-stage__gameError,
+.mc2-d__inner .chat-stage__gameSetupCard,
+.mc2-d__inner .draw-guess,
+.mc2-d__inner .draw-guess--arcade,
+.mc2-d__inner .draw-guess__heroCard,
+.mc2-d__inner .draw-guess__lobbyShell,
+.mc2-d__inner .draw-guess__wordChoiceShell,
+.mc2-d__inner .draw-guess__waitingCard,
+.mc2-d__inner .draw-guess__leaderboardCard,
+.mc2-d__inner .draw-guess__stageCard,
+.mc2-d__inner .draw-guess__railCard,
+.mc2-d__inner .draw-guess__answerCard,
+.mc2-d__inner .draw-guess__wordBanner,
+.mc2-d__inner .draw-guess__hintBubble,
+.mc2-d__inner .draw-guess__toolbarStrip,
+.mc2-d__inner .draw-guess__scoreRow,
+.mc2-d__inner .draw-guess__rankItem {
+  background: var(--mc2-dark-2) !important;
+  border-color: var(--mc2-border-dark) !important;
+  color: var(--mc2-text-main) !important;
+}
+
+.mc2-d__inner .chat-stage__gameSetupTitle,
+.mc2-d__inner .chat-stage__gameSetupLabel,
+.mc2-d__inner .draw-guess__heroTitle,
+.mc2-d__inner .draw-guess__leaderboardTitle,
+.mc2-d__inner .draw-guess__panelTitle,
+.mc2-d__inner .draw-guess__headerText,
+.mc2-d__inner .draw-guess__leaderboardChampion {
+  color: var(--mc2-text-main) !important;
+}
+
+.mc2-d__inner .chat-stage__gameSetupHint,
+.mc2-d__inner .draw-guess__heroText,
+.mc2-d__inner .draw-guess__panelCopy,
+.mc2-d__inner .draw-guess__toolbarLabel,
+.mc2-d__inner .draw-guess__rankMeta,
+.mc2-d__inner .draw-guess__updateItem {
+  color: var(--mc2-text-sub) !important;
+}
+
+.mc2-d__inner .chat-stage__gameSetupSelect,
+.mc2-d__inner .draw-guess__guessInput {
+  background: var(--mc2-dark-1) !important;
+  border-color: var(--mc2-border-dark) !important;
+  color: var(--mc2-text-main) !important;
+}
+
+.mc2-d__inner .draw-guess__chip,
+.mc2-d__inner .draw-guess__chip--status,
+.mc2-d__inner .draw-guess__heroBadge,
+.mc2-d__inner .draw-guess__leaderboardBadge,
+.mc2-d__inner .draw-guess__wordLabel {
+  background: rgba(95, 121, 170, 0.28) !important;
+  color: #dce8ff !important;
+}
+
+.mc2-d__inner .draw-guess__wordCard,
+.mc2-d__inner .draw-guess__iconButton,
+.mc2-d__inner .draw-guess__swatch {
+  background: var(--mc2-dark-3) !important;
+  border-color: var(--mc2-border-dark) !important;
+  color: var(--mc2-text-main) !important;
+}
+
+.mc2-d__inner .draw-guess__primaryBtn {
+  background: #3d5a82 !important;
+  color: #f2f6ff !important;
+}
+
+.mc2-d__inner .draw-guess__ghostBtn {
+  background: #2a3140 !important;
+  color: var(--mc2-text-main) !important;
+  border-color: var(--mc2-border-dark) !important;
+}
+
+.mc2-d__inner .draw-guess__canvasShell,
+.mc2-d__inner .draw-guess__canvas {
+  background: #171a21 !important;
+  border-color: var(--mc2-border-dark) !important;
+  box-shadow: none !important;
+}
+
+/* Fix 1: Lobby player row contrast (avoid white bg + pale text) */
+.mc2-d__inner .draw-guess__playerCard,
+.mc2-d__inner .draw-guess__scoreRow {
+  background: #2a3140 !important;
+  border-color: var(--mc2-border-dark) !important;
+  color: var(--mc2-text-main) !important;
+}
+
+.mc2-d__inner .draw-guess__playerCard *,
+.mc2-d__inner .draw-guess__scoreRow * {
+  color: var(--mc2-text-main) !important;
+}
+
+/* Fix 2: Avatar contrast in private/group chat lists and headers */
+.mc2-d__inner .chat-search-card__avatar,
+.mc2-d__inner .chat-thread__avatar,
+.mc2-d__inner .chat-message__avatar,
+.mc2-d__inner .personal-modal__avatar,
+.mc2-d__inner .chat-stage__directAvatar,
+.mc2-d__inner .chat-stage__groupAvatar {
+  background: #4e6a93 !important;
+  border-color: rgba(173, 191, 222, 0.55) !important;
+  color: #f3f7ff !important;
+  opacity: 1 !important;
+  filter: none !important;
+}

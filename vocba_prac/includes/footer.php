@@ -48,7 +48,7 @@
     $showAcadbeatNav = !isset($hideGlobalHomeNav) || !$hideGlobalHomeNav;
     if ($showAcadbeatNav && defined('ACADBEAT_MAIN_ORIGIN')):
     ?>
-    <script src="<?php echo htmlspecialchars(ACADBEAT_MAIN_ORIGIN, ENT_QUOTES, 'UTF-8'); ?>/shared-nav.js"></script>
+    <script src="<?php echo htmlspecialchars(ACADBEAT_MAIN_ORIGIN, ENT_QUOTES, 'UTF-8'); ?>/gates/shared-nav.js"></script>
     <script>
       (function () {
         var MAIN = <?php echo json_encode(ACADBEAT_MAIN_ORIGIN, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
@@ -62,7 +62,7 @@
             ownerUrl: MAIN + '/owner.html',
             authApiBase: MAIN + '/Auth/backend/api',
             forumUrl: MAIN + '/home.html?module=Dialogue',
-            technologyUrl: MAIN + '/technology.html',
+            technologyUrl: MAIN + '/Technology/technology.html',
             studioUrl: MAIN + '/Studio/studio.html',
             messageCenterUrl: L.messageCenterDistUrl,
             adminUrl: L.adminDistUrl,

@@ -36,7 +36,7 @@ return [
     'server_secret' => $serverSecret,
     'test_secret' => $testSecret,
     'token_mode' => $tokenMode,
-    'token_endpoint' => (string) (video_env('ZEGO_TOKEN_ENDPOINT', './api/video/zego-token.php') ?? './api/video/zego-token.php'),
+    'token_endpoint' => (string) (video_env('ZEGO_TOKEN_ENDPOINT', './video_call/api/zego-token.php') ?? './video_call/api/zego-token.php'),
     'room_prefix' => $roomPrefix,
     'project_name' => (string) (video_env('ZEGO_PROJECT_NAME', 'AcadBeat Video Match') ?? 'AcadBeat Video Match'),
     'branding_logo_url' => (string) (video_env('ZEGO_BRANDING_LOGO_URL', '') ?? ''),

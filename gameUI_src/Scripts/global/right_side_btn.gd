@@ -3,7 +3,9 @@ extends CanvasLayer
 # 悬停颜色
 var normal_color : Color = Color(1, 1, 1)
 var hover_color : Color = Color(0.8, 0.8, 0.8)
-const MAIN_MESSAGE_CENTER_URL := "http://127.0.0.1:8001/message-center-project%202/dist/index.html?ui=godot"
+const MAIN_MESSAGE_CENTER_URL := "http://127.0.0.1:8001/GameUI/message-center-project-GameUI/dist/index.html?ui=godot"
+const MAIN_CHALLENGE_URL := "http://127.0.0.1:8001/GameUI/challenge-GameUI/challenge-panel.html?ui=godot"
+const MAIN_PROFILE_URL := "http://127.0.0.1:8001/GameUI/owner-2.html?ui=godot"
 
 # ==========================
 # 切换按钮
@@ -66,7 +68,7 @@ func _on_team_mouse_exited() -> void:
 
 func _on_team_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		print("团队按钮点击！")
+		ExternalLink.open_in_new_tab(MAIN_CHALLENGE_URL)
 
 # ==========================
 # 个人资料按钮
@@ -81,7 +83,7 @@ func _on_profile_mouse_exited() -> void:
 
 func _on_profile_gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		print("个人资料按钮点击！")
+		ExternalLink.open_in_new_tab(MAIN_PROFILE_URL)
 
 # ==========================
 # 消息按钮

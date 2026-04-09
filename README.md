@@ -1,254 +1,141 @@
-# Deadline-Disco — AcadBeat
+# 🎓 Academic English Training Web App
 
-> Agile Software Engineering Course Project
+[![Agile Software Engineering](https://img.shields.io/badge/Course-Agile%20Software%20Engineering-blue.svg)](#)
 
-## Important Notice
-
-The repository has evolved beyond the historical module list below.
-For the current runnable architecture and startup topology, use:
-
-- `docs/ARCHITECTURE.md`
-- `docs/REPO_REORG_PLAN.md`
-
-If this `README.md` conflicts with `docs/ARCHITECTURE.md`, treat `docs/ARCHITECTURE.md` as the source of truth.
-
-## Current Quick Start (Recommended)
-
-### 0) Environment config
-
-- Copy `.env.example` to `.env.local` (or `.env`) and adjust values when needed.
-- For production, use `.env.prod.example` as the template.
-
-### 1) Start database
-
-- Ensure MySQL is running.
-- Import bootstrap SQL from the canonical path:
-
-```bash
-mysql -u root -p123456 < sql/001_acadbeat_all_create_tables.sql
-mysql -u root -p123456 < sql/002_acadbeat_all_other_sql.sql
-```
-
-### 2) Start all services
-
-Use one command from repository root:
-
-```bash
-php start_all.php
-```
-
-Or run full bootstrap flow (import SQL + restart services):
-
-```bash
-php run_everything.php
-```
-
-Production deployment (Alibaba Cloud Linux 4):
-
-- See `DEPLOY_ALIYUN_LINUX4.md`
-
-### 3) Verify key pages
-
-- Home: `http://127.0.0.1:8001/home.html`
-- Forum: `http://127.0.0.1:8001/forum-project/dist/index.html?view=forum`
-- Message Center: `http://127.0.0.1:8001/message-center-project/dist/index.html`
-- Admin: `http://127.0.0.1:5174/admin_page/dist/`
-- Realtime health: `http://127.0.0.1:3001/health`
-
-AcadBeat is an English learning platform built for university freshmen. It currently provides four functional modules:
-
-| Module | Description | Tech Stack |
-|--------|-------------|------------|
-| **Vocabulary Practice** | Word banks, word books, study sessions and progress tracking | PHP + MySQL |
-| **Vocabulary Exam** | Timed vocabulary test with 3 difficulty levels (Beginner / Intermediate / Advanced) | Static HTML/CSS/JS |
-| **Listening Exam** | Full listening exam flow with 5 question types, timer, progress saving and auto-grading | React + Vite + PHP + MySQL |
-| **Intensive Listening** | Sentence-level audio practice with collection and progress tracking | PHP + MySQL |
+A comprehensive platform designed for **DIISCU first-year students** to bridge the gap between general English and university-level academic communication.
 
 ---
 
-## Project Structure
+## 🚀 Project Overview
 
+The **Academic English Training Web Application** integrates learning, collaboration, and gamification into a single ecosystem. It helps students master academic vocabulary and communication skills through two distinct experiences:
+
+* **Classic Web Interface**: Streamlined, efficient, and professional.
+* **Game-style Interface**: An immersive 2D lobby built with **Godot** for interactive navigation.
+
+---
+
+## 🎯 Target Users
+
+* **DIISCU Freshmen**: Students adapting to an English-mediated instruction (EMI) environment.
+* **Academic Aspirants**: Learners preparing for academic research and collaboration.
+* **Interactive Learners**: Students who prefer engaging, gamified educational experiences.
+
+---
+
+## 🛠 Tech Stack
+
+| Layer | Technology | Purpose |
+| :--- | :--- | :--- |
+| **Backend** | `PHP` | Auth, API Handling & Business Logic |
+| **Database** | `MySQL 8.0` | Persistent Data Storage |
+| **Frontend Core** | `React` + `Vite` | Dynamic & Modern UI Components |
+| **Game Engine** | `Godot` | Interactive Navigation & Game-style UI |
+| **Realtime** | `WebSocket` | Live Chat & Instant Notifications |
+| **Server** | `Nginx` + `PHP-FPM` | High-performance Web Serving |
+| **Environment** | `Linux` | Production Deployment |
+
+---
+
+## ✨ Key Features
+
+* **🔐 Unified Auth**: Single Sign-On (SSO) across learning modules, forums, and messaging.
+* **📚 Academic Workflow**: Tailored practice for academic listening, response, and speaking.
+* **📈 Progress Tracking**: Visual vocabulary learning with persistent history and review cycles.
+* **💬 Social Ecosystem**: 
+    * *Forum*: Peer-to-peer knowledge exchange.
+    * *Message Center*: Direct and group real-time communication.
+* **🏆 Team Challenges**: Collaborative weekly tasks with live leaderboards to boost motivation.
+* **🎮 Dual-Mode Navigation**: Switch between a standard web dashboard and a Godot-powered "Game Lobby".
+* **🛡️ Role-Based Access (RBAC)**: Distinct workflows and dashboards for Students and Admins.
+
+---
+
+## 📂 Repository Structure
+
+```text
+Deadline-Disco/
+├── Auth/                 # Authentication & Session Management APIs
+├── Academic-Practice/    # Core academic training modules
+├── vocba_prac/           # Vocabulary learning engine
+├── forum-project/        # Discussion boards (Frontend/API)
+├── message-center-project/# Real-time chat system
+├── GameUI/               # Integrated game-style web views
+├── gameUI_src/           # Godot source code & Web exports
+├── shared/               # Shared runtime configurations
+├── admin_page/           # Administrative control panel
+├── challenge/            # Team collaboration & Ranking modules
+├── sql/                 # Database schema & Bootstrap scripts
+├── redeploy.php          # Unified system startup script
+└── doc/                  # Architecture & deployment manuals
 ```
-Deadline-Disco-dev/
-|-- home.html                  # Main landing page (entry point)
-|-- README.md
-|-- sql/
-|   |-- 001_acadbeat_all_create_tables.sql
-|   +-- 002_acadbeat_all_other_sql.sql
-|
-|-- vocba_prac/                # Vocabulary Practice module (PHP, port 8002)
-|   |-- config.php             # DB config
-|   |-- index.php, wordbank.php, practice.php, ...
-|   +-- includes/              # Shared header/footer
-|
-|-- vocabulary-exam/           # Vocabulary Exam module (static, port 8003)
-|   |-- vocabulary-exam.html   # Exam page
-|   |-- styles.css
-|   |-- exam.js                # Exam logic (timer, grading)
-|   +-- questions.js           # Question bank (180 questions)
-|
-|-- Listening/                 # Listening Exam module
-|   |-- frontend/              # React + Vite app (port 5173)
-|   |   |-- src/
-|   |   |-- package.json
-|   |   +-- index.html
-|   +-- backend/               # PHP API backend (port 8000)
-|       |-- php/
-|       |   |-- router.php     # Entry router
-|       |   +-- src/           # Modules, config, HTTP helpers
-|       +-- sql/               # Database scripts (my_test_schema)
-|
-+-- Intensive_Listening/       # Intensive Listening data & components
-    +-- sql/                   # Database scripts (tables in my_test_schema)
+---
+
+## 💻 Local Deployment
+
+### 1. Prerequisites
+- **PHP** 8+
+- **Node.js** 18+ and npm
+- **MySQL** 8+
+
+### 2. Configure 
+Initialize your environment variables:
+
+```bash
+cp .env.example .env
+```
+**Note:** Ensure DB_* and REALTIME_* settings match your local environment.
+
+### 3. Database Setup
+Import the initial schema and data:
+
+```bash
+mysql -u root -p < sql/001_acadbeat_all_create_tables.sql
+mysql -u root -p < sql/002_acadbeat_all_other_sql.sql
+```
+
+### 4. Running the Application
+#### Stardard Mode
+```bash
+php redeploy.php
+```
+
+#### Development Mode (with extra services):
+
+```bash
+php redeploy.php --full
+```
+
+### Stop Services
+```bash
+php shutdown.php
 ```
 
 ---
 
-## Quick Start Guide
-
-### Prerequisites
-
-Make sure the following are installed on your machine:
-
-- **PHP** >= 8.0 (with `pdo_mysql` extension enabled)
-- **Node.js** >= 18 and **npm**
-- **MySQL** >= 8.0
-
-### Step 1: Start MySQL Service
-
-Make sure the MySQL service is running:
-
-```bash
-# Windows (run as Administrator if needed)
-net start MySQL80
-```
-
-> Default credentials used by the project: user `root`, password `123456`.
-> If your password is different, update these files:
-> - `vocba_prac/config.php` (or set env variable `VOCAB_DB_PASS`)
-> - `Listening/backend/php/src/Config/database.php`
-
-### Step 2: Import All SQL Files
-
-Run the following commands from the project root directory. On Windows, if `mysql` is not in PATH, use the full path (e.g. `"C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql"`).
-
-**Vocabulary module** (database: `acadbeat`):
-
-```bash
-mysql -u root -p123456 < sql/001_acadbeat_all_create_tables.sql
-mysql -u root -p123456 < sql/002_acadbeat_all_other_sql.sql
-```
-
-**Listening module** (database: `my_test_schema`):
-
-```bash
-mysql -u root -p123456 < Listening/backend/sql/schema.sql
-mysql -u root -p123456 < Listening/backend/sql/seed.sql
-mysql -u root -p123456 < Listening/backend/sql/migration_add_timer_columns.sql
-```
-
-**Intensive Listening tables** (into `my_test_schema`):
-
-```bash
-mysql -u root -p123456 my_test_schema < Intensive_Listening/sql/createUser.sql
-mysql -u root -p123456 my_test_schema < Intensive_Listening/sql/createAudio.sql
-mysql -u root -p123456 my_test_schema < Intensive_Listening/sql/createProgress.sql
-```
-
-### Step 3: Start All Servers
-
-Open **4 separate terminal windows** from the project root and run one command in each:
-
-**Terminal 1** - Vocabulary Practice (port 8002):
-```bash
-php -S 127.0.0.1:8002 -t ./vocba_prac
-```
-
-**Terminal 2** - Listening Backend API (port 8000):
-```bash
-php -S 127.0.0.1:8000 Listening/backend/php/router.php
-```
-
-**Terminal 3** - Listening Frontend (port 5173):
-```bash
-cd Listening/frontend
-npm install
-npm run dev
-```
-
-> If `npm run dev` fails, delete `node_modules` folder, then run `npm install` again.
-
-**Terminal 4** - Vocabulary Exam (port 8003):
-```bash
-php -S 127.0.0.1:8003 -t ./vocabulary-exam
-```
-
-### Step 4: Open the Application
-
-Open your browser and navigate to:
-
-| Page | URL |
-|------|-----|
-| **Main Homepage (recommended)** | http://127.0.0.1:5173 |
-| **Static Landing Page (optional)** | Open `home.html` directly in browser |
-| **Vocabulary Practice** | http://127.0.0.1:8002 |
-| **Vocabulary Exam** | http://127.0.0.1:8003/vocabulary-exam.html |
-| **Listening Exam (Frontend)** | http://127.0.0.1:5173 |
-| **Listening API** | http://127.0.0.1:8000/api/health |
-
-Navigation behavior (latest):
-- In **Listening Frontend** (`5173`) Home:
-  - **Vocabulary → Word Quest** opens `http://127.0.0.1:8002/`
-  - **Vocabulary → Mastery Check** opens `http://127.0.0.1:8003/vocabulary-exam.html`
-- In **Vocabulary Exam** (`8003`):
-  - **Back to Main** button (bottom-right) returns to the page you came from
-  - Top nav (**AcadBeat / Listening / Speaking / Reading / Writing**) also returns to main page
-  - If no referrer is available, fallback target is `http://127.0.0.1:5173/`
+## 🔗 Main Entrances (Local)
+- Main Entrance: `http://127.0.0.1:8001/home.html`
+- Academic Training Entrance: `http://127.0.0.1:8001/Academic-Practice/training.html`
+- Forum Entrance: `http://127.0.0.1:8001/forum-project/dist/index.html?view=forum`
+- Chat Entrance: `http://127.0.0.1:8001/message-center-project/dist/index.html`
+- Team Entrance: `http://127.0.0.1:8001/challenge/challenge-panel.html`
+- Game Entrance: `http://127.0.0.1:5500/index.html?ui=godot`
 
 ---
 
-## Databases
+## 🤝 Welcome to Contribute
+We follow the **Agile** development process. To contribute:
 
-| Database | Module | Tables |
-|----------|--------|--------|
-| `acadbeat` | Core platform + Vocabulary Practice | `users`, `training_*`, `forum_*`, `checkin_*`, `vocab_*` |
-| `my_test_schema` | Listening + Intensive Listening | `user`, `exams`, `questions`, `exam_progress`, `exam_results`, `intensive_listening_user`, `intensive_listening_audio`, `user_audio_progress` |
+1. **Fork** the repo & create your feature branch.
 
----
+2. **Sync:** Always pull the latest main before coding.
 
-## Port Summary
+3. **Scope:** Focus on one bug fix or feature per PR.
 
-| Port | Service |
-|------|---------|
-| 8000 | Listening backend PHP API |
-| 8002 | Vocabulary Practice PHP |
-| 8003 | Vocabulary Exam (static) |
-| 5173 | Listening Frontend (Vite dev server) |
+4. **Test:** Verify locally using redeploy.php.
+
+5. **Submit:** Open a PR with a clear summary of changes.
 
 ---
+_Developed as part of the Agile Software Engineering course._
 
-## Team
-
-Deadline-Disco | Agile Software Engineering
-
----
-
-## AI Cite
-
-**AI Assistance Statement
-
-This project utilized AI-powered tools to support development and improve productivity:
-	•	ChatGPT
-	•	Gemini
-	•	Doubao
-
-**Scope of Use
-
-AI tools were used strictly as supportive tools for:
-	•	Code suggestions and debugging
-	•	UI/UX design inspiration
-	•	Documentation drafting
-
-**Academic Integrity
-
-All outputs generated by AI tools were critically evaluated, edited, and integrated by the authors. The final implementation reflects the team’s own understanding and decisions.

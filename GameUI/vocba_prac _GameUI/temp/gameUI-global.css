@@ -1,0 +1,759 @@
+﻿/* =========================================================
+   ACADBEAT GLOBAL DESIGN SYSTEM
+   Pixel-style soft pink theme
+   ========================================================= */
+
+
+/* ================= FONT ================= */
+
+@font-face {
+  font-family: 'AcadBeat';
+
+  src:
+    local('Myfont Regular'),
+    url('./Myfont-Regular.ttf') format('truetype');
+
+  font-weight: normal;
+  font-style: normal;
+
+  font-display: swap;
+}
+
+
+
+/* ================= DESIGN TOKENS ================= */
+
+:root {
+
+  /* ---------- COLORS ---------- */
+
+  --bg-pink: #d6c7c7;
+
+  --card-white: rgba(255, 255, 255, 0.92);
+
+  --text-dark: #3a3a3a;
+
+  --primary: #c9b3b3;
+
+  --secondary: #b9c6b4;
+
+  --accent: #b7c8cc;
+
+
+
+  /* ---------- RADIUS ---------- */
+
+  --radius-small: 8px;
+
+  --radius-button: 10px;
+
+  --radius-card: 12px;
+
+  --radius-large: 16px;
+
+
+
+  /* ---------- SPACING ---------- */
+
+  --space-xs: 4px;
+
+  --space-sm: 8px;
+
+  --space-md: 16px;
+
+  --space-lg: 24px;
+
+  --space-xl: 32px;
+
+
+
+  /* ---------- SHADOW ---------- */
+
+  --shadow-soft:
+
+    0 2px 6px rgba(0, 0, 0, 0.08);
+
+
+
+  /* ---------- TRANSITION ---------- */
+
+  --transition-fast:
+
+    all 0.18s ease;
+
+}
+
+
+
+/* ================= RESET ================= */
+
+* {
+
+  margin: 0;
+
+  padding: 0;
+
+  box-sizing: border-box;
+
+}
+
+
+
+body {
+
+  font-family: 'AcadBeat', sans-serif;
+
+  background-color: var(--bg-pink);
+
+  color: var(--text-dark);
+
+}
+
+
+
+/* ================= LAYOUT ================= */
+
+.container {
+
+  max-width: 1100px;
+
+  margin: 0 auto;
+
+  padding: var(--space-md);
+
+}
+
+
+
+.section {
+
+  margin-top: var(--space-lg);
+
+}
+
+
+
+/* ================= TITLE ================= */
+
+.page-title {
+
+  font-size: 28px;
+
+  margin-bottom: var(--space-lg);
+
+}
+
+
+
+/* ================= CARD ================= */
+
+.card {
+
+  background: var(--card-white);
+
+  border-radius: var(--radius-card);
+
+  padding: var(--space-md);
+
+  box-shadow: var(--shadow-soft);
+
+}
+
+
+
+/* 所有卡片统一 */
+
+.video-card,
+
+.post-card,
+
+.module-card,
+
+.profile-card,
+
+.favorite-card {
+
+  background: var(--card-white);
+
+  border-radius: var(--radius-card);
+
+  padding: var(--space-md);
+
+  box-shadow: var(--shadow-soft);
+
+}
+
+
+
+/* ================= BUTTON ================= */
+
+.btn {
+
+  background-color: var(--primary);
+
+  border: none;
+
+  border-radius: var(--radius-button);
+
+  padding:
+
+    var(--space-sm)
+
+    var(--space-md);
+
+  cursor: pointer;
+
+  font-family: 'AcadBeat', sans-serif;
+
+  transition: var(--transition-fast);
+
+}
+
+
+
+.btn:hover {
+
+  transform: scale(1.04);
+
+}
+
+
+
+.btn-secondary {
+
+  background-color: var(--secondary);
+
+}
+
+
+
+.btn-accent {
+
+  background-color: var(--accent);
+
+}
+
+
+
+/* ================= INPUT ================= */
+
+.input,
+
+select,
+
+textarea {
+
+  border: none;
+
+  border-radius: var(--radius-button);
+
+  padding:
+
+    var(--space-sm)
+
+    var(--space-md);
+
+  font-family: 'AcadBeat', sans-serif;
+
+}
+
+
+
+/* ================= NAVBAR ================= */
+
+.navbar {
+
+  height: 70px;
+
+  background-color: var(--bg-pink);
+
+  display: flex;
+
+  align-items: center;
+
+  padding:
+
+    0
+
+    var(--space-lg);
+
+}
+
+
+
+/* ================= GRID ================= */
+
+.grid {
+
+  display: grid;
+
+  gap: var(--space-md);
+
+}
+
+
+
+.grid-2 {
+
+  grid-template-columns:
+
+    repeat(2, 1fr);
+
+}
+
+
+
+.grid-3 {
+
+  grid-template-columns:
+
+    repeat(3, 1fr);
+
+}
+
+
+
+/* ================= FLOAT BUTTON ================= */
+
+.fab {
+
+  position: fixed;
+
+  right: 30px;
+
+  bottom: 30px;
+
+  width: 60px;
+
+  height: 60px;
+
+  border-radius: 50%;
+
+  background: var(--card-white);
+
+  box-shadow: var(--shadow-soft);
+
+  cursor: pointer;
+
+}
+
+
+
+/* ================= IMAGE ================= */
+
+img {
+
+  image-rendering: pixelated;
+
+}
+
+
+
+/* ================= SCROLL ================= */
+
+::-webkit-scrollbar {
+
+  width: 8px;
+
+}
+
+
+
+::-webkit-scrollbar-thumb {
+
+  background: rgba(0,0,0,0.15);
+
+  border-radius: 6px;
+
+}
+
+/* ================= WORDBANK THEME ================= */
+
+.wordbankTempTheme {
+
+  background:
+    radial-gradient(circle at top left, rgba(255,255,255,0.45), transparent 32%),
+    linear-gradient(180deg, #e8d7d2 0%, #d6c7c7 100%);
+
+  color: var(--text-dark);
+
+  font-family: 'AcadBeat', sans-serif;
+
+}
+
+.wordbankTempTheme .page__main {
+
+  padding-top: 24px;
+
+}
+
+.wordbankTempTheme,
+.wordbankTempTheme button,
+.wordbankTempTheme input,
+.wordbankTempTheme a,
+.wordbankTempTheme .hero__title,
+.wordbankTempTheme .hero__subtitle,
+.wordbankTempTheme .card__title,
+.wordbankTempTheme .card__sub,
+.wordbankTempTheme .wordbook__title,
+.wordbankTempTheme .wordbook__count,
+.wordbankTempTheme .wordbook__desc {
+
+  font-family: 'AcadBeat', sans-serif;
+
+}
+
+.wordbankTempTheme .vocabSubpageHeader {
+
+  margin-top: 24px;
+
+}
+
+.wordbankTempTheme .vocabSubpageHeader .hero__title {
+
+  font-size: clamp(2.2rem, 4vw, 3.4rem);
+
+  letter-spacing: 0.02em;
+
+}
+
+.wordbankTempTheme .vocabSubpageHeader .hero__subtitle,
+.wordbankTempTheme .card__sub,
+.wordbankTempTheme .wordbook__desc,
+.wordbankTempTheme .wordbankSearchHint,
+.wordbankTempTheme .wordbankSelection__empty {
+
+  color: rgba(58, 58, 58, 0.76);
+
+}
+
+.wordbankTempTheme .card {
+
+  background: rgba(255,255,255,0.9);
+
+  border: 1px solid rgba(58,58,58,0.08);
+
+  border-radius: 20px;
+
+  box-shadow: 0 18px 40px rgba(58,58,58,0.08);
+
+}
+
+.wordbankTempTheme .secondary,
+.wordbankTempTheme .linkBtn {
+
+  border-radius: 12px;
+
+}
+
+.wordbankTempTheme .secondary {
+
+  background: #b9c6b4;
+
+  border-color: rgba(58,58,58,0.08);
+
+  color: var(--text-dark);
+
+}
+
+.wordbankTempTheme .secondary:hover {
+
+  background: #adbea7;
+
+}
+
+.wordbankTempTheme .wordbankSearchInput {
+
+  border-radius: 12px;
+
+  border: 1px solid rgba(58,58,58,0.08);
+
+  background: rgba(255,255,255,0.92);
+
+}
+
+.wordbankTempTheme .wordbankSelection {
+
+  background: rgba(255,255,255,0.72);
+
+  border-radius: 16px;
+
+  border: 1px solid rgba(58,58,58,0.06);
+
+}
+
+.wordbankTempTheme .pill2 {
+
+  background: #c9b3b3;
+
+  border-color: transparent;
+
+  color: var(--text-dark);
+
+}
+
+.wordbankTempTheme .wordbook {
+
+  border-radius: 18px;
+
+  border: 1px solid rgba(58,58,58,0.08);
+
+  background: rgba(255,255,255,0.9);
+
+  box-shadow: 0 16px 32px rgba(58,58,58,0.08);
+
+}
+
+.wordbankTempTheme .wordbook:hover {
+
+  border-color: rgba(58,58,58,0.18);
+
+  box-shadow: 0 20px 40px rgba(58,58,58,0.12);
+
+}
+
+.wordbankTempTheme .wordbook.isSelected {
+
+  border-color: rgba(58,58,58,0.18);
+
+  background: linear-gradient(180deg, rgba(201,179,179,0.28), rgba(255,255,255,0.98));
+
+}
+
+.wordbankTempTheme .wordbook__check,
+.wordbankTempTheme .wordbook__badge {
+
+  color: var(--text-dark);
+
+}
+
+.wordbankTempTheme .wordbook__check {
+
+  background: rgba(255,255,255,0.94);
+
+  border-color: rgba(58,58,58,0.1);
+
+}
+
+.wordbankTempTheme .wordbook__cover {
+
+  border-bottom-color: rgba(58,58,58,0.08);
+
+  background: linear-gradient(135deg, rgba(201,179,179,0.18), rgba(185,198,180,0.22));
+
+}
+
+.wordbankTempTheme .wordbook__body {
+
+  gap: 4px;
+
+}
+
+.wordbankTempTheme .wordbook__link {
+
+  margin-top: auto;
+
+  background: rgba(255,255,255,0.78);
+
+}
+
+/* ================= PRACTICE THEME ================= */
+
+.practicePageBg,
+.practiceSessionPageBg {
+
+  --bg: #e8d7d2;
+
+  --brand: #c9b3b3;
+
+  --brand2: #3a3a3a;
+
+  --text: #3a3a3a;
+
+  --muted: rgba(58,58,58,0.76);
+
+  --muted2: rgba(58,58,58,0.58);
+
+  --panel: rgba(255,255,255,0.9);
+
+  --panel2: rgba(255,255,255,0.96);
+
+  --stroke: rgba(58,58,58,0.08);
+
+  --shadow-card: 0 18px 40px rgba(58,58,58,0.08);
+
+  color: var(--text-dark);
+
+  font-family: 'AcadBeat', sans-serif;
+
+}
+
+.practicePageBg *,
+.practiceSessionPageBg * {
+
+  font-family: 'AcadBeat', sans-serif !important;
+
+}
+
+.practicePageBg .page__main,
+.practiceSessionPageBg .page__main {
+
+  color: var(--text-dark);
+
+}
+
+.practicePageBg .vocabEntryHero,
+.practiceSessionPageBg .sessionCard,
+.practiceSessionPageBg .sessionProgress,
+.practicePageBg .card,
+.practiceSessionPageBg .card,
+.practicePageBg .dailyPlan,
+.practicePageBg .selectedBookCard {
+
+  background: rgba(255,255,255,0.9);
+
+  border-color: rgba(58,58,58,0.08);
+
+  box-shadow: 0 18px 40px rgba(58,58,58,0.08);
+
+}
+
+.practicePageBg .vocabEntryHero {
+
+  background:
+    linear-gradient(160deg, rgba(255,255,255,0.92), rgba(244,232,228,0.82)),
+    linear-gradient(180deg, rgba(255,255,255,0.25), rgba(255,255,255,0));
+
+}
+
+.practicePageBg .vocabEntryHero h1,
+.practicePageBg .vocabSectionTitle,
+.practicePageBg .card__title,
+.practicePageBg .modeCard__title,
+.practicePageBg .selectedBookCard__title,
+.practiceSessionPageBg .card__title,
+.practiceSessionPageBg .sessionCard__label {
+
+  color: var(--text-dark) !important;
+
+}
+
+.practicePageBg .vocabEntryHero p,
+.practicePageBg .card__sub,
+.practicePageBg .modeCard__desc,
+.practicePageBg .selectedBookCard__meta,
+.practicePageBg .selectedBookCard__count,
+.practiceSessionPageBg .card__sub,
+.practiceSessionPageBg .sessionProgress__text,
+.practiceSessionPageBg .sessionAudioHint,
+.practiceSessionPageBg .sessionResult__body,
+.practiceSessionPageBg .sessionEnd__detail {
+
+  color: rgba(58,58,58,0.76) !important;
+
+}
+
+.practicePageBg .modeBackBtn,
+.practicePageBg .modeCard,
+.practiceSessionPageBg .sessionCard,
+.practiceSessionPageBg .sessionOption,
+.practiceSessionPageBg .sessionFillInput {
+
+  border-color: rgba(58,58,58,0.08);
+
+}
+
+.practicePageBg .modeBackBtn {
+
+  background: rgba(255,255,255,0.9);
+
+  color: var(--text-dark);
+
+}
+
+.practicePageBg .modeCard {
+
+  background:
+    linear-gradient(168deg, rgba(255,255,255,0.94), rgba(244,232,228,0.82));
+
+  color: var(--text-dark);
+
+}
+
+.practicePageBg .modeCard:hover {
+
+  background:
+    radial-gradient(circle at 82% 18%, rgba(185,198,180,0.24), transparent 28%),
+    linear-gradient(168deg, rgba(255,255,255,0.96), rgba(238,226,220,0.86));
+
+  box-shadow: 0 22px 44px rgba(58,58,58,0.12);
+
+}
+
+.practicePageBg .modeCard.isSelected {
+
+  border-color: rgba(58,58,58,0.16);
+
+  background:
+    radial-gradient(circle at 14% 16%, rgba(201,179,179,0.26), transparent 30%),
+    linear-gradient(168deg, rgba(255,255,255,0.98), rgba(236,224,218,0.9));
+
+  box-shadow: 0 24px 48px rgba(58,58,58,0.12);
+
+}
+
+.practicePageBg .primary,
+.practicePageBg .secondary,
+.practicePageBg .tag,
+.practicePageBg .pill2,
+.practiceSessionPageBg .primary,
+.practiceSessionPageBg .secondary,
+.practiceSessionPageBg .ghost,
+.practiceSessionPageBg .sessionOption,
+.practiceSessionPageBg .pill2 {
+
+  color: var(--text-dark) !important;
+
+  border-color: rgba(58,58,58,0.08) !important;
+
+}
+
+.practicePageBg .primary,
+.practiceSessionPageBg .primary {
+
+  background: #b9c6b4 !important;
+
+}
+
+.practicePageBg .secondary,
+.practicePageBg .tag,
+.practicePageBg .pill2,
+.practiceSessionPageBg .secondary,
+.practiceSessionPageBg .ghost,
+.practiceSessionPageBg .sessionOption,
+.practiceSessionPageBg .pill2 {
+
+  background: rgba(255,255,255,0.88) !important;
+
+}
+
+.practiceSessionPageBg .sessionOption--correct {
+
+  background: rgba(185,198,180,0.28) !important;
+
+}
+
+.practiceSessionPageBg .sessionOption--wrong {
+
+  background: rgba(201,179,179,0.22) !important;
+
+}
+
+.practiceSessionPageBg .sessionProgress__fill,
+.practiceSessionPageBg .usageBar__fill,
+.practiceSessionPageBg .bookProgress__fill {
+
+  background: #b9c6b4 !important;
+
+}
+

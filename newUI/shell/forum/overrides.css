@@ -1,7 +1,0 @@
-@import "../../static/shell-frame.css";
-
-:root {
-  --ab-shell-bg: #252530;
-  /* --ab-shell-frame-image: url("../../assets/forum/frame.webp"); */
-  --ab-shell-content-inset: 6%;
-}

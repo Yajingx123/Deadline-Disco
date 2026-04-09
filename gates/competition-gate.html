@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Competition</title>
+  <link rel="stylesheet" href="./shared-nav.css">
+  <link rel="stylesheet" href="./shared-gate.css">
+  <script src="../shared/acadbeat-local-config.js"></script>
+  <style>
+    /* Competition-only: rotating conic mesh + floating shards (distinct from Studio rings) */
+    .gate-fx--competition .competition-mesh {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      width: 140vmin;
+      height: 140vmin;
+      margin-left: -70vmin;
+      margin-top: -70vmin;
+      border-radius: 50%;
+      background: conic-gradient(
+        from 0deg,
+        rgba(250, 204, 21, 0.07),
+        rgba(91, 42, 134, 0.1),
+        rgba(250, 204, 21, 0.06),
+        rgba(91, 42, 134, 0.09),
+        rgba(250, 204, 21, 0.07)
+      );
+      animation: gateCompetitionMesh 28s linear infinite;
+      opacity: 0.55;
+      pointer-events: none;
+    }
+    .gate-fx--competition .competition-shard {
+      position: absolute;
+      width: 12px;
+      height: 28px;
+      border-radius: 3px;
+      background: linear-gradient(180deg, rgba(250, 204, 21, 0.55), rgba(91, 42, 134, 0.35));
+      opacity: 0.55;
+      animation: gateCompetitionFloat 6.5s ease-in-out infinite;
+    }
+    .gate-fx--competition .competition-shard.s1 { left: 18%; top: 28%; animation-delay: -0.8s; }
+    .gate-fx--competition .competition-shard.s2 { left: 72%; top: 22%; animation-delay: -2.1s; }
+    .gate-fx--competition .competition-shard.s3 { left: 64%; top: 68%; animation-delay: -3.4s; }
+    .gate-fx--competition .competition-shard.s4 { left: 26%; top: 62%; animation-delay: -1.2s; }
+    @keyframes gateCompetitionMesh {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    @keyframes gateCompetitionFloat {
+      0%, 100% { transform: translate(0, 0) rotate(-8deg); opacity: 0.45; }
+      50% { transform: translate(8px, -14px) rotate(6deg); opacity: 0.75; }
+    }
+  </style>
+</head>
+<body class="gate-page">
+  <div id="acadbeatNav"></div>
+  <a class="gate-home-link" href="../home.html?entry=1" title="Back to AcadBeat home">AcadBeat Home</a>
+  <main class="gate-main">
+    <div class="gate-fx gate-fx--competition" aria-hidden="true">
+      <div class="competition-mesh"></div>
+      <div class="competition-shard s1"></div>
+      <div class="competition-shard s2"></div>
+      <div class="competition-shard s3"></div>
+      <div class="competition-shard s4"></div>
+    </div>
+    <div class="gate-hero">
+      <h1 class="gate-title">Competition</h1>
+      <div class="gate-typing" aria-hidden="true">
+        <div class="gate-typing-track">
+          <span id="gateTypingDot" class="gate-typing-dot">🫀</span>
+          <span id="gateTypingText"></span>
+        </div>
+      </div>
+      <div class="gate-actions">
+        <a class="gate-enter-btn" id="gate-enter" href="../rank/index.html">Enter Module</a>
+      </div>
+    </div>
+  </main>
+  <script src="./shared-nav.js"></script>
+  <script>
+    function applyHighlight() {
+      const btn = document.getElementById('gate-enter');
+      if (!btn) return;
+      try {
+        const h = new URLSearchParams(window.location.search).get('highlight');
+        if (h === 'ranking' || h === 'challenge') {
+          btn.classList.add('is-highlight');
+        }
+      } catch (_e) {}
+    }
+
+    window.addEventListener('load', () => {
+      window.initializeAcadBeatNav({
+        mountId: 'acadbeatNav',
+        basePath: '../',
+        active: 'competition',
+        academicUrl: './academic-gate.html',
+        forumUrl: './forum-gate.html',
+        technologyUrl: './technology-gate.html',
+        studioUrl: './studio-gate.html',
+        socialUrl: './social-gate.html',
+        competitionUrl: './competition-gate.html',
+        authApiBase: '../Auth/backend/api',
+        homeUrl: '../home.html',
+        ownerUrl: '../owner.html',
+        adminUrl: (window.ACADBEAT_LOCAL && window.ACADBEAT_LOCAL.adminDistUrl) || window.location.origin + '/admin_page/dist/index.html',
+        redirectAdmins: true
+      });
+      initGateTyping();
+      applyHighlight();
+    });
+
+    function initGateTyping() {
+      const phrase = 'Open team ranking first — weekly challenge is one click away.';
+      const textMount = document.getElementById('gateTypingText');
+      const dot = document.getElementById('gateTypingDot');
+      if (!textMount || !dot) return;
+      textMount.innerHTML = '';
+      const chars = Array.from(phrase).map((ch) => {
+        const span = document.createElement('span');
+        span.className = 'gate-typing-char';
+        span.textContent = ch;
+        textMount.appendChild(span);
+        return span;
+      });
+      function setDot(index) {
+        if (!chars.length) return;
+        const safe = Math.max(0, Math.min(index, chars.length - 1));
+        dot.style.left = `${chars[safe].offsetLeft - 16}px`;
+      }
+      function clearLine() {
+        chars.forEach((el) => el.classList.remove('is-on'));
+        dot.style.left = '0px';
+      }
+      function loop() {
+        clearLine();
+        let i = 0;
+        const timer = window.setInterval(() => {
+          if (i < chars.length) {
+            chars[i].classList.add('is-on');
+            setDot(i);
+            i += 1;
+            return;
+          }
+          window.clearInterval(timer);
+          window.setTimeout(loop, 1000);
+        }, 65);
+      }
+      loop();
+    }
+  </script>
+</body>
+</html>
