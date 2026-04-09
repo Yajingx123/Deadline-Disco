@@ -1,71 +1,81 @@
-# AcadBeat 仓库架构（双 UI 模式）
+# AcadBeat Repository Architecture (Dual UI Modes)
 
-## 核心结论
+## Core Principles
 
-- **一个项目、一套账号与数据**：登录后 Session 在 `Auth/backend`，各模块读同一用户。
-- **经典模式（原版）**：以 `home.html` 为浏览器入口，必须保证**所有模块可完整跑通**（验收标准）。
-- **Godot 模式**：同一业务链路的**换壳入口**（`5500` Web 导出 + `ui_mode=godot` / `ui=godot`）。部分页面可仍用经典样式或尚未接 newUI，**允许未全部接完**。
-- **结构整理路线**：见 `docs/REPO_REORG_PLAN.md`（仅做低风险、可回滚的分阶段重组）。
+- **One project, one account system, one data layer**: auth sessions are managed in `Auth/backend`, and all modules read the same logged-in user.
+- **Classic mode (baseline acceptance path)**: browser entry is `home.html`; all major modules must remain fully usable.
+- **Godot mode (alternate shell)**: same business flow through the Godot web export (`5500`) using `ui_mode=godot` / `ui=godot`.
+- **Repo reorganization approach**: keep changes incremental, low-risk, and reversible.
 
-## 目录职责
+## Directory Responsibilities
 
-| 路径 | 职责 |
-|------|------|
-| `Auth/` | 登录注册、Session、与 PHP 主站同域 Cookie |
-| `home.html` / `owner.html` / `technology.html` | 经典主页、个人页、技术页 |
-| `Academic-Practice/` | 学术听力、口语、语音房等（`practice-app.js` 驱动多页） |
-| `vocba_prac/` | 词表练习 |
-| `forum-project/` | 论坛前端（Vite）；开发 `5173/forum-project/dist/` |
-| `admin_page/` | 管理端构建产物 + 开发服务 |
-| `message-center-project/` | 消息中心前端 |
-| `newUI/static/` | Godot/经典共用的**补充样式与静态片段**（如像素风 CSS）；含 **`shell-frame.css` / `shell-iframe.js`**（网页壳布局与 iframe 默认路由） |
-| `newUI/shell/` | **网页壳**：按 `academic` / `vocabulary` / `forum` 分子目录，`shell.html` 内嵌 iframe 承载原版同功能页面 |
-| `newUI/assets/` | 新版 UI **成品配图**（按模块分子目录，由对应 `shell/*/overrides.css` 引用） |
-| `gameUI_src/` | Godot 工程；Web 玩法则导出到 `gameUI_src/Release` 并由 `serve.py` 提供 |
-| `shared/` | **跨页面共享**：`acadbeat-local-config.js`（本地绝对 URL 单一真相） |
-| `shared-nav.js` / `shared-nav.css`（仓库根） | 顶栏导航组件（Academic / Forum / Technology / **Studio** → `Studio/studio.html`）；在引入 `shared/acadbeat-local-config.js` 后会自动使用其中的管理端/消息中心/摘要 API URL（未引入时仍有内置回退） |
-| `docs/` | 架构与约定（本文件） |
+| Path | Responsibility |
+|------|----------------|
+| `Auth/` | Login, registration, session, same-origin cookie flow with PHP pages |
+| `home.html` / `owner.html` / `technology.html` | Classic home, profile, technology pages |
+| `Academic-Practice/` | Academic listening/speaking features (`practice-app.js` drives multi-page flow) |
+| `vocba_prac/` | Vocabulary practice module |
+| `forum-project/` | Classic forum frontend (Vite) |
+| `admin_page/` | Admin frontend build/dev app |
+| `message-center-project/` | Message center frontend |
+| `GameUI/` | Reorganized UI module outputs used by Godot-linked pages |
+| `gameUI_src/` | Godot project source; web export in `gameUI_src/Release` |
+| `shared/` | Cross-module shared config (`acadbeat-local-config.js`) |
+| `shared-nav.js` / `shared-nav.css` | Shared top navigation layer |
+| `doc/` | Architecture, deployment, and team docs |
 
-## 本地 URL 单一配置
+## Single Source of Local URL Truth
 
-- 文件：**`shared/acadbeat-local-config.js`**
-- 暴露全局 **`window.ACADBEAT_LOCAL`**（`adminDistUrl`、`forumDevChooserUrl`、`godotWebEntryUrl` 等）。
-- 各 HTML 在 **admin 角色守卫**与 `initializeAcadBeatNav` 之前引入该脚本，避免散落硬编码。
-- **PHP / Node** 侧 CORS 与重定向（如 `Auth/backend/api/login.php`、`forum-project/api/bootstrap.php`）需与此处 **同源策略一致**；改端口时两边一起改。
+- File: `shared/acadbeat-local-config.js`
+- Exposes: `window.ACADBEAT_LOCAL`
+- Includes canonical local URLs such as admin, forum, message center, and Godot entry.
+- HTML pages should load this script **before** role guards and `initializeAcadBeatNav`.
+- If host/port changes, update both frontend config and backend CORS/redirect config together.
 
-## 双模式如何切换
+## Classic vs Godot Mode Switching
 
-- 主页 **Switch**：写入 `ui_mode=godot` 并进入 `godotWebEntryUrl`。
-- 学术等子页通过 URL 参数 **`ui=godot`** 或 Cookie **`ui_mode=godot`** 决定：是否切 `newUI/static` 样式、未登录时是否回 Godot 入口等。
-- Godot 内门/星球上的外链应与 `ACADBEAT_LOCAL` **保持同一套地址**（Godot 无法读 JS 配置，改配置后请同步 `gameUI_src` 内常量或重新导出）。
+- Home page **Switch** writes `ui_mode=godot` and opens `godotWebEntryUrl`.
+- Sub-pages read URL query `ui=godot` or cookie `ui_mode=godot` to select behavior/styling.
+- Godot scene links should stay aligned with `ACADBEAT_LOCAL` URL strategy.
 
-## 启动
+## Startup Scripts (Simplified)
 
-- `php start_all.php`：按 OS 拉起主站 `8001`、论坛 Vite、管理端、Godot 静态等；详见脚本输出。
-- **Windows** 与 **macOS** 的 `start_all` 均会尝试启动 **`voice-room-server`（`3001`）**；论坛实时/私信摘要等依赖该 WebSocket。若未在 `voice-room-server` 目录执行过 `npm install`，该进程可能立即退出，请在该目录安装依赖后重试。
-- 论坛开发地址必须为 **`/forum-project/dist/`** 子路径（与 Vite `base` 一致）。
-- 论坛 / 消息中心 Vite 开发服将 **`/shared/*` 代理到 `http://127.0.0.1:8001`**，以便加载 `shared/acadbeat-local-config.js`；**主站 `8001` 必须先启动**，否则该脚本与 API 都会失败。
-- Vite 子项目执行 `npm run build` 后，`dist/index.html` 会从源 `index.html` 重新生成；若曾手改 `dist`，应以源文件为准并重新构建。
+Only keep one starter per OS:
 
-## 经典模式完整跑通 — 模块清单（验收）
+- Linux: `php start_all_linux.php`
+- macOS: `php start_all_mac.php`
+- Windows: `php start_all_windows.php`
 
-在**未**开 Godot、已登录普通用户前提下，应能从顶栏或主页进入：
+Optional full mode (extra dev services):
 
-1. Academic → `Academic-Practice/training.html` → 各子功能（听力选视频、练习、语音房等）
-2. Forum → 开发环境 `forumDevChooserUrl`；或主站静态 `forumProdIndexUrl`
-3. Technology → `technology.html`
-4. 词表 → `vocba_prac/`
-5. 个人页 → `owner.html`
-6. 消息中心 → `messageCenterDistUrl`（依赖登录）
+- `php start_all_linux.php --full`
+- `php start_all_mac.php --full`
+- `php start_all_windows.php --full`
 
-管理员应被重定向到 **`adminDistUrl`**，且不进入普通学术/论坛学生流（由各页 `acadbeat-role-guard` 与 nav 逻辑处理）。
+## Required Runtime Services
 
-## Godot 模式（非阻塞）
+Default start profile brings up:
 
-- 入口：`godotWebEntryUrl`。
-- 允许：部分门/星球目标页仍为经典 HTML、或 newUI 样式未覆盖；以「不阻断主流程」为准。
-- 长期目标：门/星球 URL 与 `ACADBEAT_LOCAL` 对齐，减少重复常量。
+- Main site: `http://127.0.0.1:8001`
+- Realtime server: `ws://127.0.0.1:3001/ws`
+- Godot web export static server: `http://127.0.0.1:5500`
 
-## 其它字面量 URL（改环境时请手查）
+The scripts also build key frontends and install runtime dependencies where needed.
 
-- `Academic-Practice/practice-app.js` 内 `CHAT_API_BASE`、`FORUM_COMPOSE_URL` 等仍为固定字符串；若更换主站端口，需与此处及 PHP CORS 一并修改（或后续再抽到构建期配置）。
+## Acceptance Baseline (Classic Mode)
+
+With normal user login in classic mode, the following should be reachable:
+
+1. Academic flow (`Academic-Practice/...`)
+2. Forum
+3. Technology
+4. Vocabulary module
+5. Owner page
+6. Message center
+
+Admin users should be redirected to the admin app instead of student flows.
+
+## Notes
+
+- Godot mode is allowed to be partially styled/integrated as long as core navigation is not blocked.
+- If you update Godot-side hardcoded URLs, keep them consistent with `shared/acadbeat-local-config.js`.

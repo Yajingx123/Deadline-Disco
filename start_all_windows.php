@@ -9,7 +9,8 @@ if (!is_dir($runDir)) {
 
 $php = PHP_BINARY ?: 'php';
 $npm = 'npm.cmd';
-$profile = getenv('ACADBEAT_START_PROFILE') ?: 'simple';
+$argv = $_SERVER['argv'] ?? [];
+$profile = getenv('ACADBEAT_START_PROFILE') ?: (in_array('--full', $argv, true) ? 'full' : 'simple');
 
 function is_port_open(string $host, int $port, float $timeoutSeconds = 0.8): bool
 {
@@ -197,8 +198,7 @@ foreach ($services as $service) {
 
 echo "\nLogs are in .run\n";
 echo "Start command: php start_all_windows.php\n";
-echo "Auto-detect command: php start_all.php\n";
-echo "Full mode command: php start_all.php --full\n";
+echo "Full mode command: php start_all_windows.php --full\n";
 echo "\n=== 浏览器入口（唯一推荐）===\n";
 echo "  http://127.0.0.1:8001/home.html\n";
 echo "  （或 http://127.0.0.1:8001/ 会跳转到主页）\n";

@@ -9,7 +9,8 @@ if (!is_dir($runDir)) {
 
 $php = PHP_BINARY ?: 'php';
 $npm = 'npm';
-$profile = getenv('ACADBEAT_START_PROFILE') ?: 'simple';
+$argv = $_SERVER['argv'] ?? [];
+$profile = getenv('ACADBEAT_START_PROFILE') ?: (in_array('--full', $argv, true) ? 'full' : 'simple');
 
 function sh_quote(string $value): string
 {
@@ -250,8 +251,7 @@ foreach ($services as $service) {
 
 echo "\nLogs are in .run\n";
 echo "Start command: php start_all_mac.php\n";
-echo "Auto-detect command: php start_all.php\n";
-echo "Full mode command: php start_all.php --full\n";
+echo "Full mode command: php start_all_mac.php --full\n";
 echo "\nHome: http://127.0.0.1:8001/home.html\n";
 echo "Forum isolation: classic -> /forum-project/dist/, new shell -> /forum-project-v2/dist/\n";
 if (!empty($healthFailures)) {

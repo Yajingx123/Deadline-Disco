@@ -7,10 +7,9 @@
 The repository has evolved beyond the historical module list below.
 For the current runnable architecture and startup topology, use:
 
-- `docs/ARCHITECTURE.md`
-- `docs/REPO_REORG_PLAN.md`
+- `doc/ARCHITECTURE.md`
 
-If this `README.md` conflicts with `docs/ARCHITECTURE.md`, treat `docs/ARCHITECTURE.md` as the source of truth.
+If this `README.md` conflicts with `doc/ARCHITECTURE.md`, treat `doc/ARCHITECTURE.md` as the source of truth.
 
 ## Current Quick Start (Recommended)
 
@@ -31,10 +30,14 @@ mysql -u root -p123456 < sql/002_acadbeat_all_other_sql.sql
 
 ### 2) Start all services
 
-Use one command from repository root:
+Use one command from repository root (pick your OS):
 
 ```bash
-php start_all.php
+php start_all_linux.php
+# or
+php start_all_mac.php
+# or
+php start_all_windows.php
 ```
 
 Or run full bootstrap flow (import SQL + restart services):

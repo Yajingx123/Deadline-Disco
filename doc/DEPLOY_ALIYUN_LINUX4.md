@@ -45,7 +45,6 @@ mysql -u root -p < sql/002_acadbeat_all_other_sql.sql
 ## 4) Build frontend and start realtime
 
 ```bash
-chmod +x ./start_prod_linux.sh ./stop_prod_linux.sh
 cd /var/www/Deadline-Disco/voice-room-server && npm install && cd ..
 sudo mkdir -p /var/www/Deadline-Disco/forum-project/uploads/image
 sudo mkdir -p /var/www/Deadline-Disco/forum-project/uploads/audio
@@ -53,7 +52,7 @@ sudo mkdir -p /var/www/Deadline-Disco/forum-project/uploads/video
 # Allow php-fpm/nginx user to write forum uploads:
 sudo chown -R nginx:nginx /var/www/Deadline-Disco/forum-project/uploads
 sudo chmod -R 775 /var/www/Deadline-Disco/forum-project/uploads
-bash ./start_prod_linux.sh
+php ./start_all_linux.php
 ```
 
 ## 5) Configure Nginx + PHP-FPM
