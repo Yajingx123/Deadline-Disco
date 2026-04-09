@@ -6,11 +6,12 @@
 [ext_resource type="Script" uid="uid://c2xyjmt8iuyt" path="res://Scripts/homepage/door_academic.gd" id="3_7cdp5"]
 
 [node name="Planet" type="Area2D" unique_id=490313873]
-rotation = 0.2565634
+rotation = -6.0353484
 script = ExtResource("1_vpe2g")
-rotate_speed = 30.0
+rotate_speed = 15.0
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1536433087]
+z_index = 5
 scale = Vector2(0.275, 0.275)
 texture = ExtResource("2_7cdp5")
 
@@ -24,36 +25,36 @@ tip_text = "Academic Practice"
 
 [node name="Door2" parent="." unique_id=289938450 instance=ExtResource("2_r86au")]
 z_index = 4
-position = Vector2(305.08548, -192.99704)
-rotation = 1.0240043
+position = Vector2(269.58408, -240.30278)
+rotation = 0.8374001
 scale = Vector2(0.457, 0.457)
 tip_text = "Game Studio"
 
 [node name="Door3" parent="." unique_id=40628788 instance=ExtResource("2_r86au")]
 z_index = 4
-position = Vector2(-311, -176.00002)
-rotation = -1.027229
+position = Vector2(-273.10074, -229.20071)
+rotation = -0.8374735
 scale = Vector2(0.472, 0.472)
 tip_text = "Technology"
 
 [node name="Door4" parent="." unique_id=155672748 instance=ExtResource("2_r86au")]
 z_index = 4
-position = Vector2(119.68551, -329.96573)
-rotation = 0.3575748
+position = Vector2(100.78709, -344.86368)
+rotation = 0.2890909
 scale = Vector2(0.351, 0.351)
 tip_text = "Forum"
 
 [node name="Door5" parent="." unique_id=872164903 instance=ExtResource("2_r86au")]
 z_index = 4
-position = Vector2(-92.7772, 340.59128)
-rotation = -2.87947
+position = Vector2(-139.1314, 336.38437)
+rotation = -2.7528045
 scale = Vector2(0.45, 0.45)
 tip_text = "Forum"
 
 [node name="Door6" parent="." unique_id=551336010 instance=ExtResource("2_r86au")]
 z_index = 4
-position = Vector2(-355.21878, 58.894917)
-rotation = -1.7344419
+position = Vector2(-366.16092, -24.883772)
+rotation = -1.5264326
 scale = Vector2(0.457, 0.457)
 tip_text = "Ranking"
 
@@ -66,22 +67,22 @@ tip_text = "Academic Practice"
 
 [node name="Door8" parent="." unique_id=1322085135 instance=ExtResource("2_r86au")]
 z_index = 4
-position = Vector2(-258.69122, 229.60802)
-rotation = -2.3127127
-scale = Vector2(0.351, 0.351)
+position = Vector2(-297.29532, 187.66054)
+rotation = -2.1386702
+scale = Vector2(0.396, 0.396)
 tip_text = "Game Studio"
 
 [node name="Door9" parent="." unique_id=58010467 instance=ExtResource("2_r86au")]
 z_index = 4
-position = Vector2(356.64697, 10.437195)
-rotation = 1.6160705
+position = Vector2(360.54004, -32.55552)
+rotation = 1.4705414
 scale = Vector2(0.458, 0.458)
 tip_text = "Ranking"
 
 [node name="Door10" parent="." unique_id=731027919 instance=ExtResource("2_r86au")]
 z_index = 4
-position = Vector2(291.9136, 196.70901)
-rotation = 2.186481
+position = Vector2(304.54575, 184.53159)
+rotation = 2.1329205
 scale = Vector2(0.375, 0.375)
 tip_text = "Technology"
 
