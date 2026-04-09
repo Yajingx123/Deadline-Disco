@@ -1,0 +1,105 @@
+.shop-backdrop {
+  position: absolute;
+  inset: 0;
+  z-index: 22;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(6, 8, 16, 0.88);
+  backdrop-filter: blur(6px);
+}
+
+.shop-panel {
+  width: min(620px, 96vw);
+  background: linear-gradient(145deg, #1a2542 0%, #121a30 55%, #0f1628 100%);
+  color: var(--ui-text, #e8e8e8);
+  font-family: var(--ui-font, "Courier New", monospace);
+  padding: 0.9rem 1rem 1rem;
+  border-radius: 2px;
+}
+
+.shop-panel-inner {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.shop-panel-main {
+  flex: 1;
+  min-width: 0;
+}
+
+@media (max-width: 540px) {
+  .shop-panel-inner {
+    flex-direction: column;
+    align-items: center;
+  }
+}
+
+.shop-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.shop-tag {
+  color: #fca311;
+}
+
+.shop-gold {
+  color: #feca57;
+}
+
+.shop-desc {
+  margin: 0 0 0.75rem;
+  color: #c7d3df;
+}
+
+.shop-items {
+  list-style: none;
+  margin: 0 0 0.75rem;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.shop-items button {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.2rem;
+  border: 2px solid #0f3460;
+  background: #1f4068;
+  color: #e8e8e8;
+  font-family: inherit;
+  padding: 0.5rem;
+  cursor: pointer;
+}
+
+.shop-items button:hover:not(:disabled) {
+  border-color: #4cc9f0;
+}
+
+.shop-items button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.shop-items button span {
+  font-size: 0.8rem;
+  color: #c7d3df;
+}
+
+.shop-skip {
+  width: 100%;
+  border: none;
+  background: #394867;
+  color: #e8e8e8;
+  padding: 0.45rem;
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: bold;
+}

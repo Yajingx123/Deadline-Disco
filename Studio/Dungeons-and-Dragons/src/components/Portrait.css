@@ -1,0 +1,32 @@
+.portrait-frame {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.55rem 0.65rem 0.65rem;
+  background: linear-gradient(165deg, #1e2a4a 0%, #0d1428 55%, #0a0f1c 100%);
+  border: 2px solid var(--ui-accent, #fca311);
+  box-shadow:
+    inset 0 0 24px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(76, 201, 240, 0.15),
+    0 5px 0 rgba(5, 5, 10, 0.9);
+}
+
+.portrait-label {
+  font-family: var(--ui-font, "Courier New", monospace);
+  font-size: 0.62rem;
+  color: var(--ui-cyan, #4cc9f0);
+  margin-bottom: 0.4rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  text-shadow: 0 0 12px rgba(76, 201, 240, 0.35);
+}
+
+.portrait-svg {
+  display: block;
+  width: 76px;
+  height: 114px;
+  image-rendering: pixelated;
+  shape-rendering: crispEdges;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+}

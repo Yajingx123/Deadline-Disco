@@ -1,0 +1,4 @@
+Bundled PNGs are copied from the Phaser Examples repository (github.com/phaserjs/examples).
+Example code is MIT; bundled art is not — see that repo’s README for asset restrictions.
+For commercial or ad-supported games, replace these files with your own or CC0-licensed art
+(e.g. kenney.nl Tiny Dungeon, CC0).
