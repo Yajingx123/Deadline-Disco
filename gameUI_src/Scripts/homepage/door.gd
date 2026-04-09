@@ -74,7 +74,7 @@ func _target_url_for_tip(normalized_tip: String) -> String:
 			return MAIN_FORUM_URL
 		"game studio":
 			return MAIN_STUDIO_URL
-		"technic", "technologies":
+		"technology", "technologies", "technic":
 			return MAIN_TECH_URL
 		"team competition", "teamwork":
 			return MAIN_COMPETITION_URL

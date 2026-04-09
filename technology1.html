@@ -49,6 +49,27 @@
             overflow-x: hidden;
         }
 
+        .godot-back-btn {
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            z-index: 999;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            background: rgba(0, 0, 0, 0.65);
+            color: #fff;
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+
+        .godot-back-btn:hover {
+            transform: translateY(-1px);
+            background: rgba(0, 0, 0, 0.82);
+        }
+
         .page-layout {
             display: flex;
             width: 100%;
@@ -141,6 +162,7 @@
     </style>
 </head>
 <body>
+    <button id="godotBackBtn" class="godot-back-btn" type="button" aria-label="Return to Godot">← Return to Godot</button>
     <div class="page-layout">
         <div class="left-spacer"></div>
 
@@ -173,5 +195,33 @@
             </div>
         </div>
     </div>
+    <script>
+        (function setupGodotBackButton() {
+            const backBtn = document.getElementById('godotBackBtn');
+            if (!backBtn) return;
+
+            const fallbackGodotUrl =
+                ((window.ACADBEAT_LOCAL && window.ACADBEAT_LOCAL.godotUrl) || '').trim() ||
+                (window.location.origin + '/gameUI_src/Release/index.html');
+
+            backBtn.addEventListener('click', function onBackToGodot() {
+                if (window.opener && !window.opener.closed) {
+                    try { window.opener.focus(); } catch (_e) {}
+                    window.close();
+                    setTimeout(function () {
+                        if (!document.hidden) window.location.href = fallbackGodotUrl;
+                    }, 250);
+                    return;
+                }
+
+                if (document.referrer) {
+                    window.location.href = document.referrer;
+                    return;
+                }
+
+                window.location.href = fallbackGodotUrl;
+            });
+        })();
+    </script>
 </body>
 </html>
