@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from 'react'
-import { adminFetch } from '../api'
 
 function VideoResourceManager() {
   const [videos, setVideos] = useState([])
