@@ -5,10 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Academic Forum V2</title>
     <script src="/shared/acadbeat-local-config.js"></script>
-    <script type="module" crossorigin src="/forum-project-v2/dist/assets/index-BGUCtJJk.js"></script>
-    <link rel="stylesheet" crossorigin href="/forum-project-v2/dist/assets/index-DUN3mDCw.css">
+    <script type="module" crossorigin src="/forum-project-v2/dist/assets/index-BngYbzuC.js"></script>
+    <link rel="stylesheet" crossorigin href="/forum-project-v2/dist/assets/index-BhC2ztrj.css">
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      (function bindGodotBackOverride() {
+        var params = new URLSearchParams(window.location.search);
+        if (params.get('ui') !== 'godot') return;
+        document.addEventListener('click', function (event) {
+          var btn = event.target && event.target.closest
+            ? event.target.closest('.v2-back-btn--global')
+            : null;
+          if (!btn || btn.classList.contains('v2-back-btn--favorites')) return;
+          event.preventDefault();
+          event.stopPropagation();
+          var L = window.ACADBEAT_LOCAL || {};
+          var target = String(L.godotWebEntryUrl || '').trim() || (window.location.origin + '/gameUI_src/Release/index.html?ui=godot');
+          window.location.href = target;
+        }, true);
+      })();
+    </script>
   </body>
 </html>

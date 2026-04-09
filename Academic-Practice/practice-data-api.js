@@ -1,5 +1,5 @@
 // =========================================
-// 视频数据 API：数据库（管理员上传） + practice-data.js 本地目录合并
+// 视频数据 API：统一从数据库读取（video_resources）
 // =========================================
 
 const API_BASE_URL = './api';
@@ -42,106 +42,39 @@ window.PracticeDataAPI = (function () {
     };
   }
 
-  /** 与旧版 practice-data.js（本地 JSON）对齐的字段，供 practice-app-api 播放与封面解析 */
-  function mapFromLocalJson(v) {
-    return {
-      id: v.id,
-      mode: v.mode,
-      title: v.title,
-      type: v.type,
-      difficulty: v.difficulty,
-      duration: v.duration,
-      source: v.source,
-      country: v.country,
-      author: v.author,
-      timeSpecific: v.timeSpecific,
-      videoUrl: v.videoUrl || null,
-      videoPath: v.videoPath,
-      videoFile: v.videoFile,
-      transcriptUrl: v.transcriptPath || v.transcriptUrl,
-      vttUrl: v.vttUrl || null,
-      labelsUrl: v.labelsUrl || null,
-      sampleNotesUrl: v.sampleNotesUrl || null,
-      coverUrl: v.coverUrl || null,
-      coverFile: v.coverFile,
-      flagUrl: v.flagUrl || null,
-      transcriptText: v.transcriptText,
-      question: v.question,
-      answerText: v.answerText,
-      dataSource: 'local'
-    };
-  }
-
-  function localVideosForMode(mode) {
-    if (typeof window === 'undefined' || !window.PracticeData || !Array.isArray(window.PracticeData.videos)) {
-      return [];
-    }
-    return window.PracticeData.videos.filter(function (x) {
-      return x.mode === mode;
-    });
-  }
-
-  /**
-   * 列表：每个 mode 固定先出 practice-data.js 中的本地条目（默认 12 条，顺序与文件一致），
-   * 再追加数据库中「id 不在本地集合里」的条目（管理员新增的第 13 条及以后）。同 id 时以本地为准。
-   */
   async function getVideos(filters) {
-    const mode = (filters && filters.mode) || 'understand';
-    const localRaw = localVideosForMode(mode);
-    const localList = localRaw.map(mapFromLocalJson);
-    const localIdSet = new Set(localList.map(function (v) {
-      return String(v.id);
-    }));
+    const params = new URLSearchParams();
+    params.append('action', 'list');
 
-    let apiList = [];
-    try {
-      const params = new URLSearchParams();
-      params.append('action', 'list');
-      params.append('mode', mode);
-      const response = await fetch(API_BASE_URL + '/videos.php?' + params.toString());
-      const result = await response.json();
-      if (result.ok && Array.isArray(result.data)) {
-        apiList = result.data.map(mapFromApiRow);
-      } else if (!result.ok) {
-        console.error('Failed to fetch videos:', result.message);
-      }
-    } catch (error) {
-      console.error('Error fetching videos:', error);
+    if (filters && filters.mode) params.append('mode', filters.mode);
+    if (filters && filters.type && filters.type !== 'All') params.append('type', filters.type);
+    if (filters && filters.difficulty && filters.difficulty !== 'All') params.append('difficulty', filters.difficulty);
+    if (filters && filters.duration && filters.duration !== 'All') params.append('duration', filters.duration);
+    if (filters && filters.source && filters.source !== 'All') params.append('source', filters.source);
+    if (filters && filters.country && filters.country !== 'All') params.append('country', filters.country);
+    if (filters && filters.search) params.append('search', filters.search);
+
+    const response = await fetch(API_BASE_URL + '/videos.php?' + params.toString());
+    const result = await response.json();
+
+    if (!result.ok || !Array.isArray(result.data)) {
+      throw new Error(result.message || 'Failed to fetch videos from database.');
     }
 
-    const extras = apiList.filter(function (v) {
-      return !localIdSet.has(String(v.id));
-    });
-
-    return localList.concat(extras);
+    return result.data.map(mapFromApiRow);
   }
 
-  /**
-   * 详情：先本地（默认 12 条），再数据库（管理员新增 id）。
-   */
   async function getVideoById(videoId) {
-    if (typeof window !== 'undefined' && window.PracticeData && Array.isArray(window.PracticeData.videos)) {
-      const found = window.PracticeData.videos.find(function (x) {
-        return String(x.id) === String(videoId);
-      });
-      if (found) {
-        return mapFromLocalJson(found);
-      }
+    const response = await fetch(
+      API_BASE_URL + '/videos.php?action=detail&id=' + encodeURIComponent(videoId)
+    );
+    const result = await response.json();
+
+    if (!result.ok || !result.data) {
+      return null;
     }
 
-    try {
-      const response = await fetch(
-        API_BASE_URL + '/videos.php?action=detail&id=' + encodeURIComponent(videoId)
-      );
-      const result = await response.json();
-      if (result.ok && result.data) {
-        return mapFromApiRow(result.data);
-      }
-    } catch (error) {
-      console.error('Error fetching video detail:', error);
-    }
-
-    return null;
+    return mapFromApiRow(result.data);
   }
 
   return {

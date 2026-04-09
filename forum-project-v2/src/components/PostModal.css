@@ -3,7 +3,7 @@
   --pm-primary: #9BB7D4;
   --pm-secondary: #3A4E6B;
   --pm-text-light: rgba(58, 78, 107, 0.58);
-  --pm-border: rgba(58, 78, 107, 0.12);
+  --pm-border: transparent;
   --pm-container-bg-image: url('/images/ForumHome/composer-modal-bg.png');
   --pm-header-bg-image: none;
   --pm-card-bg-image: none;
@@ -32,7 +32,7 @@
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
-  border: 1px solid rgba(58, 78, 107, 0.1);
+  border: none;
   border-radius: 24px;
   box-shadow: 0 28px 80px rgba(58, 78, 107, 0.18);
   z-index: 1050;
@@ -40,7 +40,7 @@
   flex-direction: column;
   overflow: hidden;
   animation: pm-scale-in 0.25s ease forwards;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: inherit;
 }
 
 .post-modal-header {
@@ -192,7 +192,7 @@
 .post-modal-reply-heading {
   width: 100%;
   border: 0;
-  border-bottom: 1px solid var(--pm-border);
+  border-bottom: none;
   background: transparent;
   color: var(--pm-secondary);
   padding: 8px 0 10px;
@@ -232,7 +232,7 @@
 }
 
 .tag-chip {
-  border: 1px solid rgba(58, 78, 107, 0.12);
+  border: none;
   background: rgba(255, 255, 255, 0.8);
   color: var(--pm-secondary);
   border-radius: 999px;
@@ -269,7 +269,7 @@
   gap: 14px;
   padding: 16px 18px;
   border-radius: 18px;
-  border: 1px solid rgba(58, 78, 107, 0.1);
+  border: none;
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(155, 183, 212, 0.18));
 }
 
@@ -348,7 +348,7 @@
   color: var(--pm-secondary);
   font-size: 0.96rem;
   line-height: 1.7;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: inherit;
 }
 
 .post-modal-textarea {

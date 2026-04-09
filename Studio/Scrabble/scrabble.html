@@ -369,30 +369,36 @@
         }
         .mode-overlay.hidden { display: none; }
         .mode-card {
-            width: min(420px, 100%);
-            background: linear-gradient(165deg, rgba(255, 255, 255, 0.94) 0%, rgba(248, 242, 255, 0.9) 100%);
-            border: 1px solid rgba(91, 42, 134, 0.18);
-            border-radius: 24px;
-            padding: 28px 26px;
-            box-shadow: 0 22px 56px rgba(91, 42, 134, 0.12);
+            width: min(500px, 100%);
+            background:
+                radial-gradient(circle at 92% -4%, rgba(250, 204, 21, 0.18), transparent 36%),
+                linear-gradient(165deg, rgba(255, 255, 255, 0.95) 0%, rgba(247, 240, 255, 0.92) 100%);
+            border: 1px solid rgba(91, 42, 134, 0.2);
+            border-radius: 26px;
+            padding: 32px 28px;
+            box-shadow: 0 24px 64px rgba(91, 42, 134, 0.14);
         }
         .mode-card h2 {
-            margin: 0 0 8px;
-            font-size: 1.35rem;
+            margin: 0 0 10px;
+            font-size: 1.7rem;
             letter-spacing: -0.02em;
             color: var(--secondary-color);
         }
         .mode-card p {
-            margin: 0 0 20px;
-            font-size: 0.9rem;
+            margin: 0 0 22px;
+            font-size: 0.96rem;
             color: rgba(58, 78, 107, 0.78);
-            line-height: 1.55;
+            line-height: 1.6;
         }
         .mode-card .mode-actions button,
         .mode-card .match-row button {
+            min-height: 54px;
+            border-radius: 999px;
             border-color: rgba(91, 42, 134, 0.18);
             background: rgba(255, 255, 255, 0.72);
             color: var(--secondary-color);
+            font-size: 1rem;
+            font-weight: 700;
         }
         .mode-card .mode-actions button:hover,
         .mode-card .match-row button:hover {
@@ -411,6 +417,23 @@
             gap: 10px;
         }
         .mode-actions button { width: 100%; }
+        .mode-return {
+            margin-top: 12px;
+        }
+        .mode-return button {
+            width: 100%;
+            min-height: 46px;
+            border-radius: 999px;
+            border: 1px solid rgba(58, 78, 107, 0.25);
+            background: rgba(255, 255, 255, 0.62);
+            color: var(--secondary-color);
+            font-size: 0.92rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .mode-return button:hover {
+            background: rgba(155, 183, 212, 0.28);
+        }
         #match-panel,
         #weekly-match-panel {
             margin-top: 18px;
@@ -428,13 +451,6 @@
         }
         .match-row { display: flex; gap: 8px; flex-wrap: wrap; }
         .game-root.hidden { display: none; }
-        .server-hint {
-            font-size: 0.72rem;
-            color: rgba(58, 78, 107, 0.72);
-            margin-top: 14px;
-            word-break: break-all;
-        }
-
         .nav-rules {
             font-family: inherit;
             font-size: 0.72rem;
@@ -452,13 +468,6 @@
         .nav-rules:hover {
             background: rgba(155, 183, 212, 0.35);
         }
-        .studio-rules-btn {
-            position: fixed;
-            top: 94px;
-            right: 20px;
-            z-index: 90;
-        }
-
         .game-progress {
             width: 100%;
             max-width: min(92vw, 720px);
@@ -774,7 +783,25 @@
             gap: 8px;
         }
         .guide-dim {
-            display: none !important;
+            position: fixed;
+            inset: 0;
+            background: rgba(13, 19, 30, 0.56);
+            z-index: 70;
+        }
+        .guide-dim.hidden {
+            display: none;
+        }
+        .guide-dim.guide-dim--spotlight {
+            --guide-spot-x: 50vw;
+            --guide-spot-y: 50vh;
+            --guide-spot-r: 120px;
+            background:
+                radial-gradient(
+                    circle at var(--guide-spot-x) var(--guide-spot-y),
+                    rgba(255, 255, 255, 0) 0 calc(var(--guide-spot-r) - 8px),
+                    rgba(13, 19, 30, 0.22) calc(var(--guide-spot-r) + 8px),
+                    rgba(13, 19, 30, 0.62) calc(var(--guide-spot-r) + 52px)
+                );
         }
         .guide-focus-target {
             position: relative;
@@ -879,11 +906,14 @@
     <div id="mode-overlay" class="mode-overlay">
         <div class="mode-card">
             <h2>Scrabble</h2>
-            <p>Choose how you want to play. Online mode needs the match server running (see hint below).</p>
+            <p>Choose how you want to play. Online mode needs the match server running.</p>
             <div class="mode-actions">
                 <button type="button" class="primary" onclick="chooseAiMode()">Play vs AI</button>
                 <button type="button" onclick="showOnlineMatchPanel()">Online match (2 players)</button>
                 <button type="button" onclick="showWeeklyMatchPanel()">Weekly match (Team competition)</button>
+            </div>
+            <div class="mode-return">
+                <button type="button" onclick="goBackToStudio()">Return to Studio</button>
             </div>
             <div id="match-panel">
                 <div id="match-status">Click “Find match” to join the queue.</div>
@@ -899,7 +929,6 @@
                     <button type="button" onclick="cancelWeeklyMatch()">Cancel</button>
                 </div>
             </div>
-            <p class="server-hint" id="server-hint"></p>
         </div>
     </div>
     <nav class="studio-local-nav">
@@ -912,8 +941,6 @@
         </div>
         <button type="button" class="nav-rules" onclick="goBackToStudio()">Back to Studio</button>
     </nav>
-    <button type="button" class="nav-rules studio-rules-btn" onclick="openRulesModal()">Rules</button>
-
     <div id="game-root" class="game-root hidden">
     <div class="layout">
         <section class="board-panel">
@@ -1333,6 +1360,7 @@
             if (forceFromStart) state.guideStep = 0;
             state.guideActive = true;
             document.getElementById("guide-modal")?.classList.add("hidden");
+            document.getElementById("guide-dim")?.classList.remove("hidden");
             document.getElementById("guide-coach")?.classList.remove("hidden");
             renderGuideStep();
             window.addEventListener("resize", onGuideViewportChanged);
@@ -1343,6 +1371,9 @@
 
         function closeGuideModal(markSeen = true) {
             document.getElementById("guide-modal")?.classList.add("hidden");
+            const dim = document.getElementById("guide-dim");
+            dim?.classList.add("hidden");
+            dim?.classList.remove("guide-dim--spotlight");
             document.getElementById("guide-coach")?.classList.add("hidden");
             state.guideActive = false;
             clearGuideFocus();
@@ -1391,6 +1422,7 @@
             const targets = getGuideTargets(step);
             targets.forEach((el) => el.classList.add("guide-focus-target"));
             state.guideFocusEls = targets;
+            syncGuideDimSpotlight(step);
         }
 
         function positionGuideCoach(step) {
@@ -1478,8 +1510,27 @@
                 if (!state.guideActive) return;
                 const step = GUIDE_STEPS[Math.max(0, Math.min(state.guideStep, GUIDE_STEPS.length - 1))];
                 if (!step) return;
+                syncGuideDimSpotlight(step);
                 positionGuideCoach(step);
             });
+        }
+
+        function syncGuideDimSpotlight(step) {
+            const dim = document.getElementById("guide-dim");
+            if (!dim) return;
+            const target = getGuideTargets(step)[0];
+            if (!target) {
+                dim.classList.remove("guide-dim--spotlight");
+                return;
+            }
+            const rect = target.getBoundingClientRect();
+            const cx = rect.left + rect.width / 2;
+            const cy = rect.top + rect.height / 2;
+            const radius = Math.max(rect.width, rect.height) * 0.62 + 22;
+            dim.style.setProperty("--guide-spot-x", `${Math.round(cx)}px`);
+            dim.style.setProperty("--guide-spot-y", `${Math.round(cy)}px`);
+            dim.style.setProperty("--guide-spot-r", `${Math.round(radius)}px`);
+            dim.classList.add("guide-dim--spotlight");
         }
 
         function maybeShowGuideForNewPlayer() {
@@ -1835,8 +1886,6 @@
             }
             render();
         }
-
-        document.getElementById("server-hint").textContent = `Match server: ${SCRABBLE_SERVER} (override with ?server=https://host/scrabble-match)`;
 
         function buildWordIndexes() {
             wordsByLength = Array.from({ length: 16 }, () => []);

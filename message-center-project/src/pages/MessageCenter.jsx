@@ -37,7 +37,6 @@ const MAIN_ORIGIN =
   (typeof window !== 'undefined' && window.ACADBEAT_LOCAL && window.ACADBEAT_LOCAL.mainOrigin)
   || (typeof window !== 'undefined' ? window.location.origin : 'http://127.0.0.1:8001')
 const FALLBACK_BACK_URL = `${MAIN_ORIGIN}/home.html?module=Dialogue`
-const TARGET_UI_PATH = '/message-center-project%202/dist/'
 
 function sanitizeBackUrl(rawUrl) {
   if (!rawUrl) return ''
@@ -85,12 +84,6 @@ function resolveBackUrl() {
   return sanitizeBackUrl(FALLBACK_BACK_URL) || FALLBACK_BACK_URL
 }
 
-function resolveUiSwitchUrl(targetPath) {
-  if (typeof window === 'undefined') return targetPath
-  const { origin, search, hash } = window.location
-  return `${origin}${targetPath}${search || ''}${hash || ''}`
-}
-
 export default function MessageCenter() {
   const [currentUser, setCurrentUser] = useState(null)
   const [activeTab, setActiveTab] = useState('messages')
@@ -98,7 +91,6 @@ export default function MessageCenter() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [backUrl] = useState(resolveBackUrl)
-  const [switchUrl] = useState(() => resolveUiSwitchUrl(TARGET_UI_PATH))
 
   const loadCenter = async () => {
     const [sessionData, centerData] = await Promise.all([
@@ -369,9 +361,6 @@ export default function MessageCenter() {
           <button type="button" className="message-center__backBtn" onClick={() => { window.location.href = backUrl }}>
             ←
           </button>
-          <button type="button" className="message-center__modeBtn" onClick={() => { window.location.href = switchUrl }}>
-            Game UI
-          </button>
         </div>
       </header>
 
@@ -380,7 +369,6 @@ export default function MessageCenter() {
           <div className="message-center__sidebarHeader">
             <div className="message-center__eyebrow">Message Center</div>
             <h1>Inbox</h1>
-            <p>Track conversations, post replies, appreciation, and platform notices in one place.</p>
           </div>
 
           <div className="message-center__nav">

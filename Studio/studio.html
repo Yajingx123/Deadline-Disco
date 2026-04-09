@@ -119,6 +119,7 @@
             animation: studioCardIn 0.75s ease both;
         }
         .game-card:nth-child(2) { animation-delay: 0.12s; }
+        .game-card:nth-child(3) { animation-delay: 0.2s; }
 
         .game-icon {
             width: 54px;
@@ -216,7 +217,7 @@
 
     <section class="studio-hero">
         <h1>Studio</h1>
-        <p>Play educational mini-games designed for English learners. Start with Scrabble mode to practice vocabulary, spelling, and tactical decision-making against the computer.</p>
+        <p>Play educational mini-games designed for English learners. Start with Scrabble mode for tactical word play, or explore Dungeons and Dragons for an adventure-style learning challenge.</p>
     </section>
 
     <section class="games-grid">
@@ -228,6 +229,16 @@
                 Classic 15x15 word game with premium squares, rack management, scoring bonuses, and AI opponent.
             </p>
             <div class="game-link">Start Playing →</div>
+        </article>
+
+        <article class="game-card" onclick="window.location.href='./Dungeons-and-Dragons/dist/index.html'">
+            <div class="game-icon">DD</div>
+            <div class="game-name">Dungeons and Dragons</div>
+            <div class="game-tag">Adventure Mode</div>
+            <p class="game-desc">
+                A roguelike English adventure with combat questions, random events, shop upgrades, and boss battles.
+            </p>
+            <div class="game-link">Enter Dungeon →</div>
         </article>
 
         <article class="game-card coming-soon" onclick="alert('More games are coming soon in Studio!')">

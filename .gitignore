@@ -1,5 +1,4 @@
 Picture.py
-.DS_Store
 node_modules/
 **/node_modules/
 .run/

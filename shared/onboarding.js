@@ -123,14 +123,11 @@
     mount() {
       this.overlayEl = document.createElement('div');
       this.overlayEl.className = 'acadbeat-guide-overlay';
-      // 确保遮罩层不会阻止点击事件
-      this.overlayEl.style.pointerEvents = 'none';
+      this.overlayEl.addEventListener('click', () => {});
       document.body.appendChild(this.overlayEl);
 
       this.cardEl = document.createElement('div');
       this.cardEl.className = 'acadbeat-guide-card';
-      // 确保卡片可以接收点击事件
-      this.cardEl.style.pointerEvents = 'auto';
       document.body.appendChild(this.cardEl);
     }
 
@@ -172,9 +169,7 @@
 
     bindStepClickIfNeeded(step, targetEl) {
       if (!step.requireClick || !targetEl) return;
-      const handler = (e) => {
-        // 不阻止事件默认行为，确保按钮的点击事件能够正常触发
-        // 只是在点击后进入下一步指南
+      const handler = () => {
         window.setTimeout(() => this.next(), 140);
       };
       targetEl.addEventListener('click', handler, { once: true });

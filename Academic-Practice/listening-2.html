@@ -1,0 +1,614 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Video Selection | AcadBeat</title>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+  <script src="../shared/acadbeat-local-config.js"></script>
+  <style>
+    @font-face {
+      font-family: "AcademicDisplay";
+      src: url("Myfont-Regular.ttf") format("truetype");
+      font-display: swap;
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    :root {
+      --monitor-ratio: 1452 / 1071;
+      --clipboard-ratio: 993 / 1618;
+      --text-main: #ffffff;
+      --text-dark: #2c2118;
+      --accent-cyan: #7ef5de;
+      --font-ui: "AcademicDisplay", sans-serif;
+      --font-pixel: "Press Start 2P", cursive;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: clamp(20px, 4vh, 60px) 20px;
+      font-family: var(--font-ui);
+      background:
+        linear-gradient(180deg, rgba(18, 13, 14, 0.36), rgba(18, 13, 14, 0.64)),
+        url("note_training/note-background.png") center center / cover no-repeat fixed;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      overflow-x: hidden;
+    }
+
+    /* 布局容器 */
+    .page-shell {
+      width: min(1680px, 100%);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) clamp(380px, 32vw, 520px);
+      gap: 30px;
+      align-items: start;
+    }
+
+    /* --- 左侧：卡通显示器 (视频展示区) --- */
+    .monitor-panel {
+      width: 100%;
+      aspect-ratio: var(--monitor-ratio);
+      background: url("note_training/note-video-frame.png") no-repeat center center;
+      background-size: 100% 100%;
+      position: relative;
+      filter: drop-shadow(0 20px 50px rgba(0,0,0,0.4));
+    }
+
+    .monitor-screen {
+      position: absolute;
+      top: 12%; left: 2.7%;
+      width: 94.6%; height: 80.4%;
+      background: #1a1617; 
+      border-radius: clamp(12px, 1.5vw, 22px);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .screen-header {
+      padding: 24px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.03);
+      border-bottom: 2px dashed rgba(255, 255, 255, 0.1);
+      gap: 16px;
+    }
+
+    .screen-header-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .return-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      border: 2px solid rgba(255, 255, 255, 0.6);
+      background: rgba(36, 31, 39, 0.82);
+      color: #fff;
+      font-family: var(--font-pixel) !important;
+      font-size: 16px;
+      line-height: 1;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+    }
+
+    .return-btn:hover {
+      background: rgba(52, 46, 56, 0.9);
+    }
+
+    .screen-header h2 {
+      margin: 0;
+      font-family: var(--font-pixel) !important;
+      font-size: 18px;
+      color: var(--text-main);
+      text-shadow: 2px 2px 0px #000;
+    }
+
+    .video-scroll-region {
+      flex: 1;
+      padding: 30px;
+      overflow-y: scroll;
+      scrollbar-gutter: stable;
+      scrollbar-width: auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 14px;
+      align-content: start;
+    }
+
+    /* 卡通视频卡片 */
+    .video-item,
+    .video-card {
+      background: rgba(255, 255, 255, 0.95);
+      border: 2px solid #d8cfe7;
+      border-radius: 14px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.16s ease, box-shadow 0.16s ease;
+      box-shadow: 0 6px 16px rgba(0,0,0,0.14);
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      height: auto;
+    }
+
+    .video-item:hover,
+    .video-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 22px rgba(0,0,0,0.18);
+    }
+
+    .video-thumb,
+    .video-cover-box {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      height: auto;
+      min-height: 0;
+      flex: 0 0 auto;
+      background: #444;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .video-thumb::after {
+      content: "▶";
+      font-size: 32px;
+      color: #fff;
+      opacity: 0.8;
+    }
+
+    .video-cover-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .video-cover-placeholder {
+      color: #fff;
+      font-family: var(--font-pixel) !important;
+      font-size: 10px;
+      letter-spacing: 0.03em;
+      opacity: 0.86;
+    }
+
+    .video-go-btn {
+      position: absolute;
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.82);
+      background: rgba(54, 38, 75, 0.72);
+      color: #fff;
+      font-size: 22px;
+      cursor: pointer;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.24);
+    }
+
+    .video-cover-title {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 10px 12px 11px;
+      color: #fff;
+      font-weight: 800;
+      font-size: 0.92rem;
+      line-height: 1.35;
+      font-family: var(--font-ui);
+      text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+      background: linear-gradient(180deg, transparent, rgba(0, 0, 0, 0.5));
+    }
+
+    .video-info {
+      padding: 16px;
+      color: var(--text-dark);
+    }
+
+    .video-info h4 {
+      margin: 0 0 8px;
+      font-size: 1.2rem;
+      font-weight: 800;
+    }
+
+    .video-meta,
+    .video-person-line {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      font-size: 0.84rem;
+      opacity: 0.96;
+      font-weight: 700;
+      margin: 0;
+      padding: 8px 12px 12px;
+      color: #7a58a3;
+    }
+
+    .video-meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding: 10px 12px 8px;
+      flex: 0 0 auto;
+    }
+
+    .video-meta-pill {
+      border: 1.5px solid #e2c979;
+      border-radius: 999px;
+      padding: 1px 8px;
+      font-size: 0.76rem;
+      line-height: 1.2;
+      color: #8a6f43;
+      background: #fff6de;
+      font-family: var(--font-ui);
+      font-weight: 700;
+    }
+
+    .video-country-pill .country-inline {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .country-flag-icon {
+      width: 16px;
+      height: 11px;
+      object-fit: cover;
+      border-radius: 2px;
+      display: inline-block;
+      flex: 0 0 auto;
+      vertical-align: middle;
+    }
+
+    .country-label {
+      white-space: nowrap;
+    }
+
+    .video-question {
+      margin: 0;
+      padding: 0 12px 10px;
+      color: #4b3a2c;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .empty-hint {
+      margin: 0;
+      color: rgba(255,255,255,0.78);
+      font-family: var(--font-pixel) !important;
+      font-size: 10px;
+      letter-spacing: 0.03em;
+      line-height: 1.7;
+      text-align: center;
+      align-self: center;
+      justify-self: center;
+    }
+
+    /* --- 右侧：写字板 (过滤器) --- */
+    .filter-panel {
+      width: 100%;
+      aspect-ratio: var(--clipboard-ratio);
+      background: url("note_training/note-clipboard.png") no-repeat center center;
+      background-size: 100% 100%;
+      position: relative;
+      filter: drop-shadow(0 15px 40px rgba(0,0,0,0.25));
+    }
+
+    .filter-content {
+      position: absolute;
+      top: 12%; left: 8%;
+      width: 84%; height: 82%;
+      display: flex;
+      flex-direction: column;
+      padding: 20px 10px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      scrollbar-gutter: stable;
+    }
+
+    .filter-content h3 {
+      font-family: var(--font-pixel) !important;
+      font-size: 14px;
+      color: #5d4037;
+      text-align: center;
+      margin-bottom: 25px;
+      border-bottom: 2px solid rgba(93, 64, 55, 0.15);
+      padding-bottom: 15px;
+    }
+
+    .filter-group {
+      margin-bottom: 20px;
+    }
+
+    .filter-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 800;
+      color: #8d6e63;
+      font-size: 1rem;
+      text-transform: uppercase;
+    }
+
+    .cartoon-input, .cartoon-select {
+      width: 100%;
+      padding: 12px 16px;
+      border: 3px solid #8d6e63;
+      border-radius: 12px;
+      background: #fff;
+      font-size: 1.1rem;
+      font-family: var(--font-ui);
+      outline: none;
+      color: var(--text-dark);
+    }
+
+    .cartoon-select {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238d6e63' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      background-size: 18px;
+    }
+
+    #smartCountryFilter {
+      width: 100%;
+    }
+
+    #smartCountryFilter .country-select {
+      width: 100%;
+      position: relative;
+    }
+
+    #smartCountryFilter .country-select-btn {
+      width: 100%;
+      padding: 12px 42px 12px 16px;
+      border: 3px solid #8d6e63;
+      border-radius: 12px;
+      background: #fff;
+      color: var(--text-dark);
+      font-size: 1.1rem;
+      font-family: var(--font-ui);
+      font-weight: 700;
+      text-align: left;
+    }
+
+    #smartCountryFilter .country-select-caret {
+      position: absolute;
+      right: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #8d6e63;
+      font-size: 12px;
+      pointer-events: none;
+    }
+
+    #smartCountryFilter .country-select-menu {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      right: 0;
+      z-index: 30;
+      max-height: 220px;
+      overflow-y: auto;
+      border: 3px solid #8d6e63;
+      border-radius: 12px;
+      background: #fff;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      padding: 8px;
+    }
+
+    #smartCountryFilter .country-select:not(.is-open) .country-select-menu {
+      display: none;
+    }
+
+    #smartCountryFilter .country-select.is-open .country-select-menu {
+      display: block;
+    }
+
+    #smartCountryFilter .country-select-option {
+      width: 100%;
+      border: 0;
+      border-radius: 8px;
+      background: transparent;
+      color: var(--text-dark);
+      font-size: 1rem;
+      font-family: var(--font-ui);
+      font-weight: 700;
+      text-align: left;
+      padding: 8px 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+
+    #smartCountryFilter .country-select-option:hover,
+    #smartCountryFilter .country-select-option.is-active {
+      background: rgba(141,110,99,0.12);
+    }
+
+    .reset-button {
+      margin-top: auto;
+      width: 100%;
+      height: 56px;
+      background: #ff8a80;
+      border: 4px solid #2c2118;
+      border-radius: 16px;
+      color: #fff;
+      font-family: var(--font-pixel) !important;
+      font-size: 12px;
+      cursor: pointer;
+      box-shadow: 0 6px 0px #2c2118;
+      transition: all 0.1s;
+    }
+
+    .reset-button:active {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0px #2c2118;
+    }
+
+    /* 滚动条美化 */
+    .video-scroll-region::-webkit-scrollbar { width: 14px; }
+    .video-scroll-region::-webkit-scrollbar-track { background: transparent; }
+    .video-scroll-region::-webkit-scrollbar-thumb { 
+      background: rgba(255,255,255,0.52); 
+      border-radius: 10px;
+      border: 2px solid #1a1617;
+    }
+
+    .filter-content::-webkit-scrollbar { width: 10px; }
+    .filter-content::-webkit-scrollbar-track { background: transparent; }
+    .filter-content::-webkit-scrollbar-thumb {
+      background: rgba(141,110,99,0.42);
+      border-radius: 10px;
+      border: 2px solid rgba(255,255,255,0.6);
+    }
+
+    /* 强制卡片完整展示（避免封面被压扁成条） */
+    .video-scroll-region .video-card {
+      display: flex !important;
+      flex-direction: column !important;
+      min-height: 318px !important;
+      height: auto !important;
+      overflow: hidden !important;
+    }
+
+    .video-scroll-region .video-meta-row {
+      flex: 0 0 auto !important;
+    }
+
+    .video-scroll-region .video-cover-box {
+      width: 100% !important;
+      height: 180px !important;
+      min-height: 180px !important;
+      max-height: 180px !important;
+      flex: 0 0 180px !important;
+      position: relative !important;
+      overflow: hidden !important;
+      background: #302a35 !important;
+    }
+
+    .video-scroll-region .video-cover-image {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover !important;
+      object-position: center center !important;
+      display: block !important;
+    }
+
+    .video-scroll-region .video-cover-title {
+      font-size: 0.95rem !important;
+      line-height: 1.3 !important;
+      max-height: calc(1.3em * 2 + 16px);
+      overflow: hidden;
+    }
+
+    .video-scroll-region .video-person-line {
+      flex: 0 0 auto !important;
+      margin: 0 !important;
+      padding: 10px 12px 12px !important;
+    }
+
+    @media (max-width: 1180px) {
+      .page-shell { grid-template-columns: 1fr; }
+      .filter-panel { max-width: 500px; margin: 0 auto; }
+      .video-scroll-region { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body data-page="video-list">
+
+  <main class="page-shell">
+    <section class="monitor-panel">
+      <div class="monitor-screen">
+        <header class="screen-header">
+          <div class="screen-header-left">
+            <button class="back-btn return-btn" data-back-target="training.html" type="button" aria-label="Return">←</button>
+            <h2 id="modeTitle">LISTENING_AND_UNDERSTAND</h2>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">
+            <div style="font-family: var(--font-pixel); font-size: 10px; color: var(--accent-cyan);">
+              STATUS: ONLINE
+            </div>
+            <div id="resultsCount" style="font-family: var(--font-pixel); font-size: 10px; color: rgba(255,255,255,0.85);">
+              0 videos
+            </div>
+          </div>
+        </header>
+
+        <div class="video-scroll-region" id="videoResultList"></div>
+      </div>
+    </section>
+
+    <aside class="filter-panel">
+      <div class="filter-content">
+        <h3>SEARCH_FILTERS</h3>
+        
+        <div class="filter-group">
+          <label>Video Keyword</label>
+          <input id="smartSearch" type="text" class="cartoon-input" placeholder="Type here...">
+        </div>
+
+        <div class="filter-group">
+          <label>Type</label>
+          <select id="smartType" class="cartoon-select"></select>
+        </div>
+
+        <div class="filter-group">
+          <label>Difficulty</label>
+          <select id="smartDifficulty" class="cartoon-select">
+            <option value="All">Difficulty: All</option>
+            <option>Easy</option>
+            <option>Medium</option>
+            <option>Hard</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label>Time Duration</label>
+          <select id="smartDuration" class="cartoon-select">
+            <option value="All">Duration: All</option>
+            <option value="0-1min">0-1min</option>
+            <option value="1-2min">1-2min</option>
+            <option value="2-3min">2-3min</option>
+          </select>
+        </div>
+
+        <div class="filter-group">
+          <label>Source</label>
+          <select id="smartSource" class="cartoon-select"></select>
+        </div>
+
+        <div class="filter-group">
+          <label>Country</label>
+          <div id="smartCountryFilter"></div>
+        </div>
+
+        <button id="clearSmartFilters" class="reset-button">SYSTEM_RELOAD</button>
+      </div>
+    </aside>
+  </main>
+
+  <script src="practice-data-api.js"></script>
+  <script src="practice-app-api.js"></script>
+</body>
+</html>

@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AcadBeat | Studio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;1,700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../shared-nav.css">
+    <script src="../shared/acadbeat-local-config.js"></script>
+    <style>
+        @font-face {
+            font-family: 'MyfontRegular';
+            src: url('../gameUI_src/Assets/Fonts/Myfont-Regular.ttf') format('truetype');
+            font-display: swap;
+        }
+
+        :root {
+            --bg-color: #f4efff;
+            --primary-color: #facc15;
+            --secondary-color: #5b2a86;
+            --white: #ffffff;
+            --card-bg: rgba(255, 255, 255, 0.68);
+            --panel-border: rgba(91, 42, 134, 0.16);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background:
+                radial-gradient(circle at top, rgba(250, 204, 21, 0.22), transparent 28%),
+                var(--bg-color);
+            color: var(--secondary-color);
+            min-height: 100vh;
+            padding: 0 5% 48px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        html[data-ui="godot"] body {
+            background:
+                linear-gradient(rgba(18, 14, 22, 0.16), rgba(18, 14, 22, 0.16)),
+                url('./assets/studio-godot-bg.png') center top / cover no-repeat fixed,
+                #89797c;
+            color: #f6f3f1;
+        }
+
+        html[data-ui="godot"] *,
+        html[data-ui="godot"] .game-tag,
+        html[data-ui="godot"] .game-link {
+            font-family: 'MyfontRegular', 'Inter', sans-serif;
+        }
+
+        html[data-ui="godot"] body::before,
+        html[data-ui="godot"] body::after {
+            display: none;
+        }
+
+        body::before,
+        body::after {
+            content: "";
+            position: fixed;
+            pointer-events: none;
+            z-index: -1;
+            border-radius: 50%;
+        }
+
+        body::before {
+            width: 52vw;
+            height: 52vw;
+            left: -18vw;
+            top: -18vw;
+            background: radial-gradient(circle, rgba(250, 204, 21, 0.24), transparent 70%);
+            filter: blur(8px);
+            animation: studioFloatA 11s ease-in-out infinite alternate;
+        }
+
+        body::after {
+            width: 40vw;
+            height: 40vw;
+            right: -12vw;
+            bottom: -12vw;
+            background: radial-gradient(circle, rgba(91, 42, 134, 0.26), transparent 68%);
+            filter: blur(10px);
+            animation: studioFloatB 13s ease-in-out infinite alternate;
+        }
+
+        .studio-hero {
+            max-width: 1180px;
+            margin: 256px auto 0;
+            padding: 0;
+            background: transparent;
+            border: 0;
+            box-shadow: none;
+            backdrop-filter: none;
+        }
+
+        .godot-back-btn {
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            z-index: 1000;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            background: rgba(0, 0, 0, 0.56);
+            color: #fff;
+            padding: 8px 14px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+
+        .godot-back-btn:hover {
+            transform: translateY(-1px);
+            background: rgba(0, 0, 0, 0.78);
+        }
+
+        .studio-hero p {
+            color: rgba(91, 42, 134, 0.86);
+            max-width: 880px;
+            line-height: 1.7;
+            font-size: 0.95rem;
+            text-align: center;
+            margin: 0 auto;
+        }
+
+        html[data-ui="godot"] .studio-hero p {
+            color: rgba(255, 246, 240, 0.9);
+            line-height: 1.55;
+            font-size: 1rem;
+        }
+
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            max-width: 1180px;
+            margin: 28px auto 0;
+        }
+
+        .game-card {
+            background: var(--card-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 18px;
+            padding: 26px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            min-height: 280px;
+        }
+
+        html[data-ui="godot"] .game-card {
+            background: rgba(48, 40, 45, 0.76);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 14px 34px rgba(8, 7, 10, 0.24);
+        }
+
+        .game-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 36px rgba(91, 42, 134, 0.16);
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        html[data-ui="godot"] .game-card:hover {
+            background: rgba(64, 53, 60, 0.9);
+            box-shadow: 0 20px 40px rgba(8, 7, 10, 0.38);
+        }
+
+        .game-card {
+            animation: studioCardIn 0.75s ease both;
+        }
+        .game-card:nth-child(2) { animation-delay: 0.12s; }
+        .game-card:nth-child(3) { animation-delay: 0.2s; }
+
+        .game-icon {
+            width: 54px;
+            height: 54px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(250, 204, 21, 0.24);
+            color: var(--secondary-color);
+            font-size: 1.4rem;
+            font-weight: 800;
+        }
+
+        .game-name {
+            font-size: 1.45rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        html[data-ui="godot"] .game-name {
+            color: #f8f7f6;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+        }
+
+        .game-tag {
+            display: inline-flex;
+            width: fit-content;
+            border: 1px solid rgba(91, 42, 134, 0.22);
+            border-radius: 999px;
+            padding: 4px 10px;
+            font-size: 0.72rem;
+            letter-spacing: 0.08rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: rgba(91, 42, 134, 0.78);
+        }
+
+        html[data-ui="godot"] .game-tag {
+            border-color: rgba(0, 223, 205, 0.74);
+            color: #eaf9f8;
+        }
+
+        .game-desc {
+            line-height: 1.65;
+            color: rgba(91, 42, 134, 0.78);
+            font-size: 0.9rem;
+            flex-grow: 1;
+        }
+
+        html[data-ui="godot"] .game-desc {
+            color: rgba(247, 239, 236, 0.9);
+        }
+
+        .game-link {
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--primary-color);
+        }
+
+        html[data-ui="godot"] .game-link {
+            color: #00dfcd;
+        }
+
+        .coming-soon {
+            opacity: 0.76;
+        }
+
+        @media (max-width: 900px) {
+            body {
+                padding: 0 16px 36px;
+            }
+
+            nav {
+                flex-wrap: wrap;
+                justify-content: center;
+                height: auto;
+                margin: 0 -16px;
+                padding: 14px 16px;
+            }
+
+            .nav-menu {
+                width: 100%;
+                justify-content: center;
+                flex-wrap: wrap;
+                gap: 1rem 1.4rem;
+            }
+
+            .studio-hero {
+                margin-top: 220px;
+                padding: 0;
+            }
+        }
+
+        @keyframes studioFloatA {
+            from { transform: translate3d(0, 0, 0) scale(1); }
+            to { transform: translate3d(4vw, 2vh, 0) scale(1.08); }
+        }
+        @keyframes studioFloatB {
+            from { transform: translate3d(0, 0, 0) scale(1); }
+            to { transform: translate3d(-3vw, -2vh, 0) scale(1.1); }
+        }
+        @keyframes studioCardIn {
+            from { opacity: 0; transform: translateY(24px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <button id="godotBackBtn" class="godot-back-btn" type="button" aria-label="Return to Godot">← Return to Godot</button>
+    <section class="studio-hero">
+        <p>Play educational mini-games designed for English learners. Start with Scrabble mode for tactical word play, or explore Dungeons and Dragons for an adventure-style learning challenge.</p>
+    </section>
+
+    <section class="games-grid">
+        <article class="game-card" id="studioScrabbleCard" onclick="window.location.href='./Scrabble/scrabble.html'">
+            <div class="game-icon">SQ</div>
+            <div class="game-name">Scrabble</div>
+            <div class="game-tag">Single Player</div>
+            <p class="game-desc">
+                Classic 15x15 word game with premium squares, rack management, scoring bonuses, and AI opponent.
+            </p>
+            <div class="game-link">Start Playing →</div>
+        </article>
+
+        <article class="game-card" id="studioDnDCard" onclick="window.location.href='./Dungeons-and-Dragons/dist/index.html'">
+            <div class="game-icon">DD</div>
+            <div class="game-name">Dungeons and Dragons</div>
+            <div class="game-tag">Adventure Mode</div>
+            <p class="game-desc">
+                A roguelike English adventure with combat questions, random events, shop upgrades, and boss battles.
+            </p>
+            <div class="game-link">Enter Dungeon →</div>
+        </article>
+
+        <article class="game-card coming-soon" onclick="alert('More games are coming soon in Studio!')">
+            <div class="game-icon">+</div>
+            <div class="game-name">More Games</div>
+            <div class="game-tag">Coming Soon</div>
+            <p class="game-desc">
+                New vocabulary and grammar games will be added in future iterations of the Studio module.
+            </p>
+            <div class="game-link">Stay Tuned →</div>
+        </article>
+    </section>
+
+    <script>
+        function hasGodotCookie() {
+            return document.cookie.split('; ').some(function (c) { return c.startsWith('ui_mode=godot'); });
+        }
+
+        function detectUiMode() {
+            try {
+                if (new URLSearchParams(window.location.search).get('ui') === 'godot') {
+                    return 'godot';
+                }
+            } catch (_e) {}
+            return hasGodotCookie() ? 'godot' : 'classic';
+        }
+
+        function withUiMode(url, mode) {
+            if (mode !== 'godot') return url;
+            try {
+                var u = new URL(url, window.location.href);
+                u.searchParams.set('ui', 'godot');
+                return u.toString();
+            } catch (_e) {
+                var raw = String(url);
+                if (raw.indexOf('ui=godot') !== -1) return raw;
+                return raw + (raw.indexOf('?') === -1 ? '?' : '&') + 'ui=godot';
+            }
+        }
+
+        function applyStudioUiTheme(mode) {
+            document.documentElement.setAttribute('data-ui', mode);
+            if (mode === 'godot') {
+                document.cookie = 'ui_mode=godot; path=/; max-age=2592000';
+            }
+        }
+
+        function setupGodotBackButton() {
+            const backBtn = document.getElementById('godotBackBtn');
+            if (!backBtn) return;
+
+            const L = window.ACADBEAT_LOCAL || {};
+            const fallbackGodotUrl =
+                String(L.godotWebEntryUrl || '').trim() ||
+                (window.location.origin + '/gameUI_src/Release/index.html?ui=godot');
+
+            backBtn.addEventListener('click', function () {
+                if (window.opener && !window.opener.closed) {
+                    try { window.opener.focus(); } catch (_e) {}
+                    window.close();
+                    setTimeout(function () {
+                        if (!document.hidden) window.location.href = fallbackGodotUrl;
+                    }, 250);
+                    return;
+                }
+                if (document.referrer) {
+                    window.location.href = document.referrer;
+                    return;
+                }
+                window.location.href = fallbackGodotUrl;
+            });
+        }
+
+        window.addEventListener('load', () => {
+            const mode = detectUiMode();
+
+            applyStudioUiTheme(mode);
+            setupGodotBackButton();
+
+            const scrabbleCard = document.getElementById('studioScrabbleCard');
+            const dndCard = document.getElementById('studioDnDCard');
+            if (scrabbleCard) {
+                scrabbleCard.onclick = function () {
+                    window.location.href = withUiMode('./Scrabble/scrabble.html', mode);
+                };
+            }
+            if (dndCard) {
+                dndCard.onclick = function () {
+                    window.location.href = withUiMode('./Dungeons-and-Dragons/dist/index.html', mode);
+                };
+            }
+        });
+    </script>
+</body>
+</html>

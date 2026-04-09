@@ -95,7 +95,7 @@
     const technologyOriginlabUrl = options.technologyOriginlabUrl || 'https://www.originlab.com/index.aspx?go=Support/VideoTutorials';
     const technologyDundeeUrl = options.technologyDundeeUrl || `${basePath}dundee.html?from=technology`;
     const studioScrabbleUrl = options.studioScrabbleUrl || `${basePath}Studio/Scrabble/scrabble.html`;
-    const studio2dUrl = options.studio2dUrl || ((L && L.godotWebEntryUrl) ? L.godotWebEntryUrl : `${basePath}gameUI_src/Release/index.html?ui=godot`);
+    const studioDungeonsUrl = options.studioDungeonsUrl || `${basePath}Studio/Dungeons-and-Dragons/dist/index.html`;
     const adminUrl = options.adminUrl || (L && L.adminDistUrl) || `${currentOrigin}/admin_page/dist/index.html`;
     const active = String(options.active || '').toLowerCase();
     const showSwitchButton = options.showSwitchButton !== undefined
@@ -126,19 +126,19 @@
           <div class="nav-dropdown">
             <a class="nav-item" data-nav="technology" href="${technologyUrl}">Technology</a>
             <div class="nav-submenu">
+              <a class="nav-subitem" href="${technologyDundeeUrl}">Dundee</a>
               <a class="nav-subitem" href="${technologyTeamsUrl}" target="_blank" rel="noopener noreferrer">Teams</a>
               <a class="nav-subitem" href="${technologyGithubUrl}" target="_blank" rel="noopener noreferrer">Github</a>
               <a class="nav-subitem" href="${technologyMatlabUrl}" target="_blank" rel="noopener noreferrer">Matlab</a>
               <a class="nav-subitem" href="${technologyAutocadUrl}" target="_blank" rel="noopener noreferrer">AutoCAD</a>
               <a class="nav-subitem" href="${technologyOriginlabUrl}" target="_blank" rel="noopener noreferrer">Originlab</a>
-              <a class="nav-subitem" href="${technologyDundeeUrl}">My Dundee</a>
             </div>
           </div>
           <div class="nav-dropdown">
             <a class="nav-item" data-nav="studio" href="${studioUrl}">Studio</a>
             <div class="nav-submenu">
               <a class="nav-subitem" href="${studioScrabbleUrl}">Scrabble</a>
-              <a class="nav-subitem nav-subitem--disabled" href="javascript:void(0)" aria-disabled="true" tabindex="-1">2D</a>
+              <a class="nav-subitem" href="${studioDungeonsUrl}">Dungeons &amp; Dragons</a>
             </div>
           </div>
           <a class="nav-item" data-nav="social" href="${socialUrl}">Social</a>

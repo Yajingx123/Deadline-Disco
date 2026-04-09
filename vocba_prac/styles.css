@@ -308,14 +308,10 @@ body.with-acadbeat-shared-nav .page__main {
   margin: 68px auto 28px;
   padding: 26px 24px;
   border-radius: 28px;
-  border: 1px solid rgba(91,42,134,.16);
-  background:
-    linear-gradient(160deg, rgba(255,255,255,.88), rgba(246,240,255,.66)),
-    linear-gradient(180deg, rgba(255,255,255,.2), rgba(255,255,255,0));
-  box-shadow:
-    0 26px 58px rgba(91,42,134,.14),
-    inset 0 1px 0 rgba(255,255,255,.92);
-  backdrop-filter: blur(12px);
+  border: none;
+  background: transparent;
+  box-shadow: none;
+  backdrop-filter: none;
 }
 
 .modeBackBtn{

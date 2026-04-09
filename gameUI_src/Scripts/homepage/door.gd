@@ -6,8 +6,8 @@ extends Area2D
 @export var tip_text: String = "按 Enter 进门"
 @export var door_id: String = "door_default"
 
-const MAIN_FORUM_URL := "http://127.0.0.1:8001/newUI/shell/forum/shell.html"
-const MAIN_STUDIO_URL := "http://127.0.0.1:8001/Studio/studio.html?ui=godot"
+const MAIN_FORUM_URL := "http://127.0.0.1:8001/forum-project-v2/dist/index.html?ui=godot"
+const MAIN_STUDIO_URL := "http://127.0.0.1:8001/Studio/studio-godot.html?ui=godot"
 const MAIN_TECH_URL := "http://127.0.0.1:8001/technology1.html?ui=godot"
 const MAIN_COMPETITION_URL := "http://127.0.0.1:8001/home.html?module=Studio&ui=godot"
 
@@ -50,8 +50,11 @@ func _unhandled_input(event: InputEvent) -> void:
 		_activate_door()
 
 func _activate_door() -> void:
+	var normalized_door_id := String(door_id).strip_edges().to_lower()
 	var normalized_tip := String(tip_text).strip_edges().to_lower()
-	var target_url := _target_url_for_tip(normalized_tip)
+	var target_url := _target_url_for_door_id(normalized_door_id)
+	if target_url == "":
+		target_url = _target_url_for_tip(normalized_tip)
 	if target_url != "":
 		ExternalLink.open_in_new_tab(target_url)
 	else:
@@ -68,13 +71,26 @@ func _is_activate_key_event(event: InputEvent) -> bool:
 		return key_event.is_action_pressed("enter") or key_event.is_action_pressed("ui_accept") or key_event.keycode == KEY_ENTER or key_event.keycode == KEY_KP_ENTER
 	return event.is_action_pressed("enter") or event.is_action_pressed("ui_accept")
 
+func _target_url_for_door_id(normalized_door_id: String) -> String:
+	match normalized_door_id:
+		"studio", "door2", "door8":
+			return MAIN_STUDIO_URL
+		"technology", "door3", "door10":
+			return MAIN_TECH_URL
+		"forum", "door4", "door5":
+			return MAIN_FORUM_URL
+		"competition", "ranking", "door6", "door9":
+			return MAIN_COMPETITION_URL
+		_:
+			return ""
+
 func _target_url_for_tip(normalized_tip: String) -> String:
 	match normalized_tip:
 		"forum":
 			return MAIN_FORUM_URL
 		"game studio":
 			return MAIN_STUDIO_URL
-		"technic", "technologies":
+		"technology", "technologies", "technic":
 			return MAIN_TECH_URL
 		"team competition", "teamwork":
 			return MAIN_COMPETITION_URL
