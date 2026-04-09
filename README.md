@@ -7,10 +7,10 @@
 The repository has evolved beyond the historical module list below.
 For the current runnable architecture and startup topology, use:
 
-- `docs/ARCHITECTURE.md`
-- `docs/REPO_REORG_PLAN.md`
+- `doc/docs/ARCHITECTURE.md`
+- `doc/docs/REPO_REORG_PLAN.md`
 
-If this `README.md` conflicts with `docs/ARCHITECTURE.md`, treat `docs/ARCHITECTURE.md` as the source of truth.
+If this `README.md` conflicts with `doc/docs/ARCHITECTURE.md`, treat `doc/docs/ARCHITECTURE.md` as the source of truth.
 
 ## Current Quick Start (Recommended)
 
