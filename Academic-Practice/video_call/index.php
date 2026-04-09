@@ -12,6 +12,7 @@
   <script src="../../shared/acadbeat-local-config.js"></script>
   <link rel="stylesheet" href="../practice-style.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <link rel="stylesheet" href="../acadbeat-global.css">
   <style>html.acadbeat-role-guard body{visibility:hidden}</style>
   <script>
     document.documentElement.classList.add('acadbeat-role-guard');
@@ -165,13 +166,15 @@
 
   <style>
     #voiceRoomOpenCreateBtn {
-      background: rgba(58, 78, 107, 0.92);
-      border-color: rgba(58, 78, 107, 0.92);
-      color: #f6f1ea;
+      background: linear-gradient(135deg, #5b2a86 0%, #6a33a0 100%);
+      border-color: rgba(91, 42, 134, 0.9);
+      color: #fff8ea;
     }
 
     #voiceRoomRefreshBtn {
-      background: rgba(255, 255, 255, 0.74);
+      background: rgba(255, 255, 255, 0.82);
+      border-color: rgba(91, 42, 134, 0.14);
+      color: rgba(91, 42, 134, 0.86);
     }
 
     .voice-room-card p.voice-room-card-host {
@@ -206,11 +209,13 @@
     }
 
     .voice-room-toast.is-error {
-      background: rgba(145, 74, 74, 0.94);
+      background: rgba(184, 76, 92, 0.94);
+      color: #fff;
     }
 
     .voice-room-toast.is-success {
-      background: rgba(58, 78, 107, 0.92);
+      background: linear-gradient(135deg, #5b2a86 0%, #6a33a0 100%);
+      color: #fff8ea;
     }
 
     .voice-room-modal-btn {
@@ -218,8 +223,8 @@
       padding: 0 16px;
       border: 0;
       border-radius: 999px;
-      background: rgba(58, 78, 107, 0.92);
-      color: #f6f1ea;
+      background: linear-gradient(135deg, #5b2a86 0%, #6a33a0 100%);
+      color: #fff8ea;
       font-size: 0.86rem;
       font-weight: 800;
       letter-spacing: 0.08em;
@@ -230,7 +235,7 @@
     .voice-room-form-field input:disabled {
       opacity: 0.82;
       cursor: default;
-      background: rgba(244, 241, 236, 0.9);
+      background: rgba(248, 244, 255, 0.92);
     }
 
     .voice-room-form-field.hidden {
@@ -408,15 +413,15 @@
       width: 16px;
       height: 16px;
       border-radius: 50%;
-      border: 2px solid rgba(58, 78, 107, 0.34);
+      border: 2px solid rgba(91, 42, 134, 0.35);
       background: #fff;
       box-shadow: inset 0 0 0 3px #fff;
       transition: all 0.16s ease;
     }
 
     .voice-room-radio input:checked + .voice-room-radio__dot {
-      border-color: rgba(58, 78, 107, 0.92);
-      background: rgba(58, 78, 107, 0.92);
+      border-color: #5b2a86;
+      background: #5b2a86;
     }
 
     .voice-room-radio__label {
@@ -438,10 +443,10 @@
       max-height: 180px;
       overflow: auto;
       padding: 10px;
-      border: 1px solid rgba(58, 78, 107, 0.12);
+      border: 1px solid rgba(91, 42, 134, 0.14);
       border-radius: 16px;
       background: rgba(255, 255, 255, 0.92);
-      box-shadow: 0 16px 28px rgba(58, 78, 107, 0.08);
+      box-shadow: 0 16px 28px rgba(91, 42, 134, 0.1);
     }
 
     .voice-room-invite-suggestions.hidden {
@@ -454,7 +459,7 @@
       justify-content: space-between;
       gap: 10px;
       padding: 10px 12px;
-      border: 1px solid rgba(58, 78, 107, 0.08);
+      border: 1px solid rgba(91, 42, 134, 0.1);
       border-radius: 12px;
       background: rgba(255, 255, 255, 0.88);
       color: var(--secondary-color);
@@ -471,8 +476,8 @@
     }
 
     .voice-room-invite-option:hover {
-      background: rgba(155, 183, 212, 0.14);
-      border-color: rgba(155, 183, 212, 0.36);
+      background: rgba(250, 204, 21, 0.16);
+      border-color: rgba(91, 42, 134, 0.22);
     }
 
     @media (max-width: 900px) {

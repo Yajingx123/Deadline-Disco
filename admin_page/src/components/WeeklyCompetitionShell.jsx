@@ -39,16 +39,16 @@ const styles = {
   hero: {
     padding: '28px 30px',
     borderRadius: '28px',
-    background: 'linear-gradient(135deg, rgba(255,255,255,0.94), rgba(244,241,234,0.94))',
-    border: '1px solid rgba(58, 78, 107, 0.1)',
-    boxShadow: '0 24px 60px rgba(58, 78, 107, 0.08)',
+    background: 'linear-gradient(135deg, rgba(255,255,255,0.94), rgba(248,244,255,0.94))',
+    border: '1px solid rgba(91, 42, 134, 0.1)',
+    boxShadow: '0 24px 60px rgba(91, 42, 134, 0.08)',
     marginBottom: '24px',
   },
   eyebrow: {
     fontSize: '0.78rem',
     letterSpacing: '0.16rem',
     textTransform: 'uppercase',
-    color: 'rgba(58, 78, 107, 0.58)',
+    color: 'rgba(91, 42, 134, 0.58)',
     marginBottom: '10px',
   },
   title: {
@@ -71,9 +71,9 @@ const styles = {
   card: {
     borderRadius: '24px',
     background: 'rgba(255,255,255,0.92)',
-    border: '1px solid rgba(58, 78, 107, 0.1)',
+    border: '1px solid rgba(91, 42, 134, 0.1)',
     padding: '24px',
-    boxShadow: '0 18px 40px rgba(58, 78, 107, 0.06)',
+    boxShadow: '0 18px 40px rgba(91, 42, 134, 0.06)',
   },
   cardTitle: {
     margin: '0 0 10px',

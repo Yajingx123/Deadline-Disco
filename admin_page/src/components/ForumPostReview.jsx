@@ -325,7 +325,7 @@ const styles = {
     fontWeight: 700,
     letterSpacing: '0.24rem',
     textTransform: 'uppercase',
-    color: 'rgba(58, 78, 107, 0.45)',
+    color: 'rgba(91, 42, 134, 0.45)',
     marginBottom: '12px'
   },
   title: {
@@ -340,7 +340,7 @@ const styles = {
   subtitle: {
     margin: 0,
     maxWidth: '620px',
-    color: 'rgba(58, 78, 107, 0.74)',
+    color: 'rgba(91, 42, 134, 0.74)',
     fontSize: '0.95rem',
     lineHeight: 1.6
   },
@@ -357,7 +357,7 @@ const styles = {
   },
   filterButton: {
     padding: '12px 22px',
-    backgroundColor: 'rgba(155, 183, 212, 0.8)',
+    backgroundColor: 'rgba(250, 204, 21, 0.8)',
     color: 'var(--white)',
     border: 'none',
     borderRadius: '8px',
@@ -365,12 +365,12 @@ const styles = {
     fontWeight: 600,
     fontSize: '0.85rem',
     transition: 'all 0.3s ease',
-    boxShadow: '0 14px 28px rgba(58, 78, 107, 0.12)',
+    boxShadow: '0 14px 28px rgba(91, 42, 134, 0.12)',
     fontFamily: 'Inter, sans-serif',
     flex: 1
   },
   activeFilter: {
-    backgroundColor: 'rgba(58, 78, 107, 0.94)'
+    backgroundColor: 'rgba(91, 42, 134, 0.94)'
   },
   content: {
     maxWidth: '1280px',
@@ -387,8 +387,8 @@ const styles = {
     padding: '10px 14px',
     borderRadius: '999px',
     background: 'rgba(255, 255, 255, 0.82)',
-    border: '1px solid rgba(58, 78, 107, 0.08)',
-    color: 'rgba(58, 78, 107, 0.72)',
+    border: '1px solid rgba(91, 42, 134, 0.08)',
+    color: 'rgba(91, 42, 134, 0.72)',
     fontSize: '0.82rem',
     fontWeight: 700
   },
@@ -403,15 +403,15 @@ const styles = {
   mainContent: {
     minWidth: 0,
     background: 'rgba(255, 255, 255, 0.88)',
-    border: '1px solid rgba(58, 78, 107, 0.08)',
+    border: '1px solid rgba(91, 42, 134, 0.08)',
     borderRadius: '26px',
     padding: '12px 18px',
-    boxShadow: '0 18px 44px rgba(58, 78, 107, 0.06)'
+    boxShadow: '0 18px 44px rgba(91, 42, 134, 0.06)'
   },
   emptyState: {
     textAlign: 'center',
     padding: '48px',
-    color: 'rgba(58, 78, 107, 0.5)'
+    color: 'rgba(91, 42, 134, 0.5)'
   },
   emptyText: {
     fontSize: '1rem'
@@ -423,7 +423,7 @@ const styles = {
     marginBottom: 0,
     boxShadow: 'none',
     border: 0,
-    borderBottom: '1px solid rgba(58, 78, 107, 0.08)',
+    borderBottom: '1px solid rgba(91, 42, 134, 0.08)',
     display: 'flex',
     alignItems: 'flex-start',
     gap: '18px',
@@ -439,14 +439,14 @@ const styles = {
     width: '42px',
     height: '42px',
     borderRadius: '50%',
-    background: 'linear-gradient(135deg, #9BB7D4, #c7d5e5)',
+    background: 'linear-gradient(135deg, #5b2a86, #7c3aed)',
     color: '#fff',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     fontSize: '0.92rem',
     fontWeight: 700,
-    boxShadow: '0 10px 20px rgba(155, 183, 212, 0.22)'
+    boxShadow: '0 10px 20px rgba(250, 204, 21, 0.22)'
   },
   postMain: {
     flex: 1,
@@ -466,7 +466,7 @@ const styles = {
   },
   postAuthorTime: {
     fontSize: '0.78rem',
-    color: 'rgba(58, 78, 107, 0.6)'
+    color: 'rgba(91, 42, 134, 0.6)'
   },
   statusBadge: {
     padding: '4px 10px',
@@ -498,7 +498,7 @@ const styles = {
   },
   postSummary: {
     fontSize: '0.88rem',
-    color: 'rgba(58, 78, 107, 0.74)',
+    color: 'rgba(91, 42, 134, 0.74)',
     lineHeight: 1.55,
     margin: 0,
     display: '-webkit-box',
@@ -522,7 +522,7 @@ const styles = {
   tagBadge: {
     padding: '4px 10px',
     borderRadius: '10px',
-    backgroundColor: 'rgba(155, 183, 212, 0.18)',
+    backgroundColor: 'rgba(250, 204, 21, 0.18)',
     color: 'var(--secondary-color)',
     fontSize: '0.72rem',
     fontWeight: 600
@@ -530,8 +530,8 @@ const styles = {
   typeBadge: {
     padding: '4px 10px',
     borderRadius: '10px',
-    backgroundColor: 'rgba(58, 78, 107, 0.08)',
-    color: 'rgba(58, 78, 107, 0.6)',
+    backgroundColor: 'rgba(91, 42, 134, 0.08)',
+    color: 'rgba(91, 42, 134, 0.6)',
     fontSize: '0.72rem',
     fontWeight: 600,
     textTransform: 'lowercase'
@@ -546,12 +546,12 @@ const styles = {
     justifyContent: 'space-between',
     gap: '10px',
     fontSize: '0.85rem',
-    color: 'rgba(58, 78, 107, 0.7)',
+    color: 'rgba(91, 42, 134, 0.7)',
     fontWeight: 600,
     minWidth: '120px'
   },
   statLabel: {
-    color: 'rgba(58, 78, 107, 0.55)'
+    color: 'rgba(91, 42, 134, 0.55)'
   },
   actionButtons: {
     display: 'flex',
@@ -598,7 +598,7 @@ const styles = {
     position: 'fixed',
     inset: 0,
     zIndex: 1200,
-    background: 'rgba(28, 35, 49, 0.42)',
+    background: 'rgba(45, 18, 82, 0.45)',
     backdropFilter: 'blur(6px)',
     display: 'flex',
     alignItems: 'center',
@@ -611,7 +611,7 @@ const styles = {
     overflow: 'auto',
     borderRadius: '28px',
     background: 'rgba(255,255,255,0.98)',
-    boxShadow: '0 28px 64px rgba(58, 78, 107, 0.18)',
+    boxShadow: '0 28px 64px rgba(91, 42, 134, 0.18)',
     padding: '24px'
   },
   previewHeader: {
@@ -626,7 +626,7 @@ const styles = {
     fontWeight: 800,
     letterSpacing: '0.16em',
     textTransform: 'uppercase',
-    color: 'rgba(58, 78, 107, 0.48)',
+    color: 'rgba(91, 42, 134, 0.48)',
     marginBottom: '10px'
   },
   previewTitle: {
@@ -640,14 +640,14 @@ const styles = {
     alignItems: 'center',
     gap: '10px',
     flexWrap: 'wrap',
-    color: 'rgba(58, 78, 107, 0.62)',
+    color: 'rgba(91, 42, 134, 0.62)',
     fontSize: '0.84rem'
   },
   previewClose: {
     minHeight: '40px',
     padding: '0 16px',
     borderRadius: '999px',
-    border: '1px solid rgba(58, 78, 107, 0.14)',
+    border: '1px solid rgba(91, 42, 134, 0.14)',
     background: 'rgba(255,255,255,0.88)',
     color: 'var(--secondary-color)',
     fontSize: '0.82rem',
@@ -662,11 +662,11 @@ const styles = {
     marginBottom: '18px'
   },
   previewBody: {
-    border: '1px solid rgba(58, 78, 107, 0.08)',
+    border: '1px solid rgba(91, 42, 134, 0.08)',
     borderRadius: '20px',
-    background: 'rgba(247, 244, 239, 0.62)',
+    background: 'rgba(248, 244, 255, 0.72)',
     padding: '18px',
-    color: 'rgba(58, 78, 107, 0.86)',
+    color: 'rgba(91, 42, 134, 0.86)',
     fontSize: '0.94rem',
     lineHeight: 1.7
   },
@@ -675,7 +675,7 @@ const styles = {
     gap: '18px',
     flexWrap: 'wrap',
     marginTop: '16px',
-    color: 'rgba(58, 78, 107, 0.62)',
+    color: 'rgba(91, 42, 134, 0.62)',
     fontSize: '0.82rem',
     fontWeight: 700
   }
