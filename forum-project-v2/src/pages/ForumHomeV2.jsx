@@ -221,6 +221,13 @@ export default function ForumHomeV2() {
     window.history.replaceState({}, '', `${window.location.pathname}${queryString ? `?${queryString}` : ''}`)
   }
 
+  const handleBackToHub = () => {
+    const params = new URLSearchParams(window.location.search)
+    const ui = params.get('ui')
+    const target = ui ? `/forum-gate.html?ui=${encodeURIComponent(ui)}` : '/forum-gate.html'
+    window.location.href = target
+  }
+
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     const postId = Number(params.get('postId') || 0)
@@ -251,6 +258,17 @@ export default function ForumHomeV2() {
         </div>
       ) : (
         <div className={`v2-stage${viewMode === 'favorites' ? ' v2-stage--mine' : ''}`}>
+          {viewMode === 'all' ? (
+            <button
+              type="button"
+              className="v2-back-btn v2-back-btn--global"
+              aria-label="Back to forum hub"
+              onClick={handleBackToHub}
+            >
+              <span className="v2-back-btn__icon" />
+            </button>
+          ) : null}
+
           {viewMode === 'favorites' ? (
             <>
               <button
