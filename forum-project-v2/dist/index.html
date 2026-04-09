@@ -10,5 +10,22 @@
   </head>
   <body>
     <div id="root"></div>
+    <script>
+      (function bindGodotBackOverride() {
+        var params = new URLSearchParams(window.location.search);
+        if (params.get('ui') !== 'godot') return;
+        document.addEventListener('click', function (event) {
+          var btn = event.target && event.target.closest
+            ? event.target.closest('.v2-back-btn--global')
+            : null;
+          if (!btn || btn.classList.contains('v2-back-btn--favorites')) return;
+          event.preventDefault();
+          event.stopPropagation();
+          var L = window.ACADBEAT_LOCAL || {};
+          var target = String(L.godotWebEntryUrl || '').trim() || (window.location.origin + '/gameUI_src/Release/index.html?ui=godot');
+          window.location.href = target;
+        }, true);
+      })();
+    </script>
   </body>
 </html>

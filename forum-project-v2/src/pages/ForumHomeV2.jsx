@@ -224,7 +224,10 @@ export default function ForumHomeV2() {
   const handleBackToHub = () => {
     const params = new URLSearchParams(window.location.search)
     const ui = params.get('ui')
-    const target = ui ? `/forum-gate.html?ui=${encodeURIComponent(ui)}` : '/forum-gate.html'
+    const L = (typeof window !== 'undefined' && window.ACADBEAT_LOCAL) ? window.ACADBEAT_LOCAL : {}
+    const target = ui === 'godot'
+      ? (L.godotWebEntryUrl || `${window.location.origin}/gameUI_src/Release/index.html?ui=godot`)
+      : (ui ? `/forum-gate.html?ui=${encodeURIComponent(ui)}` : '/forum-gate.html')
     window.location.href = target
   }
 

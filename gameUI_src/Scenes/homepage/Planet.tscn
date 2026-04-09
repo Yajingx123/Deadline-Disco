@@ -64,6 +64,7 @@ z_index = 4
 position = Vector2(117.36163, 339.3689)
 rotation = -3.459471
 scale = Vector2(0.507, 0.507)
+script = ExtResource("3_7cdp5")
 tip_text = "Academic Practice"
 
 [node name="Door8" parent="." unique_id=1322085135 instance=ExtResource("2_r86au")]
