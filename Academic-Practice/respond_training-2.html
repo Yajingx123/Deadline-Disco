@@ -240,6 +240,7 @@
       border: 4px solid #fff;
       border-radius: 32px;
       padding: 40px 30px;
+      margin-top: 88px;
       box-shadow: 
         0 20px 40px rgba(0,0,0,0.3),
         inset 0 0 0 2px rgba(126, 245, 222, 0.15);
@@ -328,20 +329,29 @@
     }
 
     .upload-btn {
-      width: 100%;
-      height: 60px;
+      width: min(280px, 92%);
+      height: 52px;
       background: #ff8a80;
       border: 4px solid #2c2118;
-      border-radius: 16px;
+      border-radius: 14px;
       color: #fff;
       font-family: var(--font-pixel) !important;
-      font-size: 12px;
+      font-size: 11px;
+      letter-spacing: 0.02em;
       cursor: pointer;
       box-shadow: 0 6px 0px #2c2118;
       transition: all 0.1s;
     }
 
     .upload-btn:active { transform: translateY(4px); box-shadow: 0 2px 0px #2c2118; }
+
+    .action-btn-stack {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      margin-top: 4px;
+    }
 
     .feedback-msg {
       text-align: center;
@@ -398,7 +408,7 @@
 
       <audio id="respondPlayback" controls></audio>
 
-      <div style="display: flex; flex-direction: column; gap: 10px;">
+      <div class="action-btn-stack">
         <button class="upload-btn" id="respondSaveBtn">UPLOAD_TO_CLOUD</button>
         <button class="upload-btn" id="respondShareBtn" type="button">SHARE</button>
         <span id="respondSaveError" class="hidden" style="color:#ff8a80; font-size:12px; text-align:center;">Error: No Recording Detected</span>

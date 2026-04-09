@@ -3,6 +3,7 @@ class TeamRanking {
     this.currentUser = null;
     this.teamData = null;
     this.rankingData = [];
+    this.guideRunnerRef = null;
     this.init();
   }
 
@@ -14,6 +15,8 @@ class TeamRanking {
     }
     this.renderMyTeam();
     this.renderRanking();
+    this.addDataGuideAttributes();
+    this.initGuideButton();
   }
 
   async getUserInfo() {
@@ -266,6 +269,106 @@ class TeamRanking {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+  }
+
+  getGuideUserId() {
+    return this.currentUser?.user_id || this.currentUser?.id || this.currentUser?.username || 'guest';
+  }
+
+  startRankingGuide(force = false) {
+    if (!window.AcadBeatGuide || !this.currentUser) {
+      return;
+    }
+
+    const guideKey = 'ranking-overview-v1';
+    const userId = this.getGuideUserId();
+    if (!force && window.AcadBeatGuide.hasSeen(guideKey, userId)) {
+      return;
+    }
+
+    window.setTimeout(() => {
+      if (this.guideRunnerRef) {
+        this.guideRunnerRef.stop(false);
+      }
+      const runner = window.AcadBeatGuide.create({
+        guideKey,
+        userId,
+        steps: [
+  {
+    target: '[data-guide-rank="my-team"]',
+    placement: 'right',
+    title: 'Step 1: My Team',
+    content: 'This section shows your team information, members, and progress.',
+  },
+  {
+    target: '[data-guide-rank="challenge-btn"]',
+    placement: 'bottom',
+    requireClick: true,
+    title: 'Step 2: Weekly Challenge',
+    content: 'Click here to join or create a team for the weekly challenge.',
+    beforeEnter: () => {
+      // 确保challenge按钮在视口中
+      const challengeBtn = document.querySelector('[data-guide-rank="challenge-btn"]');
+      if (challengeBtn) {
+        challengeBtn.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+      }
+    }
+  },
+  {
+    target: () => document.querySelector('.challenge-panel-title') || document.querySelector('.challenge-hero'),
+    placement: 'bottom',
+    title: 'Step 3: Team Formation',
+    content: 'Here you can form a 4-person team for the challenge.',
+    onNext: () => {
+      // 直接关闭challenge面板
+      if (window.toggleTeamModal) {
+        window.toggleTeamModal(false);
+      }
+    }
+  },
+  {
+    target: '[data-guide-rank="ranking-list"]',
+    placement: 'left',
+    title: 'Step 4: Team Rankings',
+    content: 'See how your team ranks against others here.',
+  },
+  {
+    target: '[data-guide-rank="guide-btn"]',
+    placement: 'bottom',
+    title: 'Step 5: Guide Button',
+    content: 'Click the guide button anytime to see this tutorial again.',
+  },
+],
+      });
+      this.guideRunnerRef = runner;
+      runner.start();
+    }, 260);
+  }
+
+  initGuideButton() {
+    const guideBtn = document.getElementById('rankGuideBtn');
+    if (guideBtn) {
+      guideBtn.addEventListener('click', () => {
+        this.startRankingGuide(true);
+      });
+    }
+  }
+
+  addDataGuideAttributes() {
+    const myTeamCard = document.querySelector('.my-team-card');
+    if (myTeamCard) {
+      myTeamCard.setAttribute('data-guide-rank', 'my-team');
+    }
+
+    const progressItems = document.querySelectorAll('.team-progress');
+    progressItems.forEach((item, index) => {
+      item.setAttribute('data-guide-rank', 'progress');
+    });
+
+    const rankingList = document.querySelector('.ranking-list');
+    if (rankingList) {
+      rankingList.setAttribute('data-guide-rank', 'ranking-list');
+    }
   }
 }
 

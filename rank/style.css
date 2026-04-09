@@ -71,7 +71,6 @@
   --shadow-md: 0 4px 6px -1px rgba(91, 42, 134, 0.14), 0 2px 4px -1px rgba(91, 42, 134, 0.1);
   --shadow-lg: 0 10px 15px -3px rgba(91, 42, 134, 0.16), 0 4px 6px -2px rgba(91, 42, 134, 0.1);
   --border-radius: 8px;
-  --transition: all 0.3s ease;
 }
 
 * {
@@ -105,7 +104,6 @@ body::before {
   left: -16vw;
   top: -18vw;
   background: radial-gradient(circle, rgba(250, 204, 21, 0.26), transparent 72%);
-  animation: rankDriftA 11s ease-in-out infinite alternate;
 }
 
 body::after {
@@ -114,7 +112,6 @@ body::after {
   right: -12vw;
   bottom: -14vw;
   background: radial-gradient(circle, rgba(91, 42, 134, 0.24), transparent 72%);
-  animation: rankDriftB 13s ease-in-out infinite alternate;
 }
 
 /* Floating back to competition gate (replaces top breadcrumb bar) */
@@ -135,7 +132,6 @@ body::after {
   font-size: 0.88rem;
   font-weight: 700;
   text-decoration: none;
-  transition: var(--transition);
 }
 
 .rank-back-float:hover {
@@ -165,37 +161,19 @@ body::after {
   grid-template-columns: 480px 1fr;
   gap: 24px;
   align-items: start;
-  opacity: 0;
-  transform: translateY(20px);
-  animation: fadeInUp 0.8s ease-out forwards;
-  animation-delay: 0.2s;
-}
-
-/* Animation Keyframes */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* Staggered Animation for Child Elements */
 .my-team-card {
-  animation: fadeInUp 0.8s ease-out forwards;
-  animation-delay: 0.4s;
-  opacity: 0;
-  transform: translateY(20px);
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .ranking-list {
-  animation: fadeInUp 0.8s ease-out forwards;
-  animation-delay: 0.6s;
-  opacity: 0;
-  transform: translateY(20px);
+  opacity: 1;
+  transform: translateY(0);
 }
 
 /* Header Styles */
@@ -203,30 +181,8 @@ body::after {
   text-align: center;
   margin-bottom: 32px;
   padding: 0 24px;
-  opacity: 0;
-  transform: translateY(-20px);
-  animation: fadeInDown 0.8s ease-out forwards;
-}
-
-@keyframes fadeInDown {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes rankDriftA {
-  from { transform: translate3d(0, 0, 0) scale(1); }
-  to { transform: translate3d(4vw, 2vh, 0) scale(1.08); }
-}
-
-@keyframes rankDriftB {
-  from { transform: translate3d(0, 0, 0) scale(1); }
-  to { transform: translate3d(-3vw, -2vh, 0) scale(1.1); }
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .ranking-header h1 {
@@ -267,6 +223,35 @@ body::after {
   border: none;
   font: inherit;
   cursor: pointer;
+}
+
+.ranking-header .rank-guide-btn {
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  padding: 0;
+  border-radius: 50%;
+  font-size: 18px;
+  font-weight: bold;
+  background: rgba(255, 255, 255, 0.9);
+  color: #3a3a3a;
+  border: 1px solid #e0e0e0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.ranking-header .rank-guide-btn:hover {
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+
+.ranking-header .rank-guide-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* My Team Card */
@@ -337,7 +322,6 @@ body::after {
   gap: 16px;
   padding: 20px;
   border-bottom: 1px solid var(--border-color);
-  transition: var(--transition);
   align-items: center;
 }
 
@@ -586,7 +570,6 @@ body::after {
   height: 100%;
   background: var(--secondary-color);
   border-radius: 4px;
-  transition: width 0.3s ease;
 }
 
 .progress-points {
@@ -626,7 +609,6 @@ body::after {
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  transition: var(--transition);
   text-decoration: none;
 }
 
@@ -653,12 +635,6 @@ body::after {
   border: 3px solid #f3f3f3;
   border-top: 3px solid var(--primary-color);
   border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
 }
 
 /* Responsive Design */

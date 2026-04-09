@@ -24,7 +24,7 @@
 
 .v2-postdetail-block {
   border-radius: 0;
-  border: 1px solid rgba(100, 83, 64, 0.3);
+  border: none;
   background-color: transparent;
   background-size: 100% 100%;
   background-position: center;
@@ -65,6 +65,28 @@
   margin-top: 14px;
   display: flex;
   gap: 14px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.v2-postdetail-action {
+  border: none;
+  background: rgba(255, 255, 255, 0.55);
+  color: #3b3128;
+  border-radius: 0;
+  padding: 4px 10px;
+  font: inherit;
+  cursor: pointer;
+}
+
+.v2-postdetail-action.is-active {
+  border-color: transparent;
+  background: rgba(26, 110, 91, 0.14);
+}
+
+.v2-postdetail-action:disabled {
+  opacity: 0.55;
+  cursor: default;
 }
 
 .v2-postdetail-comments-title {
@@ -72,7 +94,9 @@
 }
 
 .v2-postdetail-comments-list {
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
   gap: 10px;
   min-height: 0;
   overflow-y: auto;
@@ -80,7 +104,7 @@
 }
 
 .v2-postdetail-comment {
-  border: 1px solid rgba(100, 83, 64, 0.28);
+  border: none;
   border-radius: 0;
   padding: 12px;
   background: rgba(255, 255, 255, 0.4);
@@ -108,7 +132,7 @@
   width: 78px;
   height: 78px;
   border-radius: 0;
-  border: 1px solid rgba(90, 75, 59, 0.32);
+  border: none;
   background-color: transparent;
   background-image: var(--detail-back-btn-image);
   background-size: 100% 100%;
@@ -125,7 +149,7 @@
   width: 19vw;
   min-width: 230px;
   height: 53.333vh;
-  border: 1px solid rgba(100, 83, 64, 0.45);
+  border: none;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
   background-color: transparent;
@@ -154,7 +178,7 @@
   height: 52px;
   transform: translate(-50%, -50%);
   border-radius: 0;
-  border: 1px solid rgba(90, 75, 59, 0.32);
+  border: none;
   background-color: transparent;
   background-image: var(--detail-reply-btn-image);
   background-size: 100% 100%;
