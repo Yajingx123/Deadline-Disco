@@ -11,20 +11,6 @@
   <script src="../shared/acadbeat-local-config.js"></script>
   <link rel="stylesheet" href="acadbeat-global.css">
   <link rel="stylesheet" href="practice-style.css">
-  <script>
-    (function () {
-      var params = new URLSearchParams(window.location.search);
-      var uiParam = params.get('ui');
-      if (uiParam !== 'godot') {
-        return;
-      }
-      var mode = params.get('mode') === 'respond' ? 'respond' : 'understand';
-      var target = new URL('../listening-2.html', window.location.href);
-      target.searchParams.set('mode', mode);
-      target.searchParams.set('ui', 'godot');
-      window.location.replace(target.toString());
-    })();
-  </script>
 </head>
 <body data-page="video-list">
   <script>
@@ -161,28 +147,25 @@
   <script src="practice-app-api.js"></script>
   <script>
     window.addEventListener('load', () => {
-      const uiGodot = new URLSearchParams(location.search).get('ui') === 'godot';
-      if (!uiGodot) {
-        const L = window.ACADBEAT_LOCAL || {};
-        const loginUrl = '../home.html?login=1';
-        window.initializeAcadBeatNav({
-          mountId: 'acadbeatNav',
-          basePath: '../',
-          active: 'academic',
-          authApiBase: '../Auth/backend/api',
-          homeUrl: '../home.html',
-          ownerUrl: '../owner.html',
-          forumUrl: '../home.html?module=Dialogue',
-          technologyUrl: '../technology.html',
-          studioUrl: '../Studio/studio.html',
-          messageCenterUrl: L.messageCenterDistUrl,
-          adminUrl: L.adminDistUrl || window.location.origin + '/admin_page/dist/index.html',
-          messageApiUrl: L.messageSummaryApiUrl,
-          loginUrl,
-          redirectAdmins: false,
-          showChallengeButton: false
-        });
-      }
+      const L = window.ACADBEAT_LOCAL || {};
+      const loginUrl = '../home.html?login=1';
+      window.initializeAcadBeatNav({
+        mountId: 'acadbeatNav',
+        basePath: '../',
+        active: 'academic',
+        authApiBase: '../Auth/backend/api',
+        homeUrl: '../home.html',
+        ownerUrl: '../owner.html',
+        forumUrl: '../home.html?module=Dialogue',
+        technologyUrl: '../technology.html',
+        studioUrl: '../Studio/studio.html',
+        messageCenterUrl: L.messageCenterDistUrl,
+        adminUrl: L.adminDistUrl || window.location.origin + '/admin_page/dist/index.html',
+        messageApiUrl: L.messageSummaryApiUrl,
+        loginUrl,
+        redirectAdmins: false,
+        showChallengeButton: false
+      });
     });
   </script>
   <script src="../shared-nav.js"></script>

@@ -358,97 +358,52 @@
             inset: 0;
             z-index: 200;
             background:
-                radial-gradient(circle at 10% 8%, rgba(250, 204, 21, 0.2), transparent 30%),
-                radial-gradient(circle at 88% 14%, rgba(111, 66, 180, 0.2), transparent 34%),
-                linear-gradient(148deg, rgba(248, 244, 255, 0.97) 0%, rgba(237, 229, 252, 0.95) 52%, rgba(255, 248, 226, 0.95) 100%);
+                radial-gradient(circle at 12% 10%, rgba(250, 204, 21, 0.15), transparent 34%),
+                radial-gradient(circle at 86% 14%, rgba(91, 42, 134, 0.14), transparent 38%),
+                linear-gradient(145deg, rgba(248, 244, 255, 0.96) 0%, rgba(241, 233, 255, 0.94) 56%, rgba(255, 248, 226, 0.94) 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 24px;
-            backdrop-filter: blur(6px);
+            backdrop-filter: blur(4px);
         }
         .mode-overlay.hidden { display: none; }
         .mode-card {
-            width: min(560px, 100%);
-            position: relative;
+            width: min(500px, 100%);
             background:
-                radial-gradient(circle at top right, rgba(250, 204, 21, 0.22), transparent 28%),
-                linear-gradient(165deg, rgba(255, 255, 255, 0.96) 0%, rgba(247, 240, 255, 0.94) 100%);
+                radial-gradient(circle at 92% -4%, rgba(250, 204, 21, 0.18), transparent 36%),
+                linear-gradient(165deg, rgba(255, 255, 255, 0.95) 0%, rgba(247, 240, 255, 0.92) 100%);
             border: 1px solid rgba(91, 42, 134, 0.2);
-            border-radius: 28px;
-            padding: 32px 30px 28px;
-            box-shadow: 0 30px 64px rgba(91, 42, 134, 0.16);
-            overflow: hidden;
-        }
-        .mode-card::before {
-            content: "";
-            position: absolute;
-            left: 24px;
-            right: 24px;
-            top: 0;
-            height: 5px;
-            border-radius: 999px;
-            background: linear-gradient(90deg, rgba(250, 204, 21, 0), rgba(250, 204, 21, 0.95), rgba(111, 66, 180, 0.94), rgba(250, 204, 21, 0));
-        }
-        .mode-kicker {
-            display: inline-flex;
-            align-items: center;
-            padding: 4px 11px;
-            border-radius: 999px;
-            font-size: 0.68rem;
-            font-weight: 800;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: #5b2a86;
-            background: rgba(250, 204, 21, 0.24);
-            border: 1px solid rgba(250, 204, 21, 0.45);
+            border-radius: 26px;
+            padding: 32px 28px;
+            box-shadow: 0 24px 64px rgba(91, 42, 134, 0.14);
         }
         .mode-card h2 {
-            margin: 12px 0 10px;
-            font-size: 2rem;
-            letter-spacing: -0.03em;
+            margin: 0 0 10px;
+            font-size: 1.7rem;
+            letter-spacing: -0.02em;
             color: var(--secondary-color);
-            line-height: 1.05;
         }
         .mode-card p {
             margin: 0 0 22px;
-            font-size: 0.95rem;
+            font-size: 0.96rem;
             color: rgba(58, 78, 107, 0.78);
-            line-height: 1.62;
-        }
-        .mode-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin: -6px 0 18px;
-        }
-        .mode-tags span {
-            display: inline-flex;
-            align-items: center;
-            padding: 4px 10px;
-            border-radius: 999px;
-            font-size: 0.72rem;
-            font-weight: 700;
-            color: rgba(58, 78, 107, 0.82);
-            border: 1px solid rgba(91, 42, 134, 0.16);
-            background: rgba(255, 255, 255, 0.62);
+            line-height: 1.6;
         }
         .mode-card .mode-actions button,
         .mode-card .match-row button {
+            min-height: 54px;
+            border-radius: 999px;
             border-color: rgba(91, 42, 134, 0.18);
             background: rgba(255, 255, 255, 0.72);
             color: var(--secondary-color);
-            min-height: 54px;
-            font-size: 0.95rem;
-            font-weight: 800;
-            box-shadow: 0 8px 18px rgba(91, 42, 134, 0.08);
-            transition: transform 0.16s ease, background 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
+            font-size: 1rem;
+            font-weight: 700;
         }
         .mode-card .mode-actions button:hover,
         .mode-card .match-row button:hover {
             background: rgba(250, 204, 21, 0.24);
             border-color: rgba(91, 42, 134, 0.26);
-            box-shadow: 0 12px 24px rgba(91, 42, 134, 0.12);
         }
         .mode-card .mode-actions button.primary,
         .mode-card .match-row button.primary {
@@ -456,37 +411,35 @@
             border-color: #6f42b4;
             color: #fff;
         }
-        .mode-card .mode-actions button:active,
-        .mode-card .match-row button:active {
-            transform: translateY(1px);
-        }
         .mode-actions {
-            display: grid;
+            display: flex;
+            flex-direction: column;
             gap: 10px;
         }
-        .mode-option {
-            border: 1px solid rgba(91, 42, 134, 0.12);
-            border-radius: 16px;
-            padding: 10px;
-            background: rgba(255, 255, 255, 0.5);
+        .mode-actions button { width: 100%; }
+        .mode-return {
+            margin-top: 12px;
         }
-        .mode-option small {
-            display: block;
-            margin-top: 7px;
-            padding: 0 4px;
-            font-size: 0.78rem;
-            line-height: 1.45;
-            color: rgba(58, 78, 107, 0.78);
+        .mode-return button {
+            width: 100%;
+            min-height: 46px;
+            border-radius: 999px;
+            border: 1px solid rgba(58, 78, 107, 0.25);
+            background: rgba(255, 255, 255, 0.62);
+            color: var(--secondary-color);
+            font-size: 0.92rem;
+            font-weight: 700;
+            cursor: pointer;
         }
-        .mode-actions button { width: 100%; min-height: 50px; }
+        .mode-return button:hover {
+            background: rgba(155, 183, 212, 0.28);
+        }
         #match-panel,
         #weekly-match-panel {
             margin-top: 18px;
+            padding-top: 18px;
             border-top: 1px dashed rgba(58, 78, 107, 0.2);
             display: none;
-            background: rgba(255, 255, 255, 0.46);
-            border-radius: 14px;
-            padding: 14px 12px 12px;
         }
         #match-panel.is-visible,
         #weekly-match-panel.is-visible { display: block; }
@@ -497,11 +450,6 @@
             color: rgba(58, 78, 107, 0.86);
         }
         .match-row { display: flex; gap: 8px; flex-wrap: wrap; }
-        @media (max-width: 560px) {
-            .mode-card { padding: 22px 18px 18px; border-radius: 20px; }
-            .mode-card h2 { font-size: 1.56rem; }
-            .mode-card p { margin-bottom: 16px; }
-        }
         .game-root.hidden { display: none; }
         .nav-rules {
             font-family: inherit;
@@ -520,13 +468,6 @@
         .nav-rules:hover {
             background: rgba(155, 183, 212, 0.35);
         }
-        .studio-rules-btn {
-            position: fixed;
-            top: 94px;
-            right: 20px;
-            z-index: 90;
-        }
-
         .game-progress {
             width: 100%;
             max-width: min(92vw, 720px);
@@ -842,7 +783,25 @@
             gap: 8px;
         }
         .guide-dim {
-            display: none !important;
+            position: fixed;
+            inset: 0;
+            background: rgba(13, 19, 30, 0.56);
+            z-index: 70;
+        }
+        .guide-dim.hidden {
+            display: none;
+        }
+        .guide-dim.guide-dim--spotlight {
+            --guide-spot-x: 50vw;
+            --guide-spot-y: 50vh;
+            --guide-spot-r: 120px;
+            background:
+                radial-gradient(
+                    circle at var(--guide-spot-x) var(--guide-spot-y),
+                    rgba(255, 255, 255, 0) 0 calc(var(--guide-spot-r) - 8px),
+                    rgba(13, 19, 30, 0.22) calc(var(--guide-spot-r) + 8px),
+                    rgba(13, 19, 30, 0.62) calc(var(--guide-spot-r) + 52px)
+                );
         }
         .guide-focus-target {
             position: relative;
@@ -946,27 +905,15 @@
     <div id="acadbeatNav"></div>
     <div id="mode-overlay" class="mode-overlay">
         <div class="mode-card">
-            <div class="mode-kicker">AcadBeat Studio</div>
-            <h2>Choose Your Scrabble Arena</h2>
-            <p>Pick a mode to start. Online and weekly modes require the match server running and will sync board state in real time.</p>
-            <div class="mode-tags">
-                <span>Fast Start</span>
-                <span>Online Queue</span>
-                <span>Weekly Team Battle</span>
-            </div>
+            <h2>Scrabble</h2>
+            <p>Choose how you want to play. Online mode needs the match server running.</p>
             <div class="mode-actions">
-                <div class="mode-option">
-                    <button type="button" class="primary" onclick="chooseAiMode()">Play vs AI</button>
-                    <small>Solo practice with adjustable AI difficulty.</small>
-                </div>
-                <div class="mode-option">
-                    <button type="button" onclick="showOnlineMatchPanel()">Online match (2 players)</button>
-                    <small>Queue with another player and run a synchronized head-to-head match.</small>
-                </div>
-                <div class="mode-option">
-                    <button type="button" onclick="showWeeklyMatchPanel()">Weekly match (Team competition)</button>
-                    <small>Join the weekly competition lane with team scoring rules.</small>
-                </div>
+                <button type="button" class="primary" onclick="chooseAiMode()">Play vs AI</button>
+                <button type="button" onclick="showOnlineMatchPanel()">Online match (2 players)</button>
+                <button type="button" onclick="showWeeklyMatchPanel()">Weekly match (Team competition)</button>
+            </div>
+            <div class="mode-return">
+                <button type="button" onclick="goBackToStudio()">Return to Studio</button>
             </div>
             <div id="match-panel">
                 <div id="match-status">Click “Find match” to join the queue.</div>
@@ -994,8 +941,6 @@
         </div>
         <button type="button" class="nav-rules" onclick="goBackToStudio()">Back to Studio</button>
     </nav>
-    <button type="button" class="nav-rules studio-rules-btn" onclick="openRulesModal()">Rules</button>
-
     <div id="game-root" class="game-root hidden">
     <div class="layout">
         <section class="board-panel">
@@ -1415,6 +1360,7 @@
             if (forceFromStart) state.guideStep = 0;
             state.guideActive = true;
             document.getElementById("guide-modal")?.classList.add("hidden");
+            document.getElementById("guide-dim")?.classList.remove("hidden");
             document.getElementById("guide-coach")?.classList.remove("hidden");
             renderGuideStep();
             window.addEventListener("resize", onGuideViewportChanged);
@@ -1425,6 +1371,9 @@
 
         function closeGuideModal(markSeen = true) {
             document.getElementById("guide-modal")?.classList.add("hidden");
+            const dim = document.getElementById("guide-dim");
+            dim?.classList.add("hidden");
+            dim?.classList.remove("guide-dim--spotlight");
             document.getElementById("guide-coach")?.classList.add("hidden");
             state.guideActive = false;
             clearGuideFocus();
@@ -1473,6 +1422,7 @@
             const targets = getGuideTargets(step);
             targets.forEach((el) => el.classList.add("guide-focus-target"));
             state.guideFocusEls = targets;
+            syncGuideDimSpotlight(step);
         }
 
         function positionGuideCoach(step) {
@@ -1560,8 +1510,27 @@
                 if (!state.guideActive) return;
                 const step = GUIDE_STEPS[Math.max(0, Math.min(state.guideStep, GUIDE_STEPS.length - 1))];
                 if (!step) return;
+                syncGuideDimSpotlight(step);
                 positionGuideCoach(step);
             });
+        }
+
+        function syncGuideDimSpotlight(step) {
+            const dim = document.getElementById("guide-dim");
+            if (!dim) return;
+            const target = getGuideTargets(step)[0];
+            if (!target) {
+                dim.classList.remove("guide-dim--spotlight");
+                return;
+            }
+            const rect = target.getBoundingClientRect();
+            const cx = rect.left + rect.width / 2;
+            const cy = rect.top + rect.height / 2;
+            const radius = Math.max(rect.width, rect.height) * 0.62 + 22;
+            dim.style.setProperty("--guide-spot-x", `${Math.round(cx)}px`);
+            dim.style.setProperty("--guide-spot-y", `${Math.round(cy)}px`);
+            dim.style.setProperty("--guide-spot-r", `${Math.round(radius)}px`);
+            dim.classList.add("guide-dim--spotlight");
         }
 
         function maybeShowGuideForNewPlayer() {

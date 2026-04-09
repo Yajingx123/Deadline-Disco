@@ -35,23 +35,16 @@
     return pair ? decodeURIComponent(pair.slice(prefix.length)) : "";
   }
 
-  // Listening flows should stay in classic UI unless URL explicitly asks for godot.
-  const UI_MODE = getParam("ui", "");
-  const IS_GODOT_UI = UI_MODE === "godot";
+  // Dual-UI routing by page variant, not query params.
+  const CURRENT_PAGE = (window.location.pathname.split("/").pop() || "").toLowerCase();
+  const IS_ALT_UI_PAGE = CURRENT_PAGE === "listening-2.html" || CURRENT_PAGE === "respond_training-2.html" || CURRENT_PAGE === "note_training1.html";
 
   function pickUiPage(classicPage, godotPage) {
-    return IS_GODOT_UI ? godotPage : classicPage;
+    return IS_ALT_UI_PAGE ? godotPage : classicPage;
   }
 
   function withUiMode(url) {
-    if (UI_MODE !== "godot") {
-      return url;
-    }
-    var u = String(url);
-    if (u.indexOf("ui=godot") !== -1) {
-      return u;
-    }
-    return u + (u.indexOf("?") === -1 ? "?" : "&") + "ui=godot";
+    return String(url);
   }
 
   function buildAbsoluteProjectUrl(pathWithQuery) {
@@ -980,10 +973,10 @@
     // 设置返回按钮
     var backList = qs(".back-btn");
     if (backList) {
-      if (UI_MODE === "godot") {
+      if (IS_ALT_UI_PAGE) {
         var gAc =
           (typeof window !== "undefined" && window.ACADBEAT_LOCAL && window.ACADBEAT_LOCAL.godotAcademicWebUrl) ||
-          "http://127.0.0.1:5500/index.html?ui=godot&scene=academic";
+          "http://127.0.0.1:5500/index.html?scene=academic";
         backList.dataset.backTarget = gAc;
       } else {
         backList.dataset.backTarget = "training.html";
@@ -1105,7 +1098,7 @@
         card.querySelector(".video-go-btn").addEventListener("click", function () {
           const targetPage = mode === "respond"
             ? pickUiPage("respond_training.html", "respond_training-2.html")
-            : pickUiPage("note_training.html", "note_training-2.html");
+            : pickUiPage("note_training.html", "note_training1.html");
           window.location.href = withUiMode(targetPage + "?mode=" + mode + "&videoId=" + video.id);
         });
 
@@ -1200,7 +1193,7 @@
     const recordAnswerError = qs("#recordAnswerError");
     const recordAnswerFeedback = qs("#recordAnswerFeedback");
 
-    if (!titleEl || !detailPersonMetaEl || !metaEl || !videoEl || !studyWorkspaceEl || !noteShareBtn || !noteDockToggleBtn || !noteMainContentEl || !noteKeyWordEl || !notePersonalViewEl) {
+    if (!titleEl || !detailPersonMetaEl || !metaEl || !videoEl || !studyWorkspaceEl || !noteShareBtn || !noteMainContentEl || !noteKeyWordEl || !notePersonalViewEl) {
       return;
     }
 
@@ -1319,7 +1312,7 @@
 
       if (recordAnswerError) recordAnswerError.classList.add("hidden");
 
-      const notePage = pickUiPage("Academic-Practice/note_training.html", "note_training-2.html");
+      const notePage = pickUiPage("note_training.html", "note_training1.html");
       const trainingPath = withUiMode(notePage + "?mode=" + encodeURIComponent(mode) + "&videoId=" + encodeURIComponent(video.id));
       const trainingUrl = buildAbsoluteProjectUrl(trainingPath);
       const answerText = buildSharedAnswerText(values);
@@ -1394,6 +1387,9 @@
     }
 
     function refreshNoteDockBtnText() {
+      if (!noteDockToggleBtn) {
+        return;
+      }
       const isCollapsed = studyWorkspaceEl.classList.contains("note-dock-collapsed");
       noteDockToggleBtn.textContent = isCollapsed ? "展开" : "折叠";
     }
@@ -1411,10 +1407,12 @@
       }
     }
 
-    noteDockToggleBtn.addEventListener("click", function () {
-      studyWorkspaceEl.classList.toggle("note-dock-collapsed");
-      refreshNoteDockBtnText();
-    });
+    if (noteDockToggleBtn) {
+      noteDockToggleBtn.addEventListener("click", function () {
+        studyWorkspaceEl.classList.toggle("note-dock-collapsed");
+        refreshNoteDockBtnText();
+      });
+    }
 
     document.addEventListener("fullscreenchange", function () {
       if (document.fullscreenElement === studyWorkspaceEl) {
@@ -1513,7 +1511,7 @@
     }
 
     function buildRespondShareContent(audioUrl) {
-      const respondPage = pickUiPage("Academic-Practice/respond_training.html", "respond_training-2.html");
+      const respondPage = pickUiPage("respond_training.html", "respond_training-2.html");
       const trainingPath = withUiMode(respondPage + "?mode=" + encodeURIComponent(mode) + "&videoId=" + encodeURIComponent(video.id));
       const trainingUrl = buildAbsoluteProjectUrl(trainingPath);
       const audioFileName = "response-" + video.id + "." + getAudioExtensionFromMime(currentAudioMime);

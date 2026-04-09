@@ -1,0 +1,28 @@
+:root {
+  --ui-bg-deep: #070a12;
+  --ui-bg-mid: #12182a;
+  --ui-panel: #16213e;
+  --ui-panel-2: #1f4068;
+  --ui-accent: #fca311;
+  --ui-accent-dim: #c77d0a;
+  --ui-cyan: #4cc9f0;
+  --ui-magenta: #f72585;
+  --ui-text: #e8e8e8;
+  --ui-text-muted: #8d99ae;
+  --ui-glow-blue: rgba(67, 97, 238, 0.35);
+  --ui-font: "Courier New", Courier, monospace;
+}
+
+.pixel-border {
+  box-shadow:
+    0 0 0 2px var(--ui-accent),
+    0 0 0 4px #1a1a2e,
+    4px 4px 0 #050508;
+}
+
+.pixel-border--soft {
+  box-shadow:
+    0 0 0 1px rgba(252, 163, 17, 0.55),
+    0 0 24px rgba(67, 97, 238, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
