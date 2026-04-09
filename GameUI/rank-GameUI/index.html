@@ -4,10 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AcadBeat | Team Ranking</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/gates/shared-nav.css">
   <script src="/shared/acadbeat-local-config.js"></script>
   <style>html.acadbeat-role-guard body{visibility:hidden}</style>
   <script>
@@ -28,7 +24,7 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body data-page="team-ranking">
-  <div id="acadbeatNav"></div>
+  <button type="button" id="godotBackBtn" class="godot-back-btn" aria-label="Return to Godot">← Return to Godot</button>
 
   <main class="ranking-main">
     <!-- 页面标题 -->
@@ -69,29 +65,16 @@
   </main>
 
   <script>
-    window.addEventListener('load', () => {
-      const uiGodot = (() => {
-        try {
-          if (new URLSearchParams(location.search).get('ui') === 'godot') return true;
-        } catch (_e) {}
-        return document.cookie.split('; ').some((c) => c.startsWith('ui_mode=godot'));
-      })();
-      const L = window.ACADBEAT_LOCAL || {};
-      const loginUrl = uiGodot ? (L.godotWebEntryUrl || 'http://127.0.0.1:5500/index.html?ui=godot') : '../home.html?login=1';
-      window.initializeAcadBeatNav({
-        mountId: 'acadbeatNav',
-        basePath: '../',
-        active: 'rank',
-        authApiBase: '../Auth/backend/api',
-        homeUrl: '../home.html',
-        ownerUrl: '../owner.html',
-        adminUrl: L.adminDistUrl || window.location.origin + '/admin_page/dist/index.html',
-        loginUrl,
-        redirectAdmins: true
+    (function bindGodotBackButton() {
+      var btn = document.getElementById('godotBackBtn');
+      if (!btn) return;
+      btn.addEventListener('click', function () {
+        var L = window.ACADBEAT_LOCAL || {};
+        var target = String(L.godotWebEntryUrl || '').trim() || (window.location.origin + '/gameUI_src/Release/index.html?ui=godot');
+        window.location.href = target;
       });
-    });
+    })();
   </script>
-  <script src="/gates/shared-nav.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

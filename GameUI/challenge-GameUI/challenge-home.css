@@ -793,9 +793,9 @@
 
 .challenge-panel-title {
     margin: 0;
-    font-family: 'Playfair Display', serif;
+    font-family: 'AcadBeatGameUI', sans-serif;
     font-size: 2rem;
-    font-style: italic;
+    font-style: normal;
 }
 
 .challenge-panel-error {

@@ -30,14 +30,16 @@ mysql -u root -p123456 < sql/002_acadbeat_all_other_sql.sql
 
 ### 2) Start all services
 
-Use one command from repository root (pick your OS):
+Use one command from repository root:
 
 ```bash
-php start_all_linux.php
-# or
-php start_all_mac.php
-# or
-php start_all_windows.php
+php redeploy.php
+```
+
+Stop all local services:
+
+```bash
+php shutdown.php
 ```
 
 Or run full bootstrap flow (import SQL + restart services):

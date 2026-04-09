@@ -52,7 +52,7 @@ sudo mkdir -p /var/www/Deadline-Disco/forum-project/uploads/video
 # Allow php-fpm/nginx user to write forum uploads:
 sudo chown -R nginx:nginx /var/www/Deadline-Disco/forum-project/uploads
 sudo chmod -R 775 /var/www/Deadline-Disco/forum-project/uploads
-php ./start_all_linux.php
+php ./redeploy.php
 ```
 
 ## 5) Configure Nginx + PHP-FPM

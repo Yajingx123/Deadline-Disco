@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-$root = __DIR__;
+$root = dirname(__DIR__, 2);
 $runDir = $root . '/.run';
 if (!is_dir($runDir)) {
     mkdir($runDir, 0777, true);
@@ -111,6 +111,11 @@ $frontendBuilds = [
     [
         'name' => 'message-center-static',
         'workdir' => $root . '/message-center-project',
+        'command' => $npm . ' install && ' . $npm . ' run build',
+    ],
+    [
+        'name' => 'dnd-static',
+        'workdir' => $root . '/Studio/Dungeons-and-Dragons',
         'command' => $npm . ' install && ' . $npm . ' run build',
     ],
 ];
@@ -250,8 +255,8 @@ foreach ($services as $service) {
 }
 
 echo "\nLogs are in .run\n";
-echo "Start command: php start_all_linux.php\n";
-echo "Full mode command: php start_all_linux.php --full\n";
+echo "Start command: php redeploy.php\n";
+echo "Full mode command: php redeploy.php --full\n";
 echo "\nHome: http://127.0.0.1:8001/home.html\n";
 echo "Forum isolation: classic -> /forum-project/dist/, new shell -> /forum-project-v2/dist/\n";
 if (!empty($healthFailures)) {

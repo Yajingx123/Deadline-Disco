@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-$root = __DIR__;
+$root = dirname(__DIR__, 2);
 $runDir = $root . '/.run';
 if (!is_dir($runDir)) {
     mkdir($runDir, 0777, true);
@@ -43,6 +43,11 @@ $frontendBuilds = [
     [
         'name' => 'message-center-static',
         'workdir' => $root . '/message-center-project',
+        'command' => $npm . ' install && ' . $npm . ' run build',
+    ],
+    [
+        'name' => 'dnd-static',
+        'workdir' => $root . '/Studio/Dungeons-and-Dragons',
         'command' => $npm . ' install && ' . $npm . ' run build',
     ],
 ];
@@ -197,16 +202,16 @@ foreach ($services as $service) {
 }
 
 echo "\nLogs are in .run\n";
-echo "Start command: php start_all_windows.php\n";
-echo "Full mode command: php start_all_windows.php --full\n";
-echo "\n=== 浏览器入口（唯一推荐）===\n";
+echo "Start command: php redeploy.php\n";
+echo "Full mode command: php redeploy.php --full\n";
+echo "\n=== Browser Entry (Recommended) ===\n";
 echo "  http://127.0.0.1:8001/home.html\n";
-echo "  （或 http://127.0.0.1:8001/ 会跳转到主页）\n";
-echo "  在主页登录后，使用右上角 Switch 进入 Godot；不要单独把 5500 当主入口。\n";
-echo "\n论坛隔离：经典 UI -> /forum-project/dist/；GameUI -> /GameUI/forum-project-GameUI/dist/\n";
-echo "GameUI 论坛地址：http://127.0.0.1:8001/GameUI/forum-project-GameUI/dist/index.html\n";
+echo "  (or http://127.0.0.1:8001/ which redirects to home.html)\n";
+echo "  Sign in on the home page, then use the top-right Switch to enter Godot.\n";
+echo "\nForum routing: Classic UI -> /forum-project/dist/ ; GameUI -> /GameUI/forum-project-GameUI/dist/\n";
+echo "GameUI forum URL: http://127.0.0.1:8001/GameUI/forum-project-GameUI/dist/index.html\n";
 if ($profile === 'full') {
-    echo "Full 模式包含：5173 forum-dev、5174 admin-dev、9000 scrabble-match\n";
+    echo "Full mode includes: 5173 forum-dev, 5174 admin-dev, 9000 scrabble-match\n";
 }
 if (!empty($healthFailures)) {
     fwrite(STDERR, "\n[error] Service health check failed: " . implode(', ', $healthFailures) . "\n");

@@ -2,7 +2,7 @@
 <script src="/shared/acadbeat-local-config.js"></script>
 <div class="challenge-page-root" id="challengePageRoot">
     <header class="challenge-page-toolbar">
-        <button type="button" class="challenge-page-back" onclick="toggleTeamModal(false)">← Competition hub</button>
+        <button type="button" class="challenge-page-back" onclick="goBackToGodot()">← Return to Godot</button>
     </header>
     <div class="team-modal team-modal--embedded" id="teamModal">
         <div class="success-overlay" id="successOverlay" style="display: none;" aria-hidden="true">
@@ -169,7 +169,14 @@
                 </div>
             </div>
         </div>
-        <button type="button" class="challenge-modal-close" onclick="toggleTeamModal(false)" aria-label="Close weekly challenge">✕</button>
+        <button type="button" class="challenge-modal-close" onclick="goBackToGodot()" aria-label="Return to Godot">✕</button>
     </div>
 </div>
+<script>
+function goBackToGodot() {
+    var L = window.ACADBEAT_LOCAL || {};
+    var target = String(L.godotWebEntryUrl || '').trim() || (window.location.origin + '/gameUI_src/Release/index.html?ui=godot');
+    window.location.href = target;
+}
+</script>
 <script src="/challenge/challenge-home.js" defer></script>

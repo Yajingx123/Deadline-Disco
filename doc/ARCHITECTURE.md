@@ -40,17 +40,16 @@
 
 ## Startup Scripts (Simplified)
 
-Only keep one starter per OS:
+Use unified root entry scripts:
 
-- Linux: `php start_all_linux.php`
-- macOS: `php start_all_mac.php`
-- Windows: `php start_all_windows.php`
+- Start: `php redeploy.php`
+- Stop: `php shutdown.php`
+
+OS-specific scripts are organized under `scripts/os/`.
 
 Optional full mode (extra dev services):
 
-- `php start_all_linux.php --full`
-- `php start_all_mac.php --full`
-- `php start_all_windows.php --full`
+- `php redeploy.php --full`
 
 ## Required Runtime Services
 

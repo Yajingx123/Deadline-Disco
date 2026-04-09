@@ -25,6 +25,14 @@
             document.documentElement.classList.remove('acadbeat-role-guard');
         })();
     </script>
+    <script>
+        function goBackToGodot() {
+            const L = window.ACADBEAT_LOCAL || {};
+            const target = String(L.godotWebEntryUrl || '').trim()
+                || (window.location.origin + '/gameUI_src/Release/index.html?ui=godot');
+            window.location.href = target;
+        }
+    </script>
 
     <style>
         /* =========================================================
@@ -93,18 +101,19 @@
         }
 
         .back-btn {
+            display: none;
             position: absolute; left: -14%; top: -10%;
             width: 50px; height: 50px; background: var(--primary);
             border: 2px solid #fff; border-radius: 10px; color: #fff;
-            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; align-items: center; justify-content: center;
             transition: var(--transition); z-index: 10;
         }
         .back-btn:hover { transform: scale(1.1); }
 
         .back-text-btn {
-            position: absolute;
-            top: 0;
-            left: 0;
+            position: fixed;
+            top: 12px;
+            left: 12px;
             height: 36px;
             padding: 0 14px;
             border: 1px solid rgba(139, 111, 89, 0.35);
@@ -114,7 +123,7 @@
             font-size: 12px;
             cursor: pointer;
             transition: var(--transition);
-            z-index: 120;
+            z-index: 1200;
         }
 
         .back-text-btn:hover {
@@ -226,8 +235,8 @@
 
     <div class="module-frame">
         <div class="module-content">
-            <button class="back-btn" onclick="window.location.href='home.html'">←</button>
-            <button class="back-text-btn" onclick="window.location.href='home.html'">Back Home</button>
+            <button class="back-btn" onclick="goBackToGodot()">←</button>
+            <button class="back-text-btn" onclick="goBackToGodot()">Return to Godot</button>
 
             <div class="dashboard-container">
                 <aside class="sidebar">
@@ -289,10 +298,11 @@
     </div>
 
     <script>
-        const AUTH_API_BASE = './Auth/backend/api';
-        const OWNER_VOCAB_API = './vocba_prac/api/owner-vocabulary.php';
-        const OWNER_LISTENING_API = './Academic-Practice/api/records.php';
-        const OWNER_INTEGRATED_API = './Academic-Practice/api/integrated-records.php';
+        const MAIN_ORIGIN = (window.ACADBEAT_LOCAL && window.ACADBEAT_LOCAL.mainOrigin) || window.location.origin;
+        const AUTH_API_BASE = `${MAIN_ORIGIN}/Auth/backend/api`;
+        const OWNER_VOCAB_API = `${MAIN_ORIGIN}/vocba_prac/api/owner-vocabulary.php`;
+        const OWNER_LISTENING_API = `${MAIN_ORIGIN}/Academic-Practice/api/records.php`;
+        const OWNER_INTEGRATED_API = `${MAIN_ORIGIN}/Academic-Practice/api/integrated-records.php`;
 
         let checkedDays = ["2026-3-1", "2026-3-2", "2026-3-5", "2026-3-10", "2026-3-18"];
         let viewDate = new Date();
@@ -363,7 +373,7 @@
             if (data.status !== 'success' || !data.user) {
                 openSiteModal('Login required', 'Please log in first.');
                 setTimeout(function () {
-                    window.location.href = 'home.html?login=1';
+                    window.location.href = `${MAIN_ORIGIN}/home.html?login=1`;
                 }, 900);
                 return false;
             }
