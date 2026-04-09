@@ -32,6 +32,7 @@ metadata/_edit_lock_ = true
 [node name="Planet" parent="." unique_id=490313873 instance=ExtResource("2_6ft7j")]
 position = Vector2(-11.349962, 1520.6499)
 scale = Vector2(3.565, 3.565)
+rotate_speed = 30.0
 
 [node name="SpawnPoint" type="Marker2D" parent="." unique_id=1017671805]
 position = Vector2(-67.35, 364.65)

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { createPost, fetchLabels, fetchPostDetail, fetchPosts, fetchUserPosts, incrementPostViews } from '../api/forumApi'
+import { createComment, createPost, fetchLabels, fetchPostDetail, fetchPosts, fetchUserFavorites, fetchUserLikes, fetchUserPosts, incrementPostViews } from '../api/forumApi'
 import PostDetail from './PostDetail'
 import PostModal from '../components/PostModal'
 
@@ -7,52 +7,6 @@ const SORT_OPTIONS = [
   { label: 'Latest', value: 'latest_post' },
   { label: 'Hot', value: 'hot' },
   { label: 'Most Commented', value: 'comments' },
-]
-
-const SAMPLE_LABELS = [
-  { id: 'sample-l-1', name: 'Study Tips' },
-  { id: 'sample-l-2', name: 'Exam Prep' },
-  { id: 'sample-l-3', name: 'Campus Life' },
-  { id: 'sample-l-4', name: 'Language Lab' },
-]
-
-const SAMPLE_POSTS = [
-  {
-    id: 900001,
-    title: 'Sample: How I finished revision in 10 days',
-    content: 'I split the syllabus by difficulty and reviewed weak topics every morning.',
-    time: 'Sample',
-    views: 241,
-    commentCount: 18,
-    likeCount: 36,
-    normalizedLabels: ['Study Tips', 'Exam Prep'],
-    isSample: true,
-    canOpenDetail: true,
-  },
-  {
-    id: 900002,
-    title: 'Sample: Listening practice resource list',
-    content: 'Collected podcasts and dictation drills with level tags for quick daily training.',
-    time: 'Sample',
-    views: 133,
-    commentCount: 9,
-    likeCount: 24,
-    normalizedLabels: ['Language Lab'],
-    isSample: true,
-    canOpenDetail: true,
-  },
-  {
-    id: 900003,
-    title: 'Sample: Quiet places to study on campus',
-    content: 'Sharing a map of low-noise rooms and best hours before peak traffic.',
-    time: 'Sample',
-    views: 88,
-    commentCount: 7,
-    likeCount: 12,
-    normalizedLabels: ['Campus Life', 'Study Tips'],
-    isSample: true,
-    canOpenDetail: true,
-  },
 ]
 
 function getSummary(text = '', limit = 140) {
@@ -95,6 +49,9 @@ export default function ForumHomeV2() {
   const [labels, setLabels] = useState([])
   const [currentUser, setCurrentUser] = useState(null)
   const [posts, setPosts] = useState([])
+  const [favorites, setFavorites] = useState([])
+  const [likes, setLikes] = useState([])
+  const [userPosts, setUserPosts] = useState([])
   const [query, setQuery] = useState('')
   const [selectedTags, setSelectedTags] = useState([])
   const [sort, setSort] = useState('latest_post')
@@ -102,49 +59,61 @@ export default function ForumHomeV2() {
   const [error, setError] = useState('')
   const [showComposer, setShowComposer] = useState(false)
   const [selectedPost, setSelectedPost] = useState(null)
-  const [viewMode, setViewMode] = useState('all')
+  const [viewMode, setViewMode] = useState('all') // all | favorites
+  const [favoritesTab, setFavoritesTab] = useState('favorites') // favorites | likes | posts
+
+  function preparePosts(rawRows = []) {
+    return rawRows.map((post) => ({
+      ...post,
+      normalizedLabels: normalizeLabels(post),
+      summary: getSummary(post.content),
+    }))
+  }
+
+  function applyLocalFilters(rows = []) {
+    let next = rows
+    const q = query.trim().toLowerCase()
+    if (q) {
+      next = next.filter((post) => {
+        const title = String(post.title || '').toLowerCase()
+        const content = String(post.content || '').toLowerCase()
+        return title.includes(q) || content.includes(q)
+      })
+    }
+    if (selectedTags.length > 0) {
+      next = next.filter((post) => {
+        const tagSet = new Set(post.normalizedLabels || [])
+        return selectedTags.every((tag) => tagSet.has(tag))
+      })
+    }
+    return [...next].sort((a, b) => bySort(a, b, sort))
+  }
 
   const loadData = async () => {
     setLoading(true)
     setError('')
     try {
-      const labelPromise = fetchLabels()
-      const postPromise = viewMode === 'mine'
-        ? fetchUserPosts()
-        : fetchPosts({ q: query, labels: selectedTags, sort })
-
-      const [labelData, postData] = await Promise.all([labelPromise, postPromise])
-      const postRows = postData.posts || []
-
-      let prepared = postRows.map((post) => ({
-        ...post,
-        normalizedLabels: normalizeLabels(post),
-        summary: getSummary(post.content),
-      }))
-
-      if (viewMode === 'mine') {
-        if (query.trim()) {
-          const q = query.trim().toLowerCase()
-          prepared = prepared.filter((post) => {
-            const title = String(post.title || '').toLowerCase()
-            const content = String(post.content || '').toLowerCase()
-            return title.includes(q) || content.includes(q)
-          })
-        }
-
-        if (selectedTags.length > 0) {
-          prepared = prepared.filter((post) => {
-            const tagSet = new Set(post.normalizedLabels)
-            return selectedTags.every((tag) => tagSet.has(tag))
-          })
-        }
-
-        prepared.sort((a, b) => bySort(a, b, sort))
+      if (viewMode === 'all') {
+        const [labelData, postData] = await Promise.all([
+          fetchLabels(),
+          fetchPosts({ q: query, labels: selectedTags, sort }),
+        ])
+        setLabels(labelData.labels || [])
+        setCurrentUser(labelData.currentUser || null)
+        setPosts(preparePosts(postData.posts || []))
+      } else {
+        const [labelData, favoritesData, likesData, userPostsData] = await Promise.all([
+          fetchLabels(),
+          fetchUserFavorites(),
+          fetchUserLikes(),
+          fetchUserPosts(),
+        ])
+        setLabels(labelData.labels || [])
+        setCurrentUser(labelData.currentUser || null)
+        setFavorites(applyLocalFilters(preparePosts(favoritesData.posts || [])))
+        setLikes(applyLocalFilters(preparePosts(likesData.posts || [])))
+        setUserPosts(applyLocalFilters(preparePosts(userPostsData.posts || [])))
       }
-
-      setLabels(labelData.labels || [])
-      setCurrentUser(labelData.currentUser || null)
-      setPosts(prepared)
     } catch (err) {
       setError(err.message || 'Failed to load forum.')
     } finally {
@@ -168,17 +137,6 @@ export default function ForumHomeV2() {
 
   const openPost = async (post) => {
     const postId = Number(post?.id || 0)
-    if (post?.isSample && post?.canOpenDetail) {
-      setSelectedPost({
-        ...post,
-        author: 'Sample Author',
-        publishTime: 'Sample',
-      })
-      const params = new URLSearchParams(window.location.search)
-      params.set('postId', String(postId))
-      window.history.replaceState({}, '', `${window.location.pathname}?${params.toString()}`)
-      return
-    }
     try {
       await incrementPostViews(postId)
       const detail = await fetchPostDetail(postId)
@@ -199,45 +157,61 @@ export default function ForumHomeV2() {
     await loadData()
   }
 
-  const displayLabels = useMemo(() => {
-    const map = new Map()
-    labels.forEach((label) => map.set(label.name, label))
-    SAMPLE_LABELS.forEach((label) => {
-      if (!map.has(label.name)) {
-        map.set(label.name, label)
-      }
+  const handleAddComment = async ({ postId, content, parentCommentId = null }) => {
+    await createComment({
+      postId,
+      content,
+      parentCommentId,
     })
-    return [...map.values()]
+    const detail = await fetchPostDetail(postId)
+    if (detail?.post) {
+      setSelectedPost(detail.post)
+    }
+    await loadData()
+  }
+
+  const handleLikeChange = (postId, liked, nextLikeCount) => {
+    const apply = (rows = []) => rows.map((item) => (
+      Number(item.id) === Number(postId)
+        ? { ...item, isLiked: liked, likeCount: nextLikeCount }
+        : item
+    ))
+    setPosts((prev) => apply(prev))
+    setFavorites((prev) => apply(prev))
+    setLikes((prev) => apply(prev))
+    setUserPosts((prev) => apply(prev))
+    setSelectedPost((prev) => (prev && Number(prev.id) === Number(postId)
+      ? { ...prev, isLiked: liked, likeCount: nextLikeCount }
+      : prev))
+  }
+
+  const handleFavoriteChange = (postId, favorited, nextFavoriteCount) => {
+    const apply = (rows = []) => rows.map((item) => (
+      Number(item.id) === Number(postId)
+        ? { ...item, isFavorited: favorited, favoriteCount: nextFavoriteCount }
+        : item
+    ))
+    setPosts((prev) => apply(prev))
+    setFavorites((prev) => apply(prev))
+    setLikes((prev) => apply(prev))
+    setUserPosts((prev) => apply(prev))
+    setSelectedPost((prev) => (prev && Number(prev.id) === Number(postId)
+      ? { ...prev, isFavorited: favorited, favoriteCount: nextFavoriteCount }
+      : prev))
+  }
+
+  const displayLabels = useMemo(() => {
+    return [...labels].sort((a, b) => String(a.name || '').localeCompare(String(b.name || '')))
   }, [labels])
 
   const displayPosts = useMemo(() => {
-    const q = query.trim().toLowerCase()
-    let demo = SAMPLE_POSTS.map((post) => ({
-      ...post,
-      summary: getSummary(post.content),
-    }))
-
-    if (q) {
-      demo = demo.filter((post) => {
-        const title = String(post.title || '').toLowerCase()
-        const content = String(post.content || '').toLowerCase()
-        return title.includes(q) || content.includes(q)
-      })
-    }
-
-    if (selectedTags.length > 0) {
-      demo = demo.filter((post) => selectedTags.every((tag) => post.normalizedLabels.includes(tag)))
-    }
-
-    demo.sort((a, b) => bySort(a, b, sort))
     if (viewMode !== 'all') {
-      return posts
+      if (favoritesTab === 'likes') return likes
+      if (favoritesTab === 'posts') return userPosts
+      return favorites
     }
-    if (error) {
-      return demo
-    }
-    return [...demo, ...posts]
-  }, [posts, query, selectedTags, sort, viewMode, error])
+    return posts
+  }, [posts, query, selectedTags, sort, viewMode, error, favorites, likes, userPosts, favoritesTab])
 
   const handleBackToList = () => {
     setSelectedPost(null)
@@ -247,20 +221,20 @@ export default function ForumHomeV2() {
     window.history.replaceState({}, '', `${window.location.pathname}${queryString ? `?${queryString}` : ''}`)
   }
 
+  const handleBackToHub = () => {
+    const params = new URLSearchParams(window.location.search)
+    const ui = params.get('ui')
+    const L = (typeof window !== 'undefined' && window.ACADBEAT_LOCAL) ? window.ACADBEAT_LOCAL : {}
+    const target = ui === 'godot'
+      ? (L.godotWebEntryUrl || `${window.location.origin}/gameUI_src/Release/index.html?ui=godot`)
+      : (ui ? `/forum-gate.html?ui=${encodeURIComponent(ui)}` : '/forum-gate.html')
+    window.location.href = target
+  }
+
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     const postId = Number(params.get('postId') || 0)
     if (!postId) return
-
-    const sample = SAMPLE_POSTS.find((item) => item.id === postId && item.canOpenDetail)
-    if (sample) {
-      setSelectedPost({
-        ...sample,
-        author: 'Sample Author',
-        publishTime: 'Sample',
-      })
-      return
-    }
 
     fetchPostDetail(postId)
       .then((data) => {
@@ -275,45 +249,119 @@ export default function ForumHomeV2() {
     <div className="v2-viewport">
       {selectedPost ? (
         <div className="v2-detail-route">
-          <PostDetail post={selectedPost} onBack={handleBackToList} />
+          <PostDetail
+            post={selectedPost}
+            onBack={handleBackToList}
+            onAddComment={handleAddComment}
+            onLikeChange={handleLikeChange}
+            onFavoriteChange={handleFavoriteChange}
+            labelOptions={displayLabels}
+            currentUser={currentUser}
+          />
         </div>
       ) : (
-        <div className="v2-stage">
-          <header className="v2-page-title">Forum</header>
+        <div className={`v2-stage${viewMode === 'favorites' ? ' v2-stage--mine' : ''}`}>
+          {viewMode === 'all' ? (
+            <button
+              type="button"
+              className="v2-back-btn v2-back-btn--global"
+              aria-label="Back to forum hub"
+              onClick={handleBackToHub}
+            >
+              <span className="v2-back-btn__icon" />
+            </button>
+          ) : null}
 
-          <aside className="v2-label-zone">
+          {viewMode === 'favorites' ? (
+            <>
+              <button
+                type="button"
+                className="v2-back-btn v2-back-btn--global v2-back-btn--favorites"
+                aria-label="Back to forum"
+                onClick={() => setViewMode('all')}
+              >
+                <span className="v2-back-btn__icon v2-back-btn__icon--favorites" />
+              </button>
+              <div className="v2-favorites-tabs v2-favorites-tabs--overlay" role="tablist" aria-label="Favorites tabs">
+                <button
+                  type="button"
+                  role="tab"
+                  aria-label="Favorites"
+                  aria-selected={favoritesTab === 'favorites'}
+                  className={`v2-favorites-tab v2-favorites-tab--ghost v2-favorites-tab--fav ${favoritesTab === 'favorites' ? 'is-active' : ''}`}
+                  onClick={() => setFavoritesTab('favorites')}
+                >
+                  <span className="v2-sr-only">Favorites</span>
+                </button>
+                <button
+                  type="button"
+                  role="tab"
+                  aria-label="Liked"
+                  aria-selected={favoritesTab === 'likes'}
+                  className={`v2-favorites-tab v2-favorites-tab--ghost v2-favorites-tab--like ${favoritesTab === 'likes' ? 'is-active' : ''}`}
+                  onClick={() => setFavoritesTab('likes')}
+                >
+                  <span className="v2-sr-only">Liked</span>
+                </button>
+                <button
+                  type="button"
+                  role="tab"
+                  aria-label="My Posts"
+                  aria-selected={favoritesTab === 'posts'}
+                  className={`v2-favorites-tab v2-favorites-tab--ghost v2-favorites-tab--my ${favoritesTab === 'posts' ? 'is-active' : ''}`}
+                  onClick={() => setFavoritesTab('posts')}
+                >
+                  <span className="v2-sr-only">My Posts</span>
+                </button>
+              </div>
+            </>
+          ) : null}
+
+          {viewMode !== 'favorites' ? (
+            <aside className="v2-label-zone">
             <div className="v2-label-panel">
               <div className="v2-label-head">
                 <h3>Labels</h3>
+                <button
+                  type="button"
+                  className="v2-filter-clear"
+                  onClick={() => setSelectedTags([])}
+                >
+                  Clear
+                </button>
               </div>
-              <div className="v2-chip-wrap v2-chip-wrap--side">
+              <div className="v2-filter-list" role="group" aria-label="Label filters">
                 {displayLabels.map((label) => (
-                  <button
-                    key={label.id}
-                    className={`v2-chip ${selectedTags.includes(label.name) ? 'v2-chip--on' : ''}`}
-                    onClick={() => toggleTag(label.name)}
-                  >
-                    {label.name}
-                  </button>
+                  <label key={label.id} className="v2-filter-item">
+                    <input
+                      type="checkbox"
+                      checked={selectedTags.includes(label.name)}
+                      onChange={() => toggleTag(label.name)}
+                    />
+                    <span>{label.name}</span>
+                  </label>
                 ))}
               </div>
             </div>
-          </aside>
+            </aside>
+          ) : null}
 
-          <section className="v2-content-zone">
-            <div className="v2-board">
+          <section className={`v2-content-zone${viewMode === 'favorites' ? ' v2-content-zone--favorites' : ''}`}>
+            <div className={`v2-board${viewMode === 'favorites' ? ' v2-board--favorites' : ''}`}>
               <section className="v2-main-column">
-                <div className="v2-toolbar">
-                  <input
-                    className="v2-input"
-                    placeholder="Search thread"
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                  />
-                  <select className="v2-select" value={sort} onChange={(e) => setSort(e.target.value)}>
-                    {SORT_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
-                  </select>
-                </div>
+                {viewMode !== 'favorites' ? (
+                  <div className="v2-toolbar">
+                    <input
+                      className="v2-input"
+                      placeholder="Search thread"
+                      value={query}
+                      onChange={(e) => setQuery(e.target.value)}
+                    />
+                    <select className="v2-select" value={sort} onChange={(e) => setSort(e.target.value)}>
+                      {SORT_OPTIONS.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
+                    </select>
+                  </div>
+                ) : null}
 
                 <div className="v2-feed-shell">
                   {loading ? <div className="v2-state">Loading...</div> : null}
@@ -323,9 +371,9 @@ export default function ForumHomeV2() {
                     <div className="v2-feed-scroll">
                       {displayPosts.map((post) => (
                         <article
-                          className={`v2-card ${post.isSample && !post.canOpenDetail ? 'v2-card--sample' : ''}`}
+                          className="v2-card"
                           key={post.id}
-                          onClick={(post.isSample && !post.canOpenDetail) ? undefined : () => openPost(post)}
+                          onClick={() => openPost(post)}
                         >
                           <div className="v2-card-top">
                             <strong>{post.title}</strong>
@@ -339,7 +387,7 @@ export default function ForumHomeV2() {
                           </div>
                         </article>
                       ))}
-                      {displayPosts.length === 0 ? <div className="v2-state">No posts found.</div> : null}
+                      {displayPosts.length === 0 ? <div className="v2-state v2-state--empty">No posts found.</div> : null}
                     </div>
                   ) : null}
                 </div>
@@ -347,14 +395,19 @@ export default function ForumHomeV2() {
             </div>
           </section>
 
-          <div className="v2-fab-stack">
-            <button className="v2-fab v2-fab--post" aria-label="Create Post" onClick={() => setShowComposer(true)} />
-            <button
-              aria-label="Toggle My Posts"
-              className={`v2-fab v2-fab--mine ${viewMode === 'mine' ? 'v2-fab--active' : ''}`}
-              onClick={() => setViewMode((prev) => (prev === 'mine' ? 'all' : 'mine'))}
-            />
-          </div>
+          {viewMode !== 'favorites' ? (
+            <div className="v2-fab-stack">
+              <button className="v2-fab v2-fab--post" aria-label="Create Post" onClick={() => setShowComposer(true)} />
+              <button
+                aria-label="Open Favorites"
+                className={`v2-fab v2-fab--mine ${viewMode === 'favorites' ? 'v2-fab--active' : ''}`}
+                onClick={() => {
+                  setFavoritesTab('favorites')
+                  setViewMode((prev) => (prev === 'favorites' ? 'all' : 'favorites'))
+                }}
+              />
+            </div>
+          ) : null}
         </div>
       )}
 

@@ -1,6 +1,7 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+declare(strict_types=1);
+
+require_once __DIR__ . '/_bootstrap.php';
 
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET, POST, DELETE, OPTIONS");
@@ -12,18 +13,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-$host = 'localhost';
-$dbname = 'acadbeat';
-$user = 'root';
-$pass = 'a1s2d3f4qwer';
-
 try {
-    $pdo = new PDO(
-        "mysql:host=$host;dbname=$dbname;charset=utf8mb4",
-        $user,
-        $pass,
-        [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION]
-    );
+    $pdo = listening_db();
 } catch (PDOException $e) {
     echo json_encode(["ok" => false, "error" => "DB连接失败: " . $e->getMessage()]);
     exit;

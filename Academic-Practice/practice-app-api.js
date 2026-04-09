@@ -35,18 +35,16 @@
     return pair ? decodeURIComponent(pair.slice(prefix.length)) : "";
   }
 
-  // Listening flows should stay in classic UI unless URL explicitly asks for godot.
-  const UI_MODE = getParam("ui", "");
+  // Dual-UI routing by page variant, not query params.
+  const CURRENT_PAGE = (window.location.pathname.split("/").pop() || "").toLowerCase();
+  const IS_ALT_UI_PAGE = CURRENT_PAGE === "listening-2.html" || CURRENT_PAGE === "respond_training-2.html" || CURRENT_PAGE === "note_training1.html";
+
+  function pickUiPage(classicPage, godotPage) {
+    return IS_ALT_UI_PAGE ? godotPage : classicPage;
+  }
 
   function withUiMode(url) {
-    if (UI_MODE !== "godot") {
-      return url;
-    }
-    var u = String(url);
-    if (u.indexOf("ui=godot") !== -1) {
-      return u;
-    }
-    return u + (u.indexOf("?") === -1 ? "?" : "&") + "ui=godot";
+    return String(url);
   }
 
   function buildAbsoluteProjectUrl(pathWithQuery) {
@@ -597,22 +595,11 @@
     return isoMap[normalized] || (normalized.length === 2 ? normalized.toUpperCase() : null);
   }
 
-  function getCountryFlagPath(country) {
-    const iso = getCountryIso(country);
-    return iso ? "flags/flags/" + iso.toLowerCase() + ".png" : "";
-  }
-
   function getCountryFlagImgHtml(country, flagUrl) {
-    // 优先使用数据库中的外网URL
     if (flagUrl) {
       return "<img class='country-flag-icon' src='" + escapeHtml(flagUrl) + "' alt='" + escapeHtml(country || "Country") + " flag' onerror=\"this.style.display='none'\">";
     }
-    // 回退到本地路径
-    const src = getCountryFlagPath(country);
-    if (!src) {
-      return "";
-    }
-    return "<img class='country-flag-icon' src='" + escapeHtml(src) + "' alt='" + escapeHtml(country || "Country") + " flag' onerror=\"this.style.display='none'\">";
+    return "";
   }
 
   function getCountryLabelHtml(country) {
@@ -651,14 +638,13 @@
 
   function getPersonMetaHtml(video) {
     const author = escapeHtml(video.author || "Unknown");
-    // 直接使用 flagUrl 显示国旗图片，放大尺寸
+    // 优先展示数据库 flagUrl；无则回退本地图标
     const flagImg = video.flagUrl 
-      ? "<img class='country-flag-icon' src='" + video.flagUrl + "' alt='flag' style='width:24px;height:18px;vertical-align:middle;margin-right:4px;'>"
-      : "";
+      ? "<img class='country-flag-icon' src='" + escapeHtml(video.flagUrl) + "' alt='" + escapeHtml(video.country || "Country") + " flag'>"
+      : getCountryFlagImgHtml(video.country, null);
     const countryLabel = escapeHtml(video.country || "N/A");
     const timeSpecific = escapeHtml(video.timeSpecific || video.duration || "N/A");
-    // 紧凑布局：作者 | 国旗+国家 | 时长
-    return "<span>" + author + "</span><span class='person-meta-separator'>|</span><span>" + flagImg + countryLabel + "</span><span class='person-meta-separator'>|</span><span>" + timeSpecific + "</span>";
+    return "<span>" + author + "</span><span class='person-meta-separator'>|</span><span class='country-inline'>" + flagImg + "<span class='country-label'>" + countryLabel + "</span></span><span class='person-meta-separator'>|</span><span>" + timeSpecific + "</span>";
   }
 
   function createCountryFilter(containerEl, values, initialValue, onChange) {
@@ -769,32 +755,17 @@
     };
   }
 
-  // 获取视频源URL（优先使用外网服务器的URL）
+  // 仅使用数据库视频 URL
   function getVideoSource(video) {
-    return video.videoUrl || video.videoPath || ("Videos/" + video.videoFile);
+    return video.videoUrl || "";
   }
 
-  // 封面：管理员上传 URL > 本地 cover/ cover2/（与旧 practice-app.js 一致）> 外网占位图
+  // 仅使用数据库封面 URL
   function getCoverUrl(video, mode) {
     if (video.coverUrl) {
       return video.coverUrl;
     }
-    if (video.coverFile) {
-      const folder = mode === "respond" ? "cover2" : "cover";
-      return folder + "/" + video.coverFile;
-    }
-    const match = String(video.id || "").match(/(\d+)$/);
-    if (!match) {
-      return null;
-    }
-    const baseIndex = Number(match[1]);
-    const coverNum = mode === "respond" ? baseIndex + 12 : baseIndex;
-    const coverFolder = mode === "respond" ? "cover2" : "cover";
-    const localPath = coverFolder + "/" + coverNum + ".png";
-    if (video.dataSource === "local") {
-      return localPath;
-    }
-    return "http://111.231.10.140/media/" + coverFolder + "/" + coverNum + ".png";
+    return null;
   }
 
   async function initTranscriptPanel(toggleBtn, closeBtn, panelEl, contentEl, video) {
@@ -819,13 +790,13 @@
     }
 
     // 否则从外网服务器获取
-    if (!video.transcriptUrl && !video.transcriptPath) {
+    if (!video.transcriptUrl) {
       contentEl.textContent = "No transcript file for this video.";
       return;
     }
 
     try {
-      const url = video.transcriptUrl || video.transcriptPath;
+      const url = video.transcriptUrl;
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error("transcript fetch failed");
@@ -902,7 +873,7 @@
       titleEl.textContent = "Transcript";
       if (!contentCache.transcript) {
         contentCache.transcript = await loadTextContent(
-          video.transcriptUrl || video.transcriptPath, 
+          video.transcriptUrl, 
           video.transcriptText, 
           "Failed to load transcript text."
         );
@@ -1002,10 +973,10 @@
     // 设置返回按钮
     var backList = qs(".back-btn");
     if (backList) {
-      if (UI_MODE === "godot") {
+      if (IS_ALT_UI_PAGE) {
         var gAc =
           (typeof window !== "undefined" && window.ACADBEAT_LOCAL && window.ACADBEAT_LOCAL.godotAcademicWebUrl) ||
-          "http://127.0.0.1:5500/index.html?ui=godot&scene=academic";
+          "http://127.0.0.1:5500/index.html?scene=academic";
         backList.dataset.backTarget = gAc;
       } else {
         backList.dataset.backTarget = "training.html";
@@ -1030,14 +1001,20 @@
 
     // 获取所有可用的过滤选项
     const allTypes = ["All", "Campus&Life", "Academic"];
-    const allCountries = ["All"].concat(Array.from(new Set(modeVideos.map(function (v) { return v.country; }))));
+    const allSources = ["All"].concat(Array.from(new Set(modeVideos.map(function (v) { return v.source || "N/A"; })))).sort();
+    const allDurations = ["All"].concat(Array.from(new Set(modeVideos.map(function (v) { return v.duration || "N/A"; })))).sort();
+    const allCountries = ["All"].concat(Array.from(new Set(modeVideos.map(function (v) { return v.country || "N/A"; })))).sort();
 
     buildOptions(allTypes, typeEl);
+    buildOptions(allSources, sourceEl);
+    buildOptions(allDurations, durationEl);
     const countryFilter = createCountryFilter(countryFilterEl, allCountries, "All", function (value) {
       filterState.country = value;
       renderResults();
     });
     typeEl.options[0].textContent = "Type: All";
+    sourceEl.options[0].textContent = "Source: All";
+    durationEl.options[0].textContent = "Duration: All";
 
     const filterState = {
       search: "",
@@ -1054,9 +1031,11 @@
         const keywordSource = [
           video.title,
           video.type,
+          video.author || "",
           video.duration || "",
           video.source || "",
           video.country,
+          video.transcriptText || "",
           video.question || "",
           video.answerText || ""
         ].join(" ").toLowerCase();
@@ -1091,9 +1070,10 @@
         const metaLine =
           "<div class='video-meta-row'>" +
           "<span class='video-meta-pill'>" + normalizedType(video) + "</span>" +
-          "<span class='video-meta-pill'>" + video.difficulty + "</span>" +
-          "<span class='video-meta-pill'>" + (video.duration || "N/A") + "</span>" +
-          "<span class='video-meta-pill'>" + (video.source || "N/A") + "</span>" +
+          "<span class='video-meta-pill'>" + escapeHtml(video.difficulty || "N/A") + "</span>" +
+          "<span class='video-meta-pill'>" + escapeHtml(video.duration || "N/A") + "</span>" +
+          "<span class='video-meta-pill'>" + escapeHtml(video.source || "N/A") + "</span>" +
+          "<span class='video-meta-pill video-country-pill'>" + getCountryInlineHtml(video.country, video.flagUrl) + "</span>" +
           "</div>";
         
         // 使用外网服务器的封面URL
@@ -1101,17 +1081,14 @@
         const coverMedia =
           "<div class='video-cover-box'>" +
           (coverUrl
-            ? "<img class='video-cover-image' src='" + coverUrl + "' alt='Video cover'>"
+            ? "<img class='video-cover-image' src='" + escapeHtml(coverUrl) + "' alt='Video cover'>"
             : "<div class='video-cover-placeholder'>Video Cover</div>") +
           "<button class='btn-small video-go-btn' type='button' aria-label='Play video' title='Play'>&#9658;</button>" +
-          "<div class='video-cover-title'>" + video.title + "</div>" +
+          "<div class='video-cover-title'>" + escapeHtml(video.title || "Untitled") + "</div>" +
           "</div>";
         
-        // respond 模式显示完整作者信息，understand 模式只显示国旗+国家
-        const personLine = mode === "respond" 
-          ? "<p class='video-person-line'>" + getPersonMetaHtml(video) + "</p>"
-          : "<p class='video-person-line'><span>" + (video.flagUrl ? "<img class='country-flag-icon' src='" + video.flagUrl + "' alt='flag' style='width:24px;height:18px;vertical-align:middle;margin-right:4px;'>" : "") + escapeHtml(video.country || "N/A") + "</span></p>";
-        const questionLine = video.question ? "<p class='video-question'>Q: " + video.question + "</p>" : "";
+        const personLine = "<p class='video-person-line'>" + getPersonMetaHtml(video) + "</p>";
+        const questionLine = video.question ? "<p class='video-question'>Q: " + escapeHtml(video.question) + "</p>" : "";
         card.innerHTML =
           metaLine +
           coverMedia +
@@ -1119,7 +1096,9 @@
           questionLine;
 
         card.querySelector(".video-go-btn").addEventListener("click", function () {
-          const targetPage = mode === "respond" ? "respond_training.html" : "note_training.html";
+          const targetPage = mode === "respond"
+            ? pickUiPage("respond_training.html", "respond_training-2.html")
+            : pickUiPage("note_training.html", "note_training1.html");
           window.location.href = withUiMode(targetPage + "?mode=" + mode + "&videoId=" + video.id);
         });
 
@@ -1187,7 +1166,8 @@
 
     const backBtnDetail = qs(".back-btn");
     if (backBtnDetail) {
-      backBtnDetail.dataset.backTarget = "listening.html?mode=" + encodeURIComponent(mode);
+      const listeningPage = pickUiPage("listening.html", "listening-2.html");
+      backBtnDetail.dataset.backTarget = listeningPage + "?mode=" + encodeURIComponent(mode);
     }
 
     const titleEl = qs("#detailTitle");
@@ -1213,7 +1193,7 @@
     const recordAnswerError = qs("#recordAnswerError");
     const recordAnswerFeedback = qs("#recordAnswerFeedback");
 
-    if (!titleEl || !detailPersonMetaEl || !metaEl || !videoEl || !studyWorkspaceEl || !noteShareBtn || !noteDockToggleBtn || !noteMainContentEl || !noteKeyWordEl || !notePersonalViewEl) {
+    if (!titleEl || !detailPersonMetaEl || !metaEl || !videoEl || !studyWorkspaceEl || !noteShareBtn || !noteMainContentEl || !noteKeyWordEl || !notePersonalViewEl) {
       return;
     }
 
@@ -1332,7 +1312,8 @@
 
       if (recordAnswerError) recordAnswerError.classList.add("hidden");
 
-      const trainingPath = withUiMode("Academic-Practice/note_training.html?mode=" + encodeURIComponent(mode) + "&videoId=" + encodeURIComponent(video.id));
+      const notePage = pickUiPage("note_training.html", "note_training1.html");
+      const trainingPath = withUiMode(notePage + "?mode=" + encodeURIComponent(mode) + "&videoId=" + encodeURIComponent(video.id));
       const trainingUrl = buildAbsoluteProjectUrl(trainingPath);
       const answerText = buildSharedAnswerText(values);
       const prefillContent = [
@@ -1406,6 +1387,9 @@
     }
 
     function refreshNoteDockBtnText() {
+      if (!noteDockToggleBtn) {
+        return;
+      }
       const isCollapsed = studyWorkspaceEl.classList.contains("note-dock-collapsed");
       noteDockToggleBtn.textContent = isCollapsed ? "展开" : "折叠";
     }
@@ -1423,10 +1407,12 @@
       }
     }
 
-    noteDockToggleBtn.addEventListener("click", function () {
-      studyWorkspaceEl.classList.toggle("note-dock-collapsed");
-      refreshNoteDockBtnText();
-    });
+    if (noteDockToggleBtn) {
+      noteDockToggleBtn.addEventListener("click", function () {
+        studyWorkspaceEl.classList.toggle("note-dock-collapsed");
+        refreshNoteDockBtnText();
+      });
+    }
 
     document.addEventListener("fullscreenchange", function () {
       if (document.fullscreenElement === studyWorkspaceEl) {
@@ -1456,7 +1442,8 @@
 
     const backBtnRespond = qs(".back-btn");
     if (backBtnRespond) {
-      backBtnRespond.dataset.backTarget = "listening.html?mode=" + encodeURIComponent(mode);
+      const listeningPage = pickUiPage("listening.html", "listening-2.html");
+      backBtnRespond.dataset.backTarget = listeningPage + "?mode=" + encodeURIComponent(mode);
     }
 
     const titleEl = qs("#respondTitle");
@@ -1524,7 +1511,8 @@
     }
 
     function buildRespondShareContent(audioUrl) {
-      const trainingPath = withUiMode("Academic-Practice/respond_training.html?mode=" + encodeURIComponent(mode) + "&videoId=" + encodeURIComponent(video.id));
+      const respondPage = pickUiPage("respond_training.html", "respond_training-2.html");
+      const trainingPath = withUiMode(respondPage + "?mode=" + encodeURIComponent(mode) + "&videoId=" + encodeURIComponent(video.id));
       const trainingUrl = buildAbsoluteProjectUrl(trainingPath);
       const audioFileName = "response-" + video.id + "." + getAudioExtensionFromMime(currentAudioMime);
       return [

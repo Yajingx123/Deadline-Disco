@@ -11,35 +11,6 @@
   <script src="../shared/acadbeat-local-config.js"></script>
   <link rel="stylesheet" href="acadbeat-global.css">
   <link rel="stylesheet" href="practice-style.css">
-  <script>
-    (function () {
-      var params = new URLSearchParams(window.location.search);
-      var uiParam = params.get('ui');
-      var cookieGodot = document.cookie.split('; ').some(function (c) {
-        return c === 'ui_mode=godot' || c.indexOf('ui_mode=godot') === 0;
-      });
-      if (uiParam !== 'godot' && cookieGodot) {
-        params.set('ui', 'godot');
-        var qs = params.toString();
-        history.replaceState(null, '', window.location.pathname + (qs ? '?' + qs : '') + window.location.hash);
-        uiParam = 'godot';
-      }
-      if (uiParam !== 'godot') {
-        return;
-      }
-      /* 先于首帧：让 practice-style 的 display:contents 拆层不作用于 Godot（与 game-listening-theme 同特异性时不再靠加载顺序赌赢） */
-      document.documentElement.setAttribute('data-ui', 'godot');
-      document.cookie = 'ui_mode=godot; path=/; max-age=2592000';
-      var font = document.createElement('link');
-      font.rel = 'stylesheet';
-      font.href = 'https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap';
-      document.head.appendChild(font);
-      var theme = document.createElement('link');
-      theme.rel = 'stylesheet';
-      theme.href = '../newUI/static/game-listening-theme.css';
-      document.head.appendChild(theme);
-    })();
-  </script>
 </head>
 <body data-page="video-list">
   <script>
@@ -172,38 +143,29 @@
     </section>
   </main>
 
-  <script src="practice-data.js"></script>
   <script src="practice-data-api.js"></script>
   <script src="practice-app-api.js"></script>
   <script>
     window.addEventListener('load', () => {
-      const uiGodot = (() => {
-        try {
-          if (new URLSearchParams(location.search).get('ui') === 'godot') return true;
-        } catch (_e) {}
-        return document.cookie.split('; ').some((c) => c.startsWith('ui_mode=godot'));
-      })();
-      if (!uiGodot) {
-        const L = window.ACADBEAT_LOCAL || {};
-        const loginUrl = '../home.html?login=1';
-        window.initializeAcadBeatNav({
-          mountId: 'acadbeatNav',
-          basePath: '../',
-          active: 'academic',
-          authApiBase: '../Auth/backend/api',
-          homeUrl: '../home.html',
-          ownerUrl: '../owner.html',
-          forumUrl: '../home.html?module=Dialogue',
-          technologyUrl: '../technology.html',
-          studioUrl: '../Studio/studio.html',
-          messageCenterUrl: L.messageCenterDistUrl,
-          adminUrl: L.adminDistUrl || window.location.origin + '/admin_page/dist/index.html',
-          messageApiUrl: L.messageSummaryApiUrl,
-          loginUrl,
-          redirectAdmins: false,
-          showChallengeButton: false
-        });
-      }
+      const L = window.ACADBEAT_LOCAL || {};
+      const loginUrl = '../home.html?login=1';
+      window.initializeAcadBeatNav({
+        mountId: 'acadbeatNav',
+        basePath: '../',
+        active: 'academic',
+        authApiBase: '../Auth/backend/api',
+        homeUrl: '../home.html',
+        ownerUrl: '../owner.html',
+        forumUrl: '../home.html?module=Dialogue',
+        technologyUrl: '../technology.html',
+        studioUrl: '../Studio/studio.html',
+        messageCenterUrl: L.messageCenterDistUrl,
+        adminUrl: L.adminDistUrl || window.location.origin + '/admin_page/dist/index.html',
+        messageApiUrl: L.messageSummaryApiUrl,
+        loginUrl,
+        redirectAdmins: false,
+        showChallengeButton: false
+      });
     });
   </script>
   <script src="../shared-nav.js"></script>
