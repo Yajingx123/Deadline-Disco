@@ -3,12 +3,10 @@ class TeamRanking {
     this.currentUser = null;
     this.teamData = null;
     this.rankingData = [];
-    this.isV2Style = this.loadStylePreference();
     this.init();
   }
 
   async init() {
-    this.initStyle();
     await this.getUserInfo();
     await this.loadRankingData();
     if (this.currentUser) {
@@ -16,44 +14,6 @@ class TeamRanking {
     }
     this.renderMyTeam();
     this.renderRanking();
-    this.setupStyleToggle();
-  }
-
-  loadStylePreference() {
-    const saved = localStorage.getItem('deadline_disco_style');
-    return saved === 'v2';
-  }
-
-  saveStylePreference(style) {
-    localStorage.setItem('deadline_disco_style', style);
-  }
-
-  initStyle() {
-    if (this.isV2Style) {
-      document.body.classList.add('v2-style');
-    }
-  }
-
-  setupStyleToggle() {
-    const toggleBtn = document.createElement('button');
-    toggleBtn.className = 'style-toggle-btn';
-    toggleBtn.textContent = this.isV2Style ? 'Back to Classic' : 'Try New Style';
-    toggleBtn.onclick = () => this.toggleStyle();
-    document.body.appendChild(toggleBtn);
-  }
-
-  toggleStyle() {
-    this.isV2Style = !this.isV2Style;
-    const style = this.isV2Style ? 'v2' : 'v1';
-    this.saveStylePreference(style);
-    
-    // 如果切换到v1样式，跳转到rank界面
-    if (!this.isV2Style) {
-      window.location.href = '../rank/index.html';
-    } else {
-      // 如果切换到v2样式，刷新当前页面
-      window.location.reload();
-    }
   }
 
   async getUserInfo() {
