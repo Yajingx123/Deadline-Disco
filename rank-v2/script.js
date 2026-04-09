@@ -35,29 +35,23 @@ class TeamRanking {
   }
 
   setupStyleToggle() {
-    console.log('Setting up style toggle button...');
     const toggleBtn = document.createElement('button');
     toggleBtn.className = 'style-toggle-btn';
     toggleBtn.textContent = this.isV2Style ? 'Back to Classic' : 'Try New Style';
-    toggleBtn.onclick = () => {
-      console.log('Toggle button clicked!');
-      this.toggleStyle();
-    };
+    toggleBtn.onclick = () => this.toggleStyle();
     document.body.appendChild(toggleBtn);
-    console.log('Toggle button added to body:', toggleBtn);
   }
 
   toggleStyle() {
-    console.log('Toggling style...');
     this.isV2Style = !this.isV2Style;
     const style = this.isV2Style ? 'v2' : 'v1';
     this.saveStylePreference(style);
     
-    // 如果切换到v2样式，跳转到rank-v2界面
-    if (this.isV2Style) {
-      window.location.href = '../rank-v2/index.html';
+    // 如果切换到v1样式，跳转到rank界面
+    if (!this.isV2Style) {
+      window.location.href = '../rank/index.html';
     } else {
-      // 如果切换到v1样式，刷新当前页面
+      // 如果切换到v2样式，刷新当前页面
       window.location.reload();
     }
   }

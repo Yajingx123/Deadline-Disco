@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AcadBeat | Team Ranking</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../shared-nav.css">
+  <script src="../shared/acadbeat-local-config.js"></script>
+  <style>html.acadbeat-role-guard body{visibility:hidden}</style>
+  <script>
+    document.documentElement.classList.add('acadbeat-role-guard');
+    (async function guardAdminPracticeIndex() {
+      try {
+        const response = await fetch('../Auth/backend/api/me.php', { credentials: 'include' });
+        const data = await response.json().catch(() => ({ status: 'error' }));
+        if (data.status === 'success' && data.user && String(data.user.role || '').toLowerCase() === 'admin') {
+          const admin = (window.ACADBEAT_LOCAL && window.ACADBEAT_LOCAL.adminDistUrl) || window.location.origin + '/admin_page/dist/index.html';
+          window.location.replace(admin);
+          return;
+        }
+      } catch (_err) {}
+      document.documentElement.classList.remove('acadbeat-role-guard');
+    })();
+  </script>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="team-ranking">
+  <div id="acadbeatNav"></div>
+
+  <main class="ranking-main">
+    <!-- 页面标题 -->
+    <div class="ranking-header">
+      <h1>Team Ranking</h1>
+      <p>Weekly Challenge Team Performance</p>
+    </div>
+    
+    <div class="ranking-container">
+      <!-- 个人团队信息卡片 -->
+      <div class="my-team-card">
+        <h2>My Team</h2>
+        <div id="myTeamContent" class="team-content">
+          <div class="loading-state">
+            <div class="spinner"></div>
+            <p>Loading your team information...</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- 团队排名列表 -->
+      <div class="ranking-list">
+        <h2>All Teams</h2>
+        <div class="ranking-header-row">
+          <div class="rank-col">Rank</div>
+          <div class="team-col">Team</div>
+          <div class="members-col">Members</div>
+          <div class="score-col">Score</div>
+        </div>
+        <div id="rankingContent" class="ranking-rows">
+          <div class="loading-state">
+            <div class="spinner"></div>
+            <p>Loading team rankings...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    window.addEventListener('load', () => {
+      const uiGodot = (() => {
+        try {
+          if (new URLSearchParams(location.search).get('ui') === 'godot') return true;
+        } catch (_e) {}
+        return document.cookie.split('; ').some((c) => c.startsWith('ui_mode=godot'));
+      })();
+      const L = window.ACADBEAT_LOCAL || {};
+      const loginUrl = uiGodot ? (L.godotWebEntryUrl || 'http://127.0.0.1:5500/index.html?ui=godot') : '../home.html?login=1';
+      window.initializeAcadBeatNav({
+        mountId: 'acadbeatNav',
+        basePath: '../',
+        active: 'rank',
+        authApiBase: '../Auth/backend/api',
+        homeUrl: '../home.html',
+        ownerUrl: '../owner.html',
+        adminUrl: L.adminDistUrl || window.location.origin + '/admin_page/dist/index.html',
+        loginUrl,
+        redirectAdmins: true
+      });
+    });
+  </script>
+  <script src="../shared-nav.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

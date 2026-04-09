@@ -602,3 +602,39 @@ body {
 .ranking-row.current-team:hover {
   background: rgba(155, 183, 212, 0.15);
 }
+
+/* Style Toggle Button */
+.style-toggle-btn {
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  background: rgba(155, 183, 212, 0.22);
+  border: 1px solid var(--border-color);
+  border-radius: 999px;
+  padding: 8px 16px;
+  color: var(--primary-color);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: var(--transition);
+  z-index: 9999;
+  box-shadow: var(--shadow-md);
+}
+
+.style-toggle-btn:hover {
+  background: rgba(155, 183, 212, 0.35);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+@media (max-width: 760px) {
+  .style-toggle-btn {
+    top: 70px;
+    right: 15px;
+    padding: 6px 12px;
+    font-size: 0.65rem;
+  }
+}
