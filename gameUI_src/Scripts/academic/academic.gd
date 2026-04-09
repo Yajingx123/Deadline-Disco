@@ -3,9 +3,9 @@ extends Node2D
 # 与主站 Academic-Practice/training.html 四个卡片一致（功能不变，仅入口在 Godot）
 # 本地 URL 与 shared/acadbeat-local-config.js（mainOrigin 等）对齐；见 docs/ARCHITECTURE.md
 
-const URL_VOCAB := "http://127.0.0.1:8001/vocba_prac/"
-const URL_LISTEN_UNDERSTAND := "http://127.0.0.1:8001/Academic-Practice/listening-2.html?mode=understand"
-const URL_LISTEN_RESPOND := "http://127.0.0.1:8001/Academic-Practice/listening-2.html?mode=respond"
+const URL_VOCAB := "http://127.0.0.1:8001/vocba_prac%20_v2/"
+const URL_LISTEN_UNDERSTAND := "http://127.0.0.1:8001/Academic-Practice/listening-2.html?mode=understand&ui=godot"
+const URL_LISTEN_RESPOND := "http://127.0.0.1:8001/Academic-Practice/listening-2.html?mode=respond&ui=godot"
 const URL_VOICE_ROOM := "http://127.0.0.1:8001/Academic-Practice/voice_room.html"
 
 @export var hover_scale: float = 1.1
@@ -57,8 +57,7 @@ func _on_planet_3_gui_input(event: InputEvent) -> void:
 
 
 func _on_planet_4_gui_input(event: InputEvent) -> void:
-	if _is_left_click(event):
-		_try_open_planet(4)
+	return
 
 
 func _scale_to(planet: TextureRect, target_scale: float) -> void:
