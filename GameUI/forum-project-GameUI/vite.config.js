@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig(({ command }) => ({
   // Dev uses root path; build keeps deployment base path.
-  base: command === 'serve' ? '/' : '/forum-project-v2/dist/',
+  base: command === 'serve' ? '/' : '/GameUI/forum-project-GameUI/dist/',
   plugins: [react()],
   server: {
     host: '127.0.0.1',

@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Message Center</title>
-    <link rel="stylesheet" href="/shared-nav.css" />
+    <link rel="stylesheet" href="/gates/shared-nav.css" />
     <script src="/shared/acadbeat-local-config.js"></script>
     <style>html.acadbeat-role-guard body{visibility:hidden}</style>
     <style>
@@ -13,7 +13,7 @@
       }
       body.mc2-godot-bg {
         background-color: #e4dfd8;
-        background-image: url('/message-center-project%202/background.jpg');
+        background-image: url('/GameUI/message-center-project-GameUI/image/background.jpg');
         background-size: cover;
         background-repeat: no-repeat;
         background-position: center;
@@ -55,14 +55,14 @@
         document.documentElement.classList.remove('acadbeat-role-guard');
       })();
     </script>
-    <script type="module" crossorigin src="/message-center-project 2/dist/assets/index-DQk5j3Er.js"></script>
-    <link rel="stylesheet" crossorigin href="/message-center-project 2/dist/assets/index-BNXj_H86.css">
+    <script type="module" crossorigin src="/GameUI/message-center-project-GameUI/dist/assets/index-4yxoSb4m.js"></script>
+    <link rel="stylesheet" crossorigin href="/GameUI/message-center-project-GameUI/dist/assets/index-sB3vLWPK.css">
   </head>
   <body>
     <button id="godotBackBtn" class="godot-back-btn" type="button" hidden>← Return to Godot</button>
     <div id="acadbeatNav"></div>
     <div id="root"></div>
-    <script src="/shared-nav.js"></script>
+    <script src="/gates/shared-nav.js"></script>
     <script>
       (function initMessageCenterSharedNav() {
         var L = window.ACADBEAT_LOCAL || {};
@@ -83,7 +83,7 @@
             ownerUrl: MAIN + '/owner.html',
             authApiBase: MAIN + '/Auth/backend/api',
             forumUrl: MAIN + '/home.html?module=Dialogue',
-            technologyUrl: MAIN + '/technology.html',
+            technologyUrl: MAIN + '/Technology/technology.html',
             studioUrl: MAIN + '/Studio/studio.html',
             messageCenterUrl: L.messageCenterDistUrl,
             adminUrl: L.adminDistUrl,

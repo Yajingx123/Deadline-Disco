@@ -20,7 +20,7 @@ $acadbeatMain = ACADBEAT_MAIN_ORIGIN;
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet" />
     <?php if (!$hideGlobalHomeNav): ?>
-    <link rel="stylesheet" href="<?php echo htmlspecialchars($acadbeatMain); ?>/shared-nav.css" />
+    <link rel="stylesheet" href="<?php echo htmlspecialchars($acadbeatMain); ?>/gates/shared-nav.css" />
     <script src="<?php echo htmlspecialchars($acadbeatMain); ?>/shared/acadbeat-local-config.js"></script>
     <?php endif; ?>
     <link rel="stylesheet" href="<?php echo $base; ?>frontend/styles.css" />

@@ -4,28 +4,22 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>AcadBeat | Dundee Student Quest Log</title>
-  <script src="./shared/acadbeat-local-config.js"></script>
+  <script src="/shared/acadbeat-local-config.js"></script>
+  <script src="/Technology/shared/page-guards.js"></script>
+  <script src="/Technology/shared/dundee-routing.js"></script>
   <style>html.acadbeat-role-guard body{visibility:hidden}</style>
   <script>
-    document.documentElement.classList.add('acadbeat-role-guard');
-    (async function guardAdminDundeeGuide() {
-      try {
-        const response = await fetch('./Auth/backend/api/me.php', { credentials: 'include' });
-        const data = await response.json().catch(() => ({ status: 'error' }));
-        if (data.status === 'success' && data.user && String(data.user.role || '').toLowerCase() === 'admin') {
-          const admin = (window.ACADBEAT_LOCAL && window.ACADBEAT_LOCAL.adminDistUrl) || window.location.origin + '/admin_page/dist/index.html';
-          window.location.replace(admin);
-          return;
-        }
-      } catch (_err) {}
-      document.documentElement.classList.remove('acadbeat-role-guard');
-    })();
+    window.acadbeatGuardAdminPage({
+      authMeUrl: '/Auth/backend/api/me.php',
+      guardClass: 'acadbeat-role-guard',
+      redirectAdmin: true,
+    });
   </script>
   <style>
     /* Using a fallback pixel-style font stack */
     @font-face {
       font-family: 'PixelFont';
-      src: url('./message-center-project 2/Myfont-Regular.ttf') format('truetype');
+      src: url('/GameUI/resources/Myfont-Regular.ttf') format('truetype');
       font-display: swap;
     }
 
@@ -629,35 +623,11 @@
       showTab(hash || 'overview', { updateHash: Boolean(hash) });
     })();
 
-    (function initializeBackLink() {
-      const backLink = document.getElementById('backLink');
-      if (!backLink) return;
-      const fallback = './technology.html';
-      const from = new URLSearchParams(window.location.search).get('from');
-      if (from === 'technology1') {
-        backLink.href = './technology.html';
-        return;
-      }
-      if (from === 'technology') {
-        backLink.href = './technology.html';
-        return;
-      }
-      const referrer = document.referrer ? new URL(document.referrer, window.location.href) : null;
-      if (!referrer || referrer.origin !== window.location.origin) {
-        backLink.href = fallback;
-        return;
-      }
-      const refPath = referrer.pathname.toLowerCase();
-      if (refPath.endsWith('/technology1.html')) {
-        backLink.href = './technology.html';
-        return;
-      }
-      if (refPath.endsWith('/technology.html')) {
-        backLink.href = './technology.html';
-        return;
-      }
-      backLink.href = fallback;
-    })();
+    window.acadbeatResolveDundeeBackLink({
+      backLinkId: 'backLink',
+      mode: 'gameui',
+      fallback: '/GameUI/Technology-GameUI/technology.html',
+    });
   </script>
 </body>
 </html>

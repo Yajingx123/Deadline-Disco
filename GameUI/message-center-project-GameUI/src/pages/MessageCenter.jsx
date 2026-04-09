@@ -37,6 +37,9 @@ const MAIN_ORIGIN =
   (typeof window !== 'undefined' && window.ACADBEAT_LOCAL && window.ACADBEAT_LOCAL.mainOrigin)
   || (typeof window !== 'undefined' ? window.location.origin : 'http://127.0.0.1:8001')
 const FALLBACK_BACK_URL = `${MAIN_ORIGIN}/home.html?module=Dialogue`
+const GAMEUI_FORUM_URL = `${MAIN_ORIGIN}/GameUI/forum-project-GameUI/dist/index.html`
+const GAMEUI_MESSAGE_CENTER_URL = `${MAIN_ORIGIN}/GameUI/message-center-project-GameUI/dist/index.html`
+const GAMEUI_CHALLENGE_URL = `${MAIN_ORIGIN}/GameUI/challenge-GameUI/challenge-panel.html`
 
 function sanitizeBackUrl(rawUrl) {
   if (!rawUrl) return ''
@@ -82,6 +85,53 @@ function resolveBackUrl() {
   }
 
   return sanitizeBackUrl(FALLBACK_BACK_URL) || FALLBACK_BACK_URL
+}
+
+function mapMessageCtaToGameUi(rawUrl, noticeKind = '') {
+  if (!rawUrl) {
+    return noticeKind === 'challenge' ? GAMEUI_CHALLENGE_URL : ''
+  }
+
+  try {
+    const parsed = new URL(rawUrl, window.location.origin)
+    if (parsed.origin !== window.location.origin) {
+      return parsed.toString()
+    }
+
+    const path = String(parsed.pathname || '')
+    const module = String(parsed.searchParams.get('module') || '').toLowerCase()
+    const isChallengeHome = path === '/home.html' && (parsed.searchParams.get('challenge') === '1' || module === 'challenge' || module === 'competition')
+    const isForumHome = path === '/home.html' && (module === 'dialogue' || module === 'forum')
+    const isMessageHome = path === '/home.html' && (module === 'messages' || module === 'messagecenter')
+    const isForumPath = path.includes('/forum-project/dist/index.html') || path.includes('/forum-project/index.html') || path.startsWith('/forum-project/')
+    const isMessagePath = path.includes('/message-center-project/dist/index.html')
+      || path.includes('/message-center-project/index.html')
+      || path.includes('/message-center-project%202/')
+      || path.includes('/message-center-project 2/')
+      || path.startsWith('/message-center-project/')
+    const isChallengePath = path.startsWith('/challenge/')
+
+    if (isChallengeHome || isChallengePath || noticeKind === 'challenge') {
+      return GAMEUI_CHALLENGE_URL
+    }
+
+    if (isForumHome || isForumPath) {
+      const target = new URL(GAMEUI_FORUM_URL)
+      const postId = parsed.searchParams.get('postId')
+      if (postId) {
+        target.searchParams.set('postId', postId)
+      }
+      return target.toString()
+    }
+
+    if (isMessageHome || isMessagePath) {
+      return GAMEUI_MESSAGE_CENTER_URL
+    }
+
+    return parsed.toString()
+  } catch (_err) {
+    return rawUrl
+  }
 }
 
 export default function MessageCenter() {
@@ -272,7 +322,7 @@ export default function MessageCenter() {
             <div className="mc2-card__preview">{item.commentPreview || item.body}</div>
             <div className="mc2-card__meta">Post: {item.postTitle}</div>
             <div className="mc2-card__actions">
-              <button type="button" className="mc2-actionBtn" onClick={() => { window.location.href = item.ctaUrl }}>
+              <button type="button" className="mc2-actionBtn" onClick={() => { window.location.href = mapMessageCtaToGameUi(item.ctaUrl) }}>
                 Reply
               </button>
             </div>
@@ -296,7 +346,7 @@ export default function MessageCenter() {
             <div className="mc2-card__headline">{item.title}</div>
             <div className="mc2-card__preview">{item.postTitle || item.body}</div>
             <div className="mc2-card__actions">
-              <button type="button" className="mc2-actionBtn" onClick={() => { window.location.href = item.ctaUrl }}>
+              <button type="button" className="mc2-actionBtn" onClick={() => { window.location.href = mapMessageCtaToGameUi(item.ctaUrl) }}>
                 View post
               </button>
             </div>
@@ -322,7 +372,7 @@ export default function MessageCenter() {
             {item.ctaUrl && (
               <button type="button" className="mc2-actionBtn" onClick={async () => {
                 await handleReadNotice(item.id, item.kind || 'system')
-                window.location.href = item.ctaUrl
+                window.location.href = mapMessageCtaToGameUi(item.ctaUrl, item.kind || 'system')
               }}>
                 {item.ctaLabel || 'Open'}
               </button>

@@ -1,6 +1,6 @@
 @font-face {
   font-family: 'Myfont';
-  src: url('/fonts/Myfont-Regular.ttf') format('truetype');
+  src: url('/GameUI/resources/Myfont-Regular.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -9,19 +9,19 @@
 :root {
   --bg: #efe5d3;
   /* Godot/newUI art: newUI/assets/forum → copied here at build; see forum-bg.jpg / my-favourate.jpg */
-  --page-bg-image: url('/images/ForumHome/forum-bg.jpg');
-  --page-bg-image-mine: url('/images/ForumHome/my-favourate.jpg');
-  --detail-page-bg-image: url('/images/PostDetail/detail-back.png');
-  --fab-post-image: url('/images/ForumHome/fab-post.png');
-  --fab-mine-image: url('/images/ForumHome/fab-mine.png');
-  --content-bg-image: url('/images/ForumHome/content-bg.png');
-  --labels-bg-image: url('/images/ForumHome/labels-bg.png');
-  --composer-modal-bg-image: url('/images/ForumHome/composer-modal-bg.png');
-  --myfav-page-bg-image: url('/images/myfav/back.png');
-  --myfav-back-btn-image: url('/images/myfav/detail-back-btn.png');
-  --myfav-tab-fav-image: url('/images/myfav/fav.png');
-  --myfav-tab-like-image: url('/images/myfav/like.png');
-  --myfav-tab-my-image: url('/images/myfav/my.png');
+  --page-bg-image: url('/GameUI/forum-project-GameUI/dist/images/ForumHome/forum-bg.jpg');
+  --page-bg-image-mine: url('/GameUI/forum-project-GameUI/dist/images/ForumHome/my-favourate.jpg');
+  --detail-page-bg-image: url('/GameUI/forum-project-GameUI/dist/images/PostDetail/detail-back.png');
+  --fab-post-image: url('/GameUI/forum-project-GameUI/dist/images/ForumHome/fab-post.png');
+  --fab-mine-image: url('/GameUI/forum-project-GameUI/dist/images/ForumHome/fab-mine.png');
+  --content-bg-image: url('/GameUI/forum-project-GameUI/dist/images/ForumHome/content-bg.png');
+  --labels-bg-image: url('/GameUI/forum-project-GameUI/dist/images/ForumHome/labels-bg.png');
+  --composer-modal-bg-image: url('/GameUI/forum-project-GameUI/dist/images/ForumHome/composer-modal-bg.png');
+  --myfav-page-bg-image: url('/GameUI/forum-project-GameUI/dist/images/myfav/back.png');
+  --myfav-back-btn-image: url('/GameUI/forum-project-GameUI/dist/images/myfav/detail-back-btn.png');
+  --myfav-tab-fav-image: url('/GameUI/forum-project-GameUI/dist/images/myfav/fav.png');
+  --myfav-tab-like-image: url('/GameUI/forum-project-GameUI/dist/images/myfav/like.png');
+  --myfav-tab-my-image: url('/GameUI/forum-project-GameUI/dist/images/myfav/my.png');
   --stage-aspect: 1.7777778;
   --panel: rgba(255, 250, 243, 0.92);
   --ink: #1f1a15;
@@ -152,7 +152,7 @@ body {
   width: 34px;
   height: 34px;
   display: block;
-  background-image: url('/images/1775402233845.png');
+  background-image: url('/GameUI/forum-project-GameUI/dist/images/1775402233845.png');
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
@@ -293,7 +293,7 @@ body {
 .v2-card-top strong {
   font-size: 1.32rem;
   line-height: 1.25;
-  font-weight: 800;
+  font-weight: 400;
 }
 
 .v2-card-top span {
@@ -313,6 +313,23 @@ body {
   gap: 14px;
   font-size: 1rem;
   font-weight: 700;
+}
+
+/* Forum GameUI requirement: keep numeric counters regular weight */
+.v2-card-top span,
+.v2-meta span {
+  font-weight: 400;
+}
+
+/* Make Arabic numerals lighter and cleaner in forum counters/stats */
+.v2-card-top span,
+.v2-meta,
+.v2-meta span,
+.v2-favorites-tab,
+.v2-favorites-tab--ghost {
+  font-family: "Avenir Next", "Helvetica Neue", "Segoe UI", Arial, sans-serif;
+  font-weight: 300 !important;
+  font-variant-numeric: tabular-nums;
 }
 
 .v2-label-panel {

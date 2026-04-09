@@ -8,7 +8,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@1,500;1,700&family=Inter:wght@300;400;600;800&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="./shared-nav.css">
+    <link rel="stylesheet" href="./gates/shared-nav.css">
     <link rel="stylesheet" href="./challenge/challenge-home.css">
     <script src="./shared/acadbeat-local-config.js"></script>
     <script>
@@ -1408,10 +1408,10 @@
         const HOME_URL = './home.html';
         const OWNER_URL = './owner.html';
         const ADMIN_URL = L.adminDistUrl || window.location.origin + '/admin_page/dist/index.html';
-        const ACADEMIC_GATE_URL = './academic-gate.html';
+        const ACADEMIC_GATE_URL = './gates/academic-gate.html';
         const VOCABULARY_URL = './vocba_prac/';
         const FORUM_URL = L.forumDevChooserUrl || (window.location.origin + '/forum-project/dist/index.html?view=forum');
-        const TECHNOLOGY_URL = L.technologyUrl || './technology-gate.html';
+        const TECHNOLOGY_URL = L.technologyUrl || './gates/technology-gate.html';
         const ACADEMIC_PRACTICE_URL = './Academic-Practice/training.html';
         const AUTH_API_BASE = './Auth/backend/api';
         const authState = { user: null, mode: 'login' };
@@ -1686,15 +1686,15 @@
                 basePath: './',
                 active: navActiveForModule(currentHomeModule),
                 showSwitchButton: false,
-                academicUrl: './academic-gate.html',
+                academicUrl: './gates/academic-gate.html',
                 authApiBase: './Auth/backend/api',
                 homeUrl: './home.html',
                 ownerUrl: './owner.html',
                 adminUrl: L.adminDistUrl || window.location.origin + '/admin_page/dist/index.html',
-                forumUrl: './forum-gate.html',
-                technologyUrl: L.technologyUrl || './technology-gate.html',
-                studioUrl: './studio-gate.html',
-                competitionUrl: './competition-gate.html',
+                forumUrl: './gates/forum-gate.html',
+                technologyUrl: L.technologyUrl || './gates/technology-gate.html',
+                studioUrl: './gates/studio-gate.html',
+                competitionUrl: './gates/competition-gate.html',
                 messageCenterUrl: L.messageCenterDistUrl || (window.location.origin + '/message-center-project/dist/index.html'),
                 redirectAdmins: true,
                 showChallengeButton: false
@@ -2030,7 +2030,7 @@
             }
         };
     </script>
-    <script src="./shared-nav.js"></script>
+    <script src="./gates/shared-nav.js"></script>
 </body>
 
 </html>

@@ -1,14 +1,38 @@
 Picture.py
+
+# OS / editor junk
+.DS_Store
+**/.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Dependencies / caches
 node_modules/
 **/node_modules/
-.run/
-service_logs/
-debug.log
 **/.npm-cache/
 package-lock.json
+
+# Local runtime logs
+.run/
+service_logs/
+*.log
+debug.log
+
+# Build outputs
 forum-project/dist/
 admin_page/dist/
 message-center-project/dist/
+GameUI/forum-project-GameUI/dist/
+GameUI/message-center-project-GameUI/dist/
+
+# Local helper scripts (do not upload)
+scripts/local/run_linux.sh
+scripts/local/run_mac.sh
+scripts/local/run_windows.ps1
+scripts/local/run_sql.sh
+
+# Env files
 .env
 .env.local
 .env.production

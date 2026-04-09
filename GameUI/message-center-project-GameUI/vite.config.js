@@ -1,8 +1,8 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-export default defineConfig({
-  base: '/message-center-project%202/dist/',
+export default defineConfig(({ command }) => ({
+  base: command === 'serve' ? '/' : '/GameUI/message-center-project-GameUI/dist/',
   plugins: [react()],
   server: {
     proxy: {
@@ -12,4 +12,4 @@ export default defineConfig({
       },
     },
   },
-})
+}))

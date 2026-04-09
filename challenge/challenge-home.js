@@ -16,9 +16,12 @@
   };
 
   function resolveTeamGuidePath(fileName) {
-    const path = window.location.pathname || '';
+    const path = (window.location.pathname || '').toLowerCase();
     const isRankPage = path.includes('/rank/') || path.includes('/rank-v2/');
-    const base = isRankPage ? '../challenge/teamGuide/' : './teamGuide/';
+    const isGameUiChallenge = path.includes('/gameui/challenge-gameui/');
+    const base = isGameUiChallenge
+      ? '/challenge/teamGuide/'
+      : (isRankPage ? '../challenge/teamGuide/' : './teamGuide/');
     return `${base}${fileName}`;
   }
 
@@ -56,6 +59,10 @@
 
   function getChallengeMount() {
     return document.getElementById('challengeMount');
+  }
+
+  function isStandaloneChallengePanel() {
+    return !!getEl('challengePageRoot') && !getChallengeMount();
   }
 
   function getAuthUser() {
@@ -100,11 +107,11 @@
   }
 
   function competitionHubUrl() {
-    let base = './competition-gate.html';
+    let base = './gates/competition-gate.html';
     try {
       const path = window.location.pathname || '';
       if (path.includes('/rank/') || isChallengePageMode()) {
-        base = '../competition-gate.html';
+        base = '../gates/competition-gate.html';
       }
     } catch (_e) {}
     return `${base}?highlight=challenge`;
@@ -811,6 +818,23 @@
   };
 
   attachListeners();
+  if (isStandaloneChallengePanel()) {
+    if (document.body && document.body.dataset) {
+      document.body.dataset.challengePage = '1';
+    }
+    loadState().catch(() => {
+      renderState({
+        phase: 'signup',
+        signup: { isSignedUp: false },
+        cycle: { label: 'Current Week', resetRule: 'Teams reset every Monday at 00:00.' },
+        team: null,
+        sentInvites: [],
+        receivedInvites: [],
+        publicListings: [],
+        leaderboard: [],
+      });
+    });
+  }
   {
     const u = (typeof authState !== 'undefined' && authState.user) ? authState.user : getAuthUser();
     if (u && String(u.role || '').toLowerCase() !== 'admin') {

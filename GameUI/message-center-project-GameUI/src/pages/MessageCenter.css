@@ -1,6 +1,6 @@
 @font-face {
   font-family: 'MC2MyFont';
-  src: url('../../Myfont-Regular.ttf') format('truetype');
+  src: url('/GameUI/resources/Myfont-Regular.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -10,7 +10,7 @@
   min-height: 100vh;
   padding-bottom: 24px;
   background-color: #e4dfd8;
-  background-image: url('../../background.jpg');
+  background-image: url('../../image/background.jpg');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -205,7 +205,7 @@
 }
 
 .mc2-d__inner .chat-stage__messages {
-  background-image: url('../../chat.jpg');
+  background-image: url('../../image/chat.jpg');
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;

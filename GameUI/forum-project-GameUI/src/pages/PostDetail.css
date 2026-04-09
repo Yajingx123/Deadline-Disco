@@ -1,10 +1,10 @@
 :root {
-  --detail-back-btn-image: url('/images/PostDetail/detail-back-btn.png');
-  --detail-reply-btn-image: url('/images/PostDetail/detail-reply-btn.png');
-  --detail-post-block-image: url('/images/PostDetail/detail-post-block.png');
-  --detail-comments-block-image: url('/images/PostDetail/detail-comments-block.png');
-  --detail-side-right-image: url('/images/PostDetail/detail-side-right.png');
-  --detail-side-left-image: url('/images/PostDetail/detail-side-left.png');
+  --detail-back-btn-image: url('/GameUI/forum-project-GameUI/dist/images/PostDetail/detail-back-btn.png');
+  --detail-reply-btn-image: url('/GameUI/forum-project-GameUI/dist/images/PostDetail/detail-reply-btn.png');
+  --detail-post-block-image: url('/GameUI/forum-project-GameUI/dist/images/PostDetail/detail-post-block.png');
+  --detail-comments-block-image: url('/GameUI/forum-project-GameUI/dist/images/PostDetail/detail-comments-block.png');
+  --detail-side-right-image: url('/GameUI/forum-project-GameUI/dist/images/PostDetail/detail-side-right.png');
+  --detail-side-left-image: url('/GameUI/forum-project-GameUI/dist/images/PostDetail/detail-side-left.png');
 }
 
 .v2-postdetail-page {
@@ -53,6 +53,7 @@
 
 .v2-postdetail-title {
   margin: 10px 0 14px;
+  font-weight: 400;
 }
 
 .v2-postdetail-content {
@@ -67,6 +68,18 @@
   gap: 14px;
   align-items: center;
   flex-wrap: wrap;
+}
+
+.v2-postdetail-stats span {
+  font-weight: 400;
+}
+
+.v2-postdetail-stats,
+.v2-postdetail-stats span,
+.v2-postdetail-action {
+  font-family: "Avenir Next", "Helvetica Neue", "Segoe UI", Arial, sans-serif;
+  font-weight: 300 !important;
+  font-variant-numeric: tabular-nums;
 }
 
 .v2-postdetail-action {

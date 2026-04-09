@@ -1,4 +1,3 @@
 <?php
-declare(strict_types=1);
-
-require_once __DIR__ . '/../../forum-project/api/bootstrap.php';
+// Proxy to canonical message-center backend implementation.
+require __DIR__ . '/../../../message-center-project/api/bootstrap.php';
