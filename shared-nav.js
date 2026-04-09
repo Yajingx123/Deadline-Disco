@@ -102,7 +102,7 @@
     const active = String(options.active || '').toLowerCase();
     const showSwitchButton = options.showSwitchButton !== undefined
       ? Boolean(options.showSwitchButton)
-      : active === 'academic'; // 默认只在 academic 页面显示切换按钮
+      : false; // 与 gate 等页统一，默认不显示 Godot SWITCH；需显式传 showSwitchButton: true
     const redirectAdmins = Boolean(options.redirectAdmins);
     const requireLogin = Boolean(options.requireLogin);
     const loginReturnUrl = String(options.loginReturnUrl || '').trim();
