@@ -32,24 +32,6 @@
   transform: translateY(-1px);
 }
 
-.message-center__modeBtn {
-  height: 44px;
-  padding: 0 14px;
-  border-radius: 999px;
-  border: 1px solid rgba(58, 78, 107, 0.12);
-  background: rgba(255, 255, 255, 0.92);
-  color: #1e293b;
-  font-size: 0.86rem;
-  font-weight: 700;
-  cursor: pointer;
-  box-shadow: 0 10px 24px rgba(58, 78, 107, 0.08);
-  transition: transform 0.18s ease;
-}
-
-.message-center__modeBtn:hover {
-  transform: translateY(-1px);
-}
-
 .message-center {
   max-width: 1480px;
   margin: 0 auto;

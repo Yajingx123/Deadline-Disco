@@ -126,12 +126,12 @@
           <div class="nav-dropdown">
             <a class="nav-item" data-nav="technology" href="${technologyUrl}">Technology</a>
             <div class="nav-submenu">
+              <a class="nav-subitem" href="${technologyDundeeUrl}">Dundee</a>
               <a class="nav-subitem" href="${technologyTeamsUrl}" target="_blank" rel="noopener noreferrer">Teams</a>
               <a class="nav-subitem" href="${technologyGithubUrl}" target="_blank" rel="noopener noreferrer">Github</a>
               <a class="nav-subitem" href="${technologyMatlabUrl}" target="_blank" rel="noopener noreferrer">Matlab</a>
               <a class="nav-subitem" href="${technologyAutocadUrl}" target="_blank" rel="noopener noreferrer">AutoCAD</a>
               <a class="nav-subitem" href="${technologyOriginlabUrl}" target="_blank" rel="noopener noreferrer">Originlab</a>
-              <a class="nav-subitem" href="${technologyDundeeUrl}">My Dundee</a>
             </div>
           </div>
           <div class="nav-dropdown">

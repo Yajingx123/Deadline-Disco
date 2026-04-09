@@ -361,6 +361,14 @@ body.route-pending button {
   color: var(--secondary-color);
 }
 
+/* Training home uses regular type instead of decorative serif titles */
+body[data-page="training-home"] .training-clean-header h2,
+body[data-page="training-home"] .training-clean-card h3 {
+  font-family: "Inter", sans-serif;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
 .training-clean-card p {
   margin-top: 12px;
   color: var(--text-soft);

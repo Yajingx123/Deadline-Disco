@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AcadBeat | Dundee Student Guide</title>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;1,700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="./shared/acadbeat-local-config.js"></script>
     <style>html.acadbeat-role-guard body{visibility:hidden}</style>
     <script>
@@ -23,139 +23,207 @@
         })();
     </script>
     <style>
-        :root{--bg:#f4efff;--surface:rgba(255,255,255,.88);--line:rgba(91,42,134,.14);--text:#2f1f4a;--muted:rgba(91,42,134,.78);--accent:rgba(250,204,21,.22);--accent-strong:#5b2a86;--shadow:0 14px 32px rgba(91,42,134,.12)}
-        *{box-sizing:border-box;margin:0;padding:0;font-family:'Inter',sans-serif}
-        body{background:radial-gradient(circle at 12% 16%,rgba(250,204,21,.2),transparent 30%),radial-gradient(circle at 84% 18%,rgba(91,42,134,.18),transparent 34%),linear-gradient(142deg,#f8f4ff 0%,#efe6ff 56%,#fff8de 100%);color:var(--text);min-height:100vh;padding:0 5% 48px}
-        .back-link{position:fixed;top:24px;left:24px;z-index:10;display:inline-flex;align-items:center;gap:8px;min-height:42px;padding:0 16px;border:1px solid var(--line);border-radius:999px;background:rgba(255,255,255,.92);box-shadow:var(--shadow);color:var(--accent-strong);text-decoration:none;font-weight:700}
-        .shell{max-width:1240px;margin:84px auto 0}
-        .hero,.layout,.grid,.module-grid,.link-grid{display:grid;gap:20px}
-        .hero{grid-template-columns:1fr;margin-bottom:24px}
-        .layout{grid-template-columns:280px minmax(0,1fr)}
-        .card,.rail,.panel-shell{background:linear-gradient(165deg,rgba(255,255,255,.9),rgba(246,240,255,.7));border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow)}
-        .card,.panel-shell{padding:28px}
-        .rail{padding:18px;position:sticky;top:100px;align-self:start}
-        .eyebrow{display:inline-flex;align-items:center;min-height:34px;padding:0 14px;border-radius:999px;background:var(--accent);color:var(--accent-strong);font-size:.78rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;border:1px solid rgba(250,204,21,.5)}
-        h1,.panel-title{font-family:'Playfair Display',serif;line-height:1.05}
-        h1{margin-top:16px;font-size:clamp(2rem,4vw,3rem)}
-        .hero p,.intro,.card p,.module-card p{color:var(--muted);line-height:1.7}
-        .hero p{margin-top:14px;max-width:60ch}
-        .actions,.quick-links{display:flex;flex-wrap:wrap;gap:10px}
-        .actions{margin-top:22px}
-        .pill{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:0 18px;border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.9);color:var(--accent-strong);text-decoration:none;font-weight:700;cursor:pointer;font:inherit}
-        .pill.primary{background:linear-gradient(135deg,#5b2a86 0%,#6a33a0 100%);border-color:rgba(91,42,134,.9);color:#fff8ea}
-        .hero-card{display:flex;align-items:center;justify-content:space-between;gap:24px}
-        .hero-copy{flex:1;min-width:0}
-        .hero-logo-wrap{flex:0 0 180px;display:flex;justify-content:center;align-items:center}
-        .hero-image{display:block;width:100%;max-width:160px;height:auto;object-fit:contain;border-radius:16px;border:1px solid var(--line);background:#fff;padding:8px}
-        .hero-steps{margin-top:18px;padding-left:18px;display:grid;gap:8px;color:var(--muted);line-height:1.6}
-        .hero-steps strong{color:var(--text)}
-        .link-card:hover,.tab-button:hover{transform:translateY(-1px)}
-        .link-card,.tab-button,.pill{transition:transform .18s ease,background .18s ease,border-color .18s ease,box-shadow .18s ease}
-        .rail-intro{padding:10px 10px 16px}
-        .rail-intro p{margin-top:10px;font-size:.9rem;line-height:1.6;color:var(--muted)}
-        .rail h2{padding:8px 10px 16px;font-size:.92rem;font-weight:800;color:var(--accent-strong);letter-spacing:.08em;text-transform:uppercase}
-        .tab-list{display:grid;gap:8px}
-        .tab-button{width:100%;border:0;border-radius:16px;background:transparent;color:var(--text);cursor:pointer;padding:14px 16px;text-align:left;font:inherit}
-        .tab-button.active{background:linear-gradient(135deg,rgba(250,204,21,.22),rgba(255,255,255,.6));color:var(--accent-strong)}
-        .tab-label{display:block;font-size:.95rem;font-weight:800}
-        .tab-meta{display:block;margin-top:4px;font-size:.82rem;line-height:1.45;color:var(--muted)}
-        .tab-panel{display:none}
-        .tab-panel.active{display:block}
-        .section-switcher{display:none;margin-bottom:24px;padding:16px 18px;border:1px solid var(--line);border-radius:18px;background:rgba(255,255,255,.78)}
-        .section-switcher label{display:block;font-size:.85rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--accent-strong)}
-        .section-switcher p{margin-top:8px;font-size:.9rem;line-height:1.55;color:var(--muted)}
-        .section-select{width:100%;margin-top:12px;padding:14px 16px;border:1px solid var(--line);border-radius:16px;background:#fff;font-size:.95rem;color:var(--text);font:inherit}
-        .back-link:focus-visible,.tab-button:focus-visible,.pill:focus-visible,.section-select:focus-visible{outline:3px solid rgba(58,78,107,.22);outline-offset:3px}
-        .panel-head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:14px;margin-bottom:20px}
-        .panel-title{font-size:clamp(1.7rem,3vw,2.3rem)}
-        .intro{max-width:62ch}
-        .grid,.module-grid,.link-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-        .info-card,.module-card,.link-card,.note{border:1px solid var(--line);border-radius:22px;background:linear-gradient(160deg,rgba(255,255,255,.88),rgba(247,241,255,.7))}
-        .info-card,.module-card,.note{padding:20px}
-        .info-card h3,.module-card h3{font-size:1rem;font-weight:800;color:var(--accent-strong);margin-bottom:10px}
-        .info-card ul,.info-card ol,.module-card ul{padding-left:18px;display:grid;gap:8px;color:var(--muted);font-size:.94rem;line-height:1.6}
-        .tag{display:inline-flex;align-items:center;min-height:28px;padding:0 10px;border-radius:999px;background:rgba(250,204,21,.2);color:var(--accent-strong);font-size:.76rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px;border:1px solid rgba(250,204,21,.46)}
-        .warning{margin-top:18px;padding:18px 20px;border-radius:20px;border:1px solid rgba(171,92,71,.18);background:rgba(255,239,233,.9);color:#7d4436;line-height:1.65}
-        table{width:100%;border-collapse:collapse;border:1px solid var(--line);border-radius:16px;overflow:hidden}
-        th,td{padding:12px 14px;text-align:left;font-size:.92rem;border-bottom:1px solid var(--line)}
-        th{background:rgba(250,204,21,.18);color:var(--accent-strong);font-weight:800}
-        tr:last-child td{border-bottom:0}
-        .link-card{display:block;padding:16px 18px;color:inherit;text-decoration:none}
-        .link-card strong{display:block;color:var(--accent-strong);font-size:.94rem}
-        .link-card span{display:block;margin-top:6px;color:var(--muted);font-size:.88rem;line-height:1.55}
-        .source-list{display:grid;gap:10px;color:var(--muted);font-size:.92rem;line-height:1.55}
-        .quick-links{margin-top:14px}
-        .quick-links a{color:var(--accent-strong);font-weight:700;text-decoration:none}
-        @media (max-width:1100px){body{padding:0 16px 36px}.hero,.layout,.grid,.module-grid,.link-grid{grid-template-columns:1fr}.hero-card{align-items:flex-start}.rail{position:static}.section-switcher{display:block}}
-        @media (max-width:720px){.back-link{top:16px;left:16px}.shell{margin-top:88px}.card,.panel-shell,.rail{padding:20px;border-radius:18px}.hero-card{flex-direction:column;align-items:flex-start}.hero-logo-wrap{flex-basis:auto}.hero-image{max-width:120px}}
+        :root {
+            --bg: #f4efff;
+            --surface: rgba(255, 255, 255, 0.75);
+            --line: rgba(91, 42, 134, 0.08);
+            --text: #1a0f2e;
+            --muted: rgba(47, 31, 74, 0.65);
+            --accent: rgba(250, 204, 21, 0.18);
+            --accent-strong: #5b2a86;
+            --shadow: 0 10px 30px -10px rgba(91, 42, 134, 0.12);
+            --shadow-hover: 0 22px 48px -12px rgba(91, 42, 134, 0.2);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
+        
+        body { 
+            background: 
+                radial-gradient(circle at 15% 15%, rgba(250, 204, 21, 0.22), transparent 35%),
+                radial-gradient(circle at 85% 20%, rgba(91, 42, 134, 0.15), transparent 40%),
+                linear-gradient(135deg, #fbfaff 0%, #f4efff 50%, #fffdf4 100%);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 0 5% 100px;
+            line-height: 1.6;
+        }
+
+        .back-link {
+            position: fixed; top: 32px; left: 32px; z-index: 100;
+            display: inline-flex; align-items: center; gap: 10px;
+            height: 48px; padding: 0 24px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            box-shadow: var(--shadow);
+            color: var(--accent-strong);
+            text-decoration: none; font-weight: 700; font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        .back-link:hover { transform: translateX(-5px); box-shadow: var(--shadow-hover); background: #fff; }
+
+        .shell { max-width: 1160px; margin: 96px auto 0; }
+
+        .card, .rail, .panel-shell {
+            background: var(--surface);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            border-radius: 28px;
+            box-shadow: var(--shadow);
+        }
+
+        .hero { margin-bottom: 28px; }
+        .hero-card { padding: 42px; display: flex; align-items: center; justify-content: space-between; gap: 34px; }
+        .eyebrow { 
+            display: inline-flex; align-items: center; padding: 6px 16px;
+            border-radius: 999px; background: var(--accent); color: var(--accent-strong);
+            font-size: 0.75rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase;
+            border: 1px solid rgba(250, 204, 21, 0.4);
+        }
+        h1 { font-family: 'Playfair Display', serif; font-size: clamp(2rem, 4.6vw, 2.9rem); margin-top: 18px; font-weight: 700; line-height: 1.12; }
+        .hero p { margin-top: 18px; font-size: 1rem; color: var(--muted); max-width: 64ch; }
+        
+        .hero-steps { margin-top: 22px; list-style: none; display: grid; gap: 10px; }
+        .hero-steps li { display: flex; align-items: flex-start; gap: 10px; color: var(--muted); font-size: 0.94rem; }
+        .hero-steps li::before { content: "→"; color: var(--accent-strong); font-weight: 900; }
+
+        .actions { margin-top: 26px; display: flex; gap: 12px; }
+        .pill { 
+            display: inline-flex; align-items: center; justify-content: center;
+            height: 48px; padding: 0 24px; border-radius: 999px;
+            font-weight: 700; text-decoration: none; transition: all 0.3s ease; border: 1px solid var(--line);
+            background: #fff; color: var(--accent-strong); cursor: pointer;
+        }
+        .pill.primary { background: var(--accent-strong); color: #fff; border: none; box-shadow: 0 12px 24px -6px rgba(91, 42, 134, 0.3); }
+        .pill:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); }
+
+        .hero-image { width: 100%; max-width: 168px; border-radius: 20px; transform: rotate(3deg); box-shadow: var(--shadow); transition: transform 0.6s ease; }
+        .hero-card:hover .hero-image { transform: rotate(0deg) scale(1.05); }
+
+        .layout { display: grid; grid-template-columns: 286px 1fr; gap: 24px; align-items: start; }
+        .rail { padding: 24px 16px; position: sticky; top: 28px; }
+        .rail h2 { padding: 0 12px 14px; font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.2em; color: var(--muted); }
+        
+        .tab-list { display: flex; flex-direction: column; gap: 8px; }
+        .tab-button {
+            width: 100%; border: none; background: transparent; padding: 14px 14px;
+            border-radius: 14px; text-align: left; cursor: pointer; transition: all 0.3s ease;
+        }
+        .tab-button:hover { background: rgba(255,255,255,0.6); transform: translateX(5px); }
+        .tab-button.active { background: #fff; box-shadow: 0 8px 20px -5px rgba(91, 42, 134, 0.1); transform: scale(1.03); }
+        .tab-label { display: block; font-weight: 800; font-size: 0.92rem; color: var(--text); }
+        .tab-meta { display: block; font-size: 0.76rem; color: var(--muted); margin-top: 4px; line-height: 1.4; }
+
+        .panel-shell { padding: 40px; min-height: 560px; }
+        .panel-title { font-family: 'Playfair Display', serif; font-size: 2.1rem; margin-bottom: 14px; font-weight: 700; }
+        .intro { font-size: 1rem; color: var(--muted); margin-bottom: 28px; max-width: 68ch; line-height: 1.7; }
+        
+        .grid, .module-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+        .info-card, .module-card { 
+            padding: 20px; border-radius: 18px; background: rgba(255,255,255,0.5); 
+            border: 1px solid rgba(255,255,255,0.4); transition: all 0.4s ease;
+        }
+        .info-card:hover, .module-card:hover { background: #fff; transform: translateY(-8px); box-shadow: var(--shadow-hover); }
+        .info-card h3, .module-card h3 { font-size: 1.06rem; color: var(--accent-strong); margin-bottom: 12px; font-weight: 800; }
+        
+        .tag { display: inline-block; padding: 4px 12px; border-radius: 8px; background: var(--accent); color: var(--accent-strong); font-size: 0.7rem; font-weight: 800; margin-bottom: 12px; border: 1px solid rgba(250, 204, 21, 0.4); }
+        
+        ul, ol { padding-left: 20px; }
+        li { margin-bottom: 8px; color: var(--muted); font-size: 0.9rem; }
+
+        table { width: 100%; border-collapse: separate; border-spacing: 0; margin: 16px 0; border-radius: 16px; overflow: hidden; border: 1px solid var(--line); }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid var(--line); font-size: 0.86rem; }
+        th { background: var(--accent); color: var(--accent-strong); font-weight: 800; }
+        
+        .link-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 10px; }
+        .link-card { display: block; padding: 14px; border-radius: 14px; border: 1px solid var(--line); text-decoration: none; color: inherit; transition: all 0.3s ease; background: rgba(255,255,255,0.3); }
+        .link-card:hover { border-color: var(--accent-strong); background: #fff; transform: translateY(-3px); box-shadow: var(--shadow); }
+        .link-card strong { display: block; color: var(--accent-strong); margin-bottom: 4px; font-size: 0.92rem; }
+        .link-card span { font-size: 0.8rem; color: var(--muted); }
+
+        .warning { margin-top: 20px; padding: 18px; border-radius: 16px; background: rgba(171, 92, 71, 0.05); border: 1px dashed rgba(171, 92, 71, 0.3); color: #7d4436; font-size: 0.9rem; line-height: 1.6; }
+
+        .tab-panel { display: none; animation: slideUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
+        .tab-panel.active { display: block; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+
+        @media (max-width: 1100px) {
+            .layout { grid-template-columns: 1fr; }
+            .rail { position: static; }
+            .hero-card { flex-direction: column; text-align: center; padding: 30px; }
+            .grid, .module-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
-    <a class="back-link" id="backLink" href="./technology.html" aria-label="Back to previous page">← Back</a>
+    <a class="back-link" id="backLink" href="./technology.html" aria-label="Back to previous page">← Return</a>
+    
     <div class="shell">
         <section class="hero">
             <div class="card hero-card">
                 <div class="hero-copy">
                     <span class="eyebrow">Dundee Starter Guide</span>
-                    <h1>Year 1 Dundee study guide for new students.</h1>
-                    <p>This page groups the Dundee materials into simple sections so new students can quickly find platform guidance, module expectations, assessment rules, referencing help, grades, and support services.</p>
-                    <ol class="hero-steps">
-                        <li><strong>First time here:</strong> start with <strong>MyDundee and Registry</strong>.</li>
-                        <li><strong>Before coursework:</strong> read <strong>Semester 1 Modules</strong> and <strong>Referencing</strong>.</li>
-                        <li><strong>Before exams:</strong> review <strong>Exam Rules</strong> again.</li>
-                    </ol>
+                    <h1>Year 1 Dundee Study Guide</h1>
+                    <p>This page groups the Dundee materials into simple sections so new students can quickly find platform guidance, module expectations, and support services.</p>
+                    <ul class="hero-steps">
+                        <li><strong>First time here:</strong> start with MyDundee and Registry.</li>
+                        <li><strong>Before coursework:</strong> read Semester 1 Modules and Referencing.</li>
+                        <li><strong>Before exams:</strong> review Exam Rules again.</li>
+                    </ul>
                     <div class="actions">
                         <button class="pill primary" type="button" data-jump="systems">Start reading</button>
                         <a class="pill" href="https://www.dundee.ac.uk/students" target="_blank" rel="noopener noreferrer">Official student site</a>
                     </div>
                 </div>
-                <div class="hero-logo-wrap">
-                    <img class="hero-image" src="./Dundee/dundee-campus.webp" alt="University of Dundee campus">
-                </div>
+                <img class="hero-image" src="./Dundee/dundee-campus.webp" alt="Dundee Campus">
             </div>
         </section>
 
         <div class="layout">
             <aside class="rail">
-                <div class="rail-intro">
-                    <span class="eyebrow">Sections</span>
-                    <p>Choose a section from the list. The page only shows one topic at a time to keep reading simple.</p>
-                </div>
-                <h2>Modules</h2>
-                <div class="tab-list" role="tablist" aria-label="Dundee guide modules">
-                    <button class="tab-button active" type="button" role="tab" aria-selected="true" aria-controls="panel-overview" data-target="overview"><span class="tab-label">Overview</span><span class="tab-meta">What this guide covers and where to start.</span></button>
-                    <button class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="panel-systems" data-target="systems"><span class="tab-label">MyDundee and Registry</span><span class="tab-meta">Where each system lives and how to use it.</span></button>
-                    <button class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="panel-semester" data-target="semester"><span class="tab-label">Semester 1 Modules</span><span class="tab-meta">Detailed course content and how to stay on track.</span></button>
-                    <button class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="panel-exams" data-target="exams"><span class="tab-label">Exam Rules</span><span class="tab-meta">Online and in-room rules with common failure risks.</span></button>
-                    <button class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="panel-referencing" data-target="referencing"><span class="tab-label">Referencing</span><span class="tab-meta">Harvard style, plagiarism, and tools.</span></button>
-                    <button class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="panel-mitigation" data-target="mitigation"><span class="tab-label">Mitigating Circumstances</span><span class="tab-meta">Formal route for serious assessment impact.</span></button>
-                    <button class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="panel-grades" data-target="grades"><span class="tab-label">Grades and English Medium</span><span class="tab-meta">Conversion bands and official wording.</span></button>
-                    <button class="tab-button" type="button" role="tab" aria-selected="false" aria-controls="panel-support" data-target="support"><span class="tab-label">Student Support</span><span class="tab-meta">Academic help, admin tools, and student services.</span></button>
-                </div>
+                <h2>Sections</h2>
+                <nav class="tab-list">
+                    <button class="tab-button active" type="button" data-target="overview" onclick="switchTab('overview')">
+                        <span class="tab-label">Overview</span>
+                        <span class="tab-meta">Where to start.</span>
+                    </button>
+                    <button class="tab-button" type="button" data-target="systems" onclick="switchTab('systems')">
+                        <span class="tab-label">MyDundee and Registry</span>
+                        <span class="tab-meta">Digital platform usage.</span>
+                    </button>
+                    <button class="tab-button" type="button" data-target="semester" onclick="switchTab('semester')">
+                        <span class="tab-label">Semester 1 Modules</span>
+                        <span class="tab-meta">Course content details.</span>
+                    </button>
+                    <button class="tab-button" type="button" data-target="exams" onclick="switchTab('exams')">
+                        <span class="tab-label">Exam Rules</span>
+                        <span class="tab-meta">Regulations & Conduct.</span>
+                    </button>
+                    <button class="tab-button" type="button" data-target="referencing" onclick="switchTab('referencing')">
+                        <span class="tab-label">Referencing</span>
+                        <span class="tab-meta">Harvard style & tools.</span>
+                    </button>
+                    <button class="tab-button" type="button" data-target="mitigation" onclick="switchTab('mitigation')">
+                        <span class="tab-label">Mitigating Circumstances</span>
+                        <span class="tab-meta">Formal Route for Emergencies.</span>
+                    </button>
+                    <button class="tab-button" type="button" data-target="grades" onclick="switchTab('grades')">
+                        <span class="tab-label">Grades and EMI</span>
+                        <span class="tab-meta">Conversions and Language.</span>
+                    </button>
+                    <button class="tab-button" type="button" data-target="support" onclick="switchTab('support')">
+                        <span class="tab-label">Student Support</span>
+                        <span class="tab-meta">Help services and links.</span>
+                    </button>
+                </nav>
             </aside>
 
-            <section class="panel-shell">
-                <div class="section-switcher">
-                    <label for="dundeeSectionSelect">Jump to a section</label>
-                    <p>Use this menu on smaller screens.</p>
-                    <select id="dundeeSectionSelect" class="section-select" aria-label="Jump to Dundee guide section">
-                        <option value="overview">Overview</option>
-                        <option value="systems">MyDundee and Registry</option>
-                        <option value="semester">Semester 1 Modules</option>
-                        <option value="exams">Exam Rules</option>
-                        <option value="referencing">Referencing</option>
-                        <option value="mitigation">Mitigating Circumstances</option>
-                        <option value="grades">Grades and English Medium</option>
-                        <option value="support">Student Support</option>
-                    </select>
-                </div>
-                <article class="tab-panel active" id="panel-overview" role="tabpanel">
-                    <div class="panel-head">
-                        <div>
-                            <h2 class="panel-title">What this guide gives new students</h2>
-                            <p class="intro">The original folder mixed system instructions, course notes, exam rules, and support information. This page separates those topics so you can switch directly to the module you need.</p>
-                        </div>
-                    </div>
+            <main class="panel-shell">
+                <article class="tab-panel active" id="panel-overview">
+                    <h2 class="panel-title">What this guide gives new students</h2>
+                    <p class="intro">The original folder mixed system instructions, course notes, exam rules, and support information. This page separates those topics so you can switch directly to the module you need.</p>
                     <div class="grid">
                         <div class="info-card">
                             <h3>Start here</h3>
@@ -169,30 +237,26 @@
                         <div class="info-card">
                             <h3>Main themes repeated across the files</h3>
                             <ul>
-                                <li>MyDundee is a working platform for resources, submissions, extra materials, and online exams, not just a noticeboard.</li>
-                                <li>Academic integrity rules are strict around tabs, translation tools, copied work, and referencing.</li>
+                                <li>MyDundee is a working platform for resources, submissions, and exams, not just a noticeboard.</li>
+                                <li>Academic integrity rules are strict around tabs, translation tools, and referencing.</li>
                                 <li>Semester 1 expects independent learning very early, especially in group project modules.</li>
                                 <li>Different problems need different routes: academic support, library help, mitigating circumstances, or student services.</li>
                             </ul>
                         </div>
                     </div>
                 </article>
-                <article class="tab-panel" id="panel-systems" role="tabpanel">
-                    <div class="panel-head">
-                        <div>
-                            <h2 class="panel-title">MyDundee and Registry</h2>
-                            <p class="intro">The source files show two core system families: <strong>MyDundee</strong> for learning and assessments, and <strong>registry or eVision workflows</strong> for applications, records, and official student administration.</p>
-                        </div>
-                    </div>
+
+                <article class="tab-panel" id="panel-systems">
+                    <h2 class="panel-title">MyDundee and Registry</h2>
+                    <p class="intro">The source files show core system families for learning and administration.</p>
                     <div class="grid">
                         <div class="info-card">
                             <h3>Where each system lives</h3>
                             <ul>
-                                <li><strong>MyDundee:</strong> module pages, learning resources, submissions, extra English materials, and online Listening, Reading, and Writing exams.</li>
-                                <li><strong>eVision:</strong> registry-facing actions, records, and official letters.</li>
-                                <li><strong>Dundee Students site:</strong> central services and official guidance.</li>
+                                <li><strong>MyDundee:</strong> Module pages, learning resources, and online exams.</li>
+                                <li><strong>eVision:</strong> Registry-facing actions, records, and official letters.</li>
+                                <li><strong>Dundee Students site:</strong> Central services and official guidance.</li>
                             </ul>
-                            <p style="margin-top:12px">Use the module descriptions on this page as the quick reference for what each platform is used for. The only global jump button is placed at the bottom of the page.</p>
                         </div>
                         <div class="info-card">
                             <h3>Registry application flow</h3>
@@ -200,376 +264,279 @@
                                 <li>Open the course-specific application link.</li>
                                 <li>Create a username and password as a new user.</li>
                                 <li>Complete personal and contact details.</li>
-                                <li>Add qualifications and, if required, English language qualifications.</li>
+                                <li>Add qualifications and English language results.</li>
                                 <li>Complete the other information section and submit.</li>
                             </ol>
                         </div>
-                        <div class="info-card">
-                            <h3>Programme links shown in the Dundee slides</h3>
-                            <div class="link-grid">
-                                <a class="link-card" href="https://uod.ac.uk/csu-h200" target="_blank" rel="noopener noreferrer"><strong>Civil Engineering</strong><span>BEng (Hons), joint degree with Central South University.</span></a>
-                                <a class="link-card" href="https://uod.ac.uk/csu-h300" target="_blank" rel="noopener noreferrer"><strong>Mechanical Engineering</strong><span>BEng (Hons), joint degree with Central South University.</span></a>
-                                <a class="link-card" href="https://uod.ac.uk/csu-g401" target="_blank" rel="noopener noreferrer"><strong>Computing Science</strong><span>BSc (Hons), joint degree with Central South University.</span></a>
-                                <a class="link-card" href="https://uod.ac.uk/csu-g100" target="_blank" rel="noopener noreferrer"><strong>Mathematics</strong><span>BSc (Hons), joint degree with Central South University.</span></a>
-                                <a class="link-card" href="https://uod.ac.uk/csu-h304" target="_blank" rel="noopener noreferrer"><strong>Mechanical with Transportation</strong><span>BEng (Hons), joint degree with Central South University.</span></a>
-                            </div>
-                        </div>
+                    </div>
+                    <h3 style="margin: 32px 0 16px; color: var(--accent-strong);">Programme links in the Dundee slides</h3>
+                    <div class="link-grid" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));">
+                        <a class="link-card" href="https://uod.ac.uk/csu-h200" target="_blank" rel="noopener noreferrer"><strong>Civil Engineering</strong><span>BEng (Hons), joint degree with Central South University.</span></a>
+                        <a class="link-card" href="https://uod.ac.uk/csu-h300" target="_blank" rel="noopener noreferrer"><strong>Mechanical Engineering</strong><span>BEng (Hons), joint degree with Central South University.</span></a>
+                        <a class="link-card" href="https://uod.ac.uk/csu-g401" target="_blank" rel="noopener noreferrer"><strong>Computing Science</strong><span>BSc (Hons), joint degree with Central South University.</span></a>
+                        <a class="link-card" href="https://uod.ac.uk/csu-g100" target="_blank" rel="noopener noreferrer"><strong>Mathematics</strong><span>BSc (Hons), joint degree with Central South University.</span></a>
+                        <a class="link-card" href="https://uod.ac.uk/csu-h304" target="_blank" rel="noopener noreferrer"><strong>Mechanical with Transportation</strong><span>BEng (Hons), joint degree with Central South University.</span></a>
+                    </div>
+                    <div class="grid" style="margin-top: 28px;">
                         <div class="info-card">
                             <h3>How to use MyDundee well</h3>
                             <ul>
-                                <li>Check each module space early because project work often expects study beyond the lecture introduction.</li>
+                                <li>Check each module space early because project work expects study beyond the lecture introduction.</li>
                                 <li>Use extra English materials regularly, especially before speaking and writing assessments.</li>
-                                <li>Before online exams, make sure you can log in quickly and your device is fully charged.</li>
-                                <li>Keep your working setup clean because open tabs and wrong device settings can become misconduct issues during exams.</li>
+                                <li>Before online exams, make sure login access is smooth and your device is fully charged.</li>
+                                <li>Keep your setup clean because open tabs and wrong device settings can become misconduct issues.</li>
                             </ul>
                         </div>
                     </div>
                 </article>
-                <article class="tab-panel" id="panel-semester" role="tabpanel">
-                    <div class="panel-head">
-                        <div>
-                            <h2 class="panel-title">Semester 1 Modules</h2>
-                            <p class="intro">The first-semester notes describe rotating project work, English transition support, and subject teaching that expects fast adaptation. The cards below focus on content, assessment style, and what usually helps students pass or perform safely.</p>
-                        </div>
-                    </div>
+
+                <article class="tab-panel" id="panel-semester">
+                    <h2 class="panel-title">Semester 1 Modules</h2>
+                    <p class="intro">Detailed course content and projects for the first semester.</p>
                     <div class="module-grid">
                         <div class="module-card">
                             <span class="tag">Project Structure</span>
                             <h3>How the rotation works</h3>
-                            <p>Students usually complete four short projects in Computing, Mathematics, Mechanical, and Civil topics. Groups are random, usually 5 to 8 students, and peer review can affect individual marks.</p>
-                            <ul>
-                                <li>Projects are used to introduce Dundee teaching style and teamwork.</li>
-                                <li>Different degree cohorts may be mixed in the same class.</li>
-                                <li>English communication matters inside project marking, not only technical output.</li>
-                            </ul>
+                            <p>Students usually complete four short projects in Computing, Mathematics, Mechanical, and Civil topics. Groups are often random and peer review may affect individual marks.</p>
                         </div>
                         <div class="module-card">
                             <span class="tag">Computing</span>
-                            <h3>Processing, drawing tools, and demonstration</h3>
-                            <p>The Computing project introduces programming through <strong>Processing</strong>. Students build a simple drawing tool and explain it in a demonstration.</p>
-                            <ul>
-                                <li><strong>Main output:</strong> group drawing software plus demo.</li>
-                                <li><strong>How to stay on track:</strong> do not wait for class alone, because the final product needs more than the starter examples.</li>
-                                <li><strong>Useful habit:</strong> practice extra features early and read the recommended MyDundee materials.</li>
-                            </ul>
+                            <h3>Processing & Drawing</h3>
+                            <p>Programming via Processing. Main output: group drawing software plus demo. Practice extra features early.</p>
                         </div>
                         <div class="module-card">
                             <span class="tag">Mathematics</span>
-                            <h3>Game design and academic report</h3>
-                            <p>The Mathematics project focuses on designing a game, identifying a mathematical problem inside it, and writing an academic-style report.</p>
-                            <ul>
-                                <li><strong>Main output:</strong> group-designed game plus written report.</li>
-                                <li><strong>How to stay on track:</strong> treat report writing seriously because academic style matters heavily.</li>
-                                <li><strong>Critical warning:</strong> if only one student should submit, do not let multiple group members upload the same file to Turnitin.</li>
-                            </ul>
+                            <h3>Game Design Report</h3>
+                            <p>Designing a game and writing a formal academic report. Do not let multiple members upload same file to Turnitin.</p>
                         </div>
                         <div class="module-card">
                             <span class="tag">Mechanical</span>
-                            <h3>Fan design, testing, and poster</h3>
-                            <p>This project covers Excel data handling, fan design, risk awareness, testing with equipment, and turning the results into a poster-style report.</p>
-                            <ul>
-                                <li><strong>Main output:</strong> built fan model, measured data, poster report, and oral questioning.</li>
-                                <li><strong>How to stay on track:</strong> take part in the whole build and testing process because final review can include individual questioning.</li>
-                                <li><strong>Common issue:</strong> poor time or materials planning makes the final stage much more stressful.</li>
-                            </ul>
+                            <h3>Fan testing & poster</h3>
+                            <p>Excel data handling, fan design, testing, and poster report. Individual questioning may be included.</p>
                         </div>
                         <div class="module-card">
                             <span class="tag">Civil</span>
-                            <h3>CAD bridge design, testing, report, and presentation</h3>
-                            <p>The Civil project introduces basic CAD drawing, materials, and bridge knowledge. Students then design and build a bridge, test its load capacity, analyse the result, and present the project as a group.</p>
-                            <ul>
-                                <li><strong>Main output:</strong> CAD design, physical model, test results, report, and presentation.</li>
-                                <li><strong>How to stay on track:</strong> understand the structure before building and plan material use carefully.</li>
-                                <li><strong>Performance tip:</strong> this project usually feels clearer when the team assigns roles early.</li>
-                            </ul>
+                            <h3>CAD Bridge Design</h3>
+                            <p>CAD drawing, bridge build, load capacity testing, and group presentation.</p>
                         </div>
                         <div class="module-card">
-                            <span class="tag">English for Academic Skills I</span>
-                            <h3>Academic English, presentation, and four-skill exams</h3>
-                            <p>This module helps students adapt to English-medium study through referencing, presentation technique, and general writing, listening, speaking, and reading development.</p>
-                            <ul>
-                                <li><strong>Main assessments:</strong> coursework plus final Writing, Listening, Reading, and Speaking components.</li>
-                                <li><strong>How to stay on track:</strong> practise speaking delivery, not only content, because confidence and presentation quality matter.</li>
-                                <li><strong>Support tip:</strong> use MyDundee extra materials and English corner sessions regularly.</li>
-                            </ul>
+                            <span class="tag">English Skills I</span>
+                            <h3>Four-skill Exams</h3>
+                            <p>Academic English, presentation techniques, and Reading/Writing/Listening/Speaking assessments.</p>
                         </div>
                         <div class="module-card">
-                            <span class="tag">Calculus for Science and Engineering</span>
-                            <h3>Worksheets, class test, and final exam</h3>
-                            <p>The Calculus notes describe two main assessments: a class test and a final exam. Teaching staff may vary, so students benefit from relying on the prepared learning sheets rather than one teaching style.</p>
-                            <ul>
-                                <li><strong>Main assessments:</strong> class test plus final exam.</li>
-                                <li><strong>How to stay on track:</strong> preview worksheets before class and learn mathematics vocabulary in English.</li>
-                                <li><strong>Practical benefit:</strong> pre-reading reduces pressure when teaching pace, accent, or handwriting changes.</li>
-                            </ul>
+                            <span class="tag">Calculus</span>
+                            <h3>Tests & Exams</h3>
+                            <p>Preview worksheets before class and learn math vocabulary in English to reduce pressure.</p>
                         </div>
                         <div class="module-card">
                             <span class="tag">Study Routine</span>
                             <h3>Habits that protect your mark</h3>
-                            <p>The notes also include practical study advice: use libraries and available study spaces, review materials early, and treat project teamwork as a real grading factor rather than an optional extra.</p>
-                            <ul>
-                                <li>Join every important stage of group work because final questioning often exposes weak participation.</li>
-                                <li>Use spare time to build technical confidence before the final submission rush.</li>
-                                <li>Keep your English exposure daily, especially for subject vocabulary and presentations.</li>
-                            </ul>
+                            <p>Join key stages of group work, build technical confidence before final submission week, and keep daily English exposure for subject vocabulary and presentation tasks.</p>
                         </div>
                     </div>
                 </article>
-                <article class="tab-panel" id="panel-exams" role="tabpanel">
-                    <div class="panel-head">
-                        <div>
-                            <h2 class="panel-title">Exam Rules</h2>
-                            <p class="intro">The DIICSU exam documents are strict. They cover room behaviour, late arrival, allowed equipment, online platform rules, and academic misconduct triggers. Many serious penalties come from avoidable mistakes rather than weak academic performance.</p>
-                        </div>
-                    </div>
+
+                <article class="tab-panel" id="panel-exams">
+                    <h2 class="panel-title">Exam Regulations</h2>
+                    <p class="intro">Strict protocols for room behaviour and online platforms.</p>
                     <div class="grid">
                         <div class="info-card">
-                            <h3>General exam-room rules</h3>
+                            <h3>General room rules</h3>
                             <ul>
-                                <li>Phones must be switched off and stored in bags at the front of the room.</li>
-                                <li>Smart watches must also be switched off and stored away. Keeping one on your person counts as misconduct.</li>
-                                <li>Enter in silence, remain silent, and do not start until instructed.</li>
-                                <li>Bring your University of Dundee ID card and place it on the desk.</li>
+                                <li>Phones and Smart Watches must be OFF and stored in bags.</li>
+                                <li>Enter in silence and place ID card on the desk.</li>
+                                <li>Late entry allowed only if no student has left; no extra time.</li>
                             </ul>
                         </div>
                         <div class="info-card">
-                            <h3>Leaving, lateness, and timing</h3>
+                            <h3>Leaving and timing rules</h3>
                             <ul>
                                 <li>You cannot leave an exam that lasts less than one hour.</li>
-                                <li>For longer exams, students may leave only after 30 minutes and not in the last 15 minutes.</li>
-                                <li>Late entry is allowed only if no student has left yet, and there is no extra time.</li>
-                                <li>Emergency exits normally mean you cannot re-enter.</li>
+                                <li>For longer exams, leaving is usually only allowed after 30 minutes and not in the last 15 minutes.</li>
+                                <li>Emergency exits normally mean re-entry is not allowed.</li>
                             </ul>
                         </div>
                         <div class="info-card">
-                            <h3>Online English exam setup</h3>
+                            <h3>Online Setup</h3>
                             <ul>
-                                <li>Listening, Reading, and Writing exams are run on <strong>MyDundee</strong>.</li>
-                                <li>Bring a charged laptop because no replacement equipment is promised.</li>
-                                <li>Keep devices closed until told to log in.</li>
-                                <li>Keep only one tab open: MyDundee.</li>
-                                <li>For Listening, bring working headphones and use the note paper provided.</li>
+                                <li>Run on MyDundee; bring a charged laptop.</li>
+                                <li>Only one tab allowed: MyDundee.</li>
+                                <li>No translation or auto-translation software.</li>
                             </ul>
                         </div>
                         <div class="info-card">
                             <h3>Allowed equipment</h3>
                             <ul>
-                                <li>Three black or blue pens.</li>
-                                <li>A ruler.</li>
-                                <li>A scientific calculator that is not a graphing calculator.</li>
-                                <li>Pens or pencils for Listening and Reading where permitted.</li>
-                                <li>No personal paper brought into the exam room.</li>
+                                <li>Three black or blue pens and a ruler.</li>
+                                <li>A scientific calculator (not graphing).</li>
+                                <li>For listening exams, bring working headphones and use provided note paper only.</li>
                             </ul>
                         </div>
                     </div>
-                    <div class="warning"><strong>High-risk mistakes:</strong> keeping extra browser tabs open during a MyDundee exam, using translation or auto-translation software, leaving non-English interface text visible when English-only setup is required, or carrying a phone or smart watch on your person. The documents frame these as academic misconduct, not minor errors.</div>
+                    <div class="warning"><strong>High-risk mistakes:</strong> keeping extra tabs open, using translation tools, or carrying a watch/phone on your person. These are academic misconduct.</div>
                 </article>
-                <article class="tab-panel" id="panel-referencing" role="tabpanel">
-                    <div class="panel-head">
-                        <div>
-                            <h2 class="panel-title">Referencing and Citation</h2>
-                            <p class="intro">The citation notes explain referencing as both an academic requirement and a misconduct safeguard. The programme uses <strong>Harvard style</strong>, which means in-text citation plus a reference list at the end.</p>
-                        </div>
-                    </div>
+
+                <article class="tab-panel" id="panel-referencing">
+                    <h2 class="panel-title">Referencing & Citation</h2>
+                    <p class="intro">Maintaining integrity using the Harvard Style.</p>
                     <div class="grid">
                         <div class="info-card">
-                            <h3>When you must reference</h3>
+                            <h3>Requirements</h3>
                             <ul>
-                                <li>When text or ideas are copied directly from a website, book, or journal.</li>
-                                <li>When you paraphrase or combine other people's ideas.</li>
-                                <li>When you reuse your own previously written or published work.</li>
+                                <li>Reference all copied, paraphrased, or reused work.</li>
+                                <li>Includes In-text citation (Author, Year) and full Reference List.</li>
                             </ul>
-                            <p style="margin-top:12px">The notes explicitly connect poor referencing to plagiarism risk and warn that large-scale AI writing can also be treated as academic misconduct.</p>
                         </div>
                         <div class="info-card">
                             <h3>What Harvard style includes</h3>
                             <ul>
-                                <li><strong>In-text citation:</strong> author plus year inside the paragraph where the source is used.</li>
-                                <li><strong>Reference list:</strong> full source details at the end, normally sorted alphabetically.</li>
-                                <li>The reference list includes much more publication detail than the in-text citation.</li>
+                                <li>In-text citation: author plus year where the source is used.</li>
+                                <li>Reference list: full source details at the end, usually sorted alphabetically.</li>
+                                <li>Large-scale AI-generated writing can also be treated as misconduct in module rules.</li>
                             </ul>
                         </div>
                         <div class="info-card">
-                            <h3>Tools mentioned in the source notes</h3>
-                            <ul>
-                                <li>Library or database citation generators.</li>
-                                <li>Mendeley for organising references and inserting citations into Word.</li>
-                                <li>Turnitin Draft Coach for checking similarity, citations, and grammar before submission.</li>
-                            </ul>
-                            <div class="quick-links">
-                                <a href="https://www.mendeley.com" target="_blank" rel="noopener noreferrer">Mendeley</a>
-                                <a href="https://www.scribbr.co.uk/referencing/harvard-style/" target="_blank" rel="noopener noreferrer">Harvard guide</a>
-                                <a href="https://www.citethemrightonline.com/category-list?docid=CTRHarvard" target="_blank" rel="noopener noreferrer">Cite Them Right</a>
+                            <h3>Tools & Guides</h3>
+                            <div class="link-grid">
+                                <a href="https://www.mendeley.com" class="link-card" target="_blank" rel="noopener noreferrer"><strong>Mendeley</strong><span>Organize and insert citations.</span></a>
+                                <a href="https://www.scribbr.co.uk/referencing/harvard-style/" class="link-card" target="_blank" rel="noopener noreferrer"><strong>Harvard Guide</strong><span>Reference examples and formats.</span></a>
+                                <a href="https://www.citethemrightonline.com" class="link-card" target="_blank" rel="noopener noreferrer"><strong>Cite Them Right</strong><span>Official Harvard guide.</span></a>
                             </div>
                         </div>
                         <div class="info-card">
                             <h3>Practical advice for safe submissions</h3>
                             <ul>
-                                <li>Keep a source list as you read instead of rebuilding it at the end.</li>
+                                <li>Keep a source list while reading instead of rebuilding it at the end.</li>
                                 <li>Reference paraphrases, not just direct quotations.</li>
-                                <li>Check submission rules before using Turnitin, especially in group work.</li>
-                                <li>Use support tools to improve your own writing, not replace it.</li>
+                                <li>Check Turnitin submission rules before group uploads.</li>
                             </ul>
                         </div>
                     </div>
                 </article>
-                <article class="tab-panel" id="panel-mitigation" role="tabpanel">
-                    <div class="panel-head">
-                        <div>
-                            <h2 class="panel-title">Mitigating Circumstances</h2>
-                            <p class="intro">If illness, personal emergencies, or other serious situations significantly affect performance, the DIICSU form explains how to request formal consideration.</p>
-                        </div>
-                    </div>
+
+                <article class="tab-panel" id="panel-mitigation">
+                    <h2 class="panel-title">Mitigating Circumstances</h2>
+                    <p class="intro">Formal route for serious illness or emergencies.</p>
                     <div class="grid">
                         <div class="info-card">
-                            <h3>Where to send the form</h3>
-                            <p>Submit the application by email, with supporting evidence attached, to <strong>SSEN-DIICSU@dundee.ac.uk</strong>.</p>
-                            <p style="margin-top:12px">The email subject should include: <strong>Mitigating Circumstances - Private and Confidential</strong>.</p>
+                            <h3>How to Submit</h3>
+                            <p>Email <strong>SSEN-DIICSU@dundee.ac.uk</strong> with subject: <em>Mitigating Circumstances - Private and Confidential</em>.</p>
                         </div>
                         <div class="info-card">
-                            <h3>What the form asks for</h3>
+                            <h3>Required Info</h3>
                             <ul>
-                                <li>Name, phone number, Dundee email, student number, programme, year of study, and adviser.</li>
-                                <li>Which modules or exams were affected.</li>
-                                <li>Assessment titles, dates, and submission status.</li>
-                                <li>Clear explanation of the circumstances and their impact.</li>
-                                <li>Dates showing the period affected and evidence attached.</li>
+                                <li>Student details, affected modules, and assessment titles.</li>
+                                <li>Clear explanation of impact with dated evidence attached.</li>
                             </ul>
                         </div>
                         <div class="info-card">
                             <h3>Timing and consent</h3>
                             <ul>
-                                <li>The form notes that deadlines are set near the end of each semester and communicated in advance.</li>
-                                <li>You are asked to consent to discussion with your Student Adviser.</li>
-                                <li>You also declare that the information is correct and can be used by the committee.</li>
+                                <li>Deadlines are usually set near the end of each semester and communicated in advance.</li>
+                                <li>You may need consent for discussion with your Student Adviser and committee review.</li>
+                                <li>Submit evidence early; late evidence often weakens the application.</li>
                             </ul>
                         </div>
                         <div class="info-card">
                             <h3>When to use this route</h3>
                             <ul>
-                                <li>Use it for genuine serious impact, not for normal deadline pressure.</li>
-                                <li>If poor equipment stops you taking an online exam, the rules state you may need this process and a retake.</li>
-                                <li>Evidence matters, so collect documents early.</li>
+                                <li>Use it for genuine serious impact, not normal deadline pressure.</li>
+                                <li>If equipment failure blocks an online exam, this route may be required before a retake.</li>
                             </ul>
                         </div>
                     </div>
                 </article>
-                <article class="tab-panel" id="panel-grades" role="tabpanel">
-                    <div class="panel-head">
-                        <div>
-                            <h2 class="panel-title">Grades and English-Medium Study</h2>
-                            <p class="intro">Two files matter here: the grade conversion table and the English Proficiency Certificate template. Together they explain how Dundee marks map into China-facing grade ranges and how the institute describes its English-medium teaching.</p>
-                        </div>
-                    </div>
-                    <div class="grid">
-                        <div class="info-card">
-                            <h3>High-level grade conversion bands</h3>
-                            <table>
-                                <thead>
-                                    <tr><th>Dundee band</th><th>China range</th><th>Descriptor</th><th>Class</th></tr>
-                                </thead>
-                                <tbody>
-                                    <tr><td>A1 to A5</td><td>89 to 99</td><td>Excellent</td><td>1st</td></tr>
-                                    <tr><td>B1 to B3</td><td>79 to 88</td><td>Very Good</td><td>2(i)</td></tr>
-                                    <tr><td>C1 to C3</td><td>69 to 78</td><td>Good</td><td>2(ii)</td></tr>
-                                    <tr><td>D1 to D3</td><td>60 to 68</td><td>Sufficient</td><td>3rd</td></tr>
-                                    <tr><td>MF1 to MF3</td><td>39 to 59</td><td>Marginal Fail</td><td>Fail</td></tr>
-                                    <tr><td>CF or BF</td><td>0 to 38</td><td>Fail</td><td>Fail</td></tr>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="info-card">
-                            <h3>What the English-medium certificate says</h3>
-                            <ul>
-                                <li>The degree is taught entirely in English across four years.</li>
-                                <li>Core modules, teaching, course materials, and assessments are all delivered in English.</li>
-                                <li>Year 1 includes intensive academic English training aligned with UK higher education expectations.</li>
-                                <li>Students are formally registered with both Central South University and the University of Dundee.</li>
-                                <li>The wording references quality assurance oversight by the UK QAA and China's Ministry of Education.</li>
-                            </ul>
-                        </div>
-                    </div>
-                </article>
-                <article class="tab-panel" id="panel-support" role="tabpanel">
-                    <div class="panel-head">
-                        <div>
-                            <h2 class="panel-title">Student Support and Useful Services</h2>
-                            <p class="intro">The handbook materials point students toward a wider Dundee support ecosystem. These links are useful because many problems are solved faster when you go to the correct service first.</p>
-                        </div>
-                    </div>
-                    <div class="grid">
-                        <div class="info-card">
-                            <h3>Academic and study support</h3>
-                            <div class="link-grid">
-                                <a class="link-card" href="https://www.dundee.ac.uk/academic-skills/students" target="_blank" rel="noopener noreferrer"><strong>Academic Skills</strong><span>Writing, revision, and study strategy support.</span></a>
-                                <a class="link-card" href="https://www.dundee.ac.uk/library/" target="_blank" rel="noopener noreferrer"><strong>Library</strong><span>Books, study spaces, and research tools.</span></a>
-                                <a class="link-card" href="https://www.dundee.ac.uk/it" target="_blank" rel="noopener noreferrer"><strong>IT Support</strong><span>Help for university systems and device access.</span></a>
-                                <a class="link-card" href="https://www.dundee.ac.uk/careers" target="_blank" rel="noopener noreferrer"><strong>Careers</strong><span>Career planning and employability support.</span></a>
-                            </div>
-                        </div>
-                        <div class="info-card">
-                            <h3>Student welfare and representation</h3>
-                            <div class="link-grid">
-                                <a class="link-card" href="https://www.dundee.ac.uk/disability-services" target="_blank" rel="noopener noreferrer"><strong>Disability Services</strong><span>Adjustments, access, and learning support.</span></a>
-                                <a class="link-card" href="https://www.dusa.co.uk/advice/academic/" target="_blank" rel="noopener noreferrer"><strong>DUSA Advice</strong><span>Independent student advice on academic issues.</span></a>
-                                <a class="link-card" href="https://www.dundee.ac.uk/governance/discipline-complaints-appeals/appeals" target="_blank" rel="noopener noreferrer"><strong>Appeals</strong><span>Official information on academic appeals.</span></a>
-                                <a class="link-card" href="https://www.dundee.ac.uk/guides/complaints-handling-procedure-guide-students" target="_blank" rel="noopener noreferrer"><strong>Complaints Guide</strong><span>Procedure guidance for formal complaints.</span></a>
-                            </div>
-                        </div>
-                        <div class="info-card">
-                            <h3>Administrative tools</h3>
-                            <div class="link-grid">
-                                <a class="link-card" href="https://www.dundee.ac.uk/guides/get-letter-says-i-am-student" target="_blank" rel="noopener noreferrer"><strong>Student Letter Guide</strong><span>How to get an official letter confirming student status.</span></a>
-                                <a class="link-card" href="https://www.dundee.ac.uk/guides/order-official-document-or-letter-registry" target="_blank" rel="noopener noreferrer"><strong>Registry Documents</strong><span>Order official documents or letters.</span></a>
-                                <a class="link-card" href="https://www.dundee.ac.uk/guides/university-dundee-app" target="_blank" rel="noopener noreferrer"><strong>University App</strong><span>Mobile access to useful university information.</span></a>
-                                <a class="link-card" href="https://universityofdundee.cn/discover-dundee/support-hub-in-china/" target="_blank" rel="noopener noreferrer"><strong>Support Hub in China</strong><span>China-facing support information linked from handbook materials.</span></a>
-                            </div>
-                        </div>
-                        <div class="info-card">
-                            <h3>Daily study advice carried over from the notes</h3>
-                            <ul>
-                                <li>Use library areas and available study spaces early instead of waiting until deadlines are close.</li>
-                                <li>For speaking confidence, use English corner and extra English practice resources regularly.</li>
-                                <li>If the problem is academic writing, use Academic Skills or library tools before it becomes an emergency.</li>
-                                <li>If the problem is formal assessment impact, use the Mitigating Circumstances route instead of informal explanation.</li>
-                            </ul>
-                        </div>
-                    </div>
-                </article>
-            </section>
-        </div>
 
+                <article class="tab-panel" id="panel-grades">
+                    <h2 class="panel-title">Grades and EMI</h2>
+                    <p class="intro">Grade mapping and English Medium Instruction details.</p>
+                    <table>
+                        <thead>
+                            <tr><th>Dundee Band</th><th>China Range</th><th>Descriptor</th><th>Class</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>A1 to A5</td><td>89 to 99</td><td>Excellent</td><td>1st</td></tr>
+                            <tr><td>B1 to B3</td><td>79 to 88</td><td>Very Good</td><td>2(i)</td></tr>
+                            <tr><td>C1 to C3</td><td>69 to 78</td><td>Good</td><td>2(ii)</td></tr>
+                            <tr><td>D1 to D3</td><td>60 to 68</td><td>Sufficient</td><td>3rd</td></tr>
+                            <tr><td>MF1 to MF3</td><td>39 to 59</td><td>Marginal Fail</td><td>Fail</td></tr>
+                            <tr><td>CF or BF</td><td>0 to 38</td><td>Fail</td><td>Fail</td></tr>
+                        </tbody>
+                    </table>
+                    <div class="info-card" style="margin-top: 24px;">
+                        <h3>English Proficiency Certificate</h3>
+                        <p>The degree is taught entirely in English across four years, including all core modules, materials, and assessments. Year 1 includes intensive academic English training aligned with UK higher education expectations.</p>
+                    </div>
+                </article>
+
+                <article class="tab-panel" id="panel-support">
+                    <h2 class="panel-title">Student Support</h2>
+                    <p class="intro">Direct links to essential university services.</p>
+                    <div class="grid">
+                        <div class="info-card">
+                            <h3>Academic Help</h3>
+                            <div class="link-grid">
+                                <a href="https://www.dundee.ac.uk/academic-skills/students" class="link-card" target="_blank" rel="noopener noreferrer"><strong>Academic Skills</strong><span>Writing and study strategy.</span></a>
+                                <a href="https://www.dundee.ac.uk/library/" class="link-card" target="_blank" rel="noopener noreferrer"><strong>Library</strong><span>Research tools and study space.</span></a>
+                                <a href="https://www.dundee.ac.uk/it" class="link-card" target="_blank" rel="noopener noreferrer"><strong>IT Support</strong><span>Help for university systems and device access.</span></a>
+                                <a href="https://www.dundee.ac.uk/careers" class="link-card" target="_blank" rel="noopener noreferrer"><strong>Careers</strong><span>Career planning and employability support.</span></a>
+                            </div>
+                        </div>
+                        <div class="info-card">
+                            <h3>Welfare & Admin</h3>
+                            <div class="link-grid">
+                                <a href="https://www.dundee.ac.uk/disability-services" class="link-card" target="_blank" rel="noopener noreferrer"><strong>Disability Services</strong><span>Adjustments and access.</span></a>
+                                <a href="https://www.dusa.co.uk/advice/academic/" class="link-card" target="_blank" rel="noopener noreferrer"><strong>DUSA Advice</strong><span>Independent student advice.</span></a>
+                                <a href="https://www.dundee.ac.uk/governance/discipline-complaints-appeals/appeals" class="link-card" target="_blank" rel="noopener noreferrer"><strong>Appeals</strong><span>Official information on academic appeals.</span></a>
+                                <a href="https://www.dundee.ac.uk/guides/complaints-handling-procedure-guide-students" class="link-card" target="_blank" rel="noopener noreferrer"><strong>Complaints Guide</strong><span>Procedure guidance for formal complaints.</span></a>
+                                <a href="https://www.dundee.ac.uk/guides/get-letter-says-i-am-student" class="link-card" target="_blank" rel="noopener noreferrer"><strong>Student Letter Guide</strong><span>How to get an official student-status letter.</span></a>
+                                <a href="https://www.dundee.ac.uk/guides/order-official-document-or-letter-registry" class="link-card" target="_blank" rel="noopener noreferrer"><strong>Registry Documents</strong><span>Official letters and transcripts.</span></a>
+                                <a href="https://www.dundee.ac.uk/guides/university-dundee-app" class="link-card" target="_blank" rel="noopener noreferrer"><strong>University App</strong><span>Mobile access to key university information.</span></a>
+                                <a href="https://universityofdundee.cn/discover-dundee/support-hub-in-china/" class="link-card" target="_blank" rel="noopener noreferrer"><strong>Support Hub in China</strong><span>China-facing support information linked from handbook materials.</span></a>
+                            </div>
+                        </div>
+                        <div class="info-card">
+                            <h3>Daily study advice</h3>
+                            <ul>
+                                <li>Use library and study spaces early instead of waiting until deadlines are close.</li>
+                                <li>For speaking confidence, use English corner and extra English practice resources regularly.</li>
+                                <li>If the issue is formal assessment impact, use the Mitigating Circumstances route instead of informal explanation.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </article>
+            </main>
+        </div>
     </div>
 
-        <script>
-        (function initializeDundeeTabs() {
+    <script>
+        function switchTab(targetId, options) {
+            const settings = Object.assign({ updateHash: true, smoothScroll: true }, options || {});
             const buttons = Array.from(document.querySelectorAll('.tab-button'));
             const panels = Array.from(document.querySelectorAll('.tab-panel'));
-            const jumpButtons = Array.from(document.querySelectorAll('[data-jump]'));
-            const sectionSelect = document.getElementById('dundeeSectionSelect');
-            const panelShell = document.querySelector('.panel-shell');
-            function getButton(target) {
-                return buttons.find((button) => button.dataset.target === target);
+            const activeTarget = buttons.some((button) => button.dataset.target === targetId) ? targetId : 'overview';
+            buttons.forEach((button) => {
+                button.classList.toggle('active', button.dataset.target === activeTarget);
+            });
+            panels.forEach((panel) => {
+                panel.classList.toggle('active', panel.id === `panel-${activeTarget}`);
+            });
+            if (settings.updateHash) history.replaceState(null, '', `#${activeTarget}`);
+            if (settings.smoothScroll) {
+                const layoutTop = document.querySelector('.layout').offsetTop;
+                window.scrollTo({ top: layoutTop - 40, behavior: 'smooth' });
             }
-            function activate(target, options) {
-                const settings = Object.assign({ updateHash: false, scrollIntoView: false }, options || {});
-                const activeButton = getButton(target) || buttons[0];
-                buttons.forEach((button) => {
-                    const active = button.dataset.target === target;
-                    button.classList.toggle('active', active);
-                    button.setAttribute('aria-selected', active ? 'true' : 'false');
-                });
-                panels.forEach((panel) => panel.classList.toggle('active', panel.id === `panel-${target}`));
-                if (sectionSelect) sectionSelect.value = activeButton.dataset.target;
-                if (settings.updateHash) history.replaceState(null, '', `#${target}`);
-                if (settings.scrollIntoView && panelShell) panelShell.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-            buttons.forEach((button) => button.addEventListener('click', () => activate(button.dataset.target, { updateHash: true })));
-            jumpButtons.forEach((button) => button.addEventListener('click', () => activate(button.dataset.jump, { updateHash: true, scrollIntoView: true })));
-            if (sectionSelect) sectionSelect.addEventListener('change', (event) => activate(event.target.value, { updateHash: true, scrollIntoView: true }));
+        }
+
+        (function initializeDundeePage() {
             const hash = (window.location.hash || '').replace('#', '');
-            activate(buttons.some((button) => button.dataset.target === hash) ? hash : 'overview');
+            switchTab(hash || 'overview', { updateHash: Boolean(hash), smoothScroll: false });
+            document.querySelectorAll('[data-jump]').forEach((button) => {
+                button.addEventListener('click', () => switchTab(button.dataset.jump, { updateHash: true, smoothScroll: true }));
+            });
         })();
+
         (function initializeBackLink() {
             const backLink = document.getElementById('backLink');
             if (!backLink) return;
