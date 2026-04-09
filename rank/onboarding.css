@@ -1,0 +1,93 @@
+/* 新手指引样式 */
+.acadbeat-guide-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 9990;
+  pointer-events: none;
+}
+
+.acadbeat-guide-card {
+  position: fixed;
+  max-width: 400px;
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+  z-index: 9992;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  pointer-events: auto;
+}
+
+.acadbeat-guide-card h4 {
+  margin: 0 0 12px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.acadbeat-guide-card p {
+  margin: 0 0 16px 0;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #4a4a4a;
+}
+
+.acadbeat-guide-card__meta {
+  font-size: 12px;
+  color: #8a8a8a;
+  margin-bottom: 16px;
+}
+
+.acadbeat-guide-card__actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 8px;
+}
+
+.acadbeat-guide-btn {
+  padding: 6px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: white;
+  color: #374151;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.acadbeat-guide-btn:hover:not(:disabled) {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+}
+
+.acadbeat-guide-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.acadbeat-guide-btn--primary {
+  background: #3b82f6;
+  color: white;
+  border-color: #3b82f6;
+}
+
+.acadbeat-guide-btn--primary:hover:not(:disabled) {
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
+.acadbeat-guide-focus {
+  position: relative !important;
+  z-index: 9991 !important;
+  outline: 4px solid #3b82f6 !important;
+  outline-offset: 4px !important;
+  border-radius: 8px;
+  box-shadow: 0 0 0 12px rgba(59, 130, 246, 0.3) !important;
+}
