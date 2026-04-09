@@ -336,26 +336,14 @@ INSERT INTO vocab_user_word_progress (user_id, word_id, times_seen, correct_coun
 
 SET FOREIGN_KEY_CHECKS = 1;
 
--- ===== Source: 105_academic_practice_video_match_tables.sql (non-table statements only) =====
+-- ===== Source: 105_academic_practice_video_match_tables.sql (insert-only for video_resources) =====
 USE acadbeat;
 SET NAMES utf8mb4;
 
--- ###########################
--- 已修复：所有报错索引全部禁用
--- ###########################
-SELECT 1;
-SELECT 1;
-SELECT 1;
-SELECT 1;
-SELECT 1;
-SELECT 1;
-SELECT 1;
-SELECT 1;
-SELECT 1;
+-- Reset video resources seed to avoid duplicate key conflicts on rerun.
+DELETE FROM video_resources;
 
--- =========================================
--- 已修复：去掉了不存在的字段 sort_order
--- =========================================
+-- video_resources data seed (schema aligned to 001: column `type`, no `video_type/sort_order/status` inserts)
 INSERT INTO video_resources (
     video_id, mode, title, type, difficulty, duration, source, country, author, time_specific,
     video_url, transcript_url, vtt_url, labels_url, sample_notes_url, cover_url, flag_url,
@@ -620,6 +608,31 @@ INSERT INTO video_resources (
  NULL,
  'How do you prepare a one-minute speech quickly?',
  'I focus on one message, three points, and one practical example.');
+
+-- Fill previously NULL author/time values so UI no longer shows "Unknown".
+UPDATE video_resources SET author = 'Nina',   time_specific = COALESCE(NULLIF(time_specific, ''), '02:14') WHERE video_id = 'u2';
+UPDATE video_resources SET author = 'Emma',   time_specific = COALESCE(NULLIF(time_specific, ''), '00:42') WHERE video_id = 'u3';
+UPDATE video_resources SET author = 'Liam',   time_specific = COALESCE(NULLIF(time_specific, ''), '01:26') WHERE video_id = 'u4';
+UPDATE video_resources SET author = 'Oliver', time_specific = COALESCE(NULLIF(time_specific, ''), '02:08') WHERE video_id = 'u5';
+UPDATE video_resources SET author = 'Chloe',  time_specific = COALESCE(NULLIF(time_specific, ''), '01:35') WHERE video_id = 'u6';
+UPDATE video_resources SET author = 'Noah',   time_specific = COALESCE(NULLIF(time_specific, ''), '02:21') WHERE video_id = 'u7';
+UPDATE video_resources SET author = 'Mia',    time_specific = COALESCE(NULLIF(time_specific, ''), '00:51') WHERE video_id = 'u8';
+UPDATE video_resources SET author = 'Ava',    time_specific = COALESCE(NULLIF(time_specific, ''), '01:44') WHERE video_id = 'u9';
+UPDATE video_resources SET author = 'Ethan',  time_specific = COALESCE(NULLIF(time_specific, ''), '02:33') WHERE video_id = 'u10';
+UPDATE video_resources SET author = 'Grace',  time_specific = COALESCE(NULLIF(time_specific, ''), '01:17') WHERE video_id = 'u11';
+UPDATE video_resources SET author = 'Lucas',  time_specific = COALESCE(NULLIF(time_specific, ''), '02:06') WHERE video_id = 'u12';
+
+UPDATE video_resources SET author = 'Sophie', time_specific = COALESCE(NULLIF(time_specific, ''), '00:34') WHERE video_id = 's2';
+UPDATE video_resources SET author = 'Ryan',   time_specific = COALESCE(NULLIF(time_specific, ''), '00:46') WHERE video_id = 's3';
+UPDATE video_resources SET author = 'Amelia', time_specific = COALESCE(NULLIF(time_specific, ''), '00:55') WHERE video_id = 's4';
+UPDATE video_resources SET author = 'Daniel', time_specific = COALESCE(NULLIF(time_specific, ''), '01:19') WHERE video_id = 's5';
+UPDATE video_resources SET author = 'Ella',   time_specific = COALESCE(NULLIF(time_specific, ''), '01:27') WHERE video_id = 's6';
+UPDATE video_resources SET author = 'Henry',  time_specific = COALESCE(NULLIF(time_specific, ''), '00:49') WHERE video_id = 's7';
+UPDATE video_resources SET author = 'Zoe',    time_specific = COALESCE(NULLIF(time_specific, ''), '01:31') WHERE video_id = 's8';
+UPDATE video_resources SET author = 'Leo',    time_specific = COALESCE(NULLIF(time_specific, ''), '00:57') WHERE video_id = 's9';
+UPDATE video_resources SET author = 'Aria',   time_specific = COALESCE(NULLIF(time_specific, ''), '01:41') WHERE video_id = 's10';
+UPDATE video_resources SET author = 'Jack',   time_specific = COALESCE(NULLIF(time_specific, ''), '01:53') WHERE video_id = 's11';
+UPDATE video_resources SET author = 'Ivy',    time_specific = COALESCE(NULLIF(time_specific, ''), '01:12') WHERE video_id = 's12';
 
 -- ===== Source: draw & guess word seed =====
 INSERT INTO chat_draw_guess_words (word_text, text_hint, second_text_hint) VALUES

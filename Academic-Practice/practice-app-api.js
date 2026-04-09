@@ -602,22 +602,11 @@
     return isoMap[normalized] || (normalized.length === 2 ? normalized.toUpperCase() : null);
   }
 
-  function getCountryFlagPath(country) {
-    const iso = getCountryIso(country);
-    return iso ? "flags/flags/" + iso.toLowerCase() + ".png" : "";
-  }
-
   function getCountryFlagImgHtml(country, flagUrl) {
-    // 优先使用数据库中的外网URL
     if (flagUrl) {
       return "<img class='country-flag-icon' src='" + escapeHtml(flagUrl) + "' alt='" + escapeHtml(country || "Country") + " flag' onerror=\"this.style.display='none'\">";
     }
-    // 回退到本地路径
-    const src = getCountryFlagPath(country);
-    if (!src) {
-      return "";
-    }
-    return "<img class='country-flag-icon' src='" + escapeHtml(src) + "' alt='" + escapeHtml(country || "Country") + " flag' onerror=\"this.style.display='none'\">";
+    return "";
   }
 
   function getCountryLabelHtml(country) {
@@ -656,14 +645,13 @@
 
   function getPersonMetaHtml(video) {
     const author = escapeHtml(video.author || "Unknown");
-    // 直接使用 flagUrl 显示国旗图片，放大尺寸
+    // 优先展示数据库 flagUrl；无则回退本地图标
     const flagImg = video.flagUrl 
-      ? "<img class='country-flag-icon' src='" + video.flagUrl + "' alt='flag' style='width:24px;height:18px;vertical-align:middle;margin-right:4px;'>"
-      : "";
+      ? "<img class='country-flag-icon' src='" + escapeHtml(video.flagUrl) + "' alt='" + escapeHtml(video.country || "Country") + " flag'>"
+      : getCountryFlagImgHtml(video.country, null);
     const countryLabel = escapeHtml(video.country || "N/A");
     const timeSpecific = escapeHtml(video.timeSpecific || video.duration || "N/A");
-    // 紧凑布局：作者 | 国旗+国家 | 时长
-    return "<span>" + author + "</span><span class='person-meta-separator'>|</span><span>" + flagImg + countryLabel + "</span><span class='person-meta-separator'>|</span><span>" + timeSpecific + "</span>";
+    return "<span>" + author + "</span><span class='person-meta-separator'>|</span><span class='country-inline'>" + flagImg + "<span class='country-label'>" + countryLabel + "</span></span><span class='person-meta-separator'>|</span><span>" + timeSpecific + "</span>";
   }
 
   function createCountryFilter(containerEl, values, initialValue, onChange) {
@@ -774,32 +762,17 @@
     };
   }
 
-  // 获取视频源URL（优先使用外网服务器的URL）
+  // 仅使用数据库视频 URL
   function getVideoSource(video) {
-    return video.videoUrl || video.videoPath || ("Videos/" + video.videoFile);
+    return video.videoUrl || "";
   }
 
-  // 封面：管理员上传 URL > 本地 cover/ cover2/（与旧 practice-app.js 一致）> 外网占位图
+  // 仅使用数据库封面 URL
   function getCoverUrl(video, mode) {
     if (video.coverUrl) {
       return video.coverUrl;
     }
-    if (video.coverFile) {
-      const folder = mode === "respond" ? "cover2" : "cover";
-      return folder + "/" + video.coverFile;
-    }
-    const match = String(video.id || "").match(/(\d+)$/);
-    if (!match) {
-      return null;
-    }
-    const baseIndex = Number(match[1]);
-    const coverNum = mode === "respond" ? baseIndex + 12 : baseIndex;
-    const coverFolder = mode === "respond" ? "cover2" : "cover";
-    const localPath = coverFolder + "/" + coverNum + ".png";
-    if (video.dataSource === "local") {
-      return localPath;
-    }
-    return "http://111.231.10.140/media/" + coverFolder + "/" + coverNum + ".png";
+    return null;
   }
 
   async function initTranscriptPanel(toggleBtn, closeBtn, panelEl, contentEl, video) {
@@ -824,13 +797,13 @@
     }
 
     // 否则从外网服务器获取
-    if (!video.transcriptUrl && !video.transcriptPath) {
+    if (!video.transcriptUrl) {
       contentEl.textContent = "No transcript file for this video.";
       return;
     }
 
     try {
-      const url = video.transcriptUrl || video.transcriptPath;
+      const url = video.transcriptUrl;
       const response = await fetch(url);
       if (!response.ok) {
         throw new Error("transcript fetch failed");
@@ -907,7 +880,7 @@
       titleEl.textContent = "Transcript";
       if (!contentCache.transcript) {
         contentCache.transcript = await loadTextContent(
-          video.transcriptUrl || video.transcriptPath, 
+          video.transcriptUrl, 
           video.transcriptText, 
           "Failed to load transcript text."
         );
@@ -1035,14 +1008,20 @@
 
     // 获取所有可用的过滤选项
     const allTypes = ["All", "Campus&Life", "Academic"];
-    const allCountries = ["All"].concat(Array.from(new Set(modeVideos.map(function (v) { return v.country; }))));
+    const allSources = ["All"].concat(Array.from(new Set(modeVideos.map(function (v) { return v.source || "N/A"; })))).sort();
+    const allDurations = ["All"].concat(Array.from(new Set(modeVideos.map(function (v) { return v.duration || "N/A"; })))).sort();
+    const allCountries = ["All"].concat(Array.from(new Set(modeVideos.map(function (v) { return v.country || "N/A"; })))).sort();
 
     buildOptions(allTypes, typeEl);
+    buildOptions(allSources, sourceEl);
+    buildOptions(allDurations, durationEl);
     const countryFilter = createCountryFilter(countryFilterEl, allCountries, "All", function (value) {
       filterState.country = value;
       renderResults();
     });
     typeEl.options[0].textContent = "Type: All";
+    sourceEl.options[0].textContent = "Source: All";
+    durationEl.options[0].textContent = "Duration: All";
 
     const filterState = {
       search: "",
@@ -1059,9 +1038,11 @@
         const keywordSource = [
           video.title,
           video.type,
+          video.author || "",
           video.duration || "",
           video.source || "",
           video.country,
+          video.transcriptText || "",
           video.question || "",
           video.answerText || ""
         ].join(" ").toLowerCase();
@@ -1096,9 +1077,10 @@
         const metaLine =
           "<div class='video-meta-row'>" +
           "<span class='video-meta-pill'>" + normalizedType(video) + "</span>" +
-          "<span class='video-meta-pill'>" + video.difficulty + "</span>" +
-          "<span class='video-meta-pill'>" + (video.duration || "N/A") + "</span>" +
-          "<span class='video-meta-pill'>" + (video.source || "N/A") + "</span>" +
+          "<span class='video-meta-pill'>" + escapeHtml(video.difficulty || "N/A") + "</span>" +
+          "<span class='video-meta-pill'>" + escapeHtml(video.duration || "N/A") + "</span>" +
+          "<span class='video-meta-pill'>" + escapeHtml(video.source || "N/A") + "</span>" +
+          "<span class='video-meta-pill video-country-pill'>" + getCountryInlineHtml(video.country, video.flagUrl) + "</span>" +
           "</div>";
         
         // 使用外网服务器的封面URL
@@ -1106,17 +1088,14 @@
         const coverMedia =
           "<div class='video-cover-box'>" +
           (coverUrl
-            ? "<img class='video-cover-image' src='" + coverUrl + "' alt='Video cover'>"
+            ? "<img class='video-cover-image' src='" + escapeHtml(coverUrl) + "' alt='Video cover'>"
             : "<div class='video-cover-placeholder'>Video Cover</div>") +
           "<button class='btn-small video-go-btn' type='button' aria-label='Play video' title='Play'>&#9658;</button>" +
-          "<div class='video-cover-title'>" + video.title + "</div>" +
+          "<div class='video-cover-title'>" + escapeHtml(video.title || "Untitled") + "</div>" +
           "</div>";
         
-        // respond 模式显示完整作者信息，understand 模式只显示国旗+国家
-        const personLine = mode === "respond" 
-          ? "<p class='video-person-line'>" + getPersonMetaHtml(video) + "</p>"
-          : "<p class='video-person-line'><span>" + (video.flagUrl ? "<img class='country-flag-icon' src='" + video.flagUrl + "' alt='flag' style='width:24px;height:18px;vertical-align:middle;margin-right:4px;'>" : "") + escapeHtml(video.country || "N/A") + "</span></p>";
-        const questionLine = video.question ? "<p class='video-question'>Q: " + video.question + "</p>" : "";
+        const personLine = "<p class='video-person-line'>" + getPersonMetaHtml(video) + "</p>";
+        const questionLine = video.question ? "<p class='video-question'>Q: " + escapeHtml(video.question) + "</p>" : "";
         card.innerHTML =
           metaLine +
           coverMedia +

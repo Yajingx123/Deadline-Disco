@@ -1178,7 +1178,8 @@ html:not([data-ui="godot"]) body[data-page="video-list"] .listening-center-wrap 
 html:not([data-ui="godot"]) body[data-page="video-list"] .listening-square-stage {
   flex: 1;
   min-height: 0;
-  display: block;
+  display: flex;
+  flex-direction: column;
 }
 
 html:not([data-ui="godot"]) body[data-page="video-list"] .listening-right-rail {
@@ -1247,6 +1248,7 @@ html:not([data-ui="godot"]) body[data-page="video-list"] .listening-filter-reset
 html:not([data-ui="godot"]) body[data-page="video-list"] .listening-frame-outer {
   flex: 1;
   min-height: 0;
+  height: 100%;
   border: none;
   padding: 0;
   background: transparent;
@@ -3509,6 +3511,115 @@ body[data-page="video-list"][data-listening-mode="respond"] .video-results {
     linear-gradient(160deg, rgba(255, 255, 255, 0.86), rgba(244, 237, 255, 0.7));
 }
 
+/* Classic listening list layout: top filter row + scrollable card grid (keep current palette/font) */
+html:not([data-ui="godot"]) body[data-page="video-list"] .video-results {
+  width: min(1520px, 100%);
+  margin: 0 auto;
+  border-radius: 30px;
+}
+
+html:not([data-ui="godot"]) body[data-page="video-list"] .listening-main-stage {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+html:not([data-ui="godot"]) body[data-page="video-list"] .listening-right-rail {
+  order: -1;
+  width: 100%;
+  gap: 0;
+}
+
+html:not([data-ui="godot"]) body[data-page="video-list"] .listening-texture-cluster {
+  display: none;
+}
+
+html:not([data-ui="godot"]) body[data-page="video-list"] .listening-filter-dock {
+  max-width: none;
+}
+
+html:not([data-ui="godot"]) body[data-page="video-list"] .listening-filter-dock-frame {
+  grid-template-columns: minmax(260px, 1.75fr) repeat(5, minmax(145px, 1fr)) auto;
+  align-items: center;
+}
+
+html:not([data-ui="godot"]) body[data-page="video-list"] .listening-filter-dock-middle,
+html:not([data-ui="godot"]) body[data-page="video-list"] .listening-filter-dock-scroll {
+  display: contents;
+}
+
+html:not([data-ui="godot"]) body[data-page="video-list"] .listening-filter-slot {
+  border: none;
+  padding: 0;
+  background: transparent;
+}
+
+html:not([data-ui="godot"]) body[data-page="video-list"] .listening-filter-slot--country {
+  grid-column: auto;
+}
+
+html:not([data-ui="godot"]) body[data-page="video-list"] .listening-filter-reset-square {
+  grid-column: auto;
+  width: auto;
+  height: auto;
+  border: none;
+  background: transparent;
+}
+
+html:not([data-ui="godot"]) body[data-page="video-list"] .listening-filter-reset-btn {
+  width: auto;
+  height: 35px;
+  padding: 0 16px;
+  border-radius: 999px;
+}
+
+html:not([data-ui="godot"]) body[data-page="video-list"] .results-scroll-region {
+  height: 100%;
+  padding-right: 10px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(91, 42, 134, 0.45) rgba(91, 42, 134, 0.12);
+}
+
+html:not([data-ui="godot"]) body[data-page="video-list"] .results-scroll-region::-webkit-scrollbar {
+  width: 10px;
+}
+
+html:not([data-ui="godot"]) body[data-page="video-list"] .results-scroll-region::-webkit-scrollbar-track {
+  background: rgba(91, 42, 134, 0.1);
+  border-radius: 999px;
+}
+
+html:not([data-ui="godot"]) body[data-page="video-list"] .results-scroll-region::-webkit-scrollbar-thumb {
+  background: rgba(91, 42, 134, 0.4);
+  border-radius: 999px;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+html:not([data-ui="godot"]) body[data-page="video-list"] .compact-results .video-card-list {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+html:not([data-ui="godot"]) body[data-page="video-list"] .video-meta-pill .country-flag-icon {
+  width: 14px;
+  height: 10px;
+}
+
+@media (max-width: 1320px) {
+  html:not([data-ui="godot"]) body[data-page="video-list"] .listening-filter-dock-frame {
+    grid-template-columns: repeat(3, minmax(180px, 1fr));
+  }
+
+  html:not([data-ui="godot"]) body[data-page="video-list"] .listening-filter-reset-square {
+    justify-self: start;
+  }
+
+  html:not([data-ui="godot"]) body[data-page="video-list"] .compact-results .video-card-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 640px) {
   .back-fab {
     width: 44px;
@@ -3542,6 +3653,10 @@ body[data-page="video-list"][data-listening-mode="respond"] .video-results {
   .video-card,
   .post-item {
     padding: 18px;
+  }
+
+  html:not([data-ui="godot"]) body[data-page="video-list"] .listening-filter-dock-frame {
+    grid-template-columns: 1fr;
   }
 
   .topic-btn {
