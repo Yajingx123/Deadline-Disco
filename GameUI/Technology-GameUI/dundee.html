@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AcadBeat | Dundee Student Quest Log</title>
+  <script src="./shared/acadbeat-local-config.js"></script>
+  <style>html.acadbeat-role-guard body{visibility:hidden}</style>
+  <script>
+    document.documentElement.classList.add('acadbeat-role-guard');
+    (async function guardAdminDundeeGuide() {
+      try {
+        const response = await fetch('./Auth/backend/api/me.php', { credentials: 'include' });
+        const data = await response.json().catch(() => ({ status: 'error' }));
+        if (data.status === 'success' && data.user && String(data.user.role || '').toLowerCase() === 'admin') {
+          const admin = (window.ACADBEAT_LOCAL && window.ACADBEAT_LOCAL.adminDistUrl) || window.location.origin + '/admin_page/dist/index.html';
+          window.location.replace(admin);
+          return;
+        }
+      } catch (_err) {}
+      document.documentElement.classList.remove('acadbeat-role-guard');
+    })();
+  </script>
+  <style>
+    /* Using a fallback pixel-style font stack */
+    @font-face {
+      font-family: 'PixelFont';
+      src: url('./message-center-project 2/Myfont-Regular.ttf') format('truetype');
+      font-display: swap;
+    }
+
+    :root {
+      --pixel-bg: #1a1a1a;
+      --window-bg: #e4dfd8;
+      --border-color: #000;
+      --accent: #5b2a86;
+      --accent-light: #7a42ab;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --shadow: 8px 8px 0px rgba(0,0,0,0.2);
+    }
+
+    * { box-sizing: border-box; image-rendering: pixelated; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background-color: var(--pixel-bg);
+      background-image: 
+        linear-gradient(45deg, #222 25%, transparent 25%), 
+        linear-gradient(-45deg, #222 25%, transparent 25%), 
+        linear-gradient(45deg, transparent 75%, #222 75%), 
+        linear-gradient(-45deg, transparent 75%, #222 75%);
+      background-size: 20px 20px;
+      color: var(--text-main);
+      font-family: 'PixelFont', 'Courier New', monospace;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 60px 20px;
+    }
+
+    /* Game Top Bar */
+    .game-header {
+      width: 100%;
+      max-width: 1200px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      gap: 12px;
+    }
+
+    .exit-btn {
+      background: #e11d48;
+      border: 4px solid #000;
+      color: #fff;
+      padding: 10px 20px;
+      text-decoration: none;
+      font-weight: bold;
+      box-shadow: inset -4px -4px 0px #9f1239, 4px 4px 0px rgba(0,0,0,0.3);
+      transition: transform 0.1s;
+      white-space: nowrap;
+    }
+    .exit-btn:active { transform: translate(2px, 2px); box-shadow: inset 4px 4px 0px #9f1239; }
+
+    .status-panel {
+      background: #000;
+      color: #0f0;
+      padding: 8px 16px;
+      border: 4px solid #444;
+      font-size: 12px;
+      line-height: 1.4;
+      text-transform: uppercase;
+    }
+    .dundee-banner {
+      width: 100%;
+      max-width: 1200px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+      padding: 10px 14px;
+      border: 4px solid #000;
+      background: #f8f6f2;
+      box-shadow: 4px 4px 0 rgba(0,0,0,0.26);
+    }
+    .dundee-banner img {
+      width: 40px;
+      height: 40px;
+      object-fit: cover;
+      border: 3px solid #000;
+      background: #fff;
+      padding: 2px;
+    }
+    .dundee-banner__text {
+      display: flex;
+      flex-direction: column;
+      line-height: 1.15;
+    }
+    .dundee-banner__title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .dundee-banner__sub {
+      font-size: 12px;
+      color: #475569;
+    }
+
+    /* The Main Quest Window */
+    .mc2-shell {
+      width: 100%;
+      max-width: 1200px;
+      background: var(--window-bg);
+      border: 8px solid var(--border-color);
+      box-shadow: var(--shadow);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Icon Tabs - Visualized as Game Menu Tabs */
+    .tab-nav {
+      position: static;
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      max-width: 100%;
+      padding: 10px 12px 0;
+      border-bottom: 4px solid #000;
+      background: #d9d8d5;
+    }
+
+    .tab-btn {
+      background: #bbb;
+      border: 4px solid #000;
+      border-bottom: none;
+      padding: 12px 18px;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 13px;
+      color: #444;
+      transition: all 0.1s;
+      white-space: nowrap;
+    }
+
+    .tab-btn:hover { background: #d1d5db; }
+
+    .tab-btn.active {
+      background: var(--window-bg);
+      color: var(--accent);
+      padding-bottom: 12px;
+      margin-top: 0;
+      z-index: 5;
+    }
+
+    /* Scrollable Content Area */
+    .quest-content {
+      padding: 40px;
+      height: 65vh;
+      overflow-y: scroll;
+    }
+
+    .quest-content::-webkit-scrollbar { width: 16px; }
+    .quest-content::-webkit-scrollbar-track { background: #ccc; border-left: 4px solid #000; }
+    .quest-content::-webkit-scrollbar-thumb { background: var(--accent); border: 4px solid #000; }
+
+    /* Header in the window */
+    .panel-header {
+      border-bottom: 4px dashed #94a3b8;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+    }
+
+    .panel-header h2 {
+      font-size: 28px;
+      margin: 0;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .panel-header p {
+      margin: 12px 0 0;
+      color: var(--text-muted);
+      font-size: 16px;
+    }
+
+    /* Pixel Grid Cards */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+
+    .card {
+      background: #fff;
+      border: 4px solid #000;
+      padding: 24px;
+      box-shadow: 6px 6px 0px #94a3b8;
+    }
+
+    .card h3 {
+      margin: -24px -24px 20px -24px;
+      background: #000;
+      color: #fff;
+      padding: 8px 24px;
+      font-size: 16px;
+      text-transform: uppercase;
+    }
+
+    .tag {
+      display: inline-block;
+      background: var(--accent);
+      color: #fff;
+      padding: 4px 10px;
+      font-size: 11px;
+      margin-bottom: 12px;
+      border: 2px solid #000;
+    }
+
+    /* Typography inside cards */
+    p, li { font-size: 14px; line-height: 1.6; }
+    ul, ol { padding-left: 20px; margin-bottom: 0; }
+    li { margin-bottom: 10px; }
+
+    /* Link Style */
+    .link-grid { display: grid; gap: 12px; margin-top: 10px; }
+    .link-card {
+      display: block;
+      border: 3px solid #000;
+      padding: 12px;
+      background: #f1f5f9;
+      text-decoration: none;
+      color: var(--text-main);
+    }
+    .link-card:hover { background: #fa0; }
+    .link-card strong { display: block; margin-bottom: 4px; color: var(--accent); }
+    .link-card span { font-size: 12px; color: var(--text-muted); }
+
+    /* Table Pixel Style */
+    .table-wrap { overflow-x: auto; margin-top: 10px; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 4px solid #000;
+      background: #fff;
+    }
+    th, td { padding: 12px; border: 2px solid #000; text-align: left; }
+    th { background: #334155; color: #fff; text-transform: uppercase; font-size: 13px; }
+
+    /* Warning Block */
+    .warning-box {
+      margin-top: 30px;
+      background: #fee2e2;
+      border: 4px solid #dc2626;
+      padding: 20px;
+      color: #991b1b;
+      font-weight: bold;
+      position: relative;
+    }
+    .warning-box::before { content: "⚠ ALERT"; display: block; margin-bottom: 8px; font-size: 18px; }
+
+    /* Tab Animation */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; animation: pixelateIn 0.2s steps(4); }
+    @keyframes pixelateIn { from { opacity: 0; } to { opacity: 1; } }
+
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: 1fr; }
+      .tab-btn { padding: 8px 12px; font-size: 11px; }
+      .game-header { flex-wrap: wrap; }
+      .status-panel { margin-left: auto; }
+      .dundee-banner__title { font-size: 14px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="game-header">
+    <a href="./technology.html" id="backLink" class="exit-btn">← RETURN</a>
+    <div class="status-panel">
+      MODE: STUDENT_QUEST<br>
+      STAGE: DUNDEE_YEAR_1
+    </div>
+  </header>
+
+  <div class="dundee-banner">
+    <img src="./Dundee/dundee-campus.webp" alt="University of Dundee logo">
+    <div class="dundee-banner__text">
+      <div class="dundee-banner__title">University of Dundee</div>
+      <div class="dundee-banner__sub">Dundee Student Hub</div>
+    </div>
+  </div>
+
+  <div class="mc2-shell">
+    <nav class="tab-nav">
+      <button class="tab-btn active" type="button" data-target="overview" onclick="showTab('overview')">OVERVIEW</button>
+      <button class="tab-btn" type="button" data-target="systems" onclick="showTab('systems')">SYSTEMS</button>
+      <button class="tab-btn" type="button" data-target="semester" onclick="showTab('semester')">MODULES</button>
+      <button class="tab-btn" type="button" data-target="exams" onclick="showTab('exams')">EXAMS</button>
+      <button class="tab-btn" type="button" data-target="referencing" onclick="showTab('referencing')">REFERENCING</button>
+      <button class="tab-btn" type="button" data-target="mitigation" onclick="showTab('mitigation')">MITIGATION</button>
+      <button class="tab-btn" type="button" data-target="grades" onclick="showTab('grades')">GRADES</button>
+      <button class="tab-btn" type="button" data-target="support" onclick="showTab('support')">SUPPORT</button>
+    </nav>
+
+    <main class="quest-content">
+      <div class="panel-header">
+        <h2 id="tabTitle">What this guide gives new students</h2>
+        <p id="tabIntro">The original folder mixed system instructions, course notes, and support info. Use the top menu to select your quest.</p>
+      </div>
+
+      <article class="tab-panel active" id="panel-overview" data-title="Quest: Orientation" data-intro="Navigate your first year by understanding where every resource lives.">
+        <div class="grid">
+          <div class="card">
+            <h3>Start Here</h3>
+            <ol>
+              <li>Open <strong>MyDundee and Registry</strong> first to understand core platforms.</li>
+              <li>Open <strong>Semester 1 Modules</strong> for subject expectations.</li>
+              <li>Review <strong>Exam Rules</strong> before every assessment.</li>
+              <li>Keep <strong>Referencing</strong> and <strong>Mitigating Circumstances</strong> for assignment season.</li>
+            </ol>
+          </div>
+          <div class="card">
+            <h3>Main Repeated Themes</h3>
+            <ul>
+              <li>MyDundee is a working platform for resources, submissions, and exams.</li>
+              <li>Academic integrity rules are strict around tabs and translation tools.</li>
+              <li>Semester 1 expects independent learning adaptation very early.</li>
+              <li>Different issues need different routes: library support, academic skills, welfare services, or mitigating circumstances.</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article class="tab-panel" id="panel-systems" data-title="System Access" data-intro="The digital tools required for your daily learning and administration.">
+        <div class="grid">
+          <div class="card">
+            <h3>Where Systems Live</h3>
+            <ul>
+              <li><strong>MyDundee:</strong> module pages, resources, submissions, and exams.</li>
+              <li><strong>eVision:</strong> registry-facing actions, records, and official letters.</li>
+              <li><strong>Dundee Students site:</strong> central services and official guidance.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Registry Workflow</h3>
+            <ol>
+              <li>Open course-specific application link.</li>
+              <li>Create a username and password.</li>
+              <li>Complete personal and contact details.</li>
+              <li>Add qualifications and English language results.</li>
+              <li>Submit and track your application.</li>
+            </ol>
+          </div>
+        </div>
+        <h3 style="margin-top: 30px; text-transform: uppercase;">Programme Direct Links</h3>
+        <div class="grid" style="margin-top: 15px;">
+          <a class="link-card" href="https://uod.ac.uk/csu-h200" target="_blank" rel="noopener noreferrer"><strong>Civil Engineering</strong><span>BEng (Hons), joint degree with CSU.</span></a>
+          <a class="link-card" href="https://uod.ac.uk/csu-h300" target="_blank" rel="noopener noreferrer"><strong>Mechanical Engineering</strong><span>BEng (Hons), joint degree with CSU.</span></a>
+          <a class="link-card" href="https://uod.ac.uk/csu-g401" target="_blank" rel="noopener noreferrer"><strong>Computing Science</strong><span>BSc (Hons), joint degree with CSU.</span></a>
+          <a class="link-card" href="https://uod.ac.uk/csu-g100" target="_blank" rel="noopener noreferrer"><strong>Mathematics</strong><span>BSc (Hons), joint degree with CSU.</span></a>
+          <a class="link-card" href="https://uod.ac.uk/csu-h304" target="_blank" rel="noopener noreferrer"><strong>Mechanical with Transportation</strong><span>BEng (Hons), joint degree with CSU.</span></a>
+        </div>
+      </article>
+
+      <article class="tab-panel" id="panel-semester" data-title="Semester 1 Modules" data-intro="Detailed course content and project expectations for your first term.">
+        <div class="grid">
+          <div class="card">
+            <span class="tag">PROJECT STRUCTURE</span>
+            <h3>How Rotation Works</h3>
+            <p>Students typically complete short projects in Computing, Mathematics, Mechanical, and Civil topics. Groups are often random and collaboration affects outcomes.</p>
+          </div>
+          <div class="card">
+            <span class="tag">COMPUTING</span>
+            <h3>Processing & Drawing</h3>
+            <p>Building a drawing tool via Processing. Focus on product demonstration. Practice beyond starter examples.</p>
+          </div>
+          <div class="card">
+            <span class="tag">MATHEMATICS</span>
+            <h3>Game Design Report</h3>
+            <p>Designing a game and writing a formal academic report. Important: avoid duplicate group uploads to Turnitin.</p>
+          </div>
+          <div class="card">
+            <span class="tag">MECHANICAL</span>
+            <h3>Fan Design & Poster</h3>
+            <p>Excel data handling, fan design, and poster-style reporting. Individual oral questioning may occur.</p>
+          </div>
+          <div class="card">
+            <span class="tag">CIVIL</span>
+            <h3>CAD Bridge Design</h3>
+            <p>CAD drawing, physical bridge model, load testing, and group presentation.</p>
+          </div>
+          <div class="card">
+            <span class="tag">ENGLISH</span>
+            <h3>Skills I</h3>
+            <p>Academic English development plus four-skill assessments: Reading, Writing, Listening, Speaking.</p>
+          </div>
+          <div class="card">
+            <span class="tag">CALCULUS</span>
+            <h3>Test & Exams</h3>
+            <p>Focus on worksheets. Learning math vocabulary in English early will significantly reduce pressure.</p>
+          </div>
+          <div class="card">
+            <span class="tag">STUDY ROUTINE</span>
+            <h3>Habits that Protect Marks</h3>
+            <p>Join key stages of group work, build technical confidence early, and maintain daily English exposure for academic vocabulary and presentations.</p>
+          </div>
+        </div>
+      </article>
+
+      <article class="tab-panel" id="panel-exams" data-title="The Exam Protocol" data-intro="Strict regulations for room behavior and online platforms to avoid disqualification.">
+        <div class="grid">
+          <div class="card">
+            <h3>Room Regulations</h3>
+            <ul>
+              <li>Phones and smart watches must be OFF and in bags.</li>
+              <li>Place Dundee ID card on the desk.</li>
+              <li>Enter in silence and stay silent until instructed.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Online Procedures</h3>
+            <ul>
+              <li>Exams run on MyDundee; bring a charged laptop.</li>
+              <li>Only one browser tab allowed (MyDundee).</li>
+              <li>No translation or auto-translation software allowed.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Leaving & Timing</h3>
+            <ul>
+              <li>No leaving for exams shorter than one hour.</li>
+              <li>For longer exams, leaving is usually allowed after 30 minutes and not in the final 15 minutes.</li>
+              <li>Emergency exits normally mean no re-entry.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Allowed Equipment</h3>
+            <ul>
+              <li>Black/blue pens and a ruler.</li>
+              <li>Scientific calculator (non-graphing).</li>
+              <li>For listening exams, bring working headphones.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="warning-box">
+          High-risk misconduct: using translation tools, having extra tabs open, or having a phone/watch on your person.
+        </div>
+      </article>
+
+      <article class="tab-panel" id="panel-referencing" data-title="Referencing & Citation" data-intro="How to maintain academic integrity using the Harvard Style.">
+        <div class="grid">
+          <div class="card">
+            <h3>When to Reference</h3>
+            <ul>
+              <li>Direct quotes from websites/books/journals.</li>
+              <li>Paraphrasing other people's ideas.</li>
+              <li>Reusing your own previously published work.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Required Components</h3>
+            <ul>
+              <li><strong>In-text citation:</strong> Author and Year.</li>
+              <li><strong>Reference List:</strong> Full source details at the end.</li>
+              <li>Large-scale AI-generated writing may also trigger misconduct concerns.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Practical Submission Safety</h3>
+            <ul>
+              <li>Track your source list while reading, not at the end.</li>
+              <li>Reference paraphrases, not only direct quotes.</li>
+              <li>Check Turnitin workflow before group submissions.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="link-grid" style="margin-top: 20px;">
+          <a href="https://www.mendeley.com" class="link-card" target="_blank" rel="noopener noreferrer"><strong>Mendeley</strong><span>Tool for organizing references and citations.</span></a>
+          <a href="https://www.scribbr.co.uk/referencing/harvard-style/" class="link-card" target="_blank" rel="noopener noreferrer"><strong>Harvard Guide</strong><span>Reference examples and formats.</span></a>
+          <a href="https://www.citethemrightonline.com" class="link-card" target="_blank" rel="noopener noreferrer"><strong>Cite Them Right</strong><span>Official university Harvard guide.</span></a>
+        </div>
+      </article>
+
+      <article class="tab-panel" id="panel-mitigation" data-title="Mitigating Circumstances" data-intro="The formal route for serious illness or emergencies affecting performance.">
+        <div class="grid">
+          <div class="card">
+            <h3>Application Route</h3>
+            <p>Email <strong>SSEN-DIICSU@dundee.ac.uk</strong> with subject: <em>Mitigating Circumstances - Private and Confidential</em>.</p>
+          </div>
+          <div class="card">
+            <h3>Required Information</h3>
+            <ul>
+              <li>Student details, affected modules, and assessment titles.</li>
+              <li>Clear impact explanation with dated evidence.</li>
+              <li>Submission status and relevant dates.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Timing and Consent</h3>
+            <ul>
+              <li>Deadlines are usually announced each semester.</li>
+              <li>Committee/adviser discussion may require consent.</li>
+              <li>Submit evidence early for stronger review.</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>When to Use This Route</h3>
+            <ul>
+              <li>Use for serious impact, not routine deadline pressure.</li>
+              <li>If equipment failure blocks online exams, this route may be required.</li>
+            </ul>
+          </div>
+        </div>
+      </article>
+
+      <article class="tab-panel" id="panel-grades" data-title="Grades & Language" data-intro="How marks map between Dundee and China, and English Medium Certification.">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Dundee Band</th><th>China Range</th><th>Descriptor</th><th>Class</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>A1 - A5</td><td>89 - 99</td><td>Excellent</td><td>1st</td></tr>
+              <tr><td>B1 - B3</td><td>79 - 88</td><td>Very Good</td><td>2(i)</td></tr>
+              <tr><td>C1 - C3</td><td>69 - 78</td><td>Good</td><td>2(ii)</td></tr>
+              <tr><td>D1 - D3</td><td>60 - 68</td><td>Sufficient</td><td>3rd</td></tr>
+              <tr><td>MF1 - MF3</td><td>39 - 59</td><td>Marginal Fail</td><td>Fail</td></tr>
+              <tr><td>CF / BF</td><td>0 - 38</td><td>Fail</td><td>Fail</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card" style="margin-top: 20px;">
+          <h3>EMI Certification</h3>
+          <p>The degree is taught entirely in English across four years, including core modules, materials, and all assessments. Year 1 includes intensive academic English training.</p>
+        </div>
+      </article>
+
+      <article class="tab-panel" id="panel-support" data-title="Support Systems" data-intro="A directory of services for academic, welfare, and administrative help.">
+        <div class="grid">
+          <div class="card">
+            <h3>Academic Help</h3>
+            <div class="link-grid">
+              <a href="https://www.dundee.ac.uk/academic-skills/students" class="link-card" target="_blank" rel="noopener noreferrer"><strong>Academic Skills</strong><span>Writing and study strategy support.</span></a>
+              <a href="https://www.dundee.ac.uk/library/" class="link-card" target="_blank" rel="noopener noreferrer"><strong>Library</strong><span>Research tools and study space.</span></a>
+              <a href="https://www.dundee.ac.uk/it" class="link-card" target="_blank" rel="noopener noreferrer"><strong>IT Support</strong><span>University systems and device support.</span></a>
+              <a href="https://www.dundee.ac.uk/careers" class="link-card" target="_blank" rel="noopener noreferrer"><strong>Careers</strong><span>Career planning and employability support.</span></a>
+            </div>
+          </div>
+          <div class="card">
+            <h3>Welfare & Admin</h3>
+            <div class="link-grid">
+              <a href="https://www.dusa.co.uk/advice/academic/" class="link-card" target="_blank" rel="noopener noreferrer"><strong>DUSA Advice</strong><span>Independent student counsel.</span></a>
+              <a href="https://www.dundee.ac.uk/disability-services" class="link-card" target="_blank" rel="noopener noreferrer"><strong>Disability</strong><span>Adjustments and access support.</span></a>
+              <a href="https://www.dundee.ac.uk/governance/discipline-complaints-appeals/appeals" class="link-card" target="_blank" rel="noopener noreferrer"><strong>Appeals</strong><span>Official academic appeal information.</span></a>
+              <a href="https://www.dundee.ac.uk/guides/complaints-handling-procedure-guide-students" class="link-card" target="_blank" rel="noopener noreferrer"><strong>Complaints Guide</strong><span>Formal complaint procedures.</span></a>
+              <a href="https://www.dundee.ac.uk/guides/get-letter-says-i-am-student" class="link-card" target="_blank" rel="noopener noreferrer"><strong>Student Letter Guide</strong><span>How to obtain official student letters.</span></a>
+              <a href="https://www.dundee.ac.uk/guides/order-official-document-or-letter-registry" class="link-card" target="_blank" rel="noopener noreferrer"><strong>Registry Documents</strong><span>Order official letters and documents.</span></a>
+              <a href="https://www.dundee.ac.uk/guides/university-dundee-app" class="link-card" target="_blank" rel="noopener noreferrer"><strong>University App</strong><span>Mobile access to university information.</span></a>
+              <a href="https://universityofdundee.cn/discover-dundee/support-hub-in-china/" class="link-card" target="_blank" rel="noopener noreferrer"><strong>Support Hub in China</strong><span>China-facing support information.</span></a>
+            </div>
+          </div>
+        </div>
+      </article>
+
+    </main>
+  </div>
+
+  <script>
+    function showTab(targetId, options) {
+      const settings = Object.assign({ updateHash: true }, options || {});
+      const buttons = Array.from(document.querySelectorAll('.tab-btn'));
+      const panels = Array.from(document.querySelectorAll('.tab-panel'));
+      const titleEl = document.getElementById('tabTitle');
+      const introEl = document.getElementById('tabIntro');
+      const valid = buttons.some((btn) => btn.dataset.target === targetId) ? targetId : 'overview';
+
+      buttons.forEach((btn) => {
+        btn.classList.toggle('active', btn.dataset.target === valid);
+      });
+
+      panels.forEach((panel) => {
+        const active = panel.id === `panel-${valid}`;
+        panel.classList.toggle('active', active);
+        if (active) {
+          titleEl.textContent = panel.getAttribute('data-title') || titleEl.textContent;
+          introEl.textContent = panel.getAttribute('data-intro') || introEl.textContent;
+        }
+      });
+
+      if (settings.updateHash) {
+        history.replaceState(null, '', `#${valid}`);
+      }
+      const content = document.querySelector('.quest-content');
+      if (content) content.scrollTop = 0;
+    }
+
+    (function initializeTabs() {
+      const buttons = Array.from(document.querySelectorAll('.tab-btn'));
+      buttons.forEach((btn) => {
+        btn.addEventListener('click', () => showTab(btn.dataset.target, { updateHash: true }));
+      });
+      const hash = (window.location.hash || '').replace('#', '');
+      showTab(hash || 'overview', { updateHash: Boolean(hash) });
+    })();
+
+    (function initializeBackLink() {
+      const backLink = document.getElementById('backLink');
+      if (!backLink) return;
+      const fallback = './technology.html';
+      const from = new URLSearchParams(window.location.search).get('from');
+      if (from === 'technology1') {
+        backLink.href = './technology.html';
+        return;
+      }
+      if (from === 'technology') {
+        backLink.href = './technology.html';
+        return;
+      }
+      const referrer = document.referrer ? new URL(document.referrer, window.location.href) : null;
+      if (!referrer || referrer.origin !== window.location.origin) {
+        backLink.href = fallback;
+        return;
+      }
+      const refPath = referrer.pathname.toLowerCase();
+      if (refPath.endsWith('/technology1.html')) {
+        backLink.href = './technology.html';
+        return;
+      }
+      if (refPath.endsWith('/technology.html')) {
+        backLink.href = './technology.html';
+        return;
+      }
+      backLink.href = fallback;
+    })();
+  </script>
+</body>
+</html>

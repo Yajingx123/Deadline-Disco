@@ -1,5 +1,5 @@
 (function () {
-  const API_ROOMS = '../api/video/video-call-rooms.php';
+  const API_ROOMS = './api/video-call-rooms.php';
   const API_CHAT_USERS = '../../forum-project/api/chat-users.php';
 
   const state = {

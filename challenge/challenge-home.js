@@ -17,7 +17,8 @@
 
   function resolveTeamGuidePath(fileName) {
     const path = window.location.pathname || '';
-    const base = path.includes('/rank/') ? '../teamGuide/' : './teamGuide/';
+    const isRankPage = path.includes('/rank/') || path.includes('/rank-v2/');
+    const base = isRankPage ? '../challenge/teamGuide/' : './teamGuide/';
     return `${base}${fileName}`;
   }
 

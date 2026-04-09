@@ -8,7 +8,7 @@ extends Area2D
 
 const MAIN_FORUM_URL := "http://127.0.0.1:8001/forum-project-v2/dist/index.html?ui=godot"
 const MAIN_STUDIO_URL := "http://127.0.0.1:8001/Studio/studio-godot.html?ui=godot"
-const MAIN_TECH_URL := "http://127.0.0.1:8001/technology1.html?ui=godot"
+const MAIN_TECH_URL := "http://127.0.0.1:8001/GameUI/Technology-GameUI/technology.html?ui=godot"
 const MAIN_COMPETITION_URL := "http://127.0.0.1:8001/home.html?module=Studio&ui=godot"
 
 @onready var tip: Label = $Tip

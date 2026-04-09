@@ -2,9 +2,9 @@
 declare(strict_types=1);
 
 require __DIR__ . '/bootstrap.php';
-require_once __DIR__ . '/../../../zego_server_assistant/src/ZEGO/ZegoAssistantToken.php';
-require_once __DIR__ . '/../../../zego_server_assistant/src/ZEGO/ZegoErrorCodes.php';
-require_once __DIR__ . '/../../../zego_server_assistant/src/ZEGO/ZegoServerAssistant.php';
+require_once __DIR__ . '/../../video_call/zego_server_assistant/src/ZEGO/ZegoAssistantToken.php';
+require_once __DIR__ . '/../../video_call/zego_server_assistant/src/ZEGO/ZegoErrorCodes.php';
+require_once __DIR__ . '/../../video_call/zego_server_assistant/src/ZEGO/ZegoServerAssistant.php';
 
 use ZEGO\ZegoErrorCodes;
 use ZEGO\ZegoServerAssistant;
