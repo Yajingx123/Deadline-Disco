@@ -105,6 +105,12 @@
 
     next() {
       if (!this.active) return;
+      const currentStep = this.steps[this.index];
+      if (typeof currentStep.onNext === 'function') {
+        try {
+          currentStep.onNext();
+        } catch (_err) {}
+      }
       const nextIndex = this.index + 1;
       if (nextIndex >= this.steps.length) {
         this.stop(true);
@@ -162,7 +168,8 @@
       if (targetEl) {
         targetEl.classList.add(GUIDE_CLASS);
         try {
-          targetEl.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+          // 只滚动到可见区域，不居中，避免影响弹窗定位
+          targetEl.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'nearest' });
         } catch (_err) {}
       }
 
@@ -208,6 +215,17 @@
       btnPrev?.addEventListener('click', () => this.prev());
       btnNext?.addEventListener('click', () => this.next());
 
+      // 确保卡片已经在DOM中
+      if (!document.body.contains(this.cardEl)) {
+        this.cardEl.style.position = 'fixed';
+        document.body.appendChild(this.cardEl);
+      }
+
+      // 先将卡片设置为可见，以便获取正确的尺寸
+      this.cardEl.style.visibility = 'hidden';
+      this.cardEl.style.opacity = '0';
+
+      // 现在获取正确的卡片尺寸
       const cardRect = this.cardEl.getBoundingClientRect();
       const vw = window.innerWidth;
       const vh = window.innerHeight;
@@ -216,45 +234,69 @@
       let left = Math.round((vw - cardRect.width) / 2);
 
       if (targetEl) {
-        const rect = targetEl.getBoundingClientRect();
-        const gap = 14;
-        const place = String(step.placement || 'bottom');
-        if (place === 'top') {
-          top = rect.top - cardRect.height - gap;
-          left = rect.left;
-        } else if (place === 'left') {
-          top = rect.top;
-          left = rect.left - cardRect.width - gap;
-        } else if (place === 'right') {
-          top = rect.top;
-          left = rect.right + gap;
+        // 检查是否是第二步（Weekly Challenge）
+        if (step.title && step.title.includes('Weekly Challenge')) {
+          // 强制显示在屏幕中央
+          console.log('Forcing center position for Weekly Challenge step');
         } else {
-          top = rect.bottom + gap;
-          left = rect.left;
-        }
-
-        // If this step requires clicking, avoid covering the target area.
-        if (step.requireClick) {
-          const targetCenterX = rect.left + (rect.width / 2);
-          const targetCenterY = rect.top + (rect.height / 2);
-          const fitsTop = rect.top >= (cardRect.height + gap + 10);
-          const fitsBottom = (vh - rect.bottom) >= (cardRect.height + gap + 10);
-          const fitsLeft = rect.left >= (cardRect.width + gap + 10);
-          const fitsRight = (vw - rect.right) >= (cardRect.width + gap + 10);
-
-          if (fitsTop) {
+          const rect = targetEl.getBoundingClientRect();
+          const gap = 14;
+          const place = String(step.placement || 'bottom');
+          
+          // 调试信息
+          console.log('Guide Step:', step.title);
+          console.log('Target Element:', targetEl);
+          console.log('Target Rect:', rect);
+          console.log('Card Rect:', cardRect);
+          console.log('Viewport Size:', { width: vw, height: vh });
+          
+          if (place === 'top') {
             top = rect.top - cardRect.height - gap;
-            left = targetCenterX - (cardRect.width / 2);
-          } else if (fitsBottom) {
-            top = rect.bottom + gap;
-            left = targetCenterX - (cardRect.width / 2);
-          } else if (fitsRight) {
-            top = targetCenterY - (cardRect.height / 2);
-            left = rect.right + gap;
-          } else if (fitsLeft) {
-            top = targetCenterY - (cardRect.height / 2);
+            left = rect.left;
+          } else if (place === 'left') {
+            top = rect.top;
             left = rect.left - cardRect.width - gap;
+          } else if (place === 'right') {
+            top = rect.top;
+            left = rect.right + gap;
+          } else {
+            top = rect.bottom + gap;
+            left = rect.left;
           }
+
+          // If this step requires clicking, avoid covering the target area.
+          if (step.requireClick) {
+            const targetCenterX = rect.left + (rect.width / 2);
+            const targetCenterY = rect.top + (rect.height / 2);
+            const fitsTop = rect.top >= (cardRect.height + gap + 10);
+            const fitsBottom = (vh - rect.bottom) >= (cardRect.height + gap + 10);
+            const fitsLeft = rect.left >= (cardRect.width + gap + 10);
+            const fitsRight = (vw - rect.right) >= (cardRect.width + gap + 10);
+            
+            // 调试信息
+            console.log('Fits Check:', { fitsTop, fitsBottom, fitsLeft, fitsRight });
+
+            if (fitsBottom) {
+              top = rect.bottom + gap;
+              left = targetCenterX - (cardRect.width / 2);
+              console.log('Placing below target');
+            } else if (fitsTop) {
+              top = rect.top - cardRect.height - gap;
+              left = targetCenterX - (cardRect.width / 2);
+              console.log('Placing above target');
+            } else if (fitsRight) {
+              top = targetCenterY - (cardRect.height / 2);
+              left = rect.right + gap;
+              console.log('Placing to the right of target');
+            } else if (fitsLeft) {
+              top = targetCenterY - (cardRect.height / 2);
+              left = rect.left - cardRect.width - gap;
+              console.log('Placing to the left of target');
+            }
+          }
+          
+          // 调试信息
+          console.log('Calculated Position:', { top, left });
         }
       }
 
@@ -262,6 +304,10 @@
       left = Math.max(10, Math.min(vw - cardRect.width - 10, left));
       this.cardEl.style.top = `${top}px`;
       this.cardEl.style.left = `${left}px`;
+      
+      // 最后将卡片设置为可见
+      this.cardEl.style.visibility = 'visible';
+      this.cardEl.style.opacity = '1';
     }
   }
 

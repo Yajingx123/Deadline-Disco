@@ -8,9 +8,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Playfair+Display:ital,wght@0,500;1,500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../shared-nav.css">
-  <link rel="stylesheet" href="../shared/onboarding.css">
+  <link rel="stylesheet" href="./onboarding.css">
   <script src="../shared/acadbeat-local-config.js"></script>
-  <script src="../shared/onboarding.js"></script>
+  <script src="./onboarding.js"></script>
   <style>html.acadbeat-role-guard body{visibility:hidden}</style>
   <script>
     document.documentElement.classList.add('acadbeat-role-guard');
@@ -41,7 +41,8 @@
       <h1>Team Ranking</h1>
       <p>Weekly Challenge Team Performance</p>
       <div class="ranking-header__actions">
-        <button type="button" class="btn-primary rank-challenge-btn" id="rankWeeklyChallengeBtn">Weekly challenge</button>
+        <button type="button" class="btn-primary rank-challenge-btn" id="rankWeeklyChallengeBtn" data-guide-rank="challenge-btn">Weekly challenge</button>
+        <button type="button" class="btn-primary rank-guide-btn" id="rankGuideBtn" data-guide-rank="guide-btn" aria-label="Open ranking guide" title="Guide">?</button>
       </div>
     </div>
     
