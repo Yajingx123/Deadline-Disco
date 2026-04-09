@@ -87,40 +87,44 @@ texture = ExtResource("4_5404h")
 
 [node name="Label1" type="Label" parent="." unique_id=642961318]
 visible = false
-offset_left = -315.0
-offset_top = 227.0
-offset_right = 268.00012
-offset_bottom = 622.0
+offset_left = -22.0
+offset_top = 94.0
+offset_right = 561.0001
+offset_bottom = 489.0
 theme_override_fonts/font = ExtResource("6_4oxwx")
 theme_override_font_sizes/font_size = 80
 text = "Vocabulary"
 
 [node name="Label2" type="Label" parent="." unique_id=307180924]
 visible = false
-offset_left = -315.0
-offset_top = 227.0
-offset_right = 268.0
-offset_bottom = 622.0
+offset_left = 171.0
+offset_top = -503.0
+offset_right = 1192.0
+offset_bottom = -108.0
 theme_override_fonts/font = ExtResource("6_4oxwx")
 theme_override_font_sizes/font_size = 80
-text = "Listening and Understand"
+text = "Listening 
+and Understand"
+autowrap_mode = 2
 
 [node name="Label3" type="Label" parent="." unique_id=2104673672]
 visible = false
-offset_left = -315.0
-offset_top = 227.0
-offset_right = 268.0
-offset_bottom = 622.0
+offset_left = -523.0
+offset_top = 142.0
+offset_right = 60.0
+offset_bottom = 537.0
 theme_override_fonts/font = ExtResource("6_4oxwx")
 theme_override_font_sizes/font_size = 80
-text = "Listening and Respond"
+text = "Listening and 
+   Respond"
+autowrap_mode = 2
 
 [node name="Label4" type="Label" parent="." unique_id=735366343]
 visible = false
-offset_left = -315.0
-offset_top = 227.0
-offset_right = 268.0
-offset_bottom = 621.9999
+offset_left = -1049.0
+offset_top = -114.0
+offset_right = -286.0
+offset_bottom = 280.99988
 theme_override_fonts/font = ExtResource("6_4oxwx")
 theme_override_font_sizes/font_size = 80
 text = "Pair Speaking Room"

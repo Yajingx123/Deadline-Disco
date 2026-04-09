@@ -11,6 +11,7 @@
   <link rel="stylesheet" href="../../shared-nav.css">
   <script src="../../shared/acadbeat-local-config.js"></script>
   <link rel="stylesheet" href="../practice-style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <style>html.acadbeat-role-guard body{visibility:hidden}</style>
   <script>
     document.documentElement.classList.add('acadbeat-role-guard');
@@ -121,7 +122,7 @@
 
         <label id="voiceRoomScheduleField" class="voice-room-form-field voice-room-form-field--narrow hidden">
           <span>Start time</span>
-          <input id="voiceRoomScheduledAtInput" type="datetime-local">
+          <input id="voiceRoomScheduledAtInput" type="text" placeholder="YYYY-MM-DD HH:MM" autocomplete="off">
         </label>
 
         <div class="voice-room-form-field">
@@ -160,6 +161,7 @@
   </div>
 
   <div id="voiceRoomToast" class="voice-room-toast hidden" role="status" aria-live="polite"></div>
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
   <style>
     #voiceRoomOpenCreateBtn {
