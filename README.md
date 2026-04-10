@@ -137,27 +137,5 @@ We follow the **Agile** development process. To contribute:
 5. **Submit:** Open a PR with a clear summary of changes.
 
 ---
-
-## 🤖 AI Assistance / Citation
-
-This project was developed with the assistance of the following AI tools:
-	•	ChatGPT – used for code generation, debugging, and technical explanation
-	•	Gemini – used for idea generation and UI/UX design support
-	•	Doubao – used for content drafting and alternative solution suggestions
-
-**Scope of Use**
-
-AI tools were used to:
-	•	Assist in writing and refining code
-	•	Debug issues and suggest fixes
-	•	Provide UI/UX design ideas
-	•	Improve documentation clarity
-
-**Disclaimer**
-
-All AI-generated content was reviewed, modified, and validated by the project team. Final implementations reflect the team’s own understanding and decisions.
-
----
-
 _Developed as part of the Agile Software Engineering course._
 

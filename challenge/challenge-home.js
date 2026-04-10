@@ -240,25 +240,24 @@
     const grid = getEl(gridId);
     if (!grid) return;
     const members = team?.members || [];
-    const v2Class = isV2Style ? ' v2-style' : '';
     const cards = members.map((member) => `
-      <div class="slot-card slot-card--filled${v2Class}">
-        <div class="slot-card__avatar${v2Class}">${member.avatar}</div>
-        <div class="slot-card__badge${v2Class} ${member.role === 'captain' ? 'slot-card__badge--captain' : ''}${v2Class}">
+      <div class="slot-card slot-card--filled">
+        <div class="slot-card__avatar">${member.avatar}</div>
+        <div class="slot-card__badge ${member.role === 'captain' ? 'slot-card__badge--captain' : ''}">
           ${member.role === 'captain' ? 'Captain' : 'Member'}
         </div>
-        <p class="slot-card__name${v2Class}">${member.username}</p>
-        <p class="slot-card__meta${v2Class}">${member.email || 'AcadBeat member'}</p>
+        <p class="slot-card__name">${member.username}</p>
+        <p class="slot-card__meta">${member.email || 'AcadBeat member'}</p>
       </div>
     `);
 
     const missing = Math.max(0, Number(team?.maxMembers || 4) - members.length);
     for (let index = 0; index < missing; index += 1) {
       cards.push(`
-        <button type="button" class="slot-card slot-empty${v2Class}" ${canInvite ? 'onclick="openInviteComposer()"' : 'disabled'}>
+        <button type="button" class="slot-card slot-empty" ${canInvite ? 'onclick="openInviteComposer()"' : 'disabled'}>
           <span style="font-size:2rem; font-weight:200;">+</span>
-          <p class="module-label${v2Class}" style="margin:8px 0 0;">Seat</p>
-          <p class="slot-card__emptyLabel${v2Class}">${canInvite ? 'Invite by username' : 'Waiting to fill'}</p>
+          <p class="module-label" style="margin:8px 0 0;">Seat</p>
+          <p class="slot-card__emptyLabel">${canInvite ? 'Invite by username' : 'Waiting to fill'}</p>
         </button>
       `);
     }
@@ -275,16 +274,15 @@
       list.innerHTML = '';
       return;
     }
-    const v2Class = isV2Style ? ' v2-style' : '';
     section.hidden = false;
     list.innerHTML = sentInvites.map((invite) => `
-      <div class="challenge-pending__item${v2Class}">
-        <div class="challenge-pending__avatar${v2Class}">${invite.invitee.avatar}</div>
-        <div class="challenge-pending__content${v2Class}">
+      <div class="challenge-pending__item">
+        <div class="challenge-pending__avatar">${invite.invitee.avatar}</div>
+        <div class="challenge-pending__content">
           <strong>${invite.invitee.username}</strong>
           <span>Invite pending.</span>
         </div>
-        <div class="challenge-status-chip${v2Class}">Pending</div>
+        <div class="challenge-status-chip">Pending</div>
       </div>
     `).join('');
   }
@@ -366,7 +364,6 @@
     const empty = getEl('leaderboardEmpty');
     const status = getEl('challengeStatusCardValue');
     if (!list || !empty || !status) return;
-    const v2Class = isV2Style ? ' v2-style' : '';
 
     if (!leaderboard.length) {
       list.innerHTML = '';
@@ -374,11 +371,11 @@
     } else {
       empty.hidden = true;
       list.innerHTML = leaderboard.map((entry, index) => `
-        <div class="rank-item${v2Class}">
-          <span class="rank-badge ${index === 0 ? 'gold' : index === 1 ? 'silver' : index === 2 ? 'bronze' : ''}${v2Class}">${String(entry.rank || index + 1).padStart(2, '0')}</span>
-          <div class="rank-info${v2Class}">
-            <p class="rank-name${v2Class}">${entry.teamName}</p>
-            <p class="rank-pts${v2Class}">${entry.score} pts</p>
+        <div class="rank-item">
+          <span class="rank-badge ${index === 0 ? 'gold' : index === 1 ? 'silver' : index === 2 ? 'bronze' : ''}">${String(entry.rank || index + 1).padStart(2, '0')}</span>
+          <div class="rank-info">
+            <p class="rank-name">${entry.teamName}</p>
+            <p class="rank-pts">${entry.score} pts</p>
           </div>
         </div>
       `).join('');
@@ -819,28 +816,6 @@
       }
     },
   };
-
-  let isV2Style = false;
-
-  function toggleChallengeStyle() {
-    isV2Style = !isV2Style;
-    const elements = document.querySelectorAll('#teamModalOverlay, #teamModal, .team-main, .challenge-hero, .challenge-copy, .challenge-secondary-btn, .challenge-ghost-btn, .challenge-secondary-btn__count, .challenge-name-row, .challenge-name-field, .challenge-name-input, .challenge-search-input, .challenge-request-input, .challenge-status-row, .challenge-status-chip, .challenge-stage, .challenge-card, .challenge-card--center, .challenge-card--stacked, .challenge-forming-head, .challenge-countdown-card, .challenge-countdown, .challenge-countdown__unit, .challenge-countdown__divider, .slots-grid, .slot-card, .slot-card--filled, .slot-card__avatar, .slot-card__badge, .slot-card__badge--captain, .slot-card__name, .slot-card__meta, .slot-empty, .slot-card__emptyLabel, .challenge-pending, .challenge-pending__list, .challenge-invite-list, .challenge-pending__item, .challenge-invite-card, .challenge-pending__avatar, .challenge-invite-card__avatar, .challenge-pending__content, .challenge-invite-card__content, .team-float-actions, .team-float-actions--wide, .btn-publish, .btn-publish__count, .btn-publish--secondary, .btn-publish--soft, .btn-publish--ghost, .challenge-tabbar, .challenge-tab, .challenge-hub-pane, .challenge-mylisting-card, .challenge-mylisting-card__copy, .leaderboard-aside, .leaderboard-empty, .challenge-system-card, .challenge-system-card__value, .search-layer, .search-layer__card, .search-layer__card--wide, .search-layer__copy, .search-layer__actions, .challenge-inline-btn, .challenge-inline-btn--ghost, .challenge-panel-title, .challenge-panel-error, .challenge-admin-note, .success-overlay, .module-label, .quote-text, .challenge-btn, .challenge-empty');
-    
-    elements.forEach(el => {
-      if (isV2Style) {
-        el.classList.add('v2-style');
-      } else {
-        el.classList.remove('v2-style');
-      }
-    });
-    
-    const toggleBtn = document.querySelector('.style-toggle-btn');
-    if (toggleBtn) {
-      toggleBtn.textContent = isV2Style ? 'Switch to V1' : 'Switch to V2';
-    }
-  }
-
-  window.toggleChallengeStyle = toggleChallengeStyle;
 
   attachListeners();
   if (isStandaloneChallengePanel()) {

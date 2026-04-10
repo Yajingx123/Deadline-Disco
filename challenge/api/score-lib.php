@@ -41,7 +41,7 @@ function score_add_routine_points(PDO $pdo, int $userId, string $ruleId, string 
     $baseScore = (int)$rule['base_score'];
     $dailyLimit = (int)($rule['daily_count_limit'] ?? 1);
 
-    $today = date('Y-m-d');
+    $today = date('Y-m-d', strtotime('+1 day'));
     $checkStmt = $pdo->prepare("
         SELECT COUNT(*) as cnt
         FROM score_records

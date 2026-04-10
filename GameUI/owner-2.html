@@ -7,9 +7,8 @@
     <title>AcadBeat | The Sanctuary</title>
     <script src="/shared/acadbeat-local-config.js"></script>
     <style>
-        html.acadbeat-role-guard body {
-            visibility: hidden
-        }
+        /* 1. 守卫样式 */
+        html.acadbeat-role-guard body { visibility: hidden }
     </style>
     <script>
         document.documentElement.classList.add('acadbeat-role-guard');
@@ -26,405 +25,221 @@
             document.documentElement.classList.remove('acadbeat-role-guard');
         })();
     </script>
+    <script>
+        function goBackToGodot() {
+            const L = window.ACADBEAT_LOCAL || {};
+            const target = String(L.godotWebEntryUrl || '').trim()
+                || (window.location.origin + '/gameUI_src/Release/index.html?ui=godot');
+            window.location.href = target;
+        }
+    </script>
 
     <style>
         /* =========================================================
-   ACADBEAT GLOBAL DESIGN SYSTEM (已完美融合进你的页面)
-   只改字体 + 颜色 + 样式，不动任何布局！
-   ========================================================= */
-
-        /* ================= FONT ================= */
+           ACADBEAT DESIGN SYSTEM
+           ========================================================= */
         @font-face {
             font-family: 'AcadBeat';
-            src:
-                local('Pixellari'),
-                url('../fonts/Pixellari.ttf') format('truetype'),
-                url('../gameUI_src/Assets/Fonts/Pixellari.ttf') format('truetype');
-            font-weight: normal;
-            font-style: normal;
-            font-display: swap;
+            src: url('/GameUI/resources/Myfont-Regular.ttf') format('truetype');
+            font-weight: normal; font-style: normal; font-display: swap;
         }
 
-        /* ================= DESIGN TOKENS ================= */
         :root {
-            /* ---------- COLORS ---------- */
-            --bg-pink: #d6c7c7;
-            --card-white: rgba(255, 255, 255, 0.92);
-            --text-dark: #3a3a3a;
-            --primary: #c9b3b3;
-            --secondary: #b9c6b4;
-            --accent: #b7c8cc;
-
-            /* ---------- RADIUS ---------- */
-            --radius-small: 8px;
-            --radius-button: 10px;
+            --bg-pink: #e7ded6;
+            --card-white: rgba(255, 252, 248, 0.9);
+            --text-dark: #2f2a25;
+            --text-soft: #6b6258;
+            --primary: #8b6f59;
+            --secondary: #b49a86;
+            --accent: #d7b99d;
             --radius-card: 12px;
-            --radius-large: 16px;
-
-            /* ---------- SPACING ---------- */
-            --space-xs: 4px;
-            --space-sm: 8px;
-            --space-md: 16px;
-            --space-lg: 24px;
-            --space-xl: 32px;
-
-            /* ---------- SHADOW ---------- */
-            --shadow-soft: 0 2px 6px rgba(0, 0, 0, 0.08);
-
-            /* ---------- TRANSITION ---------- */
-            --transition-fast: all 0.18s ease;
+            --shadow-soft: 0 8px 24px rgba(58, 44, 32, 0.12);
+            --transition: all 0.18s ease;
         }
 
-        /* 原始守卫样式 */
-        html.acadbeat-role-guard body {
-            visibility: hidden
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'AcadBeat', sans-serif !important;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'AcadBeat', sans-serif !important; }
 
         body {
+            /* =========================================================
+               在此处更换【背景图片】
+               ========================================================= */
             background: url('./owner2.jpg') no-repeat center center fixed;
             background-size: cover;
             background-color: var(--bg-pink);
             color: var(--text-dark);
             image-rendering: pixelated;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            display: flex; justify-content: center; align-items: center;
             min-height: 100vh;
-            padding: 20px;
-            font-family: 'AcadBeat', sans-serif !important;
         }
 
+        /* =========================================================
+           在此处更换【图层图片（模块框）】
+           ========================================================= */
         .module-frame {
-            background: url('./owner1.jpg') no-repeat center center;
-            background-size: 100% 100%;
-            width: 100%;
-            max-width: 1450px;
+            background:
+                linear-gradient(160deg, rgba(255, 248, 241, 0.88), rgba(250, 238, 227, 0.84));
+            width: min(1280px, 92vw);
             aspect-ratio: 16 / 9;
             position: relative;
             image-rendering: pixelated;
-            transform: scale(1.08);
-            transform-origin: center;
+            transform: scale(1.02);
+            border: 1px solid rgba(139, 111, 89, 0.28);
+            border-radius: 16px;
+            box-shadow: 0 24px 60px rgba(48, 35, 25, 0.18);
+            backdrop-filter: blur(2px);
+            overflow: hidden;
         }
 
+        /* 内部内容定位布局 */
         .module-content {
             position: absolute;
-            left: 32%;
-            right: 7%;
-            top: 25%;
-            bottom: 12%;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
+            left: 20%;
+            right: 5%;
+            top: 22%;
+            bottom: 10%;
+            display: flex; flex-direction: column; overflow: hidden;
+        }
+
+        .back-btn {
+            display: none;
+            position: absolute; left: -14%; top: -10%;
+            width: 50px; height: 50px; background: var(--primary);
+            border: 2px solid #fff; border-radius: 10px; color: #fff;
+            cursor: pointer; align-items: center; justify-content: center;
+            transition: var(--transition); z-index: 10;
+        }
+        .back-btn:hover { transform: scale(1.1); }
+
+        .back-text-btn {
+            position: fixed;
+            top: 12px;
+            left: 12px;
+            height: 36px;
+            padding: 0 14px;
+            border: 1px solid rgba(139, 111, 89, 0.35);
+            border-radius: 10px;
+            background: rgba(255, 249, 242, 0.92);
+            color: var(--primary);
+            font-size: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+            z-index: 1200;
+        }
+
+        .back-text-btn:hover {
+            transform: translateY(-1px);
+            background: rgba(255, 249, 242, 1);
         }
 
         .dashboard-container {
-            display: grid;
-            grid-template-columns: 130px 1fr;
-            gap: 80px;
-            flex: 1;
-            overflow: hidden;
+            display: grid; grid-template-columns: 130px 1fr; gap: 34px;
+            flex: 1; overflow: hidden;
         }
 
-        .sidebar {
-            background: rgba(255, 255, 255, 0.6);
-            border-radius: var(--radius-card);
-            padding: var(--space-md);
-            border: 1px solid var(--primary);
-            height: fit-content;
-        }
-
-        .module-label {
-            font-size: 10px;
-            letter-spacing: 1px;
-            opacity: 0.5;
-            margin-bottom: var(--space-sm);
-            display: block;
-        }
-
-        .side-menu {
-            list-style: none;
-        }
-
+        /* 侧边栏 */
+        .sidebar { padding: 10px; height: fit-content; }
+        .side-menu { list-style: none; }
         .side-item {
-            padding: 12px 0;
-            font-size: 13px;
-            font-weight: bold;
-            text-transform: uppercase;
-            cursor: pointer;
-            opacity: 0.5;
-            border-bottom: 1px solid rgba(58, 58, 58, 0.05);
-            transition: var(--transition-fast);
+            padding: 15px 0; font-size: 14px; font-weight: bold;
+            text-transform: uppercase; cursor: pointer; opacity: 0.5;
+            border-bottom: 1px solid rgba(0,0,0,0.05); transition: var(--transition);
+            color: var(--text-soft);
+        }
+        .side-item:hover, .side-item.active { opacity: 1; border-bottom: 2px solid var(--primary); color: var(--primary); }
+
+        /* 主体滚动区 */
+        .main-content { overflow-y: auto; padding-right: 10px; height: 100%; }
+        .main-content::-webkit-scrollbar { width: 6px; }
+        .main-content::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 10px; }
+
+        /* 内容卡片样式 */
+        .card, .list-item {
+            background: var(--card-white); border-radius: var(--radius-card);
+            padding: 20px; border: 1px solid var(--primary);
+            margin-bottom: 15px; box-shadow: var(--shadow-soft);
         }
 
-        .side-item:hover,
-        .side-item.active {
-            opacity: 1;
-            color: var(--text-dark);
-        }
+        /* 日历样式 */
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; text-align: center; }
+        .cal-day { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 12px; border-radius: 4px; background: rgba(255,255,255,0.4); }
+        .cal-day.other-month { opacity: 0.35; }
+        .cal-day.checked { background: var(--primary); color: #fff; }
+        .cal-day.today { border: 2px solid var(--accent); font-weight: bold; }
+        .weekday-label { font-size: 10px; opacity: 0.5; padding-bottom: 10px; }
 
-        .side-item.active {
-            border-bottom: 2px solid var(--primary);
-        }
-
-        .main-content {
-            overflow-y: auto;
-            padding-right: 8px;
-            overflow-x: hidden;
-            height: 100%;
-        }
-
-        .daily-focus-card,
-        .list-item {
-            background: var(--card-white);
-            border-radius: var(--radius-card);
-            padding: var(--space-md);
-            border: 1px solid var(--primary);
-            margin-bottom: var(--space-md);
-            width: 100%;
-            box-shadow: var(--shadow-soft);
-        }
-
-        .user-name-display {
-            font-size: 28px;
-            margin-bottom: 10px;
-        }
-
-        .quote-text {
-            font-size: 20px;
-            margin-bottom: 20px;
-            opacity: 0.8;
-        }
-
-        /* —————————— 美化后日历（保留像素风 + 你的配色）—————————— */
-        .calendar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-        }
-
-        .month-display {
-            font-size: 16px;
-            font-weight: bold;
-        }
-
-        .calendar-nav {
-            display: flex;
-            gap: 12px;
-            font-size: 12px;
-        }
-
-        .calendar-nav span {
-            cursor: pointer;
-            opacity: 0.6;
-            transition: opacity 0.2s;
-        }
-
-        .calendar-nav span:hover {
-            opacity: 1;
-        }
-
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 6px;
-            width: 100%;
-        }
-
-        .weekday-label {
-            text-align: center;
-            font-size: 11px;
-            opacity: 0.5;
-            padding: 6px 0;
-        }
-
-        .cal-day {
-            aspect-ratio: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            border-radius: 6px;
-            transition: all 0.2s;
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        .cal-day.checked {
-            background: var(--primary);
-            color: #fff;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .cal-day.today:not(.checked) {
-            border: 2px solid var(--accent);
-            font-weight: bold;
-            background: rgba(255, 255, 255, 0.6);
-        }
-
-        .cal-day.checked.today {
-            background: var(--primary);
-            color: #fff;
-            border: 2px solid var(--accent);
-        }
-
-        .cal-day.other-month {
-            opacity: 0.2;
-            background: transparent;
-        }
-
-        .cal-day:hover:not(.checked):not(.other-month) {
-            background: rgba(255, 255, 255, 0.5);
-        }
-
-        /* 全局统一按钮样式 */
         .btn {
-            background: var(--primary);
-            border: none;
-            padding: var(--space-sm) var(--space-md);
-            border-radius: var(--radius-button);
-            cursor: pointer;
+            background: linear-gradient(135deg, #8b6f59, #a88870);
+            color: #fff7f0;
+            border: none; padding: 10px 20px;
+            border-radius: 8px; cursor: pointer; font-size: 12px; transition: var(--transition);
+            box-shadow: 0 6px 14px rgba(87, 62, 43, 0.22);
+        }
+        .btn:hover { transform: scale(1.05); }
+
+        .hidden { display: none; }
+
+        .group-title {
             font-size: 12px;
-            font-family: 'AcadBeat', sans-serif !important;
-            transition: var(--transition-fast);
+            opacity: 0.65;
+            margin: 6px 0 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
         }
 
-        .btn:hover {
-            transform: scale(1.04);
-        }
-
-        .sub-tabs {
-            display: flex;
-            gap: var(--space-md);
-            margin-bottom: var(--space-md);
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-        }
-
-        .sub-tab-item {
-            padding-bottom: 5px;
-            font-size: 12px;
-            cursor: pointer;
-            opacity: 0.5;
-        }
-
-        .sub-tab-item.active {
-            opacity: 1;
-            border-bottom: 2px solid var(--primary);
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        /* 全局统一滚动条 */
-        .main-content::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        .main-content::-webkit-scrollbar-thumb {
-            background: rgba(0, 0, 0, 0.15);
-            border-radius: 6px;
+        .record-card-btn {
+            width: 100%;
+            border: 1px solid var(--primary);
+            text-align: left;
         }
 
         .site-modal {
             position: fixed;
             inset: 0;
-            background: rgba(58, 58, 58, 0.3);
-            backdrop-filter: blur(4px);
             display: none;
             align-items: center;
             justify-content: center;
-            z-index: 9999;
+            background: rgba(0, 0, 0, 0.35);
+            z-index: 5000;
+            padding: 20px;
         }
 
-        .site-modal.is-open {
-            display: flex;
-        }
+        .site-modal.is-open { display: flex; }
 
         .site-modal__card {
-            background: white;
-            padding: 20px;
+            width: min(640px, 100%);
+            max-height: 80vh;
+            overflow: auto;
+            background: #fff;
+            border: 2px solid var(--primary);
             border-radius: 12px;
-            max-width: 460px;
-            width: 90%;
+            padding: 18px;
+            box-shadow: 0 14px 36px rgba(0, 0, 0, 0.18);
         }
 
-        /* 放大 Records / Favorites 字体 */
-        #list-sec,
-        #list-title,
-        #list-subtitle,
-        .sub-tab-item,
-        .list-item,
-        .list-item p,
-        .list-item .module-label {
-            font-size: 1.1em !important;
+        .site-modal__title { font-size: 20px; margin-bottom: 8px; }
+        .site-modal__body { font-size: 13px; line-height: 1.6; white-space: pre-wrap; color: var(--text-soft); }
+        .site-modal__actions { margin-top: 14px; display: flex; justify-content: flex-end; }
+
+        #ownerNameDisplay {
+            color: var(--primary);
+            letter-spacing: 0.02em;
+            text-shadow: 0 1px 0 rgba(255,255,255,0.45);
         }
 
-        /* 标题再稍微大一点更显眼 */
-        #list-title {
-            font-size: 1.3em !important;
-        }
-
-        /* 像素风返回按钮 */
-        .back-btn {
-            position: fixed;
-            left: 70px;
-            top: 70px;
-            width: 60px;
-            height: 60px;
-            background: var(--primary);
-            border: 2px solid #fff;
-            border-radius: 10px;
-            font-family: 'AcadBeat', monospace;
-            font-size: 18px;
-            color: #fff;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            image-rendering: pixelated;
-            transition: transform 0.18s ease;
-        }
-
-        .back-btn:hover {
-            transform: scale(1.08);
-        }
-
-        /* 只缩小 Study Records / Favorites 里的 record 卡片字体 */
-        #list-sec .list-item,
-        #list-sec .list-item p,
-        #list-sec .list-item h4,
-        #list-sec .list-item .module-label,
-        #list-sec .list-item span {
-            font-size: 0.87em !important;
-            /* 整体缩小到原来 85%（可自己改数值） */
-            line-height: 1.5 !important;
-            /* 行高稍微收紧一点更美观 */
-        }
-
-        /* 卡片右上角序号也缩小 */
-        #list-sec .list-item div[style*="font-size:2.5rem"] {
-            font-size: 1.8rem !important;
-        }
+        #list-title { color: var(--primary); }
+        #list-subtitle, #streak-txt { color: var(--text-soft); }
     </style>
-
 </head>
 
 <body>
 
     <div class="module-frame">
         <div class="module-content">
-            <button class="back-btn" onclick="window.location.href='home.html'">←</button>
+            <button class="back-btn" onclick="goBackToGodot()">←</button>
+            <button class="back-text-btn" onclick="goBackToGodot()">Return to Godot</button>
 
             <div class="dashboard-container">
                 <aside class="sidebar">
-                    <span class="module-label">SANCTUARY</span>
                     <ul class="side-menu">
                         <li class="side-item active" onclick="showSection('checkin', this)">Check-in</li>
                         <li class="side-item" onclick="showSection('records', this)">Records</li>
@@ -434,47 +249,38 @@
 
                 <main class="main-content">
                     <div id="checkin-sec">
-                        <h1 class="user-name-display" id="ownerNameDisplay">Loading...</h1>
-                        <h2 class="quote-text">Quality is not an act, it is a habit.</h2>
+                        <h1 id="ownerNameDisplay" style="margin-bottom: 10px;">User Owner</h1>
+                        <p style="font-style: italic; opacity: 0.7; margin-bottom: 20px;">"Quality is not an act, it is a habit."</p>
 
-                        <div
-                            style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-                            <span class="module-label" id="streak-txt">Current Streak: -- Days</span>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                            <span id="streak-txt">Current Streak: -- Days</span>
                             <button class="btn" id="checkin-btn" onclick="doCheckIn()">Commit Today</button>
                         </div>
 
-                        <div class="daily-focus-card">
-                            <div class="calendar-header">
-                                <div class="month-display" id="month-year-label"></div>
-                                <div class="calendar-nav">
-                                    <span onclick="changeMonth(-1)">PREV</span>
-                                    <span onclick="changeMonth(1)">NEXT</span>
+                        <div class="card">
+                            <div style="display:flex; justify-content:space-between; margin-bottom:15px; font-weight:bold;">
+                                <div id="month-year-label">March 2026</div>
+                                <div>
+                                    <span style="cursor:pointer;" onclick="changeMonth(-1)">PREV</span> | 
+                                    <span style="cursor:pointer;" onclick="changeMonth(1)">NEXT</span>
                                 </div>
                             </div>
                             <div class="calendar-grid">
-                                <div class="weekday-label">MON</div>
-                                <div class="weekday-label">TUE</div>
-                                <div class="weekday-label">WED</div>
-                                <div class="weekday-label">THU</div>
-                                <div class="weekday-label">FRI</div>
-                                <div class="weekday-label">SAT</div>
-                                <div class="weekday-label">SUN</div>
+                                <div class="weekday-label">M</div><div class="weekday-label">T</div>
+                                <div class="weekday-label">W</div><div class="weekday-label">T</div>
+                                <div class="weekday-label">F</div><div class="weekday-label">S</div>
+                                <div class="weekday-label">S</div>
                             </div>
                             <div class="calendar-grid" id="calendar-days"></div>
                         </div>
                     </div>
 
                     <div id="list-sec" class="hidden">
-                        <h2 class="quote-text" id="list-title" style="margin-bottom:5px;">Study Records</h2>
-                        <p id="list-subtitle" style="font-size:12px; opacity:0.6; margin-bottom:20px;">Archiving growth.
-                        </p>
-
-                        <div class="sub-tabs">
-                            <div class="sub-tab-item active" onclick="filterList('vocabulary', this)">Vocabulary</div>
-                            <div class="sub-tab-item" onclick="filterList('listening', this)">Listening</div>
-                            <div class="sub-tab-item" onclick="filterList('integrated', this)">Integrated</div>
-                        </div>
-                        <div id="items-container"></div>
+                        <h2 id="list-title" style="margin-bottom: 5px;">Study Records</h2>
+                        <p id="list-subtitle" style="font-size: 12px; opacity: 0.6; margin-bottom: 20px;">Archiving growth.</p>
+                        
+                        <div id="items-container">
+                            </div>
                     </div>
                 </main>
             </div>
@@ -484,9 +290,9 @@
     <div class="site-modal" id="siteModal" aria-hidden="true">
         <div class="site-modal__card">
             <div class="site-modal__title" id="siteModalTitle">Notice</div>
-            <div class="site-modal__body" id="siteModalBody" style="margin:10px 0;"></div>
+            <div class="site-modal__body" id="siteModalBody"></div>
             <div class="site-modal__actions">
-                <button class="btn" id="siteModalConfirm" type="button">OK</button>
+                <button class="btn" type="button" id="siteModalConfirm">OK</button>
             </div>
         </div>
     </div>
@@ -498,29 +304,23 @@
         const OWNER_LISTENING_API = `${MAIN_ORIGIN}/Academic-Practice/api/records.php`;
         const OWNER_INTEGRATED_API = `${MAIN_ORIGIN}/Academic-Practice/api/integrated-records.php`;
 
+        let checkedDays = ["2026-3-1", "2026-3-2", "2026-3-5", "2026-3-10", "2026-3-18"];
         let viewDate = new Date();
         const today = new Date();
-        let checkedDays = ["2026-3-1", "2026-3-2", "2026-3-5", "2026-3-10", "2026-3-18"];
         let ownerListMode = 'records';
         let ownerVocabularyData = { records: [], favorites: [] };
         let ownerListeningRecords = [];
         let ownerIntegratedRecords = [];
         let ownerAuthUser = null;
 
-        function initialsOf(name) {
-            const trimmed = String(name || '').trim();
-            if (!trimmed) return 'U';
-            return trimmed.slice(0, 2).toUpperCase();
-        }
-
-        function formatDisplayName(username) {
-            const trimmed = String(username || '').trim();
-            if (!trimmed) return 'User';
-            return trimmed
-                .split(/[\s._-]+/)
-                .filter(Boolean)
-                .map(part => part.charAt(0).toUpperCase() + part.slice(1))
-                .join(' ');
+        async function authFetch(path, options = {}) {
+            const response = await fetch(`${AUTH_API_BASE}/${path}`, {
+                method: options.method || 'GET',
+                headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+                credentials: 'include',
+                body: options.body || undefined
+            });
+            return response.json().catch(() => ({ status: 'error' }));
         }
 
         function escapeHtml(value) {
@@ -535,7 +335,7 @@
         function formatShortDate(value) {
             if (!value) return 'Recent';
             const d = new Date(String(value).replace(' ', 'T'));
-            if (Number.isNaN(d.getTime())) return value;
+            if (Number.isNaN(d.getTime())) return String(value);
             return d.toLocaleString('en-US', {
                 month: 'short',
                 day: 'numeric',
@@ -544,40 +344,25 @@
             });
         }
 
-        async function authFetch(path, options = {}) {
-            const response = await fetch(`${AUTH_API_BASE}/${path}`, {
-                method: options.method || 'GET',
-                headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
-                credentials: 'include',
-                body: options.body || undefined
-            });
-            return response.json().catch(() => ({ status: 'error' }));
-        }
-
         function applyOwnerUser(user) {
             ownerAuthUser = user;
             const display = document.getElementById('ownerNameDisplay');
-            if (display) {
-                display.innerHTML = `${escapeHtml(String(user.username || 'User'))} <b>Owner</b>`;
-            }
+            if (!display) return;
+            display.innerHTML = `${escapeHtml(String(user.username || 'User'))} Owner`;
         }
 
-        function openSiteModal(title, message, onConfirm, allowHtml = false) {
+        function openSiteModal(title, message, allowHtml = false) {
             const modal = document.getElementById('siteModal');
             const titleEl = document.getElementById('siteModalTitle');
             const bodyEl = document.getElementById('siteModalBody');
             const confirmBtn = document.getElementById('siteModalConfirm');
             if (!modal || !titleEl || !bodyEl || !confirmBtn) return;
             titleEl.textContent = title || 'Notice';
-            if (allowHtml) {
-                bodyEl.innerHTML = message || '';
-            } else {
-                bodyEl.textContent = message || '';
-            }
+            if (allowHtml) bodyEl.innerHTML = message || '';
+            else bodyEl.textContent = message || '';
             confirmBtn.onclick = function () {
                 modal.classList.remove('is-open');
                 modal.setAttribute('aria-hidden', 'true');
-                if (typeof onConfirm === 'function') onConfirm();
             };
             modal.classList.add('is-open');
             modal.setAttribute('aria-hidden', 'false');
@@ -599,14 +384,10 @@
         async function loadOwnerVocabularyData() {
             const response = await fetch(OWNER_VOCAB_API, { credentials: 'include' });
             const data = await response.json().catch(() => ({ ok: false }));
-            if (!data.ok) {
-                ownerVocabularyData = { records: [], favorites: [] };
-                return;
-            }
-            ownerVocabularyData = {
+            ownerVocabularyData = data.ok ? {
                 records: Array.isArray(data.records) ? data.records : [],
                 favorites: Array.isArray(data.favorites) ? data.favorites : []
-            };
+            } : { records: [], favorites: [] };
         }
 
         async function loadOwnerListeningData() {
@@ -621,10 +402,167 @@
             ownerIntegratedRecords = data.ok && Array.isArray(data.records) ? data.records : [];
         }
 
-        async function loadData() {
-            await loadOwnerVocabularyData();
-            await loadOwnerListeningData();
-            await loadOwnerIntegratedData();
+        function renderVocabularyRecords() {
+            const records = ownerVocabularyData.records || [];
+            if (!records.length) {
+                return `
+                <div class="card list-item">
+                    <div class="group-title">Vocabulary</div>
+                    <p>No vocabulary sessions saved yet.</p>
+                </div>`;
+            }
+            return records.map((record, index) => `
+                <div class="card list-item">
+                    <div style="display:flex; justify-content:space-between; gap:16px; align-items:flex-start;">
+                        <div style="flex:1;">
+                            <div class="group-title">Vocabulary • ${escapeHtml(formatShortDate(record.completedAt))}</div>
+                            <p style="font-size:16px; font-weight:bold;">${escapeHtml(record.title)}</p>
+                            <div style="margin-top:10px; display:flex; flex-wrap:wrap; gap:8px;">
+                                ${(record.words || []).map(word => `<span style="padding:4px 8px; border-radius:999px; background:rgba(0,0,0,0.05);">${escapeHtml(word)}</span>`).join('')}
+                            </div>
+                        </div>
+                        <div style="font-size:24px; opacity:0.18; font-weight:800;">${String(index + 1).padStart(2, '0')}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderListeningRecords() {
+            const records = ownerListeningRecords || [];
+            if (!records.length) {
+                return `
+                <div class="card list-item">
+                    <div class="group-title">Listening</div>
+                    <p>No listening records saved yet.</p>
+                </div>`;
+            }
+            return records.map((record, index) => `
+                <button class="card list-item record-card-btn" type="button" onclick="openListeningRecord(${record.recordId})">
+                    <div style="display:flex; justify-content:space-between; gap:16px; align-items:flex-start;">
+                        <div style="flex:1;">
+                            <div class="group-title">Listening • ${escapeHtml(formatShortDate(record.createdAt))}</div>
+                            <p style="font-size:16px; font-weight:bold;">${escapeHtml(record.title)}</p>
+                            <p style="font-size:12px; opacity:0.72; margin-top:6px;">${escapeHtml(record.personMeta || 'Academic Practice')}</p>
+                        </div>
+                        <div style="font-size:24px; opacity:0.18; font-weight:800;">${String(index + 1).padStart(2, '0')}</div>
+                    </div>
+                </button>
+            `).join('');
+        }
+
+        function renderIntegratedRecords() {
+            const records = ownerIntegratedRecords || [];
+            if (!records.length) {
+                return `
+                <div class="card list-item">
+                    <div class="group-title">Integrated</div>
+                    <p>No integrated speaking records saved yet.</p>
+                </div>`;
+            }
+            return records.map((record, index) => `
+                <button class="card list-item record-card-btn" type="button" onclick="openIntegratedRecord(${record.recordId})">
+                    <div style="display:flex; justify-content:space-between; gap:16px; align-items:flex-start;">
+                        <div style="flex:1;">
+                            <div class="group-title">Integrated • ${escapeHtml(formatShortDate(record.createdAt))}</div>
+                            <p style="font-size:16px; font-weight:bold;">${escapeHtml(record.title)}</p>
+                            <p style="font-size:12px; opacity:0.72; margin-top:6px;">${escapeHtml(record.personMeta || 'Response Practice')}</p>
+                        </div>
+                        <div style="font-size:24px; opacity:0.18; font-weight:800;">${String(index + 1).padStart(2, '0')}</div>
+                    </div>
+                </button>
+            `).join('');
+        }
+
+        function renderRecordsOverview() {
+            const container = document.getElementById("items-container");
+            container.innerHTML = `
+                <div class="group-title">Vocabulary Records</div>
+                ${renderVocabularyRecords()}
+                <div class="group-title">Listening Records</div>
+                ${renderListeningRecords()}
+                <div class="group-title">Integrated Records</div>
+                ${renderIntegratedRecords()}
+            `;
+        }
+
+        function renderVocabularyFavorites() {
+            const container = document.getElementById("items-container");
+            const favorites = ownerVocabularyData.favorites || [];
+            if (!favorites.length) {
+                container.innerHTML = `
+                <div class="card list-item">
+                    <div class="group-title">Favorites</div>
+                    <p>No selected word books yet.</p>
+                </div>`;
+                return;
+            }
+            container.innerHTML = favorites.map((book, index) => `
+                <div class="card list-item">
+                    <div style="display:flex; justify-content:space-between; gap:16px; align-items:flex-start;">
+                        <div style="display:flex; gap:12px; flex:1;">
+                            <img src="${escapeHtml(book.coverUrl)}" alt="" style="width:60px; height:82px; object-fit:cover; border-radius:8px;" />
+                            <div>
+                                <div class="group-title">Vocabulary Favorite</div>
+                                <p style="font-size:16px; font-weight:bold;">${escapeHtml(book.title)}</p>
+                                <p style="font-size:12px; opacity:0.72; margin-top:6px;">${escapeHtml(book.description || '')}</p>
+                                <p style="font-size:12px; opacity:0.8; margin-top:8px;">${book.masteredWords} / ${book.totalWords} learned</p>
+                            </div>
+                        </div>
+                        <div style="font-size:24px; opacity:0.18; font-weight:800;">${String(index + 1).padStart(2, '0')}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function openListeningRecord(recordId) {
+            const response = await fetch(`${OWNER_LISTENING_API}?id=${encodeURIComponent(recordId)}`, { credentials: 'include' });
+            const data = await response.json().catch(() => ({ ok: false }));
+            if (!data.ok || !data.record) {
+                openSiteModal('Unable to open record', 'This listening record could not be loaded right now.');
+                return;
+            }
+            const record = data.record;
+            openSiteModal(
+                record.title || 'Listening Record',
+                `
+<div><b>Date:</b> ${escapeHtml(formatShortDate(record.createdAt))}</div>
+<div><b>Mode:</b> ${escapeHtml(record.mode || '-')}</div>
+<div><b>Difficulty:</b> ${escapeHtml(record.difficulty || '-')}</div>
+<div><b>Duration:</b> ${escapeHtml(record.duration || '-')}</div>
+<div style="margin-top:8px;"><b>Main Content</b></div>
+<div>${escapeHtml(record.mainContent || 'No main content recorded.')}</div>
+<div style="margin-top:8px;"><b>Key Word</b></div>
+<div>${escapeHtml(record.keyWord || 'No keywords recorded.')}</div>
+<div style="margin-top:8px;"><b>Personal View</b></div>
+<div>${escapeHtml(record.personalView || 'No personal view recorded.')}</div>
+                `,
+                true
+            );
+        }
+
+        async function openIntegratedRecord(recordId) {
+            const response = await fetch(`${OWNER_INTEGRATED_API}?id=${encodeURIComponent(recordId)}`, { credentials: 'include' });
+            const data = await response.json().catch(() => ({ ok: false }));
+            if (!data.ok || !data.record) {
+                openSiteModal('Unable to open record', 'This integrated record could not be loaded right now.');
+                return;
+            }
+            const record = data.record;
+            openSiteModal(
+                record.title || 'Integrated Record',
+                `
+<div><b>Date:</b> ${escapeHtml(formatShortDate(record.createdAt))}</div>
+<div><b>Mode:</b> ${escapeHtml(record.mode || '-')}</div>
+<div><b>Difficulty:</b> ${escapeHtml(record.difficulty || '-')}</div>
+<div><b>Duration:</b> ${escapeHtml(record.duration || '-')}</div>
+<div style="margin-top:8px;">
+    <audio controls style="width:100%;">
+        <source src="${escapeHtml(record.audioData || '')}" type="${escapeHtml(record.audioMime || 'audio/webm')}">
+    </audio>
+</div>
+                `,
+                true
+            );
         }
 
         function computeStreakDays() {
@@ -646,282 +584,29 @@
         }
 
         function refreshStreakText() {
-            const streakEl = document.getElementById('streak-txt');
-            if (streakEl) {
-                streakEl.innerText = `Current Streak: ${computeStreakDays()} Days`;
-            }
-        }
-
-        function renderVocabularyRecords() {
-            const container = document.getElementById("items-container");
-            const records = ownerVocabularyData.records || [];
-            if (!records.length) {
-                container.innerHTML = `
-                <div class="daily-focus-card list-item">
-                    <div>
-                        <h4 style="font-size:0.78rem; opacity:0.45;">VOCABULARY • NO RECORDS YET</h4>
-                        <p style="font-size:1.35rem;">No vocabulary sessions saved yet</p>
-                        <p style="font-size:0.86rem; opacity:0.62; margin-top:10px;">Finish a vocabulary session and your study record will appear here automatically.</p>
-                    </div>
-                </div>`;
-                return;
-            }
-            container.innerHTML = records.map((record, index) => `
-                <div class="daily-focus-card list-item" style="display:block;">
-                    <div style="display:flex; justify-content:space-between; gap:18px; align-items:flex-start;">
-                        <div style="flex:1;">
-                            <h4 style="font-size:0.78rem; opacity:0.45;">VOCABULARY • ${escapeHtml(formatShortDate(record.completedAt))}</h4>
-                            <p style="font-size:1.35rem;">${escapeHtml(record.title)}</p>
-                        </div>
-                        <div style="font-size:2.5rem; opacity:0.18;">${String(index + 1).padStart(2, '0')}</div>
-                    </div>
-                    <div style="margin-top:14px;">
-                        <div style="font-size:0.78rem; opacity:0.55; margin-bottom:8px;">Words in this session</div>
-                        <div style="display:flex; flex-wrap:wrap; gap:8px;">
-                            ${(record.words || []).map(word => `<span style="padding:8px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.82rem;">${escapeHtml(word)}</span>`).join('')}
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function renderVocabularyFavorites() {
-            const container = document.getElementById("items-container");
-            const favorites = ownerVocabularyData.favorites || [];
-            if (!favorites.length) {
-                container.innerHTML = `
-                <div class="daily-focus-card list-item">
-                    <div>
-                        <h4 style="font-size:0.78rem; opacity:0.45;">VOCABULARY • NO FAVORITES YET</h4>
-                        <p style="font-size:1.35rem;">No selected word books yet</p>
-                        <p style="font-size:0.86rem; opacity:0.62; margin-top:10px;">Choose word books in Vocabulary Practice and they will appear here with progress.</p>
-                    </div>
-                </div>`;
-                return;
-            }
-            container.innerHTML = favorites.map((book, index) => `
-                <div class="daily-focus-card list-item" style="display:block;">
-                    <div style="display:flex; justify-content:space-between; gap:18px; align-items:flex-start;">
-                        <div style="display:flex; gap:16px; align-items:flex-start; flex:1;">
-                            <img src="${escapeHtml(book.coverUrl)}" alt="" style="width:76px; height:102px; object-fit:cover; border-radius:16px; box-shadow:0 12px 28px rgba(0,0,0,0.08);" />
-                            <div style="flex:1;">
-                                <h4 style="font-size:0.78rem; opacity:0.45;">VOCABULARY FAVORITE</h4>
-                                <p style="font-size:1.35rem;">${escapeHtml(book.title)}</p>
-                                <p style="font-size:0.84rem; opacity:0.62; margin-top:8px;">${escapeHtml(book.description)}</p>
-                                <p style="font-size:0.82rem; opacity:0.68; margin-top:10px;">${book.masteredWords} of ${book.totalWords} words marked learned</p>
-                                <div style="margin-top:12px; width:100%; max-width:320px; height:8px; background:rgba(0,0,0,0.08); border-radius:999px; overflow:hidden;">
-                                    <div style="width:${book.progressPercent}%; height:100%; background:linear-gradient(90deg, #ff6a00, #ff9b54); border-radius:999px;"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div style="font-size:2.5rem; opacity:0.18;">${String(index + 1).padStart(2, '0')}</div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        function renderListeningRecords() {
-            const container = document.getElementById('items-container');
-            const records = ownerListeningRecords || [];
-            if (!records.length) {
-                container.innerHTML = `
-                <div class="daily-focus-card list-item">
-                    <div>
-                        <h4 style="font-size:0.78rem; opacity:0.45;">LISTENING • NO RECORDS YET</h4>
-                        <p style="font-size:1.35rem;">No listening records saved yet</p>
-                        <p style="font-size:0.86rem; opacity:0.62; margin-top:10px;">Save an answer from the note page in Academic Practice and it will appear here automatically.</p>
-                    </div>
-                </div>`;
-                return;
-            }
-            container.innerHTML = records.map((record, index) => `
-                <button class="daily-focus-card list-item" type="button" onclick="openListeningRecord(${record.recordId})" style="display:block; width:100%; text-align:left; border:none; cursor:pointer;">
-                    <div style="display:flex; justify-content:space-between; gap:18px; align-items:flex-start;">
-                        <div style="flex:1;">
-                            <h4 style="font-size:0.78rem; opacity:0.45;">LISTENING • ${escapeHtml(formatShortDate(record.createdAt))}</h4>
-                            <p style="font-size:1.35rem;">${escapeHtml(record.title)}</p>
-                            <p style="font-size:0.84rem; opacity:0.62; margin-top:8px;">${escapeHtml(record.personMeta || 'Academic Practice')}</p>
-                            <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:12px;">
-                                ${record.mode ? `<span style="padding:8px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.82rem;">${escapeHtml(record.mode)}</span>` : ''}
-                                ${record.difficulty ? `<span style="padding:8px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.82rem;">${escapeHtml(record.difficulty)}</span>` : ''}
-                                ${record.duration ? `<span style="padding:8px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.82rem;">${escapeHtml(record.duration)}</span>` : ''}
-                            </div>
-                        </div>
-                        <div style="font-size:2.5rem; opacity:0.18;">${String(index + 1).padStart(2, '0')}</div>
-                    </div>
-                    <p style="font-size:0.82rem; opacity:0.64; margin-top:14px;">Tap to view the saved answer details.</p>
-                </button>
-            `).join('');
-        }
-
-        async function openListeningRecord(recordId) {
-            const response = await fetch(`${OWNER_LISTENING_API}?id=${encodeURIComponent(recordId)}`, { credentials: 'include' });
-            const data = await response.json().catch(() => ({ ok: false }));
-            if (!data.ok || !data.record) {
-                openSiteModal('Unable to open record', 'This listening record could not be loaded right now.');
-                return;
-            }
-            const record = data.record;
-            openSiteModal(
-                record.title || 'Listening Record',
-                `
-                <div style="display:grid; gap:14px; text-align:left;">
-                    <div style="font-size:0.86rem; opacity:0.68;">${escapeHtml(formatShortDate(record.createdAt))}</div>
-                    <div style="display:flex; flex-wrap:wrap; gap:8px;">
-                        ${record.mode ? `<span style="padding:7px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.8rem;">${escapeHtml(record.mode)}</span>` : ''}
-                        ${record.difficulty ? `<span style="padding:7px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.8rem;">${escapeHtml(record.difficulty)}</span>` : ''}
-                        ${record.duration ? `<span style="padding:7px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.8rem;">${escapeHtml(record.duration)}</span>` : ''}
-                        ${record.source ? `<span style="padding:7px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.8rem;">${escapeHtml(record.source)}</span>` : ''}
-                    </div>
-                    <div>
-                        <h4 style="font-size:0.76rem; opacity:0.5; letter-spacing:0.12em; text-transform:uppercase; margin-bottom:6px;">Main Content</h4>
-                        <p style="line-height:1.8; white-space:pre-wrap;">${escapeHtml(record.mainContent || 'No main content recorded.')}</p>
-                    </div>
-                    <div>
-                        <h4 style="font-size:0.76rem; opacity:0.5; letter-spacing:0.12em; text-transform:uppercase; margin-bottom:6px;">Key Word</h4>
-                        <p style="line-height:1.8; white-space:pre-wrap;">${escapeHtml(record.keyWord || 'No keywords recorded.')}</p>
-                    </div>
-                    <div>
-                        <h4 style="font-size:0.76rem; opacity:0.5; letter-spacing:0.12em; text-transform:uppercase; margin-bottom:6px;">Personal View</h4>
-                        <p style="line-height:1.8; white-space:pre-wrap;">${escapeHtml(record.personalView || 'No personal view recorded.')}</p>
-                    </div>
-                </div>
-                `,
-                null,
-                true
-            );
-        }
-
-        function renderIntegratedRecords() {
-            const container = document.getElementById('items-container');
-            const records = ownerIntegratedRecords || [];
-            if (!records.length) {
-                container.innerHTML = `
-                <div class="daily-focus-card list-item">
-                    <div>
-                        <h4 style="font-size:0.78rem; opacity:0.45;">INTEGRATED • NO RECORDS YET</h4>
-                        <p style="font-size:1.35rem;">No integrated speaking records saved yet</p>
-                        <p style="font-size:0.86rem; opacity:0.62; margin-top:10px;">Use Response Practice and save your audio answer to create an integrated record here.</p>
-                    </div>
-                </div>`;
-                return;
-            }
-            container.innerHTML = records.map((record, index) => `
-                <button class="daily-focus-card list-item" type="button" onclick="openIntegratedRecord(${record.recordId})" style="display:block; width:100%; text-align:left; border:none; cursor:pointer;">
-                    <div style="display:flex; justify-content:space-between; gap:18px; align-items:flex-start;">
-                        <div style="flex:1;">
-                            <h4 style="font-size:0.78rem; opacity:0.45;">INTEGRATED • ${escapeHtml(formatShortDate(record.createdAt))}</h4>
-                            <p style="font-size:1.35rem;">${escapeHtml(record.title)}</p>
-                            <p style="font-size:0.84rem; opacity:0.62; margin-top:8px;">${escapeHtml(record.personMeta || 'Response Practice')}</p>
-                            <div style="display:flex; flex-wrap:wrap; gap:8px; margin-top:12px;">
-                                ${record.mode ? `<span style="padding:8px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.82rem;">${escapeHtml(record.mode)}</span>` : ''}
-                                ${record.difficulty ? `<span style="padding:8px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.82rem;">${escapeHtml(record.difficulty)}</span>` : ''}
-                                ${record.duration ? `<span style="padding:8px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.82rem;">${escapeHtml(record.duration)}</span>` : ''}
-                            </div>
-                        </div>
-                        <div style="font-size:2.5rem; opacity:0.18;">${String(index + 1).padStart(2, '0')}</div>
-                    </div>
-                    <p style="font-size:0.82rem; opacity:0.64; margin-top:14px;">Tap to play your saved response.</p>
-                </button>
-            `).join('');
-        }
-
-        async function openIntegratedRecord(recordId) {
-            const response = await fetch(`${OWNER_INTEGRATED_API}?id=${encodeURIComponent(recordId)}`, { credentials: 'include' });
-            const data = await response.json().catch(() => ({ ok: false }));
-            if (!data.ok || !data.record) {
-                openSiteModal('Unable to open record', 'This integrated record could not be loaded right now.');
-                return;
-            }
-            const record = data.record;
-            openSiteModal(
-                record.title || 'Integrated Record',
-                `
-                <div style="display:grid; gap:14px; text-align:left;">
-                    <div style="font-size:0.86rem; opacity:0.68;">${escapeHtml(formatShortDate(record.createdAt))}</div>
-                    <div style="display:flex; flex-wrap:wrap; gap:8px;">
-                        ${record.mode ? `<span style="padding:7px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.8rem;">${escapeHtml(record.mode)}</span>` : ''}
-                        ${record.difficulty ? `<span style="padding:7px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.8rem;">${escapeHtml(record.difficulty)}</span>` : ''}
-                        ${record.duration ? `<span style="padding:7px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.8rem;">${escapeHtml(record.duration)}</span>` : ''}
-                        ${record.source ? `<span style="padding:7px 12px; border-radius:999px; background:rgba(0,0,0,0.04); font-size:0.8rem;">${escapeHtml(record.source)}</span>` : ''}
-                    </div>
-                    <audio controls style="width:100%;">
-                        <source src="${record.audioData}" type="${escapeHtml(record.audioMime || 'audio/webm')}">
-                    </audio>
-                </div>
-                `,
-                null,
-                true
-            );
-        }
-
-        function renderPlaceholderList(cat) {
-            document.getElementById('items-container').innerHTML = `
-            <div class="daily-focus-card list-item" style="display:flex; justify-content:space-between; align-items:center;">
-                <div><h4 style="font-size:0.7rem; opacity:0.4;">${cat.toUpperCase()} • MAR 2026</h4><p style="font-size:1.4rem;">The Architecture of Resonance</p></div>
-                <div style="font-size:2.5rem; opacity:0.2;">01</div>
-            </div>`;
-        }
-
-        function showSection(type, triggerEl = null) {
-            document.querySelectorAll(".side-item").forEach(el => el.classList.remove("active"));
-            const activeItem = triggerEl || document.querySelector(`.side-item[onclick*="${type}"]`);
-            if (activeItem) activeItem.classList.add("active");
-            document.getElementById("checkin-sec").classList.toggle("hidden", type !== 'checkin');
-            document.getElementById("list-sec").classList.toggle("hidden", type === 'checkin');
-            if (type !== 'checkin') {
-                ownerListMode = type;
-                const isRec = type === 'records';
-                document.getElementById("list-title").innerText = isRec ? "Study Records" : "My Favorites";
-                document.getElementById("list-subtitle").innerText = isRec ? "Archiving the echoes of your persistent growth." : "A curated collection of your intellectual sparks.";
-                filterList('vocabulary');
-            }
-        }
-
-        function filterList(subType, triggerEl = null) {
-            document.querySelectorAll(".sub-tab-item").forEach(el => el.classList.remove("active"));
-            const activeTab = triggerEl || document.querySelector(`.sub-tab-item[onclick*="${subType}"]`);
-            if (activeTab) activeTab.classList.add("active");
-            if (subType === 'listening' && ownerListMode === 'records') {
-                renderListeningRecords();
-                return;
-            }
-            if (subType === 'integrated' && ownerListMode === 'records') {
-                renderIntegratedRecords();
-                return;
-            }
-            if (subType !== 'vocabulary') {
-                renderPlaceholderList(subType);
-                return;
-            }
-            if (ownerListMode === 'records') {
-                renderVocabularyRecords();
-                return;
-            }
-            renderVocabularyFavorites();
+            document.getElementById('streak-txt').innerText = `Current Streak: ${computeStreakDays()} Days`;
         }
 
         function renderCalendar() {
             const grid = document.getElementById("calendar-days");
             const label = document.getElementById("month-year-label");
-            if (!grid || !label) return;
             grid.innerHTML = "";
             const y = viewDate.getFullYear();
             const m = viewDate.getMonth();
             label.innerText = viewDate.toLocaleDateString("en-US", { month: "long", year: "numeric" });
 
-            let first = new Date(y, m, 1).getDay();
-            first = first === 0 ? 6 : first - 1;
-            const days = new Date(y, m + 1, 0).getDate();
-            const prevDays = new Date(y, m, 0).getDate();
+            let firstDay = new Date(y, m, 1).getDay();
+            firstDay = firstDay === 0 ? 6 : firstDay - 1;
+            const daysInMonth = new Date(y, m + 1, 0).getDate();
+            const prevDaysInMonth = new Date(y, m, 0).getDate();
 
-            for (let x = first; x > 0; x--) {
-                grid.innerHTML += `<div class="cal-day other-month">${prevDays - x + 1}</div>`;
+            for (let x = firstDay; x > 0; x--) {
+                grid.innerHTML += `<div class="cal-day other-month">${prevDaysInMonth - x + 1}</div>`;
             }
-            for (let d = 1; d <= days; d++) {
+            for (let d = 1; d <= daysInMonth; d++) {
                 const key = `${y}-${m + 1}-${d}`;
-                const isToday = d === today.getDate() && m === today.getMonth() && y === today.getFullYear();
                 const isChecked = checkedDays.includes(key);
+                const isToday = d === today.getDate() && m === today.getMonth() && y === today.getFullYear();
                 grid.innerHTML += `<div class="cal-day ${isChecked ? 'checked' : ''} ${isToday ? 'today' : ''}">${d}</div>`;
             }
             refreshStreakText();
@@ -929,16 +614,30 @@
 
         function changeMonth(n) { viewDate.setMonth(viewDate.getMonth() + n); renderCalendar(); }
 
-        async function doCheckIn() {
-            const key = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+        function showSection(type, el) {
+            document.querySelectorAll(".side-item").forEach(i => i.classList.remove("active"));
+            el.classList.add("active");
+            document.getElementById("checkin-sec").classList.toggle("hidden", type !== 'checkin');
+            document.getElementById("list-sec").classList.toggle("hidden", type === 'checkin');
+            if(type !== 'checkin') {
+                ownerListMode = type;
+                const isRecords = type === 'records';
+                document.getElementById("list-title").innerText = isRecords ? "Study Records" : "My Favorites";
+                document.getElementById("list-subtitle").innerText = isRecords ? "Archiving the echoes of your persistent growth." : "A curated collection of your intellectual sparks.";
+                if (isRecords) renderRecordsOverview();
+                else renderVocabularyFavorites();
+            }
+        }
+
+        function doCheckIn() {
+            const today = new Date();
+            const key = `${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()}`;
             const btn = document.getElementById('checkin-btn');
-            if (!checkedDays.includes(key)) {
+            if(!checkedDays.includes(key)) {
                 checkedDays.push(key);
-                if (btn) {
-                    btn.innerText = "Committed";
-                    btn.style.opacity = "0.55";
-                    btn.disabled = true;
-                }
+                btn.innerText = "Committed";
+                btn.style.opacity = "0.55";
+                btn.disabled = true;
             }
             renderCalendar();
             openSiteModal("Checked in", "Today's commitment has been recorded.");
@@ -946,23 +645,19 @@
 
         window.onload = async () => {
             const ok = await ensureAuthenticated();
-            if (ok) {
-                await loadData();
-                const todayKey = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
-                if (checkedDays.includes(todayKey)) {
-                    const btn = document.getElementById('checkin-btn');
-                    if (btn) {
-                        btn.innerText = "Committed";
-                        btn.style.opacity = "0.55";
-                        btn.disabled = true;
-                    }
-                }
+            if (!ok) return;
+            await loadOwnerVocabularyData();
+            await loadOwnerListeningData();
+            await loadOwnerIntegratedData();
+            const todayKey = `${today.getFullYear()}-${today.getMonth()+1}-${today.getDate()}`;
+            if (checkedDays.includes(todayKey)) {
+                const btn = document.getElementById('checkin-btn');
+                btn.innerText = "Committed";
+                btn.style.opacity = "0.55";
+                btn.disabled = true;
             }
-
             renderCalendar();
-            showSection('checkin');
         };
     </script>
 </body>
-
 </html>
