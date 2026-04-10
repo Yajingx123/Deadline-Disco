@@ -26,7 +26,7 @@ if (!$user) {
 }
 
 $userId = (int)$user['user_id'];
-$today = date('Y-m-d', strtotime('+1 day'));
+$today = date('Y-m-d');
 $weekStart = get_current_week_start();
 
 $teamStmt = $pdo->prepare("
@@ -51,8 +51,7 @@ if (!$team) {
 
 $teamId = (int)$team['team_id'];
 
-$checkStmt = $pdo->prepare("
-    SELECT COUNT(*) as cnt
+$checkStmt = $pdo->prepare("    SELECT COUNT(*) as cnt
     FROM score_records
     WHERE group_id = ?
       AND rule_id = 'routine1'
