@@ -138,10 +138,6 @@ We follow the **Agile** development process. To contribute:
 
 ---
 
-给你一个**完全匹配你现有 README 风格（不破坏结构，直接追加在最底部）**的 AI Cite👇
-
----
-
 ## 🤖 AI Assistance / Citation
 
 This project was developed with the assistance of the following AI tools:
