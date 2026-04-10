@@ -13,8 +13,25 @@
 /* Defaults when parent page does not define theme tokens (e.g. rank/index.html) */
 .challenge-mount,
 .challenge-page-root {
-    --secondary-color: #5b2a86;
-    --bg-color: #f4efff;
+    --secondary-color: #6f6668;
+    --bg-color: #f5f0ed;
+    --panel-color: #b6aaab;
+    --panel-color-soft: rgba(182, 170, 171, 0.78);
+    --panel-color-faint: rgba(182, 170, 171, 0.42);
+    --text-strong: #3f3839;
+    --text-soft: rgba(63, 56, 57, 0.74);
+    --text-muted: rgba(63, 56, 57, 0.56);
+    --line-color: rgba(157, 255, 247, 0.82);
+    --line-soft: rgba(157, 255, 247, 0.34);
+    --line-faint: rgba(157, 255, 247, 0.18);
+    --base-brown: #60534f;
+    --base-brown-deep: #564a46;
+    --base-brown-soft: #6b5e59;
+    --overlay-dark: rgba(96, 83, 79, 0.82);
+    --chip-bg: rgba(210, 201, 201, 0.88);
+    --button-dark: #4e4748;
+    --error-bg: rgba(114, 78, 83, 0.18);
+    --error-text: #6c4048;
 }
 
 .site-modal {
@@ -87,12 +104,12 @@
     padding: 2.2rem 2.4rem 1.6rem;
     display: flex;
     flex-direction: column;
-    background: linear-gradient(180deg, #fefcff 0%, #f5efff 100%);
+    background: linear-gradient(180deg, rgba(191, 181, 181, 0.96) 0%, rgba(177, 166, 167, 0.98) 100%);
 }
 
 .challenge-btn {
-    background: var(--secondary-color, #5b2a86);
-    color: var(--bg-color, #f4efff);
+    background: var(--button-dark);
+    color: #f8f5f3;
     padding: 10px 24px;
     border-radius: 4px;
     font-size: 0.7rem;
@@ -128,7 +145,7 @@
     max-width: 760px;
     font-size: 0.86rem;
     line-height: 1.55;
-    color: rgba(91, 42, 134, 0.78);
+    color: var(--text-soft);
 }
 
 .challenge-secondary-btn,
@@ -136,8 +153,8 @@
     min-height: 52px;
     padding: 0 20px;
     border-radius: 999px;
-    border: 1px solid rgba(91, 42, 134, 0.14);
-    background: rgba(255, 255, 255, 0.8);
+    border: 1px solid var(--line-soft);
+    background: rgba(243, 238, 236, 0.82);
     color: var(--secondary-color);
     font-size: 0.72rem;
     font-weight: 800;
@@ -150,7 +167,7 @@
 .challenge-secondary-btn:hover,
 .challenge-ghost-btn:hover {
     transform: translateY(-2px);
-    background: #fff;
+    background: rgba(248, 244, 242, 0.96);
 }
 
 #challengeGuideBtn {
@@ -160,13 +177,13 @@
     min-height: 44px;
     padding: 0;
     border-radius: 50%;
-    border: 1px solid rgba(122, 153, 255, 0.34);
-    background: linear-gradient(135deg, rgba(31, 58, 121, 0.88), rgba(43, 74, 143, 0.88));
-    color: rgba(236, 243, 255, 0.98);
+    border: 1px solid var(--line-color);
+    background: linear-gradient(135deg, rgba(86, 79, 80, 0.94), rgba(62, 57, 58, 0.96));
+    color: rgba(233, 255, 252, 0.98);
     font-size: 1rem;
     letter-spacing: 0;
     font-weight: 800;
-    box-shadow: 0 10px 26px rgba(22, 36, 78, 0.34);
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.26);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -176,7 +193,7 @@
 #challengeGuideBtn:hover {
     transform: translateY(-2px);
     filter: brightness(1.08);
-    border-color: rgba(146, 174, 255, 0.58);
+    border-color: rgba(157, 255, 247, 0.92);
 }
 
 .challenge-secondary-btn__count {
@@ -208,7 +225,7 @@
     font-size: 0.72rem;
     letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: rgba(91, 42, 134, 0.58);
+    color: var(--text-muted);
 }
 
 .challenge-name-input,
@@ -217,9 +234,9 @@
     width: 100%;
     min-height: 56px;
     padding: 0 20px;
-    border: 1px solid rgba(91, 42, 134, 0.14);
+    border: 1px solid var(--line-soft);
     border-radius: 24px;
-    background: rgba(255, 255, 255, 0.82);
+    background: rgba(245, 240, 237, 0.92);
     color: var(--secondary-color);
     font-size: 1rem;
     outline: none;
@@ -228,8 +245,8 @@
 .challenge-name-input:focus,
 .challenge-search-input:focus,
 .challenge-request-input:focus {
-    border-color: rgba(91, 42, 134, 0.28);
-    box-shadow: 0 0 0 4px rgba(250, 204, 21, 0.22);
+    border-color: var(--line-color);
+    box-shadow: 0 0 0 4px rgba(157, 255, 247, 0.18);
 }
 
 .challenge-status-row {
@@ -245,7 +262,7 @@
     min-height: 38px;
     padding: 0 16px;
     border-radius: 999px;
-    background: rgba(211, 214, 218, 0.7);
+    background: var(--chip-bg);
     color: var(--secondary-color);
     font-size: 0.7rem;
     font-weight: 800;
@@ -259,8 +276,8 @@
 
 .challenge-card {
     border-radius: 28px;
-    background: rgba(255, 255, 255, 0.56);
-    border: 1px solid rgba(91, 42, 134, 0.14);
+    background: rgba(243, 238, 236, 0.58);
+    border: 1px solid var(--line-soft);
     padding: 28px;
 }
 
@@ -281,7 +298,7 @@
 .challenge-card--stacked p,
 .challenge-forming-head p {
     margin: 12px 0 0;
-    color: rgba(91, 42, 134, 0.76);
+    color: var(--text-soft);
     line-height: 1.6;
 }
 
@@ -290,7 +307,7 @@
     font-size: 0.72rem;
     letter-spacing: 0.22em;
     text-transform: uppercase;
-    color: rgba(91, 42, 134, 0.56);
+    color: var(--text-muted);
 }
 
 .challenge-forming-head {
@@ -303,8 +320,8 @@
 
 .challenge-countdown-card {
     border-radius: 22px;
-    background: rgba(255, 255, 255, 0.78);
-    border: 1px solid rgba(91, 42, 134, 0.14);
+    background: rgba(244, 239, 237, 0.82);
+    border: 1px solid var(--line-soft);
     min-width: 224px;
     padding: 18px 18px 16px;
     display: flex;
@@ -316,7 +333,7 @@
 
 .challenge-countdown-card span,
 .challenge-countdown-card small {
-    color: rgba(91, 42, 134, 0.62);
+    color: var(--text-muted);
     font-size: 0.72rem;
     letter-spacing: 0.14em;
     text-transform: uppercase;
@@ -335,23 +352,23 @@
     min-width: 0;
     padding: 12px 6px;
     border-radius: 18px;
-    background: linear-gradient(180deg, rgba(255, 245, 236, 0.98), rgba(255, 238, 225, 0.9));
-    border: 1px solid rgba(255, 125, 33, 0.12);
+    background: linear-gradient(180deg, rgba(233, 225, 225, 0.98), rgba(214, 204, 205, 0.92));
+    border: 1px solid var(--line-soft);
     text-align: center;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
 .challenge-countdown__unit strong {
     display: block;
     font-size: 1.6rem;
     line-height: 1;
-    color: #ff7d21;
+    color: #8ffff7;
     letter-spacing: 0.04em;
     font-variant-numeric: tabular-nums;
 }
 
 .challenge-countdown__divider {
-    color: rgba(255, 125, 33, 0.7);
+    color: rgba(143, 255, 247, 0.76);
     font-size: 1.35rem;
     font-weight: 700;
     line-height: 1;
@@ -374,8 +391,8 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background: rgba(255, 255, 255, 0.42);
-    border: 1px solid rgba(91, 42, 134, 0.16);
+    background: rgba(242, 236, 234, 0.48);
+    border: 1px solid var(--line-faint);
     text-align: center;
 }
 
@@ -383,7 +400,7 @@
     align-items: flex-start;
     text-align: left;
     justify-content: flex-start;
-    background: rgba(255, 255, 255, 0.74);
+    background: rgba(244, 239, 236, 0.78);
 }
 
 .slot-card__avatar {
@@ -411,7 +428,7 @@
     min-height: 28px;
     padding: 0 10px;
     border-radius: 999px;
-    background: rgba(91, 42, 134, 0.12);
+    background: rgba(157, 255, 247, 0.16);
     color: var(--secondary-color);
     font-size: 0.62rem;
     font-weight: 800;
@@ -420,8 +437,8 @@
 }
 
 .slot-card__badge--captain {
-    background: rgba(197, 160, 89, 0.22);
-    color: #9b6b14;
+    background: rgba(157, 255, 247, 0.24);
+    color: #4d6d69;
 }
 
 .slot-card__name {
@@ -436,18 +453,18 @@
     margin: 0;
     font-size: 0.76rem;
     line-height: 1.25;
-    color: rgba(91, 42, 134, 0.64);
+    color: var(--text-soft);
     word-break: break-word;
 }
 
 .slot-empty {
     background: transparent;
-    border: 1px dashed rgba(91, 42, 134, 0.3);
-    color: rgba(91, 42, 134, 0.62);
+    border: 1px dashed var(--line-color);
+    color: var(--text-muted);
 }
 
 .slot-empty:hover {
-    background: rgba(255, 255, 255, 0.42);
+    background: rgba(242, 236, 234, 0.46);
 }
 
 .slot-card__emptyLabel {
@@ -455,15 +472,15 @@
     max-width: 150px;
     font-size: 0.8rem;
     line-height: 1.45;
-    color: rgba(91, 42, 134, 0.5);
+    color: rgba(63, 56, 57, 0.5);
 }
 
 .challenge-pending {
     margin-top: 1.8rem;
     padding: 18px;
     border-radius: 18px;
-    background: rgba(255, 255, 255, 0.36);
-    border: 1px solid rgba(91, 42, 134, 0.14);
+    background: rgba(241, 235, 233, 0.4);
+    border: 1px solid var(--line-faint);
 }
 
 .challenge-pending__list,
@@ -480,7 +497,7 @@
     align-items: center;
     padding: 15px 16px;
     border-radius: 18px;
-    background: rgba(255, 255, 255, 0.75);
+    background: rgba(245, 240, 237, 0.82);
 }
 
 .challenge-invite-card {
@@ -492,7 +509,7 @@
     width: 42px;
     height: 42px;
     border-radius: 50%;
-    background: rgba(91, 42, 134, 0.14);
+    background: rgba(157, 255, 247, 0.16);
     color: var(--secondary-color);
     display: flex;
     align-items: center;
@@ -512,7 +529,7 @@
     display: block;
     margin-top: 4px;
     font-size: 0.8rem;
-    color: rgba(91, 42, 134, 0.64);
+    color: var(--text-soft);
 }
 
 .team-float-actions {
@@ -559,33 +576,33 @@
     height: 20px;
     padding: 0 5px;
     border-radius: 999px;
-    background: #d85656;
-    color: #fffaf5;
+    background: #84656a;
+    color: #f9f6f4;
     font-size: 0.64rem;
     font-weight: 800;
     letter-spacing: 0;
     line-height: 1;
-    box-shadow: 0 6px 14px rgba(216, 86, 86, 0.28);
+    box-shadow: 0 6px 14px rgba(72, 55, 58, 0.22);
     border: 2px solid var(--bg-color);
     z-index: 2;
 }
 
 .btn-publish--secondary {
-    background: rgba(250, 204, 21, 0.3);
+    background: rgba(157, 255, 247, 0.16);
     color: var(--secondary-color);
-    border-color: rgba(91, 42, 134, 0.14);
+    border-color: var(--line-soft);
 }
 
 .btn-publish--soft {
-    background: rgba(255, 255, 255, 0.82);
+    background: rgba(245, 240, 237, 0.88);
     color: var(--secondary-color);
-    border-color: rgba(91, 42, 134, 0.16);
+    border-color: var(--line-faint);
 }
 
 .btn-publish--ghost {
     background: transparent;
     color: var(--secondary-color);
-    border: 1px solid rgba(91, 42, 134, 0.18);
+    border: 1px solid var(--line-soft);
 }
 
 .btn-publish:hover {
@@ -599,7 +616,7 @@
     margin-bottom: 18px;
     padding: 6px;
     border-radius: 999px;
-    background: rgba(91, 42, 134, 0.1);
+    background: rgba(157, 255, 247, 0.12);
 }
 
 .challenge-tab {
@@ -608,7 +625,7 @@
     border: none;
     border-radius: 999px;
     background: transparent;
-    color: rgba(91, 42, 134, 0.72);
+    color: rgba(63, 56, 57, 0.72);
     font-size: 0.74rem;
     font-weight: 800;
     letter-spacing: 0.08em;
@@ -632,14 +649,14 @@
 .challenge-mylisting-card {
     padding: 18px 20px;
     border-radius: 18px;
-    background: rgba(255, 255, 255, 0.78);
-    border: 1px solid rgba(91, 42, 134, 0.14);
+    background: rgba(245, 240, 237, 0.84);
+    border: 1px solid var(--line-soft);
 }
 
 .challenge-mylisting-card__copy {
     font-size: 0.9rem;
     line-height: 1.7;
-    color: rgba(91, 42, 134, 0.78);
+    color: var(--text-soft);
 }
 
 .leaderboard-aside {
@@ -647,13 +664,13 @@
     flex-direction: column;
     padding: 3.25rem 2.1rem;
     justify-content: flex-start;
-    background: linear-gradient(165deg, #3d1f62 0%, #2a1245 52%, #1a0d2e 100%);
-    color: rgba(255, 255, 255, 0.92);
+    background: linear-gradient(165deg, var(--base-brown) 0%, var(--base-brown-deep) 100%);
+    color: rgba(240, 235, 232, 0.92);
 }
 
 .leaderboard-empty {
     margin-top: 5rem;
-    color: rgba(228, 223, 216, 0.72);
+    color: rgba(220, 211, 208, 0.72);
     font-size: 0.86rem;
     line-height: 1.7;
 }
@@ -661,7 +678,7 @@
 .challenge-system-card {
     margin-top: auto;
     padding-top: 18px;
-    border-top: 1px solid rgba(255, 255, 255, 0.18);
+    border-top: 1px solid var(--line-soft);
 }
 
 .challenge-system-card__value {
@@ -680,7 +697,7 @@
     display: none;
     align-items: center;
     justify-content: center;
-    background: rgba(18, 12, 28, 0.55);
+    background: rgba(96, 83, 79, 0.68);
     box-sizing: border-box;
 }
 
@@ -688,9 +705,9 @@
     width: min(620px, 100%);
     padding: 28px;
     border-radius: 24px;
-    background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(244,240,234,0.98));
-    border: 1px solid rgba(91,42,134,0.14);
-    box-shadow: 0 36px 90px rgba(91,42,134,0.2);
+    background: linear-gradient(180deg, rgba(188, 178, 179, 0.96), rgba(176, 166, 167, 0.98));
+    border: 1px solid var(--line-color);
+    box-shadow: 0 36px 90px rgba(0, 0, 0, 0.28);
 }
 
 .search-layer__card--wide {
@@ -701,7 +718,7 @@
     margin: 10px 0 16px;
     font-size: 0.9rem;
     line-height: 1.7;
-    color: rgba(91, 42, 134, 0.72);
+    color: rgba(63, 56, 57, 0.72);
 }
 
 .search-layer__actions {
@@ -739,8 +756,8 @@
 .challenge-tutorial-figure {
     min-height: 460px;
     border-radius: 20px;
-    border: 1px solid rgba(91, 42, 134, 0.14);
-    background: rgba(16, 15, 22, 0.92);
+    border: 1px solid var(--line-color);
+    background: rgba(96, 83, 79, 0.96);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -758,7 +775,7 @@
     margin: 14px 0 0;
     font-size: 1rem;
     line-height: 1.75;
-    color: rgba(91, 42, 134, 0.82);
+    color: rgba(63, 56, 57, 0.84);
 }
 
 .challenge-tutorial-progress {
@@ -767,7 +784,7 @@
     font-weight: 700;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: rgba(91, 42, 134, 0.58);
+    color: var(--text-muted);
 }
 
 .challenge-tutorial-actions {
@@ -787,7 +804,7 @@
 }
 
 .challenge-inline-btn--ghost {
-    background: rgba(91, 42, 134, 0.12);
+    background: rgba(157, 255, 247, 0.14);
     color: var(--secondary-color);
 }
 
@@ -802,8 +819,8 @@
     margin-top: 14px;
     padding: 12px 14px;
     border-radius: 14px;
-    background: rgba(183, 79, 93, 0.12);
-    color: #9d3243;
+    background: var(--error-bg);
+    color: var(--error-text);
     font-size: 0.84rem;
     line-height: 1.5;
 }
@@ -811,7 +828,7 @@
 .challenge-admin-note {
     margin-top: 10px;
     font-size: 0.84rem;
-    color: rgba(91, 42, 134, 0.64);
+    color: var(--text-soft);
 }
 
 /* Full-bleed over .team-modal; must not participate in the 2-column grid */
@@ -825,8 +842,8 @@
     justify-content: center;
     text-align: center;
     padding: 2rem;
-    background: linear-gradient(155deg, #3d1f62 0%, #2a1245 55%, #1a0d2e 100%);
-    color: rgba(255, 255, 255, 0.95);
+    background: linear-gradient(155deg, var(--base-brown) 0%, var(--base-brown-deep) 100%);
+    color: rgba(244, 239, 236, 0.95);
 }
 
 .success-overlay.is-open {
@@ -842,7 +859,7 @@
     align-items: center;
     justify-content: center;
     padding: clamp(16px, 3vw, 28px);
-    background: rgba(18, 12, 28, 0.88);
+    background: var(--overlay-dark);
     backdrop-filter: blur(6px);
     overflow: auto;
 }
@@ -870,7 +887,7 @@
     border-radius: 8px;
     box-shadow: 0 40px 100px rgba(0, 0, 0, 0.28);
     overflow: hidden;
-    background: #faf7ff;
+    background: #b6aaab;
 }
 
 body[data-challenge-page="1"] #challengeMount {
@@ -890,8 +907,8 @@ body[data-challenge-page="1"] .challenge-page-toolbar {
 
 body[data-challenge-page="1"] .team-modal.team-modal--embedded {
     border-radius: 22px;
-    border: 1px solid rgba(91, 42, 134, 0.12);
-    box-shadow: 0 20px 48px rgba(91, 42, 134, 0.14);
+    border: 1px solid var(--line-color);
+    box-shadow: 0 20px 48px rgba(0, 0, 0, 0.22);
     overflow: hidden;
 }
 
