@@ -44,10 +44,7 @@ func _on_input_event(_viewport: Viewport, event: InputEvent, _shape_idx: int) ->
 func _input(event: InputEvent) -> void:
 	if is_near and _is_activate_key_event(event):
 		_activate_door()
-
-func _unhandled_input(event: InputEvent) -> void:
-	if is_near and _is_activate_key_event(event):
-		_activate_door()
+		get_viewport().set_input_as_handled()
 
 func _activate_door() -> void:
 	var normalized_door_id := String(door_id).strip_edges().to_lower()
