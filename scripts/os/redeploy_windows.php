@@ -37,7 +37,7 @@ $frontendBuilds = [
     ],
     [
         'name' => 'forum-v2-static',
-        'workdir' => $root . '/forum-project-v2',
+        'workdir' => $root . '/GameUI/forum-project-GameUI',
         'command' => $npm . ' install && ' . $npm . ' run build',
     ],
     [

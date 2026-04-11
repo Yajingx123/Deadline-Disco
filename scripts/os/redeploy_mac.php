@@ -105,7 +105,7 @@ $frontendBuilds = [
     ],
     [
         'name' => 'forum-v2-static',
-        'workdir' => $root . '/forum-project-v2',
+        'workdir' => $root . '/GameUI/forum-project-GameUI',
         'command' => $npm . ' install && ' . $npm . ' run build',
     ],
     [
@@ -258,7 +258,7 @@ echo "\nLogs are in .run\n";
 echo "Start command: php redeploy.php\n";
 echo "Full mode command: php redeploy.php --full\n";
 echo "\nHome: http://127.0.0.1:8001/home.html\n";
-echo "Forum isolation: classic -> /forum-project/dist/, new shell -> /forum-project-v2/dist/\n";
+echo "Forum isolation: classic -> /forum-project/dist/, GameUI -> /GameUI/forum-project-GameUI/dist/\n";
 if (!empty($healthFailures)) {
     fwrite(STDERR, "\n[error] Service health check failed: " . implode(', ', $healthFailures) . "\n");
     exit(2);
