@@ -46,6 +46,11 @@ $frontendBuilds = [
         'command' => $npm . ' install && ' . $npm . ' run build',
     ],
     [
+        'name' => 'message-center-v2-static',
+        'workdir' => $root . '/GameUI/message-center-project-GameUI',
+        'command' => $npm . ' install && ' . $npm . ' run build',
+    ],
+    [
         'name' => 'dnd-static',
         'workdir' => $root . '/Studio/Dungeons-and-Dragons',
         'command' => $npm . ' install && ' . $npm . ' run build',
